@@ -6,24 +6,21 @@ module.exports = {
   extends: [
     'eslint:recommended',
     'plugin:@typescript-eslint/recommended',
-    // 'plugin:@typescript-eslint/recommended-requiring-type-checking',
     'eslint-config-prettier',
     'prettier',
     'airbnb',
-    'plugin:jsx-a11y/recommended',
     'plugin:prettier/recommended',
     'plugin:security/recommended'
   ],
-  parser: '@typescript-eslint/parser',
-  parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: true,
-    tsconfigRootDir: __dirname
-  },
-  plugins: ['react-refresh', 'prettier', '@typescript-eslint'],
+  plugins: ['prettier', '@typescript-eslint'],
   rules: {
     '@typescript-eslint/no-non-null-assertion': 'off',
+    '@typescript-eslint/interface-name-prefix': 'off',
+    '@typescript-eslint/explicit-function-return-type': 'off',
+    '@typescript-eslint/explicit-module-boundary-types': 'off',
+    '@typescript-eslint/no-explicit-any': 'off',
+    '@typescript-eslint/no-unused-vars': 'off',
+    '@typescript-eslint/no-var-requires': 'off',
     'prettier/prettier': [
       'warn',
       {
@@ -38,11 +35,6 @@ module.exports = {
         jsxSingleQuote: true
       }
     ],
-    '@typescript-eslint/interface-name-prefix': 'off',
-    '@typescript-eslint/explicit-function-return-type': 'off',
-    '@typescript-eslint/explicit-module-boundary-types': 'off',
-    '@typescript-eslint/no-explicit-any': 'off',
-    'no-unused-vars': ['error', { vars: 'all' }],
     'import/extensions': [
       'error',
       'ignorePackages',
@@ -51,22 +43,17 @@ module.exports = {
         ts: 'never'
       }
     ],
-    'jsx-a11y/anchor-is-valid': [
-      'error',
-      {
-        components: ['Link'],
-        specialLink: ['hrefLeft', 'hrefRight'],
-        aspects: ['invalidHref', 'preferButton']
-      }
-    ],
     'no-nested-ternary': 'off',
-    'import/prefer-default-export': 'off'
+    'import/prefer-default-export': 'off',
+    'no-underscore-dangle': 'off',
+    camelcase: 'off'
   },
+  parser: '@typescript-eslint/parser',
   ignorePatterns: ['.eslintrc.cjs'],
   settings: {
     'import/resolver': {
       node: {
-        extensions: ['.ts', '.tsx', '.js', '.jsx']
+        extensions: ['.ts', '.js']
       }
     }
   },
