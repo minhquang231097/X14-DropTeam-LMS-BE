@@ -22,6 +22,19 @@ const GetAllWorkplace = async (req: Request, res: Response) => {
     }
 }
 
+const GetWorkplaceById = async (req: Request, res: Response) => {
+    try {
+        const { id } = req.params
+        const workplaceExist = await WorkplaceService.FindWorkplaceById(id)
+        if (!workplaceExist) {
+            return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[400], 400))
+        }
+        return res.json(workplaceExist)
+    } catch (error) {
+        return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[400], 400))
+    }
+}
+
 const UpdateWorkplace = async (req: Request, res: Response) => {
     try {
         const { id } = req.params
@@ -51,4 +64,6 @@ const DeletedWorkplace = async (req: Request, res: Response) => {
     }
 }
 
-export default { CreateWorkplace, GetAllWorkplace, UpdateWorkplace, DeletedWorkplace }
+
+
+export default { CreateWorkplace, GetAllWorkplace, UpdateWorkplace, DeletedWorkplace, GetWorkplaceById }
