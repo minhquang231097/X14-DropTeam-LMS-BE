@@ -1,0 +1,12 @@
+import Joi from "joi";
+import { IWorkplace } from "@/models/workplace.model";
+
+export const Schema = {
+    Workplace: {
+        create_workplace: Joi.object<IWorkplace>({
+            name: Joi.string().max(100).required(),
+            address: Joi.string().max(200).required(),
+            workplace_code: Joi.string().max(5).required()
+        })
+    }
+}
