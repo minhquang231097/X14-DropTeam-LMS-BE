@@ -22,7 +22,7 @@ const GetAllWorkplace = async (req: Request, res: Response) => {
     }
 }
 
-const UpdateWorkplacee = async (req: Request, res: Response) => {
+const UpdateWorkplace = async (req: Request, res: Response) => {
     try {
         const { id } = req.params
         const update = req.body
@@ -37,4 +37,4 @@ const UpdateWorkplacee = async (req: Request, res: Response) => {
     }
 }
 
-export default { CreateWorkplace, GetAllWorkplace, UpdateWorkplacee }
+export default { CreateWorkplace, GetAllWorkplace, UpdateWorkplace }
