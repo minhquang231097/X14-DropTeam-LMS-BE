@@ -37,4 +37,18 @@ const UpdateWorkplace = async (req: Request, res: Response) => {
     }
 }
 
-export default { CreateWorkplace, GetAllWorkplace, UpdateWorkplace }
+const DeletedWorkplace = async (req: Request, res: Response) => {
+    try {
+        const { id } = req.params
+        const workplaceExist = await WorkplaceService.FindWorkplaceById(id)
+        if (!workplaceExist) {
+            return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[400], 400))
+        }
+        const deleteWorkplace = await WorkplaceService.DeletedWorkplace(id)
+        res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE[200], 200, deleteWorkplace))
+    } catch (error: any) {
+        throw new HttpException(RESPONSE_CONFIG.MESSAGE[401], 401, error.message)
+    }
+}
+
+export default { CreateWorkplace, GetAllWorkplace, UpdateWorkplace, DeletedWorkplace }

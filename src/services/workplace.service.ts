@@ -27,4 +27,8 @@ const UpdateWorkplace = async (id: string, payload: any) => {
     return await WorkplaceRepository.UpdateWorkplace(id, payload)
 }
 
-export default { CreateWorkplace, GetAllWorkplace, FindWorkplaceByName, FindWorkplaceById, UpdateWorkplace }
+const DeletedWorkplace = async (id: string) => {
+    return await WorkplaceRepository.DeleteOneWorkplaceById(id)
+}
+
+export default { CreateWorkplace, GetAllWorkplace, FindWorkplaceByName, FindWorkplaceById, UpdateWorkplace, DeletedWorkplace }
