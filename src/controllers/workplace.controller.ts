@@ -23,16 +23,19 @@ const GetAllWorkplace = async (req: Request, res: Response) => {
     }
 }
 
-// const UpdateWorkplace = async (req: Request, res: Response) => {
-//     try {
-//         const { name, address, workplace_code } = req.body
-//         const workplaceExist = await WorkplaceService.FindWorkplaceByName(name)
-//         if (!workplaceExist) {
-//             return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[400], 400))
-//         }
-//     } catch (error) {
+const UpdateWorkplace = async (req: Request, res: Response) => {
+    try {
+        const { id } = req.params
+        const update = req.body
+        const workplaceExist = await WorkplaceService.FindWorkplaceById(id)
+        if (!workplaceExist) {
+            return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[400], 400))
+        }
+        const updateWorkplace = await WorkplaceService.UpdateWorkplace(id, update)
+        res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE[200], 200, updateWorkplace))
+    } catch (error: any) {
+        throw new HttpException(RESPONSE_CONFIG.MESSAGE[401], 401, error.message)
+    }
+}
 
-//     }
-// }
-
-export default { CreateWorkplace, GetAllWorkplace }
+export default { CreateWorkplace, GetAllWorkplace, UpdateWorkplace }

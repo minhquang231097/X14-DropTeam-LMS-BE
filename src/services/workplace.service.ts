@@ -19,8 +19,12 @@ const FindWorkplaceByName = async (name: string) => {
     return await WorkplaceRepository.FindWorkplaceByName(name)
 }
 
-const UpdateWorkplace = async (id: string) => {
-    return await WorkplaceRepository.UpdateWorkplace(id)
+const FindWorkplaceById = async (id: string) => {
+    return await WorkplaceRepository.FindWorkplaceById(id)
 }
 
-export default { CreateWorkplace, GetAllWorkplace, FindWorkplaceByName, UpdateWorkplace }
+const UpdateWorkplace = async (id: string, payload: any) => {
+    return await WorkplaceRepository.UpdateWorkplace(id, payload)
+}
+
+export default { CreateWorkplace, GetAllWorkplace, FindWorkplaceByName, FindWorkplaceById, UpdateWorkplace }

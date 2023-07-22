@@ -8,8 +8,8 @@ export class WorkplaceRepository {
         return createWorkplace.toObject()
     }
 
-    static async UpdateWorkplace(id: string) {
-        const updateWorkplace = await Workplace.findByIdAndUpdate(id)
+    static async UpdateWorkplace(id: string, update: any) {
+        const updateWorkplace = await Workplace.findByIdAndUpdate(id, update)
         return updateWorkplace?.toObject()
     }
 
