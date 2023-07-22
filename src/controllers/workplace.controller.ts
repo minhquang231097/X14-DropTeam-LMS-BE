@@ -38,4 +38,6 @@ const UpdateWorkplace = async (req: Request, res: Response) => {
     }
 }
 
+// const DeleteWorkplace = a
+
 export default { CreateWorkplace, GetAllWorkplace, UpdateWorkplace }
