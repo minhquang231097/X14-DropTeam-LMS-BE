@@ -5,6 +5,7 @@ const CreateWorkplace = async (payload: WorkplaceBody) => {
     const workplace = await WorkplaceRepository.CreateOne({
         name: payload.name,
         address: payload.address,
+        status: payload.status,
         workplace_code: payload.workplace_code,
     })
     return workplace
