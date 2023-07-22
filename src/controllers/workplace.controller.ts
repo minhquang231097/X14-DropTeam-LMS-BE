@@ -7,8 +7,7 @@ import HttpException from "@/common/httpException";
 const CreateWorkplace = async (req: Request, res: Response) => {
     try {
         const workplace: any = await WorkplaceService.CreateWorkplace(req.body)
-        const updateWorkplace = await WorkplaceService.UpdateWorkplace(workplace._id)
-        res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE[200], 200, updateWorkplace))
+        res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE[200], 200, workplace))
     } catch (error: any) {
         return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[400], 400, error.message))
     }
@@ -23,7 +22,7 @@ const GetAllWorkplace = async (req: Request, res: Response) => {
     }
 }
 
-const UpdateWorkplace = async (req: Request, res: Response) => {
+const UpdateWorkplacee = async (req: Request, res: Response) => {
     try {
         const { id } = req.params
         const update = req.body
@@ -38,6 +37,4 @@ const UpdateWorkplace = async (req: Request, res: Response) => {
     }
 }
 
-// const DeleteWorkplace = a
-
-export default { CreateWorkplace, GetAllWorkplace, UpdateWorkplace }
+export default { CreateWorkplace, GetAllWorkplace, UpdateWorkplacee }
