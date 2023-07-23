@@ -1,6 +1,6 @@
 import workplaceController from "@/controllers/workplace.controller";
 import express from "express";
-import { ValidateJoi } from "@/validation/validateJoi";
+import { ValidateJoi } from "@/validation/validatejoi";
 import { WorkplaceSchema } from "@/validation/workplace.joi";
 import { verifyAccessJWT } from "@/middlewares/verifyAccessToken";
 

@@ -1,6 +1,6 @@
 import courseController from "@/controllers/course.controller";
 import express from "express";
-import { ValidateJoi } from "@/validation/validateJoi";
+import { ValidateJoi } from "@/validation/validatejoi";
 import { CourseSchema } from "@/validation/course.joi";
 import { verifyAccessJWT } from "@/middlewares/verifyAccessToken";
 
