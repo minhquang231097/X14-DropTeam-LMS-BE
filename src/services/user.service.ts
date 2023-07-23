@@ -6,10 +6,7 @@ const CreateUser = async (payload: SignUpBody) => {
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(payload.password, salt);
     const user = await UserRepository.CreateOne({
-        fullname: payload.fullname,
-        email: payload.email,
-        phone_number: payload.phone_number,
-        username: payload.username,
+        ...payload,
         password: hashedPassword,
     })
     return user
