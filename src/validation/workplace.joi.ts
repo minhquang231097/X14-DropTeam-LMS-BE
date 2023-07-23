@@ -1,7 +1,7 @@
 import Joi from "joi";
 import { IWorkplace } from "@/models/workplace.model";
 
-export const Schema = {
+export const WorkplaceSchema = {
     Workplace: {
         create_workplace: Joi.object<IWorkplace>({
             name: Joi.string().max(100).required(),
