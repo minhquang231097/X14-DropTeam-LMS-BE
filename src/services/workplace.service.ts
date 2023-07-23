@@ -2,13 +2,7 @@ import { WorkplaceRepository } from "@/repository/workplace.repo";
 import { WorkplaceBody } from "@/types/workplace/workplace";
 
 const CreateWorkplace = async (payload: WorkplaceBody) => {
-    const workplace = await WorkplaceRepository.CreateOne({
-        name: payload.name,
-        address: payload.address,
-        status: payload.status,
-        workplace_code: payload.workplace_code,
-    })
-    return workplace
+    return await WorkplaceRepository.CreateOne(payload)
 }
 
 const GetAllWorkplace = async () => {
