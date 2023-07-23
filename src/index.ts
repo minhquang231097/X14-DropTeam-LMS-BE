@@ -15,11 +15,13 @@ app.get('/', (req: Request, res: Response, next: NextFunction) => {
 })
 
 import { connectDB } from './common/connectDB'
-import userRouter from './routers/user.route';
 connectDB();
 
 //Routes
+import userRouter from './routers/user.route';
+import workplaceRouter from './routers/workplace.route'
 app.use('/auth', userRouter)
+app.use("/workplace", workplaceRouter)
 
 app.listen(port, () => {
   console.log(`⚡️[server]: Server is running at http://localhost:${port}`)

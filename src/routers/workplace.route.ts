@@ -6,10 +6,10 @@ import { verifyAccessJWT } from "@/middlewares/verifyAccessToken";
 
 const workplaceRouter = express.Router()
 
-workplaceRouter.post("/create-workplace", verifyAccessJWT, ValidateJoi(WorkplaceSchema.Workplace.create_workplace), workplaceController.CreateWorkplace)
-workplaceRouter.put("/workplace/:id", verifyAccessJWT, ValidateJoi(WorkplaceSchema.Workplace.update_workplace), workplaceController.UpdateWorkplace)
-workplaceRouter.get("/workplace", verifyAccessJWT, workplaceController.GetAllWorkplace)
-workplaceRouter.get("/workplace/:id", verifyAccessJWT, workplaceController.GetWorkplaceById)
-workplaceRouter.delete("/workplace/:id", verifyAccessJWT, workplaceController.DeletedWorkplace)
+workplaceRouter.post("/", verifyAccessJWT, ValidateJoi(WorkplaceSchema.Workplace.create_workplace), workplaceController.CreateWorkplace)
+workplaceRouter.put("/:id", verifyAccessJWT, ValidateJoi(WorkplaceSchema.Workplace.update_workplace), workplaceController.UpdateWorkplace)
+workplaceRouter.get("/", verifyAccessJWT, workplaceController.GetAllWorkplace)
+workplaceRouter.get("/:id", verifyAccessJWT, workplaceController.GetWorkplaceById)
+workplaceRouter.delete("/:id", verifyAccessJWT, workplaceController.DeletedWorkplace)
 
 export default workplaceRouter
