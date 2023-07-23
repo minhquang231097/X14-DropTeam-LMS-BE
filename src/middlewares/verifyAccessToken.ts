@@ -16,9 +16,7 @@ export const verifyAccessJWT = (req: Request, res: Response, next: NextFunction)
                 }
                 return res.json(new HttpException("Token Failed!", 401, err.message))
             }
-            req.body.username = decoded.username;
-            req.body.role = decoded.role;
-            req.body._id = decoded._id;
+            req.user = decoded
             next();
         }
     );
