@@ -1,8 +1,8 @@
 import userController from "@/controllers/user.controller"
 import express from "express"
 import { verifyAccessJWT } from "../middlewares/verifyAccessToken"
-import { ValidateJoi } from "@/validation/validateJoi"
 import { Schema } from "@/validation/user.joi"
+import { ValidateJoi } from "@/validation/validatejoi"
 
 const userRouter = express.Router()
 
