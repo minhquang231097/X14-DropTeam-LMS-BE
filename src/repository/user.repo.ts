@@ -9,7 +9,7 @@ export class UserRepository {
     }
 
     static async UpdateUser(id: string, update: any) {
-        const updatedUser = await User.findByIdAndUpdate(id, update)
+        const updatedUser = await User.findByIdAndUpdate(id, update, { new: true })
         return updatedUser?.toObject()
     }
 

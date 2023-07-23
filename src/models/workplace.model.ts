@@ -3,7 +3,7 @@ import { Document, Schema, model } from "mongoose";
 const workplaceSchema = new Schema({
     name: String,
     address: String,
-    status: { type: String, enum: ["ON", "OFF", "UPCOMING"] },
+    status: { type: String, enum: ["ON", "OFF", "UPCOMING"], default: "ON" },
     workplace_code: { type: String, unique: true }
 })
 

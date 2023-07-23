@@ -23,8 +23,16 @@ const FindUserByUsername = async (username: string) => {
     return await UserRepository.FindUserByUsername(username)
 }
 
+const FindUserByEmail = async (email: string) => {
+    return await UserRepository.FindUserByEmail(email)
+}
+
+const FindUserById = async (id: string) => {
+    return await UserRepository.FindUserById(id)
+}
+
 const UpdateUser = async (id: string, payload: any) => {
     return await UserRepository.UpdateUser(id, payload)
 }
 
-export default { CreateUser, GetAllUser, FindUserByUsername, UpdateUser }
+export default { CreateUser, GetAllUser, FindUserByUsername, UpdateUser, FindUserByEmail, FindUserById }

@@ -6,6 +6,7 @@ import { UserRepository } from "@/repository/user.repo"
 import HttpException from "@/common/httpException"
 import HttpResponseData from "@/common/httpResponseData"
 import { RESPONSE_CONFIG } from "@/configs/response.config"
+import { SendMailService } from "@/services/sendMail.service"
 
 const SignUp = async (req: Request, res: Response) => {
     try {
@@ -99,4 +100,62 @@ const SignOutUser = async (req: Request, res: Response) => {
     }
 }
 
-export default { SignUp, SignIn, handleRefreshToken, GetAllUser, SignOutUser }
+//Send email link for reset password
+const SendEmailLink = async (req: Request, res: Response) => {
+    const { email } = req.body
+    if (!email) {
+        throw new HttpException(RESPONSE_CONFIG.MESSAGE[400], 400)
+    }
+    try {
+        const user: any = await UserService.FindUserByEmail(email)
+        const token: any = jwt.sign({ _id: user._id }, process.env.ACCESSTOKEN_KEY as string, { expiresIn: "2m" })
+        const updatedUser = await UserService.UpdateUser(user._id, { refreshToken: token })
+        if (updatedUser) {
+            const mailOption = {
+                from: process.env.EMAIL_USERNAME,
+                to: email,
+                subject: "Email for reset password",
+                text: `This link valid for 2 minutes ${process.env.HOST_FE}/forgot-password/${user._id}/${updatedUser.refreshToken}`
+            }
+            SendMailService.sendMail(mailOption, (err, payload) => {
+                if (err) return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[400], 400))
+                return res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE[200], 200, payload))
+            })
+        }
+    } catch (error) {
+        return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[400], 400))
+    }
+}
+
+const VerifyTokenTime = async (req: Request, res: Response) => {
+    const { id, token } = req.params
+    try {
+        const user: any = UserService.FindUserById(id)
+        const verifyToken: any = jwt.verify(token, process.env.ACCESSTOKEN_KEY as string)
+        if (user && verifyToken._id) {
+            return res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE[200], 200, user))
+        }
+        return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[400], 400))
+    } catch (error) {
+        return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[400], 400))
+    }
+}
+
+const ChangePassword = async (req: Request, res: Response) => {
+    const { id, token } = req.params
+    const { password } = req.body
+    try {
+        const user: any = UserService.FindUserById(id)
+        const verifyToken: any = jwt.verify(token, process.env.ACCESSTOKEN_KEY as string)
+        if (user && verifyToken._id) {
+            const salt = await bcrypt.genSalt(10);
+            const newPassword = await bcrypt.hash(password, salt)
+            const updatedUser = await UserService.UpdateUser(id, { password: newPassword })
+            return res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE[200], 200, updatedUser))
+        }
+    } catch (error) {
+        return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[400], 400))
+    }
+}
+
+export default { SignUp, SignIn, handleRefreshToken, GetAllUser, SignOutUser, SendEmailLink, VerifyTokenTime, ChangePassword }
