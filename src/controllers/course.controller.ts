@@ -14,8 +14,10 @@ const CreateCourse = async (req: Request, res: Response) => {
 }
 
 const GetAllCourse = async (req: Request, res: Response) => {
+    const { page } = req.params
+    const p = Number(page)
     try {
-        const allCourses = await CourseService.GetAllCourse()
+        const allCourses = await CourseService.GetAllCourse(p)
         return res.json(allCourses)
     } catch (error) {
         return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[400], 400))

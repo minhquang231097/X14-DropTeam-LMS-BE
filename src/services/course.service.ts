@@ -5,8 +5,8 @@ const CreateCourse = async (payload: CourseBody) => {
     return await CourseRepository.CreateOne(payload)
 }
 
-const GetAllCourse = async () => {
-    return await CourseRepository.GetAllCourse()
+const GetAllCourse = async (page: number) => {
+    return await CourseRepository.GetAllCourse(page)
 }
 
 const FindCourseByName = async (name: string) => {

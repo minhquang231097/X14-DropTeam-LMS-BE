@@ -9,6 +9,7 @@ const userRouter = express.Router()
 
 userRouter.post("/sign-up", ValidateJoi(Schema.User.sign_up), userController.SignUp)
 userRouter.post("/sign-up/admin", verifyAccessJWT, CheckRole.IsAdmin, ValidateJoi(Schema.User.sign_up), userController.SignUp)
+userRouter.post("/sign-up/admin", verifyAccessJWT, CheckRole.IsMentor, ValidateJoi(Schema.User.sign_up), userController.SignUp)
 userRouter.post("/sign-in", ValidateJoi(Schema.User.sign_in), userController.SignIn)
 userRouter.post("/sign-out", ValidateJoi(Schema.User.sign_out), userController.SignOutUser)
 userRouter.post("/refresh", userController.handleRefreshToken)

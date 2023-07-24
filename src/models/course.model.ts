@@ -6,7 +6,7 @@ const courseSchema = new Schema({
     image: String,
     desc: String,
     lesson_list: [{ type: Schema.Types.ObjectId, ref: "lessons" }],
-    session_per_course: { type: String },
+    session_per_course: Number,
     price: Number
 })
 
@@ -14,7 +14,7 @@ export interface ICourse extends Document {
     course_code: string
     title: string,
     image: string,
-    session_per_course: string,
+    session_per_course: number,
     price: number,
     desc: string,
     lesson_list: [string]

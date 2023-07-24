@@ -28,8 +28,9 @@ export class CourseRepository {
         return course?.toObject()
     }
 
-    static async GetAllCourse() {
-        const allCourse = await Course.find()
+    static async GetAllCourse(page: number) {
+        const coure_per_page = 12
+        const allCourse = await Course.find().skip((page - 1) * coure_per_page).limit(coure_per_page)
         return allCourse.map((wp) => wp.toObject())
     }
 
