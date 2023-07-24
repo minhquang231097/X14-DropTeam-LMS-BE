@@ -60,7 +60,7 @@ const SignIn = async (req: Request, res: Response) => {
         const { username, password } = req.body
         const userExist = await UserService.FindUserByUsername(username)
         if (!userExist) {
-            return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[400], 400))
+            return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[400], 400, "Username or pasword is not correct"))
         }
         const checkPassword = bcrypt.compareSync(password, userExist.password)
         if (checkPassword) {
