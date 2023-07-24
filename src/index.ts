@@ -20,8 +20,11 @@ connectDB();
 //Routes
 import userRouter from './routers/user.route';
 import workplaceRouter from './routers/workplace.route'
+import courseRouter from './routers/course.route'
+
 app.use('/auth', userRouter)
 app.use("/workplace", workplaceRouter)
+app.use("/course", courseRouter)
 
 app.listen(port, () => {
   console.log(`⚡️[server]: Server is running at http://localhost:${port}`)
