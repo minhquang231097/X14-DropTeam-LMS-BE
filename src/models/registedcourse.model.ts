@@ -3,7 +3,7 @@ import { Document, Schema, model } from "mongoose";
 const registedCourseSchema = new Schema({
     fullname: String,
     email: String,
-    phone_number: String,
+    phone_number: Number,
     course: { type: Schema.Types.ObjectId, ref: "courses" },
     workplace: { type: Schema.Types.ObjectId, ref: "workplaces" },
     note: String,
@@ -13,7 +13,7 @@ const registedCourseSchema = new Schema({
 export interface IRegistedCourse extends Document {
     fullname: string,
     email: string,
-    phone_number: string,
+    phone_number: number,
     course: string,
     workplace: string,
     note?: string,

@@ -20,9 +20,9 @@ connectDB();
 //Routes
 import userRouter from './routers/user.route';
 import workplaceRouter from './routers/workplace.route'
-app.use('/auth', userRouter)
-app.use("/workplace", workplaceRouter)
+app.use('/api/v1/auth', userRouter)
+app.use("/api/v1/workplace", workplaceRouter)
 
 app.listen(port, () => {
-  console.log(`⚡️[server]: Server is running at http://localhost:${port}`)
+  console.log(`Server is running at http://localhost:${port}`)
 })
