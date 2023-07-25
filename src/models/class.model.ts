@@ -10,7 +10,7 @@ const classSchema = new Schema({
     expected_time_start: String,
     hour_per_class: String,
     schedule: String,
-    class_size: String
+    class_size: Number
 })
 
 export interface IClass extends Document {
@@ -23,7 +23,7 @@ export interface IClass extends Document {
     expected_time_start?: string,
     hour_per_class?: string,
     schedule: string,
-    class_size?: string
+    class_size?: number
 }
 
 export const Class = model<IClass>("classes", classSchema)

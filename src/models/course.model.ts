@@ -1,21 +1,23 @@
 import { Document, Schema, model } from "mongoose";
 
 const courseSchema = new Schema({
-    workplace: { type: Schema.Types.ObjectId, ref: "workplaces" },
     course_code: { type: String, unique: true },
-    title: String,
+    title: { type: String, unique: true },
     image: String,
-    session_per_course: { type: String },
-    price: String
+    desc: String,
+    lesson_list: [{ type: Schema.Types.ObjectId, ref: "lessons" }],
+    session_per_course: Number,
+    price: Number
 })
 
 export interface ICourse extends Document {
-    workplace: string,
     course_code: string
     title: string,
     image: string,
-    session_per_course: string,
-    price: string
+    desc: string,
+    lesson_list: [string]
+    session_per_course: number,
+    price: number,
 }
 
 export const Course = model<ICourse>('courses', courseSchema)

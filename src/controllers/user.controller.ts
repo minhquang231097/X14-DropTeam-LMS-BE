@@ -114,7 +114,7 @@ const SendEmailLink = async (req: Request, res: Response) => {
             const mailOption = {
                 from: process.env.EMAIL_USERNAME,
                 to: email,
-                subject: "Email for reset password",
+                subject: "Xac thuc nguoi dung",
                 text: `This link valid for 2 minutes ${process.env.HOST_FE}/forgot-password/${user._id}/${updatedUser.refreshToken}`
             }
             SendMailService.sendMail(mailOption, (err, payload) => {
@@ -127,19 +127,19 @@ const SendEmailLink = async (req: Request, res: Response) => {
     }
 }
 
-const VerifyTokenTime = async (req: Request, res: Response) => {
-    const { id, token } = req.params
-    try {
-        const user: any = UserService.FindUserById(id)
-        const verifyToken: any = jwt.verify(token, process.env.ACCESSTOKEN_KEY as string)
-        if (user && verifyToken._id) {
-            return res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE[200], 200, user))
-        }
-        return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[400], 400))
-    } catch (error) {
-        return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[400], 400))
-    }
-}
+// const VerifyTokenTime = async (req: Request, res: Response) => {
+//     const { id, token } = req.params
+//     try {
+//         const user: any = UserService.FindUserById(id)
+//         const verifyToken: any = jwt.verify(token, process.env.ACCESSTOKEN_KEY as string)
+//         if (user && verifyToken._id) {
+//             return res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE[200], 200, user))
+//         }
+//         return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[400], 400))
+//     } catch (error) {
+//         return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[400], 400))
+//     }
+// }
 
 const ChangePassword = async (req: Request, res: Response) => {
     const { id, token } = req.params
@@ -158,4 +158,4 @@ const ChangePassword = async (req: Request, res: Response) => {
     }
 }
 
-export default { SignUp, SignIn, handleRefreshToken, GetAllUser, SignOutUser, SendEmailLink, VerifyTokenTime, ChangePassword }
+export default { SignUp, SignIn, handleRefreshToken, GetAllUser, SignOutUser, SendEmailLink, ChangePassword }

@@ -1,9 +1,10 @@
 import { User } from "@/models/user.model";
+import { SignUpBody } from "@/types/user/signup";
 
 export class UserRepository {
     constructor() { }
 
-    static async CreateOne(user: any) {
+    static async CreateOne(user: SignUpBody) {
         const createdUser = await User.create(user)
         return createdUser.toObject()
     }

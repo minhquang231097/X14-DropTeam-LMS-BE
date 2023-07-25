@@ -12,7 +12,7 @@ const userSchema = new Schema({
     type: String, unique: true
   },
   password: String,
-  role: { type: String, enum: ["STUDENT", "MENTOR", "ADMIN"], default: "STUDENT" },
+  role: { type: String, enum: ["STUDENT", "MENTOR", "ADMIN"] },
   refreshToken: String,
   create_at: {
     type: Date, default: Date.now()

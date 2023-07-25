@@ -22,10 +22,10 @@ import userRouter from './routers/user.route';
 import workplaceRouter from './routers/workplace.route'
 import courseRouter from './routers/course.route'
 
-app.use('/auth', userRouter)
-app.use("/workplace", workplaceRouter)
-app.use("/course", courseRouter)
+app.use('/api/v1/auth', userRouter)
+app.use("/api/v1/workplace", workplaceRouter)
+app.use("/api/v1/course", courseRouter)
 
 app.listen(port, () => {
-  console.log(`⚡️[server]: Server is running at http://localhost:${port}`)
+  console.log(`Server is running at http://localhost:${port}`)
 })
