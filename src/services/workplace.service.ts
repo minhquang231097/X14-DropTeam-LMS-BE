@@ -1,3 +1,4 @@
+import { IWorkplace } from "@/models/workplace.model";
 import { WorkplaceRepository } from "@/repository/workplace.repo";
 import { WorkplaceBody } from "@/types/workplace/workplace";
 

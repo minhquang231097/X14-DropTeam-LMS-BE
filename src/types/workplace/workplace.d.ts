@@ -7,7 +7,7 @@ export enum WorkplaceStatus {
 export interface WorkplaceBody {
     name: string,
     address: string,
-    status: WorkplaceBody,
+    status: WorkplaceStatus,
     workplace_code: string,
     image: string
 }

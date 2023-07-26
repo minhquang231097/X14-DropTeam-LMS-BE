@@ -3,6 +3,7 @@ import WorkplaceService from "@/services/workplace.service";
 import { RESPONSE_CONFIG } from "@/configs/response.config"
 import HttpResponseData from "@/common/httpResponseData";
 import HttpException from "@/common/httpException";
+import { WorkplaceBody } from "@/types/workplace/workplace";
 
 const CreateWorkplace = async (req: Request, res: Response) => {
     try {
@@ -40,7 +41,7 @@ const GetWorkplaceById = async (req: Request, res: Response) => {
 const UpdateWorkplace = async (req: Request, res: Response) => {
     try {
         const { id } = req.params
-        const update = req.body
+        const update: WorkplaceBody = req.body
         const workplaceExist = await WorkplaceService.FindWorkplaceById(id)
         if (!workplaceExist) {
             return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[400], 400))
@@ -49,7 +50,7 @@ const UpdateWorkplace = async (req: Request, res: Response) => {
         const updateWorkplace = await WorkplaceService.FindWorkplaceById(id)
         res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE[200], 200, updateWorkplace))
     } catch (error: any) {
-        throw new HttpException(RESPONSE_CONFIG.MESSAGE[401], 401, error.message)
+        return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[401], 401, error.message))
     }
 }
 

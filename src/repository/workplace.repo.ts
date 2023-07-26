@@ -1,4 +1,5 @@
 import { Workplace } from "@/models/workplace.model";
+import { WorkplaceBody } from "@/types/workplace/workplace";
 
 export class WorkplaceRepository {
     constructor() { }
@@ -8,7 +9,7 @@ export class WorkplaceRepository {
         return createWorkplace.toObject()
     }
 
-    static async UpdateWorkplace(id: string, update: any) {
+    static async UpdateWorkplace(id: string, update: WorkplaceBody) {
         const updateWorkplace = await Workplace.findByIdAndUpdate(id, update)
         return updateWorkplace?.toObject()
     }
