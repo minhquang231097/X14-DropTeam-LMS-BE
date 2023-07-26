@@ -14,8 +14,10 @@ const CreateWorkplace = async (req: Request, res: Response) => {
 }
 
 const GetAllWorkplace = async (req: Request, res: Response) => {
+    const { page } = req.params
+    const p = Number(page)
     try {
-        const allWorkplaces = await WorkplaceService.GetAllWorkplace()
+        const allWorkplaces = await WorkplaceService.GetAllWorkplace(p)
         return res.json(allWorkplaces)
     } catch (error) {
         return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[400], 400))
@@ -43,7 +45,8 @@ const UpdateWorkplace = async (req: Request, res: Response) => {
         if (!workplaceExist) {
             return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[400], 400))
         }
-        const updateWorkplace = await WorkplaceService.UpdateWorkplace(id, update)
+        await WorkplaceService.UpdateWorkplace(id, update)
+        const updateWorkplace = await WorkplaceService.FindWorkplaceById(id)
         res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE[200], 200, updateWorkplace))
     } catch (error: any) {
         throw new HttpException(RESPONSE_CONFIG.MESSAGE[401], 401, error.message)

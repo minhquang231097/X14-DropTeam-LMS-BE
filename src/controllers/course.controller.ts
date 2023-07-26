@@ -42,6 +42,14 @@ const UpdateCourse = async (req: Request, res: Response) => {
         const { id } = req.params
         const update = req.body
         const courseExist = await CourseService.FindCourseById(id)
+        const courseNameExist = await CourseService.FindCourseByName(update.title)
+        const courseCodeExist = await CourseService.FindCourseByCode(update.course_code)
+        if (courseNameExist) {
+            return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[400], 400, "Course Exist"))
+        }
+        if (courseCodeExist) {
+            return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[400], 400, "Course Code Exist"))
+        }
         if (!courseExist) {
             return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[400], 400))
         }

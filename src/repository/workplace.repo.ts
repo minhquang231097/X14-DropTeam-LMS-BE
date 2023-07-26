@@ -28,8 +28,9 @@ export class WorkplaceRepository {
         return workplace?.toObject()
     }
 
-    static async GetAllWorkplace() {
-        const allWorkplace = await Workplace.find()
+    static async GetAllWorkplace(page: number) {
+        const workplace_per_page = 10
+        const allWorkplace = await Workplace.find().skip((page - 1) * workplace_per_page).limit(workplace_per_page)
         return allWorkplace.map((wp) => wp.toObject())
     }
 
