@@ -1,14 +1,14 @@
-import { Course } from "@/models/course.model";
+import { Course, ICourse } from "@/models/course.model";
 
 export class CourseRepository {
     constructor() { }
 
-    static async CreateOne(course: any) {
+    static async CreateOne(course: ICourse) {
         const createCourse = await Course.create(course)
         return createCourse.toObject()
     }
 
-    static async UpdateCourse(id: string, update: any) {
+    static async UpdateCourse(id: string, update: ICourse) {
         const updateCourse = await Course.findByIdAndUpdate(id, update)
         return updateCourse?.toObject()
     }

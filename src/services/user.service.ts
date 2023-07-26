@@ -1,8 +1,7 @@
 import { UserRepository } from "@/repository/user.repo";
-import { SignUpBody } from "@/types/user/signup";
 import bcrypt from "bcryptjs"
 
-const CreateUser = async (payload: SignUpBody) => {
+const CreateUser = async (payload: any) => {
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(payload.password, salt);
     const user = await UserRepository.CreateOne({

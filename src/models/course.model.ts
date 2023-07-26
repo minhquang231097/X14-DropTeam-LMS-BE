@@ -13,11 +13,11 @@ const courseSchema = new Schema({
 export interface ICourse extends Document {
     course_code: string
     title: string,
-    image: [string],
+    image?: [string],
     session_per_course: number,
     price: number,
     desc: string,
-    lesson_list: [string]
+    lesson_list?: [string]
 }
 
 export const Course = model<ICourse>('courses', courseSchema)

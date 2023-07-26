@@ -1,5 +1,4 @@
 import { Request, Response } from "express"
-import { UserService } from "@/services"
 import jwt from "jsonwebtoken"
 import bcrypt from "bcryptjs"
 import { UserRepository } from "@/repository/user.repo"
@@ -7,14 +6,15 @@ import HttpException from "@/common/httpException"
 import HttpResponseData from "@/common/httpResponseData"
 import { RESPONSE_CONFIG } from "@/configs/response.config"
 import { SendMailService } from "@/services/sendMail.service"
+import userService from "@/services/user.service"
 
 const SignUp = async (req: Request, res: Response) => {
     try {
-        const user: any = await UserService.CreateUser(req.body)
+        const user: any = await userService.CreateUser(req.body)
         const refreshToken = jwt.sign({
             _id: user._id
         }, process.env.REFRESHTOKEN_KEY as string, { expiresIn: process.env.REFRESHTOKEN_TIME as string })
-        const updatedUser = await UserService.UpdateUser(user._id, { refreshToken })
+        const updatedUser = await userService.UpdateUser(user._id, { refreshToken })
         res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE[200], 200, updatedUser))
     } catch (error: any) {
         return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[400], 400, error.message))
@@ -45,7 +45,7 @@ const handleRefreshToken = async (req: Request, res: Response) => {
                 const newRefreshToken = jwt.sign({
                     _id: foundUser._id
                 }, process.env.REFRESHTOKEN_KEY as string, { expiresIn: `${timeRefresh}` })
-                UserService.UpdateUser(foundUser._id, { refreshToken: newRefreshToken })
+                userService.UpdateUser(foundUser._id, { refreshToken: newRefreshToken })
                 res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE[200], 200, { roles: foundUser.role, accessToken, refreshToken: newRefreshToken }))
             }
         );
@@ -58,7 +58,7 @@ const handleRefreshToken = async (req: Request, res: Response) => {
 const SignIn = async (req: Request, res: Response) => {
     try {
         const { username, password } = req.body
-        const userExist = await UserService.FindUserByUsername(username)
+        const userExist = await userService.FindUserByUsername(username)
         if (!userExist) {
             return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[400], 400))
         }
@@ -83,7 +83,7 @@ const SignIn = async (req: Request, res: Response) => {
 
 const GetAllUser = async (req: Request, res: Response) => {
     try {
-        const allUsers = await UserService.GetAllUser()
+        const allUsers = await userService.GetAllUser()
         return res.json(allUsers)
     } catch (error) {
         return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[400], 400))
@@ -93,7 +93,7 @@ const GetAllUser = async (req: Request, res: Response) => {
 const SignOutUser = async (req: Request, res: Response) => {
     try {
         const { id } = req.body
-        const user = await UserService.UpdateUser(id, { refreshToken: "" })
+        const user = await userService.UpdateUser(id, { refreshToken: "" })
         res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE[200], 200, user))
     } catch (error) {
         throw new HttpException(RESPONSE_CONFIG.MESSAGE[400], 400)
@@ -107,9 +107,9 @@ const SendEmailLink = async (req: Request, res: Response) => {
         throw new HttpException(RESPONSE_CONFIG.MESSAGE[400], 400)
     }
     try {
-        const user: any = await UserService.FindUserByEmail(email)
+        const user: any = await userService.FindUserByEmail(email)
         const token: any = jwt.sign({ _id: user._id }, process.env.ACCESSTOKEN_KEY as string, { expiresIn: "2m" })
-        const updatedUser = await UserService.UpdateUser(user._id, { refreshToken: token })
+        const updatedUser = await userService.UpdateUser(user._id, { refreshToken: token })
         if (updatedUser) {
             const mailOption = {
                 from: process.env.EMAIL_USERNAME,
@@ -145,12 +145,12 @@ const ChangePassword = async (req: Request, res: Response) => {
     const { id, token } = req.params
     const { password } = req.body
     try {
-        const user: any = UserService.FindUserById(id)
+        const user: any = userService.FindUserById(id)
         const verifyToken: any = jwt.verify(token, process.env.ACCESSTOKEN_KEY as string)
         if (user && verifyToken._id) {
             const salt = await bcrypt.genSalt(10);
             const newPassword = await bcrypt.hash(password, salt)
-            const updatedUser = await UserService.UpdateUser(id, { password: newPassword })
+            const updatedUser = await userService.UpdateUser(id, { password: newPassword })
             return res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE[200], 200, updatedUser))
         }
     } catch (error) {

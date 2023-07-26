@@ -1,7 +1,7 @@
+import { ICourse } from "@/models/course.model";
 import { CourseRepository } from "@/repository/course.repo";
-import { CourseBody } from "@/types/course/course";
 
-const CreateCourse = async (payload: CourseBody) => {
+const CreateCourse = async (payload: ICourse) => {
     return await CourseRepository.CreateOne(payload)
 }
 
@@ -17,7 +17,7 @@ const FindCourseById = async (id: string) => {
     return await CourseRepository.FindCourseById(id)
 }
 
-const UpdateCourse = async (id: string, payload: any) => {
+const UpdateCourse = async (id: string, payload: ICourse) => {
     return await CourseRepository.UpdateCourse(id, payload)
 }
 

@@ -1,7 +1,7 @@
+import { IWorkplace } from "@/models/workplace.model";
 import { WorkplaceRepository } from "@/repository/workplace.repo";
-import { WorkplaceBody } from "@/types/workplace/workplace";
 
-const CreateWorkplace = async (payload: WorkplaceBody) => {
+const CreateWorkplace = async (payload: IWorkplace) => {
     return await WorkplaceRepository.CreateOne(payload)
 }
 

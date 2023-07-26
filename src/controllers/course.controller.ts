@@ -62,7 +62,7 @@ const UpdateCourse = async (req: Request, res: Response) => {
         const updateCourse = await CourseService.UpdateCourse(id, update)
         res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE[200], 200, updateCourse))
     } catch (error: any) {
-        throw new HttpException(RESPONSE_CONFIG.MESSAGE[401], 401, error.message)
+        return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[400], 400, error.message))
     }
 }
 
@@ -76,7 +76,7 @@ const DeletedCourse = async (req: Request, res: Response) => {
         const deleteCourse = await CourseService.DeletedCourse(id)
         res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE[200], 200, deleteCourse))
     } catch (error: any) {
-        throw new HttpException(RESPONSE_CONFIG.MESSAGE[401], 401, error.message)
+        return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[400], 400, error.message))
     }
 }
 
