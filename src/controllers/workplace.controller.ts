@@ -50,7 +50,7 @@ const UpdateWorkplace = async (req: Request, res: Response) => {
         const updateWorkplace = await WorkplaceService.FindWorkplaceById(id)
         res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE[200], 200, updateWorkplace))
     } catch (error: any) {
-        return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[401], 401, error.message))
+        return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[400], 400, error.message))
     }
 }
 
@@ -64,7 +64,7 @@ const DeletedWorkplace = async (req: Request, res: Response) => {
         const deleteWorkplace = await WorkplaceService.DeletedWorkplace(id)
         res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE[200], 200, deleteWorkplace))
     } catch (error: any) {
-        throw new HttpException(RESPONSE_CONFIG.MESSAGE[401], 401, error.message)
+        return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[400], 400, error.message))
     }
 }
 

@@ -5,9 +5,23 @@ import HttpResponseData from "@/common/httpResponseData";
 import HttpException from "@/common/httpException";
 
 const CreateCourse = async (req: Request, res: Response) => {
+    const payload = req.body
     try {
-        const newCourse: any = await CourseService.CreateCourse(req.body)
+        const newCourse: any = await CourseService.CreateCourse(payload)
         res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE[200], 200, newCourse))
+    } catch (error: any) {
+        return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[400], 400, error.message))
+    }
+}
+
+const UploadImage = async (req: Request, res: Response) => {
+    const file: any = req.files
+    try {
+        let result = []
+        for (let i = 0; i < file.length; i++) {
+            result.push(file[i].path)
+        }
+        res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE[200], 200, result))
     } catch (error: any) {
         return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[400], 400, error.message))
     }
@@ -57,7 +71,7 @@ const UpdateCourse = async (req: Request, res: Response) => {
         const updateCourse = await CourseService.FindCourseById(id)
         res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE[200], 200, updateCourse))
     } catch (error: any) {
-        throw new HttpException(RESPONSE_CONFIG.MESSAGE[401], 401, error.message)
+        return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[400], 400, error.message))
     }
 }
 
@@ -71,8 +85,8 @@ const DeletedCourse = async (req: Request, res: Response) => {
         const deleteCourse = await CourseService.DeletedCourse(id)
         res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE[200], 200, deleteCourse))
     } catch (error: any) {
-        throw new HttpException(RESPONSE_CONFIG.MESSAGE[401], 401, error.message)
+        return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[400], 400, error.message))
     }
 }
 
-export default { CreateCourse, GetAllCourse, GetCourseById, UpdateCourse, DeletedCourse }
+export default { CreateCourse, GetAllCourse, GetCourseById, UpdateCourse, DeletedCourse, UploadImage }

@@ -3,6 +3,7 @@ import express from "express";
 import { ValidateJoi } from "@/validation/validatejoi";
 import { CourseSchema } from "@/validation/course.joi";
 import { verifyAccessJWT } from "@/middlewares/verifyAccessToken";
+import { UploadCloud } from "@/services/upload.service";
 
 const courseRouter = express.Router()
 
@@ -11,5 +12,6 @@ courseRouter.put("/:id", verifyAccessJWT, ValidateJoi(CourseSchema.Course.update
 courseRouter.get("/", courseController.GetAllCourse)
 courseRouter.get("/:id", courseController.GetCourseById)
 courseRouter.delete("/:id", verifyAccessJWT, courseController.DeletedCourse)
+courseRouter.post('/upload-image', UploadCloud.any(), courseController.UploadImage)
 
 export default courseRouter
