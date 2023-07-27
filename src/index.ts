@@ -1,4 +1,5 @@
-import express, { Express, NextFunction, Request, Response } from 'express'
+import { Express, NextFunction, Request, Response } from 'express'
+import express from 'express'
 import dotenv from 'dotenv'
 import cookieParser from "cookie-parser"
 
@@ -24,8 +25,8 @@ import courseRouter from './routers/course.route'
 
 app.use('/api/v1/auth', userRouter)
 app.use("/api/v1/workplace", workplaceRouter)
-app.use("/api/v1/course", courseRouter)
+app.use("/api/v1/course",courseRouter)
 
 app.listen(port, () => {
-  console.log(`Server is running at http://localhost:${port}`)
+  console.log(`⚡️[server]: Server is running at http://localhost:${port}`)
 })
