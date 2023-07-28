@@ -15,7 +15,7 @@ const CreateClass = async (req: Request, res: Response) => {
 }
 
 const GetAllClass = async (req: Request, res: Response) => {
-    const { page } = req.params
+    const { page } = req.query
     const p = Number(page)
     try {
         const allClasss = await ClassService.GetAllClass(p)
