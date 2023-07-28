@@ -9,6 +9,10 @@ const GetAllCourse = async (page: number) => {
     return await CourseRepository.GetAllCourse(page)
 }
 
+const GetCourseByPage = async (page: number) => {
+    return await CourseRepository.GetCourseByPage(page)
+}
+
 const FindCourseByName = async (name: string) => {
     return await CourseRepository.FindCourseByName(name)
 }
@@ -29,4 +33,4 @@ const DeletedCourse = async (id: string) => {
     return await CourseRepository.DeleteOneCourseById(id)
 }
 
-export default { CreateCourse, GetAllCourse, FindCourseByName, FindCourseById, FindCourseByCode, UpdateCourse, DeletedCourse }
+export default { CreateCourse, GetAllCourse, GetCourseByPage, FindCourseByName, FindCourseById, FindCourseByCode, UpdateCourse, DeletedCourse }

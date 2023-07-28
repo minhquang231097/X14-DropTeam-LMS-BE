@@ -2,7 +2,7 @@ import { Document, Schema, model } from "mongoose";
 
 const courseSchema = new Schema({
     course_code: { type: String, unique: true },
-    title: { type: String, unique: true }
+    title: { type: String, unique: true },
     image: [String],
     desc: String,
     lesson_list: [{ type: Schema.Types.ObjectId, ref: "lessons" }],

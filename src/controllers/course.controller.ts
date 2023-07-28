@@ -38,6 +38,18 @@ const GetAllCourse = async (req: Request, res: Response) => {
     }
 }
 
+const GetCourseByPage = async (req: Request, res: Response) => {
+    const page  = req.query.p || 1
+    const p = Number(page)
+    try {
+        const allCourses = await CourseService.GetCourseByPage(p)
+        return res.json(allCourses)
+    } catch (error) {
+        return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[400], 400))
+    }
+}
+
+
 const GetCourseById = async (req: Request, res: Response) => {
     try {
         const { id } = req.params
@@ -89,4 +101,4 @@ const DeletedCourse = async (req: Request, res: Response) => {
     }
 }
 
-export default { CreateCourse, GetAllCourse, GetCourseById, UpdateCourse, DeletedCourse, UploadImage }
+export default { CreateCourse, GetAllCourse, GetCourseByPage, GetCourseById, UpdateCourse, DeletedCourse, UploadImage }

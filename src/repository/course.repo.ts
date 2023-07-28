@@ -1,4 +1,5 @@
 import { Course, ICourse } from "@/models/course.model";
+import Pagination from "@/types/course/pagination";
 
 export class CourseRepository {
     constructor() { }
@@ -31,6 +32,12 @@ export class CourseRepository {
     static async GetAllCourse(page: number) {
         const course_per_page = 12
         const allCourse = await Course.find().skip((page - 1) * course_per_page).limit(course_per_page)
+        return allCourse.map((course) => course.toObject())
+    }
+
+    static async GetCourseByPage(page: number) {    
+        const course_per_page = 12
+        const allCourse = await Course.find().skip((course_per_page * page) - course_per_page).limit(course_per_page)
         return allCourse.map((course) => course.toObject())
     }
 
