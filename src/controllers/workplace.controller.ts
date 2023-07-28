@@ -15,7 +15,7 @@ const CreateWorkplace = async (req: Request, res: Response) => {
 }
 
 const GetAllWorkplace = async (req: Request, res: Response) => {
-    const { page } = req.params
+    const { page } = req.query
     const p = Number(page)
     try {
         const allWorkplaces = await WorkplaceService.GetAllWorkplace(p)
