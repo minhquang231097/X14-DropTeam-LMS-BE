@@ -50,7 +50,7 @@ const handleRefreshToken = async (req: Request, res: Response) => {
             }
         );
     } catch (error: any) {
-        throw new HttpException(RESPONSE_CONFIG.MESSAGE[401], 401, error.message)
+        return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[401], 401, error.message))
     }
 
 }
@@ -96,7 +96,7 @@ const SignOutUser = async (req: Request, res: Response) => {
         const user = await userService.UpdateUser(id, { refreshToken: "" })
         res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE[200], 200, user))
     } catch (error) {
-        throw new HttpException(RESPONSE_CONFIG.MESSAGE[400], 400)
+        return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[400], 400))
     }
 }
 
@@ -104,7 +104,7 @@ const SignOutUser = async (req: Request, res: Response) => {
 const SendEmailLink = async (req: Request, res: Response) => {
     const { email } = req.body
     if (!email) {
-        throw new HttpException(RESPONSE_CONFIG.MESSAGE[400], 400)
+        return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[400], 400))
     }
     try {
         const user: any = await userService.FindUserByEmail(email)
