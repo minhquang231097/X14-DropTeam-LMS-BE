@@ -12,7 +12,10 @@ export const Schema = {
             username: Joi.string().min(5).max(100).required(),
             password: Joi.string().min(5).max(100).required(),
             create_at: Joi.string(),
-            role: Joi.string()
+            role: Joi.string(),
+            dob: Joi.string(),
+            gender: Joi.string(),
+            address: Joi.string(),
         }),
         sign_in: Joi.object<SignInBody>({
             username: Joi.string().min(5).max(100).required(),

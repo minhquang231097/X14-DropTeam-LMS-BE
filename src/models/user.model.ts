@@ -14,6 +14,9 @@ const userSchema = new Schema({
   password: String,
   role: { type: String, enum: ["STUDENT", "MENTOR", "ADMIN"] },
   refreshToken: String,
+  dob: String,
+  gender: String,
+  address: String,
   create_at: {
     type: Date, default: Date.now()
   }
@@ -27,7 +30,10 @@ export interface IUser extends Document {
   password: string,
   refreshToken?: string,
   create_at?: Date,
-  role?: string
+  role?: string,
+  dob: string,
+  gender: string,
+  address: string,
 }
 
 export const User = model<IUser>('users', userSchema)
