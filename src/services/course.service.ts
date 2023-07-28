@@ -21,10 +21,6 @@ const FindCourseByCode = async (course_code: string) => {
     return await CourseRepository.FindCourseByCode(course_code)
 }
 
-const FindCourseByCode = async (course_code: string) => {
-    return await CourseRepository.FindCourseByCode(course_code)
-}
-
 const UpdateCourse = async (id: string, payload: ICourse) => {
     return await CourseRepository.UpdateCourse(id, payload)
 }
