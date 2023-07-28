@@ -77,6 +77,7 @@ const SignIn = async (req: Request, res: Response) => {
                 refreshToken: userExist.refreshToken
             })
         }
+        return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[400], 400))
     } catch (error: any) {
         return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[400], 400, error.message))
     }
