@@ -13,8 +13,10 @@ userRouter.post("/sign-up/admin", verifyAccessJWT, CheckRole.IsMentor, ValidateJ
 userRouter.post("/sign-in", ValidateJoi(Schema.User.sign_in), userController.SignIn)
 userRouter.post("/sign-out", ValidateJoi(Schema.User.sign_out), userController.SignOutUser)
 userRouter.post("/refresh", userController.handleRefreshToken)
-userRouter.post("/send-email", userController.SendEmailLink)
+userRouter.post("/forgot-password", userController.SendEmailForgotPassword)
+userRouter.post("/verify-user", userController.SendEmailVerifyUser)
 userRouter.post("/change-password/:id/:token", userController.ChangePassword)
 userRouter.get("/user", verifyAccessJWT, CheckRole.IsAdmin, userController.GetAllUser)
+userRouter.get("/user/info", verifyAccessJWT, userController.GetInfoUser)
 
 export default userRouter

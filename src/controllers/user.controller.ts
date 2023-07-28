@@ -1,4 +1,4 @@
-import { Request, Response } from "express"
+import { NextFunction, Request, Response } from "express"
 import jwt from "jsonwebtoken"
 import bcrypt from "bcryptjs"
 import { UserRepository } from "@/repository/user.repo"
@@ -60,7 +60,7 @@ const SignIn = async (req: Request, res: Response) => {
         const { username, password } = req.body
         const userExist = await userService.FindUserByUsername(username)
         if (!userExist) {
-            return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[400], 400))
+            return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[404], 404))
         }
         const checkPassword = bcrypt.compareSync(password, userExist.password)
         if (checkPassword) {
@@ -81,12 +81,22 @@ const SignIn = async (req: Request, res: Response) => {
     }
 }
 
+const GetInfoUser = async (req: Request, res: Response, next: NextFunction) => {
+    const idUser = req.user._id
+    try {
+        const info = await userService.FindUserById(idUser)
+        res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE[200], 200, info))
+    } catch (error) {
+        return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[404], 404))
+    }
+}
+
 const GetAllUser = async (req: Request, res: Response) => {
     try {
         const allUsers = await userService.GetAllUser()
         return res.json(allUsers)
     } catch (error) {
-        return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[400], 400))
+        return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[404], 404))
     }
 }
 
@@ -101,7 +111,7 @@ const SignOutUser = async (req: Request, res: Response) => {
 }
 
 //Send email link for reset password
-const SendEmailLink = async (req: Request, res: Response) => {
+const SendEmailVerifyUser = async (req: Request, res: Response) => {
     const { email } = req.body
     if (!email) {
         return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[400], 400))
@@ -115,7 +125,7 @@ const SendEmailLink = async (req: Request, res: Response) => {
                 from: process.env.EMAIL_USERNAME,
                 to: email,
                 subject: "Xac thuc nguoi dung",
-                text: `This link valid for 2 minutes ${process.env.HOST_FE}/forgot-password/${user._id}/${updatedUser.refreshToken}`
+                text: `This link valid for 2 minutes ${process.env.HOST_FE}/verify/${user._id}/${updatedUser.refreshToken}`
             }
             SendMailService.sendMail(mailOption, (err, payload) => {
                 if (err) return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[400], 400))
@@ -127,19 +137,31 @@ const SendEmailLink = async (req: Request, res: Response) => {
     }
 }
 
-// const VerifyTokenTime = async (req: Request, res: Response) => {
-//     const { id, token } = req.params
-//     try {
-//         const user: any = UserService.FindUserById(id)
-//         const verifyToken: any = jwt.verify(token, process.env.ACCESSTOKEN_KEY as string)
-//         if (user && verifyToken._id) {
-//             return res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE[200], 200, user))
-//         }
-//         return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[400], 400))
-//     } catch (error) {
-//         return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[400], 400))
-//     }
-// }
+const SendEmailForgotPassword = async (req: Request, res: Response) => {
+    const { email } = req.body
+    if (!email) {
+        return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[400], 400))
+    }
+    try {
+        const user: any = await userService.FindUserByEmail(email)
+        const token: any = jwt.sign({ _id: user._id }, process.env.ACCESSTOKEN_KEY as string, { expiresIn: "2m" })
+        const updatedUser = await userService.UpdateUser(user._id, { refreshToken: token })
+        if (updatedUser) {
+            const mailOption = {
+                from: process.env.EMAIL_USERNAME,
+                to: email,
+                subject: "Quen mat khau",
+                text: `This link valid for 2 minutes ${process.env.HOST_FE}/forgot-password/${user._id}/${updatedUser.refreshToken}`
+            }
+            SendMailService.sendMail(mailOption, (err, payload) => {
+                if (err) return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[400], 400))
+                return res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE[200], 200, payload))
+            })
+        }
+    } catch (error) {
+        return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[400], 400))
+    }
+}
 
 const ChangePassword = async (req: Request, res: Response) => {
     const { id, token } = req.params
@@ -158,4 +180,4 @@ const ChangePassword = async (req: Request, res: Response) => {
     }
 }
 
-export default { SignUp, SignIn, handleRefreshToken, GetAllUser, SignOutUser, SendEmailLink, ChangePassword }
+export default { SignUp, SignIn, handleRefreshToken, GetAllUser, SignOutUser, SendEmailForgotPassword, ChangePassword, SendEmailVerifyUser, GetInfoUser }

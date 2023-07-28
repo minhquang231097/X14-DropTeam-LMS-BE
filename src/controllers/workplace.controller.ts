@@ -18,7 +18,7 @@ const GetAllWorkplace = async (req: Request, res: Response) => {
         const allWorkplaces = await WorkplaceService.GetAllWorkplace()
         return res.json(allWorkplaces)
     } catch (error) {
-        return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[400], 400))
+        return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[404], 404))
     }
 }
 
@@ -27,11 +27,11 @@ const GetWorkplaceById = async (req: Request, res: Response) => {
         const { id } = req.params
         const workplaceExist = await WorkplaceService.FindWorkplaceById(id)
         if (!workplaceExist) {
-            return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[400], 400))
+            return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[404], 404))
         }
         return res.json(workplaceExist)
     } catch (error) {
-        return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[400], 400))
+        return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[404], 404))
     }
 }
 

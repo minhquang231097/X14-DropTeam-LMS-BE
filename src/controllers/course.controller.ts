@@ -34,7 +34,7 @@ const GetAllCourse = async (req: Request, res: Response) => {
         const allCourses = await CourseService.GetAllCourse(p)
         return res.json(allCourses)
     } catch (error) {
-        return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[400], 400))
+        return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[404], 404))
     }
 }
 
@@ -43,11 +43,11 @@ const GetCourseById = async (req: Request, res: Response) => {
         const { id } = req.params
         const courseExist = await CourseService.FindCourseById(id)
         if (!courseExist) {
-            return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[400], 400))
+            return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[404], 404))
         }
-        return res.json(courseExist)
+        return res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE[200], 200, courseExist))
     } catch (error) {
-        return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[400], 400))
+        return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[404], 404))
     }
 }
 
