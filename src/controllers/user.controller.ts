@@ -72,6 +72,7 @@ const SignIn = async (req: Request, res: Response) => {
 
             return res.status(200).json({
                 username: userExist.username,
+                id: userExist._id,
                 accessToken,
                 refreshToken: userExist.refreshToken
             })
@@ -155,7 +156,7 @@ const SendEmailForgotPassword = async (req: Request, res: Response) => {
             }
             SendMailService.sendMail(mailOption, (err, payload) => {
                 if (err) return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[400], 400))
-                return res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE[200], 200, payload))
+                return res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE[200], 200))
             })
         }
     } catch (error) {
