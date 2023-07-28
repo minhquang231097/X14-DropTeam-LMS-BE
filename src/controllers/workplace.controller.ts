@@ -50,7 +50,11 @@ const UpdateWorkplace = async (req: Request, res: Response) => {
         const updateWorkplace = await WorkplaceService.FindWorkplaceById(id)
         res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE[200], 200, updateWorkplace))
     } catch (error: any) {
+<<<<<<< HEAD
         return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[400], 400, error.message))
+=======
+        throw new HttpException(RESPONSE_CONFIG.MESSAGE[401], 401, error.message)
+>>>>>>> d99739771d63030edf8b7ab3f2d56cf2ca6d7d7f
     }
 }
 

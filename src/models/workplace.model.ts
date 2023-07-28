@@ -15,9 +15,8 @@ enum StatusWP {
 export interface IWorkplace extends Document {
     name: string,
     address: string,
-    status: StatusWP,
-    workplace_code: string,
-    image: string
+    status: string,
+    workplace_code: string
 }
 
 export const Workplace = model<IWorkplace>("workplaces", workplaceSchema)
