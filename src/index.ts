@@ -1,12 +1,14 @@
 import express, { Express, NextFunction, Request, Response } from 'express'
 import dotenv from 'dotenv'
 import cookieParser from "cookie-parser"
+import bodyParser = require('body-parser')
 
 dotenv.config()
 
 const app: Express = express()
 app.use(express.json());
 app.use(cookieParser())
+app.use(bodyParser.urlencoded({ extended: true }))
 
 const port = process.env.PORT || 8080
 
@@ -21,7 +23,6 @@ connectDB();
 import userRouter from './routers/user.route';
 import workplaceRouter from './routers/workplace.route'
 import courseRouter from './routers/course.route'
-
 app.use('/api/v1/auth', userRouter)
 app.use("/api/v1/workplace", workplaceRouter)
 app.use("/api/v1/course", courseRouter)

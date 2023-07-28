@@ -1,15 +1,14 @@
-import { User } from "@/models/user.model";
-import { SignUpBody } from "@/types/user/signup";
+import { IUser, User } from "@/models/user.model";
 
 export class UserRepository {
     constructor() { }
 
-    static async CreateOne(user: SignUpBody) {
+    static async CreateOne(user: IUser) {
         const createdUser = await User.create(user)
         return createdUser.toObject()
     }
 
-    static async UpdateUser(id: string, update: any) {
+    static async UpdateUser(id: string, update: IUser) {
         const updatedUser = await User.findByIdAndUpdate(id, update, { new: true })
         return updatedUser?.toObject()
     }
