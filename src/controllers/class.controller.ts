@@ -7,7 +7,7 @@ import HttpException from "@/common/httpException";
 const CreateClass = async (req: Request, res: Response) => {
     const payload = req.body
     try {
-        const newClass: any = await ClassService.CreateClass(payload)
+        const newClass: any = await ClassService.CreateOneClass(payload)
         res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE[200], 200, newClass))
     } catch (error: any) {
         return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[400], 400, error.message))
@@ -28,7 +28,7 @@ const GetAllClass = async (req: Request, res: Response) => {
 const GetClassById = async (req: Request, res: Response) => {
     try {
         const { id } = req.params
-        const classExist = await ClassService.FindClassById(id)
+        const classExist = await ClassService.GetClassById(id)
         if (!classExist) {
             return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[400], 400))
         }
@@ -42,20 +42,16 @@ const UpdateClass = async (req: Request, res: Response) => {
     try {
         const { id } = req.params
         const update = req.body
-        const classExist = await ClassService.FindClassById(id)
-        const classNameExist = await ClassService.FindClassByName(update.title)
-        const classCodeExist = await ClassService.FindClassByCode(update.class_code)
-        if (classNameExist) {
-            return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[400], 400, "Class Exist"))
-        }
+        const classExist = await ClassService.GetClassById(id)
+        const classCodeExist = await ClassService.GetClassByCode(update.class_code)
         if (classCodeExist) {
             return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[400], 400, "Class Code Exist"))
         }
         if (!classExist) {
             return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[400], 400))
         }
-        await ClassService.UpdateClass(id, update)
-        const updateClass = await ClassService.FindClassById(id)
+        await ClassService.UpdateOneClass(id, update)
+        const updateClass = await ClassService.GetClassById(id)
         res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE[200], 200, updateClass))
     } catch (error: any) {
         return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[400], 400, error.message))
@@ -65,7 +61,7 @@ const UpdateClass = async (req: Request, res: Response) => {
 const DeletedClass = async (req: Request, res: Response) => {
     try {
         const { id } = req.params
-        const classExist = await ClassService.FindClassById(id)
+        const classExist = await ClassService.GetClassById(id)
         if (!classExist) {
             return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[400], 400))
         }

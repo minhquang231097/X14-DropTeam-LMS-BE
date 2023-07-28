@@ -3,6 +3,7 @@ import express from 'express'
 import dotenv from 'dotenv'
 import cookieParser from "cookie-parser"
 import bodyParser = require('body-parser')
+import Cors from "cors"
 
 dotenv.config()
 
@@ -10,6 +11,7 @@ const app: Express = express()
 app.use(express.json());
 app.use(cookieParser())
 app.use(bodyParser.urlencoded({ extended: true }))
+app.use(Cors({ origin: true, credentials: true }))
 
 const port = process.env.PORT || 8080
 

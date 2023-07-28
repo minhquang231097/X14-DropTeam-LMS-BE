@@ -35,12 +35,6 @@ export class CourseRepository {
         return allCourse.map((course) => course.toObject())
     }
 
-    static async GetCourseByPage(page: number) {    
-        const course_per_page = 12
-        const allCourse = await Course.find().skip((course_per_page * page) - course_per_page).limit(course_per_page)
-        return allCourse.map((course) => course.toObject())
-    }
-
     static async DeleteOneCourseById(id: string) {
         const deletedCourse = await Course.findByIdAndDelete(id)
         return deletedCourse?.toObject()

@@ -1,51 +1,62 @@
-import { Class, IClass } from "@/models/class.model"
+import { Class, IClass } from "@/models/class.model";
+import { FilterQuery } from "mongoose";
 
 export class ClassRepository {
     constructor() { }
 
-    static async CreateOne(item: IClass) {
-        const createClass = await Class.create(item)
-        return createClass.toObject()
+    static async CreateClass(payload: IClass) {
+        return (await Class.create(payload)).toObject()
     }
 
-    static async UpdateClass(id: string, update: IClass) {
-        const updateClass = await Class.findByIdAndUpdate(id, update)
-        return updateClass?.toObject()
+    static async FindClassByCondition(
+        filter: FilterQuery<IClass> | any,
+        field?: any | null,
+        option?: any | null,
+        populate?: any | null): Promise<IClass[]> {
+        return await Class.find(filter, field, option).populate(populate)
+    }
+
+    static async FindOneByCondition(
+        filter: FilterQuery<IClass> | undefined,
+        field?: any | null,
+        option?: any | null,
+        populate?: any | null,
+    ) {
+        return await Class.findOne(filter, field, option).populate(populate);
     }
 
     static async FindClassById(id: string) {
-        const item = await Class.findById(id)
-        return item?.toObject()
+        return await Class.findById(id)
     }
 
-    static async FindClassByName(title: string) {
-        const item = await Class.findOne({ title })
-        return item?.toObject()
-    }
-
-    static async FindClassByCode(class_code: string) {
-        const item = await Class.findOne({ class_code })
-        return item?.toObject()
-    }
-
-    static async GetAllClass(page: number) {
+    static async FindAllClass(page: number): Promise<IClass[]> {
         const class_per_page = 12
-        const allClass = await Class.find().skip((page - 1) * class_per_page).limit(class_per_page)
-        return allClass.map((item) => item.toObject())
+        return await Class.find().skip((page - 1) * class_per_page).limit(class_per_page)
     }
 
-    static async DeleteOneClassById(id: string) {
-        const deletedClass = await Class.findByIdAndDelete(id)
-        return deletedClass?.toObject()
+    static async FindByConditionAndUpdate(filter: any, update: IClass) {
+        return await Class.findOneAndUpdate(filter, update)
     }
 
-    static async DeleteOneClassByName(title: string) {
-        const deletedClass = await Class.findOneAndDelete({ title })
-        return deletedClass?.toObject()
+    static async UpdateOneClass(
+        filter: FilterQuery<IClass> | any,
+        update?: any | null) {
+        return await Class.findOneAndUpdate(filter, update)
     }
 
-    static async DeleteOneClassByCode(class_code: string) {
-        const deletedClass = await Class.findOneAndDelete({ class_code })
-        return deletedClass?.toObject()
+    static async UpdateManyClass(
+        filter: FilterQuery<IClass> | any,
+        update?: any | null) {
+        return await Class.updateMany(filter, update)
+    }
+
+    static async DeleteClassByCondition(
+        filter: FilterQuery<IClass>) {
+        return await Class.deleteMany(filter)
+    }
+
+
+    static async DeleteClassById(id: string) {
+        return await Class.findByIdAndDelete(id)
     }
 }

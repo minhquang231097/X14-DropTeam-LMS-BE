@@ -1,32 +1,36 @@
 import { IClass } from "@/models/class.model";
 import { ClassRepository } from "@/repository/class.repo";
 
-const CreateClass = async (payload: IClass) => {
-    return await ClassRepository.CreateOne(payload)
+const CreateOneClass = async (payload: IClass) => {
+    return await ClassRepository.CreateClass(payload)
 }
 
 const GetAllClass = async (page: number) => {
-    return await ClassRepository.GetAllClass(page)
+    return await ClassRepository.FindAllClass(page)
 }
 
-const FindClassByName = async (name: string) => {
-    return await ClassRepository.FindClassByName(name)
-}
-
-const FindClassById = async (id: string) => {
+const GetClassById = async (id: string) => {
     return await ClassRepository.FindClassById(id)
 }
 
-const FindClassByCode = async (class_code: string) => {
-    return await ClassRepository.FindClassByCode(class_code)
+const GetClassByCode = async (class_code: string) => {
+    return await ClassRepository.FindClassById(class_code)
 }
 
-const UpdateClass = async (id: string, payload: IClass) => {
-    return await ClassRepository.UpdateClass(id, payload)
+const GetClassByCondition = async (filter: any, payload: IClass) => {
+    return await ClassRepository.FindClassByCondition(filter, payload)
 }
 
-const DeletedClass = async (id: string) => {
-    return await ClassRepository.DeleteOneClassById(id)
+const UpdateOneClass = async (filter: any, payload: IClass) => {
+    return await ClassRepository.UpdateOneClass(filter, payload)
 }
 
-export default { CreateClass, GetAllClass, FindClassByName, FindClassById, FindClassByCode, UpdateClass, DeletedClass }
+const UpdateManyClass = async (filter: any, payload: IClass) => {
+    return await ClassRepository.UpdateManyClass(filter, payload)
+}
+
+const DeletedClass =async (id:string) => {
+    return await ClassRepository.DeleteClassById(id)
+}
+
+export default { CreateOneClass, GetAllClass, GetClassById,GetClassByCode ,GetClassByCondition, UpdateOneClass, UpdateManyClass,DeletedClass }
