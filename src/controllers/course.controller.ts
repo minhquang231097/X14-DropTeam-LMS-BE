@@ -28,10 +28,11 @@ const UploadImage = async (req: Request, res: Response) => {
 }
 
 const GetAllCourse = async (req: Request, res: Response) => {
-    const { page } = req.params
+    const { page, limit } = req.query
     const p = Number(page)
+    const l = Number(limit)
     try {
-        const allCourses = await CourseService.GetAllCourse(p)
+        const allCourses = await CourseService.GetAllCourse(p, l)
         return res.json(allCourses)
     } catch (error) {
         return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[404], 404))

@@ -11,7 +11,8 @@ const courseSchema = new Schema({
     duration: Number,
     level: Number,
     rate: Number,
-    discount: Number
+    discount: Number,
+    // course: {type: String, enum:[]}
 })
 
 export interface ICourse extends Document {
