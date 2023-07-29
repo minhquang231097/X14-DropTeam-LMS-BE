@@ -40,9 +40,10 @@ const GetAllCourse = async (req: Request, res: Response) => {
 }
 
 const GetCourseById = async (req: Request, res: Response) => {
+    const { id } = req.query
+    const _id = String(id)
     try {
-        const { id } = req.params
-        const courseExist = await CourseService.FindCourseById(id)
+        const courseExist = await CourseService.FindCourseById(_id)
         if (!courseExist) {
             return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[404], 404))
         }
@@ -53,14 +54,15 @@ const GetCourseById = async (req: Request, res: Response) => {
 }
 
 const UpdateCourse = async (req: Request, res: Response) => {
+    const { id } = req.query
+    const _id = String(id)
     try {
-        const { id } = req.params
         const update = req.body
-        const courseExist = await CourseService.FindCourseById(id)
+        const courseExist = await CourseService.FindCourseById(_id)
         if (!courseExist) {
             return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[400], 400))
         }
-        const updateCourse = await CourseService.UpdateCourse(id, update)
+        const updateCourse = await CourseService.UpdateCourse(_id, update)
         res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE[200], 200, updateCourse))
     } catch (error: any) {
         return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[400], 400, error.message))
@@ -68,13 +70,14 @@ const UpdateCourse = async (req: Request, res: Response) => {
 }
 
 const DeletedCourse = async (req: Request, res: Response) => {
+    const { id } = req.query
+    const _id = String(id)
     try {
-        const { id } = req.params
-        const courseExist = await CourseService.FindCourseById(id)
+        const courseExist = await CourseService.FindCourseById(_id)
         if (!courseExist) {
             return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[400], 400))
         }
-        const deleteCourse = await CourseService.DeletedCourse(id)
+        const deleteCourse = await CourseService.DeletedCourse(_id)
         res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE[200], 200, deleteCourse))
     } catch (error: any) {
         return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[400], 400, error.message))

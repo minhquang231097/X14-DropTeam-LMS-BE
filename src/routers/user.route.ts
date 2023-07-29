@@ -15,7 +15,7 @@ userRouter.post("/sign-out", ValidateJoi(Schema.User.sign_out), userController.S
 userRouter.post("/refresh", userController.handleRefreshToken)
 userRouter.post("/forgot-password", userController.SendEmailForgotPassword)
 userRouter.post("/verify-user", userController.SendEmailVerifyUser)
-userRouter.post("/change-password/:id/:token", userController.ChangePassword)
+userRouter.post("/change-password", userController.ChangePassword)
 userRouter.get("/user", verifyAccessJWT, CheckRole.IsAdmin, userController.GetAllUser)
 userRouter.get("/user/info", verifyAccessJWT, userController.GetInfoUser)
 userRouter.post("/user/info", verifyAccessJWT, ValidateJoi(Schema.User.sign_up), userController.UpdateUserInfo)
