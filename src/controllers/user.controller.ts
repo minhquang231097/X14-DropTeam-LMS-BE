@@ -182,4 +182,15 @@ const ChangePassword = async (req: Request, res: Response) => {
     }
 }
 
-export default { SignUp, SignIn, handleRefreshToken, GetAllUser, SignOutUser, SendEmailForgotPassword, ChangePassword, SendEmailVerifyUser, GetInfoUser }
+const UpdateUserInfo = async (req: Request, res: Response) => {
+    const { id } = req.user
+    const payload = req.body
+    try {
+        const update = await userService.UpdateUser(id, payload)
+        res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE[200], 200, update))
+    } catch (error) {
+        return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[400], 400))
+    }
+}
+
+export default { SignUp, SignIn, handleRefreshToken, GetAllUser, SignOutUser, SendEmailForgotPassword, ChangePassword, SendEmailVerifyUser, GetInfoUser, UpdateUserInfo }

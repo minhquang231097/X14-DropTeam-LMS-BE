@@ -10,7 +10,11 @@ export const CourseSchema = {
             session_per_course: Joi.number().min(1).integer().required(),
             price: Joi.number().min(1).required(),
             desc: Joi.string().max(500).required(),
-            lesson_list: Joi.array()
+            lesson_list: Joi.array(),
+            duration: Joi.number().integer().min(0),
+            level: Joi.number().integer().min(0),
+            rate: Joi.number().min(0),
+            discount: Joi.number().integer().min(0)
         }),
         update_course: Joi.object<ICourse>({
             course_code: Joi.string().max(10).required,
@@ -19,7 +23,11 @@ export const CourseSchema = {
             session_per_course: Joi.number().required(),
             price: Joi.number().max(10).required(),
             desc: Joi.string().max(500).required(),
-            lesson_list: Joi.array()
+            lesson_list: Joi.array(),
+            duration: Joi.number().integer().min(0),
+            level: Joi.number().integer().min(0),
+            rate: Joi.number().min(0),
+            discount: Joi.number().integer().min(0)
         })
     }
 }

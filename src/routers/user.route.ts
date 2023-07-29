@@ -18,5 +18,6 @@ userRouter.post("/verify-user", userController.SendEmailVerifyUser)
 userRouter.post("/change-password/:id/:token", userController.ChangePassword)
 userRouter.get("/user", verifyAccessJWT, CheckRole.IsAdmin, userController.GetAllUser)
 userRouter.get("/user/info", verifyAccessJWT, userController.GetInfoUser)
+userRouter.post("/user/info", verifyAccessJWT, ValidateJoi(Schema.User.sign_up), userController.UpdateUserInfo)
 
 export default userRouter
