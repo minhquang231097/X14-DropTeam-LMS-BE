@@ -11,6 +11,9 @@ export const CourseSchema = {
             price: Joi.number().min(0).required(),
             desc: Joi.string().max(500).required(),
             lesson_list: Joi.array()
+        }).messages({
+            'string.empty': `all field cannot be an empty `,
+            'any.required': `all field is a required`
         }),
         update_course: Joi.object<ICourse>({
             course_code: Joi.string().max(10).required(),
@@ -20,6 +23,9 @@ export const CourseSchema = {
             price: Joi.number().min(10).required(),
             desc: Joi.string().max(500).required(),
             lesson_list: Joi.array()
+        }).messages({
+            'string.empty': `all field cannot be an empty `,
+            'any.required': `all field is a required`
         })
     }
 }

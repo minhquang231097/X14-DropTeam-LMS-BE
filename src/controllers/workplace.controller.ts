@@ -8,6 +8,9 @@ import { WorkplaceBody } from "@/types/workplace/workplace";
 const CreateWorkplace = async (req: Request, res: Response) => {
     try {
         const workplace: any = await WorkplaceService.CreateWorkplace(req.body)
+        if (!workplace) {
+            return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[400], 400, "nameabc"))
+        }
         res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE[200], 200, workplace))
     } catch (error: any) {
         return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[400], 400, error.message))

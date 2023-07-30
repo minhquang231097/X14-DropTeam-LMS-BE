@@ -14,6 +14,9 @@ export const ClassSchema = {
             hour_per_class: Joi.string().max(5).required(),
             schedule: Joi.string().max(50).required(),
             class_size: Joi.number().integer().min(0).required()
+        }).messages({
+            'string.empty': `all field cannot be an empty `,
+            'any.required': `all field is a required`
         }),
         update_class: Joi.object<IClass>({
             mentor: Joi.string().max(50),
@@ -26,6 +29,9 @@ export const ClassSchema = {
             hour_per_class: Joi.string().max(5),
             schedule: Joi.string().max(50),
             class_size: Joi.number().integer().min(0)
+        }).messages({
+            'string.empty': `all field cannot be an empty `,
+            'any.required': `all field is a required`
         })
     }
 }
