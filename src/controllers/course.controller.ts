@@ -43,7 +43,7 @@ const GetCourseById = async (req: Request, res: Response) => {
         const { id } = req.params
         const courseExist = await CourseService.FindCourseById(id)
         if (!courseExist) {
-            return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[404], 404))
+            return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[404], 404, "Course Not Exist"))
         }
         return res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE[200], 200, courseExist))
     } catch (error) {
@@ -65,7 +65,7 @@ const UpdateCourse = async (req: Request, res: Response) => {
             return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[400], 400, "Course Code Exist"))
         }
         if (!courseExist) {
-            return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[400], 400))
+            return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[400], 400, "Course Not Exist"))
         }
         await CourseService.UpdateCourse(id, update)
         const updateCourse = await CourseService.FindCourseById(id)
@@ -80,7 +80,7 @@ const DeletedCourse = async (req: Request, res: Response) => {
         const { id } = req.params
         const courseExist = await CourseService.FindCourseById(id)
         if (!courseExist) {
-            return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[400], 400))
+            return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[400], 400, "Course Not Exist"))
         }
         const deleteCourse = await CourseService.DeletedCourse(id)
         res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE[200], 200, deleteCourse))

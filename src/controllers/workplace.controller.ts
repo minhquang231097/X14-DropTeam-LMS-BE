@@ -8,9 +8,6 @@ import { WorkplaceBody } from "@/types/workplace/workplace";
 const CreateWorkplace = async (req: Request, res: Response) => {
     try {
         const workplace: any = await WorkplaceService.CreateWorkplace(req.body)
-        if (!workplace) {
-            return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[400], 400, "nameabc"))
-        }
         res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE[200], 200, workplace))
     } catch (error: any) {
         return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[400], 400, error.message))
@@ -33,7 +30,7 @@ const GetWorkplaceById = async (req: Request, res: Response) => {
         const { id } = req.params
         const workplaceExist = await WorkplaceService.FindWorkplaceById(id)
         if (!workplaceExist) {
-            return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[404], 404))
+            return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[404], 404, "Workplace Not Exist"))
         }
         return res.json(workplaceExist)
     } catch (error) {
@@ -47,7 +44,7 @@ const UpdateWorkplace = async (req: Request, res: Response) => {
         const update: WorkplaceBody = req.body
         const workplaceExist = await WorkplaceService.FindWorkplaceById(id)
         if (!workplaceExist) {
-            return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[400], 400))
+            return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[400], 400, "Workplace Not Exist"))
         }
         await WorkplaceService.UpdateWorkplace(id, update)
         const updateWorkplace = await WorkplaceService.FindWorkplaceById(id)
@@ -62,7 +59,7 @@ const DeletedWorkplace = async (req: Request, res: Response) => {
         const { id } = req.params
         const workplaceExist = await WorkplaceService.FindWorkplaceById(id)
         if (!workplaceExist) {
-            return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[400], 400))
+            return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[400], 400, "Workplace Not Exist"))
         }
         const deleteWorkplace = await WorkplaceService.DeletedWorkplace(id)
         res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE[200], 200, deleteWorkplace))

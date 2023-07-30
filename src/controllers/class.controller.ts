@@ -30,7 +30,7 @@ const GetClassById = async (req: Request, res: Response) => {
         const { id } = req.params
         const classExist = await ClassService.GetClassById(id)
         if (!classExist) {
-            return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[400], 400))
+            return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[400], 400, "Class Exist"))
         }
         return res.json(classExist)
     } catch (error) {
@@ -48,7 +48,7 @@ const UpdateClass = async (req: Request, res: Response) => {
             return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[400], 400, "Class Code Exist"))
         }
         if (!classExist) {
-            return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[400], 400))
+            return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[400], 400, "Class Not Exist"))
         }
         await ClassService.UpdateOneClass(id, update)
         const updateClass = await ClassService.GetClassById(id)
@@ -63,7 +63,7 @@ const DeletedClass = async (req: Request, res: Response) => {
         const { id } = req.params
         const classExist = await ClassService.GetClassById(id)
         if (!classExist) {
-            return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[400], 400))
+            return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[400], 400, "Class Not Exist"))
         }
         const deleteClass = await ClassService.DeletedClass(id)
         res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE[200], 200, deleteClass))
