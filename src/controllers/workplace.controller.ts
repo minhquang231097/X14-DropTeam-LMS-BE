@@ -8,9 +8,9 @@ import { WorkplaceBody } from "@/types/workplace/workplace";
 const CreateWorkplace = async (req: Request, res: Response) => {
     try {
         const workplace: any = await WorkplaceService.CreateWorkplace(req.body)
-        res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE[200], 200, workplace))
+        res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE[201], 201, workplace))
     } catch (error: any) {
-        return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[400], 400, error.message))
+        return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[404], 400, error.message))
     }
 }
 
@@ -19,9 +19,9 @@ const GetAllWorkplace = async (req: Request, res: Response) => {
     const p = Number(page)
     try {
         const allWorkplaces = await WorkplaceService.GetAllWorkplace(p)
-        return res.json(allWorkplaces)
-    } catch (error) {
-        return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[404], 404))
+        return res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE[302], 302, allWorkplaces))
+    } catch (error: any) {
+        return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[404], 404, error.message))
     }
 }
 
@@ -50,7 +50,7 @@ const UpdateWorkplace = async (req: Request, res: Response) => {
         const updateWorkplace = await WorkplaceService.FindWorkplaceById(id)
         res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE[200], 200, updateWorkplace))
     } catch (error: any) {
-        throw new HttpException(RESPONSE_CONFIG.MESSAGE[401], 401, error.message)
+        throw new HttpException(RESPONSE_CONFIG.MESSAGE[400], 400, error.message)
     }
 }
 
