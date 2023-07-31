@@ -3,9 +3,12 @@ export const RESPONSE_CONFIG = {
         USER:{
             NO_FULLNAME: "Require fullname",
             NO_USERNAME: "Require username",
+            USERNAME_ERROR: "Username exist",
             NO_PASSWORD: "Require password",
             NO_EMAIL: "Require email",
+            EMAIL_ERROR: "Email exist",
             NO_PHONE_NUM: "Require phonenumber",
+            PHONE_ERROR: "Phone number exist",
             NOT_CORRECT: "Username or password is incorect",
             NOT_FOUND: "Can't find any user",
             PAGE_NOT_FOUND: "Page not found!",
