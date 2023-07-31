@@ -1,5 +1,43 @@
 export const RESPONSE_CONFIG = {
     MESSAGE: {
+        USER:{
+            NO_FULLNAME: "Require fullname",
+            NO_USERNAME: "Require username",
+            NO_PASSWORD: "Require password",
+            NO_EMAIL: "Require email",
+            NO_PHONE_NUM: "Require phonenumber",
+            NOT_CORRECT: "Username or password is incorect",
+            NOT_FOUND: "Can't find any user",
+            PAGE_NOT_FOUND: "Page not found!",
+            PASS_NOT_CORRECT: "Password is incorrect",
+            NOT_LOGIN: "You have to login before enter this content",
+        },
+        WORKPLACE:{
+            NO_CODENAME: "Require class code",
+            CODE_EXIST: "Class code exist!",
+            CODE_ERROR: "Class code is too long",
+            NO_WORKPLACE: "Require workplace",
+            WORKPLACE_EXIST: "Workplace exist",
+            NO_ADDRESS: "Require address",
+            NOT_FOUND: "Can't find any workplace",
+            STATUS_ERROR: `Status must be "ON", "OFF", "PENDING"`,
+            PAGE_NOT_FOUND: "Page not found!",
+        },     
+        COURSE:{
+            NO_CODE: "Require course Code",
+            CODE_EXIST: "Course code exist!",
+            NO_TITLE: "Require title",
+            TITLE_EXIST: "Title exist!",
+            NO_DESCRIPTION: "Require description",
+            DESCRIPTION_ERROR: "Description is too long",
+            NO_SESSION: "Require Session",
+            SESSION_ERROR: "Session must be number",
+            NO_PRICE: "Require price",
+            PRICE_ERROR: "Price must be natural number",
+        },
+        CLASS:{
+            
+        },
         100: "Continue",
         101: "Switching Protocols",
         102: "Processing",
