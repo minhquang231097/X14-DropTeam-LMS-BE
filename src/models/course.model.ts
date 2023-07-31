@@ -7,17 +7,26 @@ const courseSchema = new Schema({
     desc: String,
     lesson_list: [{ type: Schema.Types.ObjectId, ref: "lessons" }],
     session_per_course: Number,
-    price: Number
+    price: Number,
+    duration: Number,
+    level: Number,
+    rate: Number,
+    discount: Number,
+    // course: {type: String, enum:[]}
 })
 
 export interface ICourse extends Document {
     course_code: string
     title: string,
     image?: [string],
-    desc: string,
-    lesson_list: [string]
     session_per_course: number,
     price: number,
+    desc: string,
+    lesson_list?: [string]
+    duration: number,
+    level: number,
+    rate: number,
+    discount: number
 }
 
 export const Course = model<ICourse>('courses', courseSchema)

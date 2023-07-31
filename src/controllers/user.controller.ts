@@ -56,8 +56,8 @@ const handleRefreshToken = async (req: Request, res: Response) => {
 }
 
 const SignIn = async (req: Request, res: Response) => {
+    const { username, password } = req.body
     try {
-        const { username, password } = req.body
         const userExist = await userService.FindUserByUsername(username)
         if (!userExist) {
             return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[404], 404, "Username or pasword is not correct"))
@@ -72,10 +72,12 @@ const SignIn = async (req: Request, res: Response) => {
 
             return res.status(200).json({
                 username: userExist.username,
+                id: userExist._id,
                 accessToken,
                 refreshToken: userExist.refreshToken
             })
         }
+        return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[400], 400))
     } catch (error: any) {
         return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[400], 400, error.message))
     }
@@ -101,8 +103,8 @@ const GetAllUser = async (req: Request, res: Response) => {
 }
 
 const SignOutUser = async (req: Request, res: Response) => {
+    const { id } = req.body
     try {
-        const { id } = req.body
         const user = await userService.UpdateUser(id, { refreshToken: "" })
         res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE[200], 200, user))
     } catch (error) {
@@ -155,7 +157,7 @@ const SendEmailForgotPassword = async (req: Request, res: Response) => {
             }
             SendMailService.sendMail(mailOption, (err, payload) => {
                 if (err) return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[400], 400))
-                return res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE[200], 200, payload))
+                return res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE[200], 200))
             })
         }
     } catch (error) {
@@ -164,15 +166,17 @@ const SendEmailForgotPassword = async (req: Request, res: Response) => {
 }
 
 const ChangePassword = async (req: Request, res: Response) => {
-    const { id, token } = req.params
+    const { id, token } = req.query
+    const _id = String(id)
+    const _token = String(token)
     const { password } = req.body
     try {
-        const user: any = userService.FindUserById(id)
-        const verifyToken: any = jwt.verify(token, process.env.ACCESSTOKEN_KEY as string)
+        const user: any = userService.FindUserById(_id)
+        const verifyToken: any = jwt.verify(_token, process.env.ACCESSTOKEN_KEY as string)
         if (user && verifyToken._id) {
             const salt = await bcrypt.genSalt(10);
             const newPassword = await bcrypt.hash(password, salt)
-            const updatedUser = await userService.UpdateUser(id, { password: newPassword })
+            const updatedUser = await userService.UpdateUser(_id, { password: newPassword })
             return res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE[200], 200, updatedUser))
         }
     } catch (error) {
@@ -180,4 +184,15 @@ const ChangePassword = async (req: Request, res: Response) => {
     }
 }
 
-export default { SignUp, SignIn, handleRefreshToken, GetAllUser, SignOutUser, SendEmailForgotPassword, ChangePassword, SendEmailVerifyUser, GetInfoUser }
+const UpdateUserInfo = async (req: Request, res: Response) => {
+    const { id } = req.user
+    const payload = req.body
+    try {
+        const update = await userService.UpdateUser(id, payload)
+        res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE[200], 200, update))
+    } catch (error) {
+        return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[400], 400))
+    }
+}
+
+export default { SignUp, SignIn, handleRefreshToken, GetAllUser, SignOutUser, SendEmailForgotPassword, ChangePassword, SendEmailVerifyUser, GetInfoUser, UpdateUserInfo }
