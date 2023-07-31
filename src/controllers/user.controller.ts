@@ -105,7 +105,7 @@ const GetAllUser = async (req: Request, res: Response) => {
 const SignOutUser = async (req: Request, res: Response) => {
     const { id } = req.body
     try {
-        const user = await userService.UpdateUser(id, { refreshToken: "" })
+        const user = await userService.UpdateUser(id, { accessToken: "" })
         res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE[200], 200, user))
     } catch (error) {
         return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[400], 400))

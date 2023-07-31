@@ -17,7 +17,7 @@ export const CourseSchema = {
             discount: Joi.number().integer().min(0)
         }),
         update_course: Joi.object<ICourse>({
-            course_code: Joi.string().max(10).required,
+            course_code: Joi.string().max(10).required(),
             title: Joi.string().max(20).required(),
             image: Joi.array().max(200),
             session_per_course: Joi.number().required(),

@@ -1,5 +1,6 @@
 import { UserRepository } from "@/repository/user.repo";
 import bcrypt from "bcryptjs"
+import { ObjectId } from "mongoose";
 
 const CreateUser = async (payload: any) => {
     const salt = await bcrypt.genSalt(10);
@@ -23,11 +24,11 @@ const FindUserByEmail = async (email: string) => {
     return await UserRepository.FindUserByEmail(email)
 }
 
-const FindUserById = async (id: string) => {
+const FindUserById = async (id: ObjectId | string) => {
     return await UserRepository.FindUserById(id)
 }
 
-const UpdateUser = async (id: string, payload: any) => {
+const UpdateUser = async (id: ObjectId | string, payload: any) => {
     return await UserRepository.UpdateUser(id, payload)
 }
 

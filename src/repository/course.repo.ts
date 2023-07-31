@@ -1,4 +1,6 @@
 import { Course, ICourse } from "@/models/course.model";
+import { UpdateCourseDto } from "@/types/course";
+import { ObjectId } from "mongoose";
 
 export class CourseRepository {
     constructor() { }
@@ -8,12 +10,12 @@ export class CourseRepository {
         return createCourse.toObject()
     }
 
-    static async UpdateCourse(id: string, update: ICourse) {
+    static async UpdateCourse(id: ObjectId | string, update: UpdateCourseDto) {
         const updateCourse = await Course.findByIdAndUpdate(id, update)
         return updateCourse?.toObject()
     }
 
-    static async FindCourseById(id: string) {
+    static async FindCourseById(id: ObjectId | string) {
         const course = await Course.findById(id)
         return course?.toObject()
     }
@@ -33,7 +35,7 @@ export class CourseRepository {
         return allCourse.map((wp) => wp.toObject())
     }
 
-    static async DeleteOneCourseById(id: string) {
+    static async DeleteOneCourseById(id: ObjectId | string) {
         const deletedCourse = await Course.findByIdAndDelete(id)
         return deletedCourse?.toObject()
     }

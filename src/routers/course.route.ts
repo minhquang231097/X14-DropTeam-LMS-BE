@@ -11,6 +11,8 @@ courseRouter.post("/", verifyAccessJWT, ValidateJoi(CourseSchema.Course.create_c
 courseRouter.put("/", verifyAccessJWT, ValidateJoi(CourseSchema.Course.update_course), courseController.UpdateCourse)
 courseRouter.get("/page", courseController.GetAllCourse)
 courseRouter.get("/", courseController.GetCourseById)
+courseRouter.get("/", courseController.GetCourseByCode)
+courseRouter.delete("/all", courseController.DeletedAllCourse)
 courseRouter.delete("/", verifyAccessJWT, courseController.DeletedCourse)
 courseRouter.post('/upload-image', UploadCloud.any(), courseController.UploadImage)
 
