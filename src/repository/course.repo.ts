@@ -1,52 +1,15 @@
 import { Course, ICourse } from "@/models/course.model";
 import { UpdateCourseDto } from "@/types/course";
-import { ObjectId } from "mongoose";
+import { Model } from "mongoose";
+import { BaseRepository } from "./base.repo";
 
-export class CourseRepository {
-    constructor() { }
-
-    static async CreateOne(course: ICourse) {
-        const createCourse = await Course.create(course)
-        return createCourse.toObject()
+export class CourseRepository extends BaseRepository<ICourse> {
+    constructor(model: Model<ICourse>) {
+        super(model)
     }
 
-    static async UpdateCourse(id: ObjectId | string, update: UpdateCourseDto) {
-        const updateCourse = await Course.findByIdAndUpdate(id, update)
-        return updateCourse?.toObject()
-    }
-
-    static async FindCourseById(id: ObjectId | string) {
-        const course = await Course.findById(id)
-        return course?.toObject()
-    }
-
-    static async FindCourseByName(title: string) {
-        const course = await Course.findOne({ title })
-        return course?.toObject()
-    }
-
-    static async FindCourseByCode(course_code: string) {
+    async FindCourseByCode(course_code: string) {
         const course = await Course.findOne({ course_code })
         return course?.toObject()
-    }
-
-    static async GetAllCourse(page: number, limit: number) {
-        const allCourse = await Course.find().skip((page - 1) * limit).limit(limit)
-        return allCourse.map((wp) => wp.toObject())
-    }
-
-    static async DeleteOneCourseById(id: ObjectId | string) {
-        const deletedCourse = await Course.findByIdAndDelete(id)
-        return deletedCourse?.toObject()
-    }
-
-    static async DeleteOneCourseByName(title: string) {
-        const deletedCourse = await Course.findOneAndDelete({ title })
-        return deletedCourse?.toObject()
-    }
-
-    static async DeleteOneCourseByCode(course_code: string) {
-        const deletedCourse = await Course.findOneAndDelete({ course_code })
-        return deletedCourse?.toObject()
     }
 }

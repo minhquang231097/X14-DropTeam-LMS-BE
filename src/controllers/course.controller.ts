@@ -47,7 +47,7 @@ const GetCourseById = async (req: Request, res: Response) => {
     const { id } = req.query
     const _id = String(id)
     try {
-        const courseExist = await CourseService.FindCourseById(_id)
+        const courseExist = await CourseService.GetCourseById(_id)
         if (!courseExist) {
             return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[404], 404))
         }
@@ -61,7 +61,7 @@ const GetCourseByCode = async (req: Request, res: Response) => {
     const { code } = req.query
     const _code = String(code)
     try {
-        const courseExist = await CourseService.FindCourseByCode(_code)
+        const courseExist = await CourseService.GetCourseByCode(_code)
         if (!courseExist) {
             return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[404], 404))
         }
@@ -76,7 +76,7 @@ const UpdateCourse = async (req: Request, res: Response) => {
     const _id = String(id)
     try {
         const update = req.body
-        const courseExist = await CourseService.FindCourseById(_id)
+        const courseExist = await CourseService.GetCourseById(_id)
         if (!courseExist) {
             return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[400], 400))
         }
@@ -91,7 +91,7 @@ const DeletedCourse = async (req: Request, res: Response) => {
     const { id } = req.query
     const _id = String(id)
     try {
-        const courseExist = await CourseService.FindCourseById(_id)
+        const courseExist = await CourseService.GetCourseById(_id)
         if (!courseExist) {
             return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[400], 400))
         }

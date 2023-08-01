@@ -1,33 +1,35 @@
-import { ICourse } from "@/models/course.model";
+import { Course, ICourse } from "@/models/course.model";
 import { CourseRepository } from "@/repository/course.repo";
 import { ObjectId } from "mongoose";
 
+const courseRepository = new CourseRepository(Course)
+
 const CreateCourse = async (payload: ICourse) => {
-    return await CourseRepository.CreateOne(payload)
+    return await courseRepository.Create(payload)
 }
 
 const GetAllCourse = async (page: number, limit: number) => {
-    return await CourseRepository.GetAllCourse(page, limit)
+    return await courseRepository.FindAllAndPagination(page, limit)
 }
 
-const FindCourseByName = async (name: string) => {
-    return await CourseRepository.FindCourseByName(name)
+const GetCourseById = async (id: ObjectId | string) => {
+    return await courseRepository.FindById(id)
 }
 
-const FindCourseById = async (id: ObjectId | string) => {
-    return await CourseRepository.FindCourseById(id)
-}
-
-const FindCourseByCode = async (code: string) => {
-    return await CourseRepository.FindCourseByCode(code)
+const GetCourseByCode = async (code: string) => {
+    return await courseRepository.FindCourseByCode(code)
 }
 
 const UpdateCourse = async (id: ObjectId | string, payload: ICourse) => {
-    return await CourseRepository.UpdateCourse(id, payload)
+    return await courseRepository.FindByIdAndUpdate(id, payload)
+}
+
+const UpdateManyCourse = async (filter: any, payload: ICourse) => {
+    return await courseRepository.UpdateMany(filter, payload)
 }
 
 const DeletedCourse = async (id: ObjectId | string) => {
-    return await CourseRepository.DeleteOneCourseById(id)
+    return await courseRepository.DeleteOne(id)
 }
 
-export default { CreateCourse, GetAllCourse, FindCourseByName, FindCourseById, UpdateCourse, DeletedCourse, FindCourseByCode }
+export default { CreateCourse, GetAllCourse, GetCourseById, UpdateCourse, DeletedCourse, GetCourseByCode, UpdateManyCourse }

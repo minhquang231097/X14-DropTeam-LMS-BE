@@ -1,6 +1,6 @@
 import Joi from "joi";
 import { IUser } from "../models/user.model"
-import { SignInDto, SignOutDto, UpdateUserDto } from "@/types/user.dto";
+import { SignInDto, SignOutDto, UpdateUserDto } from "@/types/user";
 
 export const Schema = {
     User: {

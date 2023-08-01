@@ -1,33 +1,35 @@
-import { IWorkplace } from "@/models/workplace.model";
+import { IWorkplace, Workplace } from "@/models/workplace.model";
 import { WorkplaceRepository } from "@/repository/workplace.repo";
 import { ObjectId } from "mongoose";
 
+const workplaceRepository = new WorkplaceRepository(Workplace)
+
 const CreateWorkplace = async (payload: IWorkplace) => {
-    return await WorkplaceRepository.CreateOne(payload)
+    return await workplaceRepository.Create(payload)
 }
 
 const GetAllWorkplace = async () => {
-    return await WorkplaceRepository.GetAllWorkplace()
+    return await workplaceRepository.FindAll()
 }
 
-const FindWorkplaceByName = async (name: string) => {
-    return await WorkplaceRepository.FindWorkplaceByName(name)
+const GetWorkplaceByName = async (name: string) => {
+    return await workplaceRepository.FindByCondition({ name })
 }
 
-const FindWorkplaceById = async (id: ObjectId | string) => {
-    return await WorkplaceRepository.FindWorkplaceById(id)
+const GetWorkplaceById = async (id: ObjectId | string) => {
+    return await workplaceRepository.FindById(id)
 }
 
-const FindWorkplaceByCode = async (code: string) => {
-    return await WorkplaceRepository.FindWorkplaceByCode(code)
+const GetWorkplaceByCode = async (code: string) => {
+    return await workplaceRepository.FindWorkplaceByCode(code)
 }
 
 const UpdateWorkplace = async (id: ObjectId | string, payload: any) => {
-    return await WorkplaceRepository.UpdateWorkplace(id, payload)
+    return await workplaceRepository.FindByIdAndUpdate(id, payload)
 }
 
 const DeletedWorkplace = async (id: ObjectId | string) => {
-    return await WorkplaceRepository.DeleteOneWorkplaceById(id)
+    return await workplaceRepository.DeleteOne(id)
 }
 
-export default { CreateWorkplace, GetAllWorkplace, FindWorkplaceByName, FindWorkplaceById, UpdateWorkplace, DeletedWorkplace, FindWorkplaceByCode }
+export default { CreateWorkplace, GetAllWorkplace, GetWorkplaceByName, GetWorkplaceById, UpdateWorkplace, DeletedWorkplace, GetWorkplaceByCode }

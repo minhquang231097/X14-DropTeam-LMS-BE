@@ -26,7 +26,7 @@ const GetWorkplaceById = async (req: Request, res: Response) => {
     try {
         const { id } = req.query
         const _id = String(id)
-        const workplaceExist = await WorkplaceService.FindWorkplaceById(_id)
+        const workplaceExist = await WorkplaceService.GetWorkplaceById(_id)
         if (!workplaceExist) {
             return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[404], 404))
         }
@@ -41,7 +41,7 @@ const UpdateWorkplace = async (req: Request, res: Response) => {
         const { id } = req.query
         const _id = String(id)
         const update = req.body
-        const workplaceExist = await WorkplaceService.FindWorkplaceById(_id)
+        const workplaceExist = await WorkplaceService.GetWorkplaceById(_id)
         if (!workplaceExist) {
             return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[400], 400))
         }
@@ -56,7 +56,7 @@ const DeletedWorkplace = async (req: Request, res: Response) => {
     const { id } = req.query
     const _id = String(id)
     try {
-        const workplaceExist = await WorkplaceService.FindWorkplaceById(_id)
+        const workplaceExist = await WorkplaceService.GetWorkplaceById(_id)
         if (!workplaceExist) {
             return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[400], 400))
         }
