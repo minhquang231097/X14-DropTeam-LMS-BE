@@ -7,7 +7,8 @@ export const ValidateJoi = (schema: ObjectSchema) => {
             await schema.validateAsync(req.body, { abortEarly: false });
             next();
         } catch (error: any) {
-            return res.status(422).json({ error: error.details[0].message });
+            const errors = error.details.map((detail: any) => detail.message);
+            return res.status(422).json({ errors });
         }
     };
 };

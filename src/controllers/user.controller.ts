@@ -185,10 +185,10 @@ const ChangePassword = async (req: Request, res: Response) => {
 }
 
 const UpdateUserInfo = async (req: Request, res: Response) => {
-    const { id } = req.user
+    const { _id } = req.user
     const payload = req.body
     try {
-        const update = await userService.UpdateUser(id, payload)
+        const update = await userService.UpdateUser(_id, payload)
         res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE[200], 200, update))
     } catch (error) {
         return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[400], 400))

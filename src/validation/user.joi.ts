@@ -2,6 +2,7 @@ import Joi from "joi";
 import { IUser } from "../models/user.model"
 import { SignInBody } from "@/types/user/signin";
 import { SignOutBody } from "@/types/user/sign_out";
+import { ChangePassword } from "@/types/user/change_password";
 
 export const Schema = {
     User: {
@@ -10,7 +11,7 @@ export const Schema = {
             email: Joi.string().min(5).max(100).required(),
             phone_number: Joi.string().min(5).max(100).required(),
             username: Joi.string().min(5).max(100).required(),
-            password: Joi.string().min(5).max(100).required(),
+            password: Joi.string().min(6).max(100).required(),
             create_at: Joi.string(),
             role: Joi.string(),
             dob: Joi.string(),
@@ -19,10 +20,13 @@ export const Schema = {
         }),
         sign_in: Joi.object<SignInBody>({
             username: Joi.string().min(5).max(100).required(),
-            password: Joi.string().min(5).max(100).required(),
+            password: Joi.string().min(6).max(100).required(),
         }),
         sign_out: Joi.object<SignOutBody>({
             id: Joi.string().required()
+        }),
+        change_password: Joi.object<ChangePassword>({
+            password: Joi.string().min(6).max(100).required(),
         })
     }
 }

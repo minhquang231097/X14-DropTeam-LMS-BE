@@ -8,7 +8,7 @@ const CreateClass = async (req: Request, res: Response) => {
     const payload = req.body
     try {
         const newClass: any = await ClassService.CreateOneClass(payload)
-        res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE[200], 200, newClass))
+        res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE[201], 201, newClass))
     } catch (error: any) {
         return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[400], 400, error.message))
     }
