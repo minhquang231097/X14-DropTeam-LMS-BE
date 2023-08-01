@@ -15,9 +15,9 @@ const SignUp = async (req: Request, res: Response) => {
             _id: user._id
         }, process.env.REFRESHTOKEN_KEY as string, { expiresIn: process.env.REFRESHTOKEN_TIME as string })
         const updatedUser = await userService.UpdateUser(user._id, { refreshToken })
-        res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE[200], 200, updatedUser))
+        res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.USER.SIGNUP_SUCCESS, 200, updatedUser))
     } catch (error: any) {
-        return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[400], 400, error.message))
+        return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.USER.WRONG, 400, error.message))
     }
 }
 
@@ -25,7 +25,7 @@ const handleRefreshToken = async (req: Request, res: Response) => {
     const { refreshToken } = req.body;
     try {
         const foundUser = await UserRepository.FindUserByCondition({ refreshToken })
-        if (!foundUser) return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[400], 400));
+        if (!foundUser) return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.USER.NOT_FOUND, 400));
         jwt.verify(
             refreshToken,
             process.env.REFRESHTOKEN_KEY as string,
@@ -46,7 +46,7 @@ const handleRefreshToken = async (req: Request, res: Response) => {
                     _id: foundUser._id
                 }, process.env.REFRESHTOKEN_KEY as string, { expiresIn: `${timeRefresh}` })
                 userService.UpdateUser(foundUser._id, { refreshToken: newRefreshToken })
-                res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE[200], 200, { roles: foundUser.role, accessToken, refreshToken: newRefreshToken }))
+                res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.USER.SUCCESS, 200, { roles: foundUser.role, accessToken, refreshToken: newRefreshToken }))
             }
         );
     } catch (error: any) {
@@ -60,7 +60,7 @@ const SignIn = async (req: Request, res: Response) => {
     try {
         const userExist = await userService.FindUserByUsername(username)
         if (!userExist) {
-            return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[404], 404, "Username or pasword is not correct"))
+            return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.USER.USERNAME_INCORRECT, 404))
         }
         const checkPassword = bcrypt.compareSync(password, userExist.password)
         if (checkPassword) {
@@ -77,9 +77,9 @@ const SignIn = async (req: Request, res: Response) => {
                 refreshToken: userExist.refreshToken
             })
         }
-        return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[400], 400))
+        return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.USER.PASSWORD_INCORRECT, 400))
     } catch (error: any) {
-        return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[400], 400, error.message))
+        return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.USER.WRONG, 400, error.message))
     }
 }
 
@@ -87,28 +87,28 @@ const GetInfoUser = async (req: Request, res: Response, next: NextFunction) => {
     const idUser = req.user._id
     try {
         const info = await userService.FindUserById(idUser)
-        res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE[200], 200, info))
-    } catch (error) {
-        return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[404], 404))
+        res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.USER.FOUND, 302, info))
+    } catch (error: any) {
+        return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[404], 404, error.message))
     }
 }
 
 const GetAllUser = async (req: Request, res: Response) => {
     try {
         const allUsers = await userService.GetAllUser()
-        return res.json(allUsers)
-    } catch (error) {
-        return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[404], 404))
+        return res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.USER.FOUND, 302, allUsers))
+    } catch (error: any) {
+        return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[404], 404, error.message))
     }
 }
 
 const SignOutUser = async (req: Request, res: Response) => {
     const { id } = req.body
     try {
-        const user = await userService.UpdateUser(id, { refreshToken: "" })
-        res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE[200], 200, user))
-    } catch (error) {
-        return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[400], 400))
+        const user = await userService.UpdateUser(id, { accessToken: "" })
+        res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.USER.SUCCESS, 200, user))
+    } catch (error: any) {
+        return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.USER.WRONG, 400, error.message))
     }
 }
 
@@ -116,7 +116,7 @@ const SignOutUser = async (req: Request, res: Response) => {
 const SendEmailVerifyUser = async (req: Request, res: Response) => {
     const { email } = req.body
     if (!email) {
-        return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[400], 400))
+        return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.USER.NO_EMAIL, 400))
     }
     try {
         const user: any = await userService.FindUserByEmail(email)
@@ -130,19 +130,19 @@ const SendEmailVerifyUser = async (req: Request, res: Response) => {
                 text: `This link valid for 2 minutes ${process.env.HOST_FE}/verify/${user._id}/${updatedUser.refreshToken}`
             }
             SendMailService.sendMail(mailOption, (err, payload) => {
-                if (err) return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[400], 400))
-                return res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE[200], 200, payload))
+                if (err) return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.USER.EMAIL_INCORRECT, 400))
+                return res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.USER.SUCCESS, 200, payload))
             })
         }
     } catch (error) {
-        return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[400], 400))
+        return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.USER.EMAIL_INCORRECT, 400))
     }
 }
 
 const SendEmailForgotPassword = async (req: Request, res: Response) => {
     const { email } = req.body
     if (!email) {
-        return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[400], 400))
+        return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.USER.NO_EMAIL, 400))
     }
     try {
         const user: any = await userService.FindUserByEmail(email)
@@ -156,12 +156,12 @@ const SendEmailForgotPassword = async (req: Request, res: Response) => {
                 text: `This link valid for 2 minutes ${process.env.HOST_FE}/forgot-password/${user._id}/${updatedUser.refreshToken}`
             }
             SendMailService.sendMail(mailOption, (err, payload) => {
-                if (err) return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[400], 400))
-                return res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE[200], 200))
+                if (err) return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.USER.WRONG, 400))
+                return res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.USER.SUCCESS, 200, payload))
             })
         }
     } catch (error) {
-        return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[400], 400))
+        return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.USER.EMAIL_INCORRECT, 400))
     }
 }
 
@@ -177,10 +177,10 @@ const ChangePassword = async (req: Request, res: Response) => {
             const salt = await bcrypt.genSalt(10);
             const newPassword = await bcrypt.hash(password, salt)
             const updatedUser = await userService.UpdateUser(_id, { password: newPassword })
-            return res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE[200], 200, updatedUser))
+            return res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.USER.PASSWORD_CHANGED, 200, updatedUser))
         }
     } catch (error) {
-        return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[400], 400))
+        return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.USER.WRONG, 400))
     }
 }
 
@@ -189,9 +189,9 @@ const UpdateUserInfo = async (req: Request, res: Response) => {
     const payload = req.body
     try {
         const update = await userService.UpdateUser(_id, payload)
-        res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE[200], 200, update))
+        res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.USER.SUCCESS, 200, update))
     } catch (error) {
-        return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[400], 400))
+        return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.USER.WRONG, 400))
     }
 }
 
