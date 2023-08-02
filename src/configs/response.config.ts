@@ -21,6 +21,8 @@ export const RESPONSE_CONFIG = {
             PASSWORD_CHANGED: "Change password success",
             SUCCESS: "Success",
             WRONG: "Something wrong...",
+            TOKEN_ERROR: "Refresh Token incorrect",
+            NO_PERMISSION: "You don't have permission to access this",
         },
         WORKPLACE: {
             NO_CODENAME: "Require class code",

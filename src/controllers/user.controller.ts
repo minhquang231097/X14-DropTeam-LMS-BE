@@ -14,7 +14,7 @@ const SignUp = async (req: Request, res: Response) => {
         const refreshToken = jwt.sign({
             _id: user._id
         }, process.env.REFRESHTOKEN_KEY as string, { expiresIn: process.env.REFRESHTOKEN_TIME as string })
-        const updatedUser = await userService.UpdateUser(user._id, { refreshToken })
+        const updatedUser = await userService.UpdateUserById(user._id, { refreshToken })
         res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.USER.SIGNUP_SUCCESS, 200, updatedUser))
     } catch (error: any) {
         return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.USER.WRONG, 400, error.message))
@@ -24,33 +24,30 @@ const SignUp = async (req: Request, res: Response) => {
 const handleRefreshToken = async (req: Request, res: Response) => {
     const { refreshToken } = req.body;
     try {
-        const foundUser = await UserRepository.FindUserByCondition({ refreshToken })
-        if (!foundUser) return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.USER.NOT_FOUND, 400));
-        jwt.verify(
-            refreshToken,
-            process.env.REFRESHTOKEN_KEY as string,
-            (err: any, payload: any) => {
-                if (err || foundUser.username !== payload.username) return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[400], 400));
-                const accessToken = jwt.sign(
-                    {
-                        _id: foundUser._id,
-                        username: payload.username,
-                        role: foundUser.role
-                    },
-                    process.env.ACCESSTOKEN_KEY as string,
-                    { expiresIn: process.env.ACCESSTOKEN_TIME as string }
-                );
-                const decode: any = jwt.decode(accessToken)
-                const timeRefresh = 31536000 - (decode.iat - payload.iat)
-                const newRefreshToken = jwt.sign({
-                    _id: foundUser._id
-                }, process.env.REFRESHTOKEN_KEY as string, { expiresIn: `${timeRefresh}` })
-                userService.UpdateUser(foundUser._id, { refreshToken: newRefreshToken })
-                res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.USER.SUCCESS, 200, { roles: foundUser.role, accessToken, refreshToken: newRefreshToken }))
-            }
-        );
+        const foundUser = await userService.GetUserByCondition({ refreshToken })
+        if (!foundUser) {
+            return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.USER.TOKEN_ERROR, 404));
+        } else {
+            jwt.verify(
+                foundUser.refreshToken,
+                process.env.REFRESHTOKEN_KEY as string,
+                async (err: any, payload: any) => {
+                    if (err) return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.USER.WRONG, 400));
+                    const accessToken = jwt.sign(
+                        {
+                            _id: foundUser._id,
+                            username: payload.username,
+                            role: foundUser.role
+                        },
+                        process.env.ACCESSTOKEN_KEY as string,
+                        { expiresIn: process.env.ACCESSTOKEN_TIME as string }
+                    );
+                    res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.USER.SUCCESS, 200, { roles: foundUser.role, accessToken }))
+                }
+            );
+        }
     } catch (error: any) {
-        return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.USER.NOT_LOGIN, 401, error.message))
+        return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.USER.WRONG, 401, error.message))
     }
 
 }
@@ -58,7 +55,7 @@ const handleRefreshToken = async (req: Request, res: Response) => {
 const SignIn = async (req: Request, res: Response) => {
     const { username, password } = req.body
     try {
-        const userExist = await userService.FindUserByUsername(username)
+        const userExist = await userService.GetUserByUsername(username)
         if (!userExist) {
             return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.USER.NOT_CORRECT, 404))
         }
@@ -69,6 +66,15 @@ const SignIn = async (req: Request, res: Response) => {
                 username: userExist.username,
                 role: userExist.role
             }, process.env.ACCESSTOKEN_KEY as string, { expiresIn: process.env.ACCESSTOKEN_TIME as string })
+
+            jwt.verify(userExist.refreshToken, process.env.REFRESHTOKEN_KEY as string, async (err: any, payload: any) => {
+                if (err) {
+                    const newRefreshToken = jwt.sign({
+                        _id: userExist._id
+                    }, process.env.REFRESHTOKEN_KEY as string, { expiresIn: process.env.REFRESHTOKEN_TIME })
+                    await userService.UpdateUserById(userExist._id, { refreshToken: newRefreshToken })
+                }
+            })
 
             return res.status(200).json({
                 username: userExist.username,
@@ -86,8 +92,11 @@ const SignIn = async (req: Request, res: Response) => {
 const GetInfoUser = async (req: Request, res: Response, next: NextFunction) => {
     const idUser = req.user._id
     try {
-        const info = await userService.FindUserById(idUser)
-        res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.USER.FOUND, 302, info))
+        const info = await userService.GetUserById(idUser)
+        if (!info) {
+            return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.USER.NOT_LOGIN, 404))
+        }
+        res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.USER.FOUND, 200, info))
     } catch (error) {
         return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.USER.WRONG, 404))
     }
@@ -96,6 +105,9 @@ const GetInfoUser = async (req: Request, res: Response, next: NextFunction) => {
 const GetAllUser = async (req: Request, res: Response) => {
     try {
         const allUsers = await userService.GetAllUser()
+        if (!allUsers) {
+            return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.USER.NOT_FOUND, 404))
+        }
         return res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.USER.FOUND, 302, allUsers))
     } catch (error) {
         return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.USER.WRONG, 404))
@@ -105,7 +117,7 @@ const GetAllUser = async (req: Request, res: Response) => {
 const SignOutUser = async (req: Request, res: Response) => {
     const { id } = req.body
     try {
-        const user = await userService.UpdateUser(id, { accessToken: "" })
+        const user = await userService.UpdateUserById(id, { accessToken: "" })
         res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.USER.SUCCESS, 200, user))
     } catch (error) {
         return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.USER.WRONG, 400))
@@ -115,19 +127,20 @@ const SignOutUser = async (req: Request, res: Response) => {
 //Send email link for reset password
 const SendEmailVerifyUser = async (req: Request, res: Response) => {
     const { email } = req.body
+    const { address } = req.params
     if (!email) {
         return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.USER.NO_EMAIL, 400))
     }
     try {
-        const user: any = await userService.FindUserByEmail(email)
+        const user: any = await userService.GetUserByEmail(email)
         const token: any = jwt.sign({ _id: user._id }, process.env.ACCESSTOKEN_KEY as string, { expiresIn: "2m" })
-        const updatedUser = await userService.UpdateUser(user._id, { refreshToken: token })
+        const updatedUser = await userService.UpdateUserById(user._id, { refreshToken: token })
         if (updatedUser) {
             const mailOption = {
                 from: process.env.EMAIL_USERNAME,
                 to: email,
                 subject: "Xac thuc nguoi dung",
-                text: `This link valid for 2 minutes ${process.env.HOST_FE}/verify/${user._id}/${updatedUser.refreshToken}`
+                text: `This link valid for 2 minutes ${process.env.HOST_FE}/${address}/${user._id}/${updatedUser.refreshToken}`
             }
             SendMailService.sendMail(mailOption, (err, payload) => {
                 if (err) return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.USER.WRONG, 400))
@@ -141,19 +154,23 @@ const SendEmailVerifyUser = async (req: Request, res: Response) => {
 
 const SendEmailForgotPassword = async (req: Request, res: Response) => {
     const { email } = req.body
+    const { address } = req.params
     if (!email) {
         return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.USER.NO_EMAIL, 400))
     }
     try {
-        const user: any = await userService.FindUserByEmail(email)
+        const user: any = await userService.GetUserByEmail(email)
+        if (!user) {
+            return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[404], 404))
+        }
         const token: any = jwt.sign({ _id: user._id }, process.env.ACCESSTOKEN_KEY as string, { expiresIn: "2m" })
-        const updatedUser = await userService.UpdateUser(user._id, { refreshToken: token })
+        const updatedUser = await userService.UpdateUserById(user._id, { refreshToken: token })
         if (updatedUser) {
             const mailOption = {
                 from: process.env.EMAIL_USERNAME,
                 to: email,
                 subject: "Quen mat khau",
-                text: `This link valid for 2 minutes ${process.env.HOST_FE}/forgot-password/${user._id}/${updatedUser.refreshToken}`
+                text: `This link valid for 2 minutes ${process.env.HOST_FE}/${address}/${user._id}/${updatedUser.refreshToken}`
             }
             SendMailService.sendMail(mailOption, (err, payload) => {
                 if (err) return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.USER.WRONG, 400))
@@ -171,12 +188,15 @@ const ChangePassword = async (req: Request, res: Response) => {
     const _token = String(token)
     const { password } = req.body
     try {
-        const user: any = userService.FindUserById(_id)
+        const user: any = userService.GetUserById(_id)
+        if (!user) {
+            return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[404], 404))
+        }
         const verifyToken: any = jwt.verify(_token, process.env.ACCESSTOKEN_KEY as string)
         if (user && verifyToken._id) {
             const salt = await bcrypt.genSalt(10);
             const newPassword = await bcrypt.hash(password, salt)
-            const updatedUser = await userService.UpdateUser(_id, { password: newPassword })
+            const updatedUser = await userService.UpdateUserById(_id, { password: newPassword })
             return res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.USER.PASSWORD_CHANGED, 200, updatedUser))
         }
     } catch (error) {
@@ -188,7 +208,10 @@ const UpdateUserInfo = async (req: Request, res: Response) => {
     const { id } = req.user
     const payload = req.body
     try {
-        const update = await userService.UpdateUser(id, payload)
+        const update = await userService.UpdateUserById(id, payload)
+        if (!update) {
+            return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.USER.NOT_FOUND, 404))
+        }
         res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.USER.SUCCESS, 200, update))
     } catch (error) {
         return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.USER.WRONG, 400))

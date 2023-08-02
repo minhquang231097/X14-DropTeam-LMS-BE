@@ -9,6 +9,9 @@ const CreateCourse = async (req: Request, res: Response) => {
     const payload = req.body
     try {
         const newCourse: ICourse = await CourseService.CreateCourse(payload)
+        if (!newCourse) {
+            return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[400], 400))
+        }
         res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE[200], 200, newCourse))
     } catch (error: any) {
         return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[400], 400, error.message))
@@ -47,7 +50,7 @@ const GetCourseById = async (req: Request, res: Response) => {
     const { id } = req.query
     const _id = String(id)
     try {
-        const courseExist = await CourseService.FindCourseById(_id)
+        const courseExist = await CourseService.GetCourseById(_id)
         if (!courseExist) {
             return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[404], 404))
         }
@@ -61,7 +64,7 @@ const GetCourseByCode = async (req: Request, res: Response) => {
     const { code } = req.query
     const _code = String(code)
     try {
-        const courseExist = await CourseService.FindCourseByCode(_code)
+        const courseExist = await CourseService.GetCourseByCode(_code)
         if (!courseExist) {
             return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[404], 404))
         }
@@ -76,7 +79,7 @@ const UpdateCourse = async (req: Request, res: Response) => {
     const _id = String(id)
     try {
         const update = req.body
-        const courseExist = await CourseService.FindCourseById(_id)
+        const courseExist = await CourseService.GetCourseById(_id)
         if (!courseExist) {
             return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[400], 400))
         }
@@ -91,7 +94,7 @@ const DeletedCourse = async (req: Request, res: Response) => {
     const { id } = req.query
     const _id = String(id)
     try {
-        const courseExist = await CourseService.FindCourseById(_id)
+        const courseExist = await CourseService.GetCourseById(_id)
         if (!courseExist) {
             return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[400], 400))
         }
@@ -104,7 +107,10 @@ const DeletedCourse = async (req: Request, res: Response) => {
 
 const DeletedAllCourse = async (req: Request, res: Response) => {
     try {
-        await Course.deleteMany()
+        const courseDeleted = await Course.deleteMany()
+        if (!courseDeleted) {
+            return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[400], 400))
+        }
         res.sendStatus(200)
     } catch (error) {
         console.log(error);

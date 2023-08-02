@@ -1,52 +1,14 @@
-import { IWorkplace, Workplace } from "@/models/workplace.model";
-import { UpdateWorkplaceDto } from "@/types/workplace";
-import { ObjectId } from "mongoose";
+import { IWorkplace } from "@/models/workplace.model";
+import { Model } from "mongoose";
+import { BaseRepository } from "./base.repo";
 
-export class WorkplaceRepository {
-    constructor() { }
-
-    static async CreateOne(workplace: IWorkplace) {
-        const createWorkplace = await Workplace.create(workplace)
-        return createWorkplace.toObject()
+export class WorkplaceRepository extends BaseRepository<IWorkplace> {
+    constructor(model: Model<IWorkplace>) {
+        super(model)
     }
 
-    static async UpdateWorkplace(id: ObjectId | string, update: UpdateWorkplaceDto) {
-        const updateWorkplace = await Workplace.findByIdAndUpdate(id, update)
-        return updateWorkplace?.toObject()
-    }
-
-    static async FindWorkplaceById(id: ObjectId | string) {
-        const workplace = await Workplace.findById(id)
+    async FindWorkplaceByCode(workplace_code: string) {
+        const workplace = await this.model.findOne({ workplace_code })
         return workplace?.toObject()
-    }
-
-    static async FindWorkplaceByName(name: string) {
-        const workplace = await Workplace.findOne({ name })
-        return workplace?.toObject()
-    }
-
-    static async FindWorkplaceByCode(workplace_code: string) {
-        const workplace = await Workplace.findOne({ workplace_code })
-        return workplace?.toObject()
-    }
-
-    static async GetAllWorkplace() {
-        const allWorkplace = await Workplace.find()
-        return allWorkplace.map((wp) => wp.toObject())
-    }
-
-    static async DeleteOneWorkplaceById(id: ObjectId | string) {
-        const deletedWorkplace = await Workplace.findByIdAndDelete(id)
-        return deletedWorkplace?.toObject()
-    }
-
-    static async DeleteOneWorkplaceByName(name: string) {
-        const deletedWorkplace = await Workplace.findOneAndDelete({ name })
-        return deletedWorkplace?.toObject()
-    }
-
-    static async DeleteOneWorkplaceByCode(workplace_code: string) {
-        const deletedWorkplace = await Workplace.findOneAndDelete({ workplace_code })
-        return deletedWorkplace?.toObject()
     }
 }
