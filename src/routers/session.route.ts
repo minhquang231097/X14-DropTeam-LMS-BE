@@ -7,6 +7,6 @@ const sessionRouter = express.Router()
 // const sessionService = new SessionService(sessionRepository)
 // const sessionController = new SessionController(sessionService)
 
-sessionRouter.get("/", sessionController.GetAll)
+// sessionRouter.get("/", sessionController.GetAll)
 
 export default sessionRouter

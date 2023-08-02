@@ -7,7 +7,7 @@ import { UpdateLessonDto } from "@/types/lesson";
 const lessonRepository = new LessonRepository(Lesson)
 
 const CreateLesson = async (session_code: string, payload: ILesson) => {
-    const session = await sessionService.FindSessionByCode(session_code)
+    const session = await sessionService.GetSessionByCode(session_code)
     return await lessonRepository.CreateLesson(session?._id, payload)
 }
 

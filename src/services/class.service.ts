@@ -12,9 +12,9 @@ import workplaceService from "./workplace.service";
 const classRepository = new ClassRepository(Class)
 
 const CreateOneClass = async (email_mentor: string, workplace_code: string, course_code: string, payload: IClass) => {
-    const _mentor = await userService.FindUserByEmail(email_mentor)
-    const _workplace = await workplaceService.FindWorkplaceByCode(workplace_code)
-    const _course = await courseService.FindCourseByCode(course_code)
+    const _mentor = await userService.GetUserByEmail(email_mentor)
+    const _workplace = await workplaceService.GetWorkplaceByCode(workplace_code)
+    const _course = await courseService.GetCourseByCode(course_code)
     const id_mentor = _mentor?._id
     const id_workplace = _workplace?._id
     const id_course = _course?._id
