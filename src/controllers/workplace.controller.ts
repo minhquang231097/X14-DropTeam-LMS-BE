@@ -57,9 +57,9 @@ const UpdateWorkplace = async (req: Request, res: Response) => {
 }
 
 const DeletedWorkplace = async (req: Request, res: Response) => {
+    const { id } = req.query
+    const _id = String(id)
     try {
-        const { id } = req.query
-        const _id = String(id)
         const workplaceExist = await WorkplaceService.FindWorkplaceById(_id)
         if (!workplaceExist) {
             return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[400], 400, "Workplace Not Exist"))

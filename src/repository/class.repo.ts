@@ -1,11 +1,12 @@
 import { Class, IClass } from "@/models/class.model";
-import { FilterQuery } from "mongoose";
+import { UpdateClassDto } from "@/types/class";
+import { FilterQuery, ObjectId } from "mongoose";
 
 export class ClassRepository {
     constructor() { }
 
-    static async CreateClass(payload: IClass) {
-        return (await Class.create(payload)).toObject()
+    static async CreateClass(mentor: ObjectId | string, workplace: ObjectId | string, course: ObjectId | string, payload: IClass) {
+        return (await Class.create({ ...payload, mentor, workplace, course })).toObject()
     }
 
     static async FindClassByCondition(
@@ -25,13 +26,16 @@ export class ClassRepository {
         return await Class.findOne(filter, field, option).populate(populate);
     }
 
-    static async FindClassById(id: string) {
+    static async FindClassById(id: ObjectId | string) {
         return await Class.findById(id)
     }
 
-    static async FindAllClass(page: number): Promise<IClass[]> {
-        const class_per_page = 12
-        return await Class.find().skip((page - 1) * class_per_page).limit(class_per_page)
+    static async FindClassByCode(code: string) {
+        return await Class.findOne({ class_code: code })
+    }
+
+    static async FindAllClass(page: number, limit: number): Promise<IClass[]> {
+        return await Class.find().skip((page - 1) * limit).limit(limit)
     }
 
     static async FindByConditionAndUpdate(filter: any, update: IClass) {
@@ -39,24 +43,23 @@ export class ClassRepository {
     }
 
     static async UpdateOneClass(
-        filter: FilterQuery<IClass> | any,
-        update?: any | null) {
-        return await Class.findOneAndUpdate(filter, update)
+        id: ObjectId | string,
+        update?: UpdateClassDto) {
+        return await Class.findOneAndUpdate({ _id: id }, update)
     }
 
     static async UpdateManyClass(
         filter: FilterQuery<IClass> | any,
-        update?: any | null) {
+        update?: UpdateClassDto) {
         return await Class.updateMany(filter, update)
     }
 
     static async DeleteClassByCondition(
-        filter: FilterQuery<IClass>) {
+        filter: FilterQuery<IClass> | any) {
         return await Class.deleteMany(filter)
     }
 
-
-    static async DeleteClassById(id: string) {
-        return await Class.findByIdAndDelete(id)
+    static async DeleteClassById(id: ObjectId | string) {
+        return await Class.findByIdAndDelete({ _id: id })
     }
 }

@@ -1,6 +1,6 @@
 import { IWorkplace } from "@/models/workplace.model";
 import { WorkplaceRepository } from "@/repository/workplace.repo";
-import { WorkplaceBody } from "@/types/workplace/workplace";
+import { ObjectId } from "mongoose";
 
 const CreateWorkplace = async (payload: IWorkplace) => {
     return await WorkplaceRepository.CreateOne(payload)
@@ -14,20 +14,20 @@ const FindWorkplaceByName = async (name: string) => {
     return await WorkplaceRepository.FindWorkplaceByName(name)
 }
 
-const FindWorkplaceById = async (id: string) => {
+const FindWorkplaceById = async (id: ObjectId | string) => {
     return await WorkplaceRepository.FindWorkplaceById(id)
 }
 
-const FindWorkplaceByCode = async (workplace_code: string) => {
-    return await WorkplaceRepository.FindWorkplaceByCode(workplace_code)
+const FindWorkplaceByCode = async (code: string) => {
+    return await WorkplaceRepository.FindWorkplaceByCode(code)
 }
 
-const UpdateWorkplace = async (id: string, payload: WorkplaceBody) => {
+const UpdateWorkplace = async (id: ObjectId | string, payload: any) => {
     return await WorkplaceRepository.UpdateWorkplace(id, payload)
 }
 
-const DeletedWorkplace = async (id: string) => {
+const DeletedWorkplace = async (id: ObjectId | string) => {
     return await WorkplaceRepository.DeleteOneWorkplaceById(id)
 }
 
-export default { CreateWorkplace, GetAllWorkplace, FindWorkplaceByName, FindWorkplaceById, FindWorkplaceByCode, UpdateWorkplace, DeletedWorkplace }
+export default { CreateWorkplace, GetAllWorkplace, FindWorkplaceByName, FindWorkplaceById, UpdateWorkplace, DeletedWorkplace, FindWorkplaceByCode }

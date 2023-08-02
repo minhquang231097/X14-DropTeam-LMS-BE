@@ -1,5 +1,6 @@
 import { IWorkplace, Workplace } from "@/models/workplace.model";
-import { WorkplaceBody } from "@/types/workplace/workplace";
+import { UpdateWorkplaceDto } from "@/types/workplace";
+import { ObjectId } from "mongoose";
 
 export class WorkplaceRepository {
     constructor() { }
@@ -9,12 +10,12 @@ export class WorkplaceRepository {
         return createWorkplace.toObject()
     }
 
-    static async UpdateWorkplace(id: string, update: WorkplaceBody) {
+    static async UpdateWorkplace(id: ObjectId | string, update: UpdateWorkplaceDto) {
         const updateWorkplace = await Workplace.findByIdAndUpdate(id, update)
         return updateWorkplace?.toObject()
     }
 
-    static async FindWorkplaceById(id: string) {
+    static async FindWorkplaceById(id: ObjectId | string) {
         const workplace = await Workplace.findById(id)
         return workplace?.toObject()
     }
@@ -35,7 +36,7 @@ export class WorkplaceRepository {
         return allWorkplace.map((wp) => wp.toObject())
     }
 
-    static async DeleteOneWorkplaceById(id: string) {
+    static async DeleteOneWorkplaceById(id: ObjectId | string) {
         const deletedWorkplace = await Workplace.findByIdAndDelete(id)
         return deletedWorkplace?.toObject()
     }

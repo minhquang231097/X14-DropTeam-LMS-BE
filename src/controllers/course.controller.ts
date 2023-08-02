@@ -3,11 +3,12 @@ import CourseService from "@/services/course.service";
 import { RESPONSE_CONFIG } from "@/configs/response.config";
 import HttpResponseData from "@/common/httpResponseData";
 import HttpException from "@/common/httpException";
+import { Course, ICourse } from "@/models/course.model";
 
 const CreateCourse = async (req: Request, res: Response) => {
     const payload = req.body
     try {
-        const newCourse: any = await CourseService.CreateCourse(payload)
+        const newCourse: ICourse = await CourseService.CreateCourse(payload)
         res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE[200], 200, newCourse))
     } catch (error: any) {
         return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[400], 400, error.message))
@@ -33,7 +34,10 @@ const GetAllCourse = async (req: Request, res: Response) => {
     const l = Number(limit)
     try {
         const allCourses = await CourseService.GetAllCourse(p, l)
-        return res.json(allCourses)
+        if (!allCourses) {
+            return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[404], 404))
+        }
+        return res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE[200], 200, { list: allCourses, page: p, count: allCourses.length }))
     } catch (error) {
         return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[404], 404))
     }
@@ -46,6 +50,20 @@ const GetCourseById = async (req: Request, res: Response) => {
         const courseExist = await CourseService.FindCourseById(_id)
         if (!courseExist) {
             return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[404], 404, "Course Not Exist"))
+        }
+        return res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE[200], 200, courseExist))
+    } catch (error) {
+        return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[404], 404))
+    }
+}
+
+const GetCourseByCode = async (req: Request, res: Response) => {
+    const { code } = req.query
+    const _code = String(code)
+    try {
+        const courseExist = await CourseService.FindCourseByCode(_code)
+        if (!courseExist) {
+            return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[404], 404))
         }
         return res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE[200], 200, courseExist))
     } catch (error) {
@@ -93,4 +111,13 @@ const DeletedCourse = async (req: Request, res: Response) => {
     }
 }
 
-export default { CreateCourse, GetAllCourse, GetCourseById, UpdateCourse, DeletedCourse, UploadImage }
+const DeletedAllCourse = async (req: Request, res: Response) => {
+    try {
+        await Course.deleteMany()
+        res.sendStatus(200)
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+export default { CreateCourse, GetAllCourse, GetCourseById, UpdateCourse, DeletedCourse, UploadImage, DeletedAllCourse, GetCourseByCode }
