@@ -93,6 +93,9 @@ const GetInfoUser = async (req: Request, res: Response, next: NextFunction) => {
     const idUser = req.user._id
     try {
         const info = await userService.GetUserById(idUser)
+        if (!info) {
+            return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[404], 404))
+        }
         res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE[200], 200, info))
     } catch (error) {
         return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[404], 404))
@@ -102,6 +105,9 @@ const GetInfoUser = async (req: Request, res: Response, next: NextFunction) => {
 const GetAllUser = async (req: Request, res: Response) => {
     try {
         const allUsers = await userService.GetAllUser()
+        if (!allUsers) {
+            return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[404], 404))
+        }
         return res.json(allUsers)
     } catch (error) {
         return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[404], 404))
@@ -154,6 +160,9 @@ const SendEmailForgotPassword = async (req: Request, res: Response) => {
     }
     try {
         const user: any = await userService.GetUserByEmail(email)
+        if (!user) {
+            return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[404], 404))
+        }
         const token: any = jwt.sign({ _id: user._id }, process.env.ACCESSTOKEN_KEY as string, { expiresIn: "2m" })
         const updatedUser = await userService.UpdateUserById(user._id, { refreshToken: token })
         if (updatedUser) {
@@ -180,6 +189,9 @@ const ChangePassword = async (req: Request, res: Response) => {
     const { password } = req.body
     try {
         const user: any = userService.GetUserById(_id)
+        if (!user) {
+            return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[404], 404))
+        }
         const verifyToken: any = jwt.verify(_token, process.env.ACCESSTOKEN_KEY as string)
         if (user && verifyToken._id) {
             const salt = await bcrypt.genSalt(10);
@@ -197,6 +209,9 @@ const UpdateUserInfo = async (req: Request, res: Response) => {
     const payload = req.body
     try {
         const update = await userService.UpdateUserById(id, payload)
+        if (!update) {
+            return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[404], 404))
+        }
         res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE[200], 200, update))
     } catch (error) {
         return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[400], 400))

@@ -7,6 +7,9 @@ import HttpException from "@/common/httpException";
 const CreateWorkplace = async (req: Request, res: Response) => {
     try {
         const workplace: any = await WorkplaceService.CreateWorkplace(req.body)
+        if (!workplace) {
+            return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[404], 404))
+        }
         res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE[200], 200, workplace))
     } catch (error: any) {
         return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[400], 400, error.message))
@@ -16,6 +19,9 @@ const CreateWorkplace = async (req: Request, res: Response) => {
 const GetAllWorkplace = async (req: Request, res: Response) => {
     try {
         const allWorkplaces = await WorkplaceService.GetAllWorkplace()
+        if (!allWorkplaces) {
+            return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[404], 404))
+        }
         return res.json(allWorkplaces)
     } catch (error) {
         return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[404], 404))

@@ -9,6 +9,9 @@ const CreateCourse = async (req: Request, res: Response) => {
     const payload = req.body
     try {
         const newCourse: ICourse = await CourseService.CreateCourse(payload)
+        if (!newCourse) {
+            return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[400], 400))
+        }
         res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE[200], 200, newCourse))
     } catch (error: any) {
         return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[400], 400, error.message))
@@ -104,7 +107,10 @@ const DeletedCourse = async (req: Request, res: Response) => {
 
 const DeletedAllCourse = async (req: Request, res: Response) => {
     try {
-        await Course.deleteMany()
+        const courseDeleted = await Course.deleteMany()
+        if (!courseDeleted) {
+            return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[400], 400))
+        }
         res.sendStatus(200)
     } catch (error) {
         console.log(error);

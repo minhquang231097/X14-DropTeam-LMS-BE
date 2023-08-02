@@ -67,6 +67,9 @@ const UpdateClass = async (req: Request, res: Response) => {
     const update = req.body
     try {
         const classUpdated = await classService.UpdateOneClass(_id, update)
+        if (!classUpdated) {
+            return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[404], 404))
+        }
         res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE[200], 200, classUpdated))
     } catch (error: any) {
         return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[400], 400))
@@ -77,7 +80,10 @@ const DeleteOneClass = async (req: Request, res: Response) => {
     const { id } = req.query
     const _id = String(id)
     try {
-        await classService.DeleteClassById(_id)
+        const classDeleted = await classService.DeleteClassById(_id)
+        if (!classDeleted) {
+            return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[404], 404))
+        }
         res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE[200], 200))
     } catch (error: any) {
         return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[400], 400, error.message))
@@ -87,7 +93,10 @@ const DeleteOneClass = async (req: Request, res: Response) => {
 const DeleteManyCourse = async (req: Request, res: Response) => {
     const filter = req.body
     try {
-        await classService.DeleteClassByCondition(filter)
+        const classDeleted = await classService.DeleteClassByCondition(filter)
+        if (!classDeleted) {
+            return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[404], 404))
+        }
         res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE[200], 200))
     } catch (error: any) {
         return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[400], 400, error.message))
