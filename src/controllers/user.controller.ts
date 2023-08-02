@@ -50,7 +50,7 @@ const handleRefreshToken = async (req: Request, res: Response) => {
             }
         );
     } catch (error: any) {
-        return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[401], 401, error.message))
+        return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.USER.NOT_LOGIN, 401, error.message))
     }
 
 }
@@ -60,7 +60,7 @@ const SignIn = async (req: Request, res: Response) => {
     try {
         const userExist = await userService.FindUserByUsername(username)
         if (!userExist) {
-            return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.USER.USERNAME_INCORRECT, 404))
+            return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.USER.NOT_CORRECT, 404))
         }
         const checkPassword = bcrypt.compareSync(password, userExist.password)
         if (checkPassword) {
@@ -77,7 +77,7 @@ const SignIn = async (req: Request, res: Response) => {
                 refreshToken: userExist.refreshToken
             })
         }
-        return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.USER.PASSWORD_INCORRECT, 400))
+        return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.USER.NOT_CORRECT, 400))
     } catch (error: any) {
         return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.USER.WRONG, 400, error.message))
     }
@@ -89,7 +89,7 @@ const GetInfoUser = async (req: Request, res: Response, next: NextFunction) => {
         const info = await userService.FindUserById(idUser)
         res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.USER.FOUND, 302, info))
     } catch (error: any) {
-        return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[404], 404, error.message))
+        return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.USER.NOT_FOUND, 404, error.message))
     }
 }
 
@@ -98,7 +98,7 @@ const GetAllUser = async (req: Request, res: Response) => {
         const allUsers = await userService.GetAllUser()
         return res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.USER.FOUND, 302, allUsers))
     } catch (error: any) {
-        return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[404], 404, error.message))
+        return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.USER.NOT_FOUND, 404, error.message))
     }
 }
 

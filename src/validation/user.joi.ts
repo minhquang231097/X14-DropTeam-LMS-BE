@@ -1,6 +1,7 @@
 import Joi from "joi";
 import { IUser } from "../models/user.model"
 import { SignInDto, SignOutDto, UpdateUserDto } from "@/types/user.dto";
+import { ChangePassword } from "@/types/user/change_password";
 
 
 export const Schema = {
@@ -35,6 +36,9 @@ export const Schema = {
             dob: Joi.string().optional(),
             gender: Joi.string().optional(),
             address: Joi.string().optional(),
+        }),
+        change_password: Joi.object<ChangePassword>({
+            password: Joi.string().min(6).max(50).required(),
         })
     }
 }
