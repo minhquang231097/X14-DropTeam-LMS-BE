@@ -4,7 +4,7 @@ const workplaceSchema = new Schema({
     name: { type: String, unique: true },
     address: String,
     status: { type: String, enum: ["ON", "OFF", "UPCOMING"] },
-    workplace_code: { type: String, unique: true }
+    workplace_code: { type: String, unique: true },
 })
 
 enum StatusWP {
@@ -15,7 +15,7 @@ export interface IWorkplace extends Document {
     name: string,
     address: string,
     status: StatusWP,
-    workplace_code: string
+    workplace_code: string,
 }
 
 export const Workplace = model<IWorkplace>("workplaces", workplaceSchema)

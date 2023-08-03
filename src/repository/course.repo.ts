@@ -9,7 +9,7 @@ export class CourseRepository extends BaseRepository<ICourse> {
     }
 
     async FindCourseByCode(course_code: string) {
-        const course = await Course.findOne({ course_code })
+        const course = await Course.findOne({ course_code }).populate("workplace")
         return course?.toObject()
     }
 }

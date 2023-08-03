@@ -1,5 +1,6 @@
 import { IWorkplace, Workplace } from "@/models/workplace.model";
 import { WorkplaceRepository } from "@/repository/workplace.repo";
+import { FindWorkplaceDto } from "@/types/workplace";
 import { ObjectId } from "mongoose";
 
 const workplaceRepository = new WorkplaceRepository(Workplace)
@@ -24,6 +25,10 @@ const GetWorkplaceByCode = async (code: string) => {
     return await workplaceRepository.FindWorkplaceByCode(code)
 }
 
+const GetWorkplaceByCodition = async (filter: FindWorkplaceDto) => {
+    return await workplaceRepository.FindByCondition(filter)
+}
+
 const UpdateWorkplace = async (id: ObjectId | string, payload: any) => {
     return await workplaceRepository.FindByIdAndUpdate(id, payload)
 }
@@ -32,4 +37,4 @@ const DeletedWorkplace = async (id: ObjectId | string) => {
     return await workplaceRepository.DeleteOne(id)
 }
 
-export default { CreateWorkplace, GetAllWorkplace, GetWorkplaceByName, GetWorkplaceById, UpdateWorkplace, DeletedWorkplace, GetWorkplaceByCode }
+export default { CreateWorkplace, GetWorkplaceByCodition, GetAllWorkplace, GetWorkplaceByName, GetWorkplaceById, UpdateWorkplace, DeletedWorkplace, GetWorkplaceByCode }

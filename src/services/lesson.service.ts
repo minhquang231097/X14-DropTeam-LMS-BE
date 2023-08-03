@@ -12,11 +12,11 @@ const CreateLesson = async (session_code: string, payload: ILesson) => {
 }
 
 const GetAllLesson = async (page: number, limit: number) => {
-    return await lessonRepository.FindAllAndPagination(page, limit)
+    return await lessonRepository.FindAllInfoAndPagination(page, limit, "session")
 }
 
 const GetLessonById = async (id: ObjectId | string) => {
-    return await lessonRepository.FindById(id)
+    return await lessonRepository.FindById(id, "session")
 }
 
 const GetLessonBySessionId = async (id: ObjectId | string) => {

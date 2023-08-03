@@ -12,6 +12,7 @@ const courseSchema = new Schema({
     level: Number,
     rate: Number,
     discount: Number,
+    workplace: { type: Schema.Types.ObjectId, ref: "workplaces" }
 })
 
 export interface ICourse extends Document {
@@ -25,7 +26,8 @@ export interface ICourse extends Document {
     duration: number,
     level: number,
     rate: number,
-    discount: number
+    discount: number,
+    workplace: string
 }
 
 export const Course = model<ICourse>('courses', courseSchema)

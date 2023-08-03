@@ -10,17 +10,15 @@ export abstract class BaseRepository<T extends Document> {
         return await createdEntity.save();
     }
 
-    async FindById(id: ObjectId | string, option?: QueryOptions): Promise<T | any> {
-        return this.model.findById(id, option);
+    async FindById(id: ObjectId | string, populate?: any | null): Promise<T | any> {
+        return this.model.findById(id).populate(populate)
     }
 
     async FindByCondition(
         filter: any,
-        field?: any | null,
-        option?: any | null,
         populate?: any | null,
     ): Promise<T | any> {
-        return this.model.findOne(filter, field, option).populate(populate);
+        return this.model.findOne(filter).populate(populate);
     }
 
     async GetByCondition(
@@ -36,8 +34,8 @@ export abstract class BaseRepository<T extends Document> {
         return this.model.find();
     }
 
-    async FindAllAndPagination(page: number, limit: number): Promise<T[] | any> {
-        return await this.model.find().skip((page - 1) * limit).limit(limit)
+    async FindAllInfoAndPagination(page: number, limit: number, populate?: any | null,): Promise<T[] | any> {
+        return await this.model.find().skip((page - 1) * limit).limit(limit).populate(populate)
     }
 
     async Aggregate(option: any) {

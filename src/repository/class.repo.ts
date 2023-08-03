@@ -12,18 +12,18 @@ export class ClassRepository extends BaseRepository<IClass> {
     }
 
     async FindClassByCode(code: string) {
-        return await Class.findOne({ class_code: code })
+        return await Class.findOne({ class_code: code }).populate(["mentor", "workplace", "course"])
     }
 
     async FindClassByMentorId(id: ObjectId | string) {
-        return await Class.find({ mentor: id })
+        return await Class.find({ mentor: id }).populate(["mentor", "workplace", "course"])
     }
 
     async FindClassByWorkplaceId(id: ObjectId | string) {
-        return await Class.find({ workplace: id })
+        return await Class.find({ workplace: id }).populate(["mentor", "workplace", "course"])
     }
 
     async FindClassByCourseId(id: ObjectId | string) {
-        return await Class.find({ course: id })
+        return await Class.find({ course: id }).populate(["mentor", "workplace", "course"])
     }
 }
