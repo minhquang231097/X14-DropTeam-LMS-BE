@@ -127,7 +127,6 @@ const SignOutUser = async (req: Request, res: Response) => {
 //Send email link for reset password
 const SendEmailVerifyUser = async (req: Request, res: Response) => {
     const { email } = req.body
-    const { address } = req.params
     if (!email) {
         return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.USER.NO_EMAIL, 400))
     }
@@ -140,7 +139,7 @@ const SendEmailVerifyUser = async (req: Request, res: Response) => {
                 from: process.env.EMAIL_USERNAME,
                 to: email,
                 subject: "Xac thuc nguoi dung",
-                text: `This link valid for 2 minutes ${process.env.HOST_FE}/${address}/${user._id}/${updatedUser.refreshToken}`
+                text: `This link valid for 2 minutes ${process.env.HOST_FE}/verify?id=${user._id}&token=${updatedUser.refreshToken}`
             }
             SendMailService.sendMail(mailOption, (err, payload) => {
                 if (err) return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.USER.WRONG, 400))
@@ -154,7 +153,6 @@ const SendEmailVerifyUser = async (req: Request, res: Response) => {
 
 const SendEmailForgotPassword = async (req: Request, res: Response) => {
     const { email } = req.body
-    const { address } = req.params
     if (!email) {
         return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.USER.NO_EMAIL, 400))
     }
@@ -170,7 +168,7 @@ const SendEmailForgotPassword = async (req: Request, res: Response) => {
                 from: process.env.EMAIL_USERNAME,
                 to: email,
                 subject: "Quen mat khau",
-                text: `This link valid for 2 minutes ${process.env.HOST_FE}/${address}/${user._id}/${updatedUser.refreshToken}`
+                text: `This link valid for 2 minutes ${process.env.HOST_FE}/reset-password?id=${user._id}&token=${updatedUser.refreshToken}`
             }
             SendMailService.sendMail(mailOption, (err, payload) => {
                 if (err) return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.USER.WRONG, 400))
@@ -195,7 +193,7 @@ const ChangePassword = async (req: Request, res: Response) => {
             const salt = await bcrypt.genSalt(10);
             const newPassword = await bcrypt.hash(password, salt)
             const updatedUser = await userService.UpdateUserById(id as string, { password: newPassword })
-            return res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.USER.PASSWORD_CHANGED, 200, updatedUser))
+            return res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.USER.PASSWORD_CHANGED, 200))
         }
     } catch (error) {
         return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.USER.WRONG, 400))
