@@ -1,14 +1,16 @@
-import { Model, FilterQuery, QueryOptions, Document } from 'mongoose';
+import { Model, FilterQuery, QueryOptions, ObjectId, Document } from 'mongoose';
 
-export class BaseRepository<T extends Document> {
-    constructor(private readonly model: Model<T>) { }
+export abstract class BaseRepository<T extends Document> {
+    constructor(public model: Model<T>) {
+        this.model = model
+    }
 
-    async Create(doc: any): Promise<any> {
-        const createdEntity = new this.model(doc);
+    async Create(payload: T | any): Promise<T | any> {
+        const createdEntity = new this.model(payload);
         return await createdEntity.save();
     }
 
-    async FindById(id: string, option?: QueryOptions): Promise<any> {
+    async FindById(id: ObjectId | string, option?: QueryOptions): Promise<T | any> {
         return this.model.findById(id, option);
     }
 
@@ -17,7 +19,7 @@ export class BaseRepository<T extends Document> {
         field?: any | null,
         option?: any | null,
         populate?: any | null,
-    ): Promise<any> {
+    ): Promise<T | any> {
         return this.model.findOne(filter, field, option).populate(populate);
     }
 
@@ -26,12 +28,16 @@ export class BaseRepository<T extends Document> {
         field?: any | null,
         option?: any | null,
         populate?: any | null,
-    ): Promise<T[]> {
+    ): Promise<T[] | any> {
         return this.model.find(filter, field, option).populate(populate);
     }
 
-    async FindAll(): Promise<T[]> {
+    async FindAll(): Promise<T[] | any> {
         return this.model.find();
+    }
+
+    async FindAllAndPagination(page: number, limit: number): Promise<T[] | any> {
+        return await this.model.find().skip((page - 1) * limit).limit(limit)
     }
 
     async Aggregate(option: any) {
@@ -42,11 +48,11 @@ export class BaseRepository<T extends Document> {
         return await this.model.populate(result, option);
     }
 
-    async DeleteOne(id: string) {
+    async DeleteOne(id: ObjectId | string) {
         return this.model.deleteOne({ _id: id } as FilterQuery<T>);
     }
 
-    async DeleteMany(id: string[]) {
+    async DeleteMany(id: string[] | ObjectId[]) {
         return this.model.deleteMany({ _id: { $in: id } } as FilterQuery<T>);
     }
 
@@ -62,7 +68,7 @@ export class BaseRepository<T extends Document> {
         return this.model.updateMany(filter, update, option);
     }
 
-    async FindByIdAndUpdate(id: any, update: any) {
+    async FindByIdAndUpdate(id: string | ObjectId, update: any) {
         return this.model.findByIdAndUpdate(id, update);
     }
 }

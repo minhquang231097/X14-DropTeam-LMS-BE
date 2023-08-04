@@ -1,6 +1,6 @@
 import Joi from "joi";
 import { IWorkplace } from "@/models/workplace.model";
-import { WorkplaceBody } from "@/types/workplace/workplace";
+import { UpdateWorkplaceDto } from "@/types/workplace";
 
 export const WorkplaceSchema = {
     Workplace: {
@@ -13,7 +13,7 @@ export const WorkplaceSchema = {
             'string.empty': `all field cannot be an empty `,
             'any.required': `all field is a required`
         }),
-        update_workplace: Joi.object<IWorkplace>({
+        update_workplace: Joi.object<UpdateWorkplaceDto>({
             name: Joi.string().max(100).required(),
             address: Joi.string().max(200).required(),
             status: Joi.string().valid("ON", "OFF", "UPCOMING").required(),

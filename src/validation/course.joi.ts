@@ -1,5 +1,6 @@
 import Joi from "joi";
 import { ICourse } from "@/models/course.model";
+import { UpdateCourseDto } from "@/types/course";
 
 export const CourseSchema = {
     Course: {
@@ -19,7 +20,7 @@ export const CourseSchema = {
             'string.empty': `all field cannot be an empty `,
             'any.required': `all field is a required`
         }),
-        update_course: Joi.object<ICourse>({
+        update_course: Joi.object<UpdateCourseDto>({
             course_code: Joi.string().max(10).required(),
             title: Joi.string().max(20).required(),
             image: Joi.array().max(200),
