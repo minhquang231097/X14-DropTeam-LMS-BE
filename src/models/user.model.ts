@@ -29,7 +29,6 @@ export interface IUser extends Document {
   username: string,
   password: string,
   refreshToken?: string,
-  create_at?: Date,
   role?: string,
   dob: string,
   gender: string,
