@@ -57,8 +57,7 @@ const UpdateWorkplace = async (req: Request, res: Response) => {
             return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.WORKPLACE.NOT_FOUND, 400))
         }
         await WorkplaceService.UpdateWorkplace(_id, update)
-        const updateWorkplace = await WorkplaceService.GetWorkplaceById(_id)
-        return res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.WORKPLACE.UPDATE_SUCCESS, 200, updateWorkplace))
+        return res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.WORKPLACE.UPDATE_SUCCESS, 200))
     } catch (error: any) {
         return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.WORKPLACE.WRONG, 400, error.message))
     }

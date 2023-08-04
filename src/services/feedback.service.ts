@@ -1,9 +1,9 @@
-// import { FeedBack } from "@/models/feedback.model";
-// import { FeedbackRepository } from "@/repository/feedback.repo";
+import { FeedBack } from "@/models/feedback.model";
+import { FeedbackRepository } from "@/repository/feedback.repo";
 import courseService from "./course.service";
 import userService from "./user.service";
 import { ObjectId } from "mongoose";
-// import { FindFeedbackDto, UpdateFeedbackDto } from "@/types/feedback";
+import { FindFeedbackDto, UpdateFeedbackDto } from "@/types/feedback";
 
 const feedbackRepository = new FeedbackRepository(FeedBack)
 
@@ -14,7 +14,7 @@ const CreateFeedback = async (course_code: string, email_student: string, payloa
     return newFeedback
 }
 
-const GetFeedbackById = async (id:  string) => {
+const GetFeedbackById = async (id: string) => {
     return await feedbackRepository.FindById(id, ["course", "student"])
 }
 
@@ -32,11 +32,11 @@ const GetFeedbackByCondition = async (page: number, limit: number) => {
     return await feedbackRepository.FindAllInfoAndPagination(page, limit, ["course", "student"])
 }
 
-const UpdateFeedback = async (id:  string, payload: UpdateFeedbackDto) => {
+const UpdateFeedback = async (id: string, payload: UpdateFeedbackDto) => {
     return await feedbackRepository.FindByIdAndUpdate(id, payload)
 }
 
-const DeleteFeedbackById = async (id:  string) => {
+const DeleteFeedbackById = async (id: string) => {
     return await feedbackRepository.DeleteOne(id)
 }
 

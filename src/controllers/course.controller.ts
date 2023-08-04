@@ -82,8 +82,7 @@ const UpdateCourse = async (req: Request, res: Response) => {
             return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.COURSE.NOT_FOUND, 400))
         }
         await CourseService.UpdateCourse(id as string, update)
-        const updateCourse = await CourseService.GetCourseById(id as string)
-        res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.COURSE.UPDATE_SUCCESS, 200, updateCourse))
+        res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.COURSE.UPDATE_SUCCESS, 200))
     } catch (error: any) {
         return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.WORKPLACE.WRONG, 400, error.message))
     }
