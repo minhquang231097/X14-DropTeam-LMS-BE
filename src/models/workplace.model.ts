@@ -5,6 +5,9 @@ const workplaceSchema = new Schema({
     address: String,
     status: { type: String, enum: ["ON", "OFF", "UPCOMING"] },
     workplace_code: { type: String, unique: true },
+    create_at: {
+        type: Date, default: Date.now()
+    }
 })
 
 enum StatusWP {

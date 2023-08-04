@@ -1,7 +1,7 @@
-import sessionController from "@/controllers/session.controller"
-import express from "express"
+import sessionController from "@/controllers/session.controller";
+import express from "express";
 
-const sessionRouter = express.Router()
+const sessionRouter = express.Router();
 
 // const sessionRepository = new SessionRepository(Session)
 // const sessionService = new SessionService(sessionRepository)
@@ -9,4 +9,4 @@ const sessionRouter = express.Router()
 
 // sessionRouter.get("/", sessionController.GetAll)
 
-export default sessionRouter
+export default sessionRouter;

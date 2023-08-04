@@ -3,38 +3,47 @@ import { WorkplaceRepository } from "@/repository/workplace.repo";
 import { FindWorkplaceDto } from "@/types/workplace";
 import { ObjectId } from "mongoose";
 
-const workplaceRepository = new WorkplaceRepository(Workplace)
+const workplaceRepository = new WorkplaceRepository(Workplace);
 
 const CreateWorkplace = async (payload: IWorkplace) => {
-    return await workplaceRepository.Create(payload)
-}
+  return await workplaceRepository.Create(payload);
+};
 
 const GetAllWorkplace = async () => {
-    return await workplaceRepository.FindAll()
-}
+  return await workplaceRepository.FindAll();
+};
 
 const GetWorkplaceByName = async (name: string) => {
-    return await workplaceRepository.FindByCondition({ name })
-}
+  return await workplaceRepository.FindByCondition({ name });
+};
 
 const GetWorkplaceById = async (id: string) => {
-    return await workplaceRepository.FindById(id)
-}
+  return await workplaceRepository.FindById(id);
+};
 
 const GetWorkplaceByCode = async (code: string) => {
-    return await workplaceRepository.FindWorkplaceByCode(code)
-}
+  return await workplaceRepository.FindWorkplaceByCode(code);
+};
 
 const GetWorkplaceByCodition = async (filter: FindWorkplaceDto) => {
-    return await workplaceRepository.FindByCondition(filter)
-}
+  return await workplaceRepository.FindByCondition(filter);
+};
 
 const UpdateWorkplace = async (id: string, payload: any) => {
-    return await workplaceRepository.FindByIdAndUpdate(id, payload)
-}
+  return await workplaceRepository.FindByIdAndUpdate(id, payload);
+};
 
 const DeletedWorkplace = async (id: string) => {
-    return await workplaceRepository.DeleteOne(id)
-}
+  return await workplaceRepository.DeleteOne(id);
+};
 
-export default { CreateWorkplace, GetWorkplaceByCodition, GetAllWorkplace, GetWorkplaceByName, GetWorkplaceById, UpdateWorkplace, DeletedWorkplace, GetWorkplaceByCode }
+export default {
+  CreateWorkplace,
+  GetWorkplaceByCodition,
+  GetAllWorkplace,
+  GetWorkplaceByName,
+  GetWorkplaceById,
+  UpdateWorkplace,
+  DeletedWorkplace,
+  GetWorkplaceByCode,
+};
