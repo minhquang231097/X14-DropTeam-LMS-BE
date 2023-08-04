@@ -1,8 +1,5 @@
 import { Class, IClass } from "@/models/class.model";
 import { ClassRepository } from "@/repository/class.repo";
-import { CourseRepository } from "@/repository/course.repo";
-import { UserRepository } from "@/repository/user.repo";
-import { WorkplaceRepository } from "@/repository/workplace.repo";
 import { UpdateClassDto } from "@/types/class";
 import { ObjectId } from "mongoose";
 import courseService from "./course.service";
@@ -22,11 +19,11 @@ const CreateOneClass = async (email_mentor: string, workplace_code: string, cour
 }
 
 const GetAllClass = async (page: number, limit: number) => {
-    return await classRepository.FindAllAndPagination(page, limit)
+    return await classRepository.FindAllInfoAndPagination(page, limit, ["mentor", "workplace", "course"])
 }
 
 const GetClassById = async (id: ObjectId | string) => {
-    return await classRepository.FindById(id)
+    return await classRepository.FindById(id, ["mentor", "workplace", "course"])
 }
 
 const GetClassByCode = async (code: string) => {
@@ -46,7 +43,7 @@ const GetClassByCourseId = async (code: string) => {
 }
 
 const GetClassByCondition = async (filter: IClass) => {
-    return await classRepository.FindByCondition(filter)
+    return await classRepository.FindByCondition(filter, ["mentor", "workplace", "course"])
 }
 
 const UpdateOneClass = async (id: ObjectId | string, payload: UpdateClassDto) => {

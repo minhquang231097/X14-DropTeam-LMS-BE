@@ -1,5 +1,6 @@
 import { Course, ICourse } from "@/models/course.model";
 import { CourseRepository } from "@/repository/course.repo";
+import { FindCourseDto } from "@/types/course";
 import { ObjectId } from "mongoose";
 
 const courseRepository = new CourseRepository(Course)
@@ -9,11 +10,11 @@ const CreateCourse = async (payload: ICourse) => {
 }
 
 const GetAllCourse = async (page: number, limit: number) => {
-    return await courseRepository.FindAllAndPagination(page, limit)
+    return await courseRepository.FindAllInfoAndPagination(page, limit, "workplace")
 }
 
 const GetCourseById = async (id: ObjectId | string) => {
-    return await courseRepository.FindById(id)
+    return await courseRepository.FindById(id, "workplace")
 }
 
 const GetCourseByCode = async (code: string) => {

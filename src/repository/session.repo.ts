@@ -12,12 +12,12 @@ export class SessionRepository extends BaseRepository<ISession> {
     }
 
     async FindSessionByCode(session_code: string) {
-        const session = await this.model.findOne({ session_code })
+        const session = await this.model.findOne({ session_code }).populate("courses")
         return session?.toObject()
     }
 
     async FindSessionByCourseId(id: ObjectId | string) {
-        const session = await this.model.findOne({ course: id })
+        const session = await this.model.findOne({ course: id }).populate("courses")
         return session?.toObject()
     }
 }

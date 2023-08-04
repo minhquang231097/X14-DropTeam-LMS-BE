@@ -12,6 +12,6 @@ export class LessonRepository extends BaseRepository<ILesson>{
     }
 
     async FindLessonBySessionId(id: ObjectId | string) {
-        return this.model.find({ session: id })
+        return this.model.find({ session: id }).populate("session")
     }
 }

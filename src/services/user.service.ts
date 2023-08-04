@@ -2,6 +2,8 @@ import { User } from "@/models/user.model";
 import { UserRepository } from "@/repository/user.repo";
 import bcrypt from "bcryptjs"
 import { ObjectId } from "mongoose";
+import courseService from "./course.service";
+import workplaceService from "./workplace.service";
 
 const userRepository = new UserRepository(User)
 

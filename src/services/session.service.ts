@@ -13,11 +13,11 @@ const CreateSession = async (course_code: string, payload: any) => {
 }
 
 const GetAllSession = async (page: number, limit: number) => {
-    return await sessionRepository.FindAllAndPagination(page, limit)
+    return await sessionRepository.FindAllInfoAndPagination(page, limit, "course")
 }
 
 const GetSessionById = async (id: ObjectId | string) => {
-    return await sessionRepository.FindById(id)
+    return await sessionRepository.FindById(id, "course")
 }
 
 const GetSessionByCourseId = async (id: ObjectId | string) => {
