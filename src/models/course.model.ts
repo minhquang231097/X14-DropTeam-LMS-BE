@@ -12,7 +12,10 @@ const courseSchema = new Schema({
     level: Number,
     rate: Number,
     discount: Number,
-    workplace: { type: Schema.Types.ObjectId, ref: "workplaces" }
+    workplace: { type: Schema.Types.ObjectId, ref: "workplaces" },
+    create_at: {
+        type: Date, default: Date.now()
+      }
 })
 
 export interface ICourse extends Document {
@@ -27,7 +30,8 @@ export interface ICourse extends Document {
     level: number,
     rate: number,
     discount: number,
-    workplace: string
+    workplace: string,
+    create_at?: string
 }
 
 export const Course = model<ICourse>('courses', courseSchema)

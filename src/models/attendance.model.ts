@@ -5,7 +5,10 @@ const attendanceSchema = new Schema({
     class: { type: Schema.Types.ObjectId, ref: "classes" },
     day: String,
     class_size: Number,
-    absence: String
+    absence: String,
+    create_at: {
+        type: Date, default: Date.now()
+      }
 })
 
 export interface IAttendance extends Document {
@@ -13,7 +16,8 @@ export interface IAttendance extends Document {
     class?: string,
     day: string,
     absence: string,
-    class_size: number
+    class_size: number,
+    create_at?: string
 }
 
 export const Attendance = model<IAttendance>("attendances", attendanceSchema)

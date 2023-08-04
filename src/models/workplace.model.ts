@@ -5,6 +5,9 @@ const workplaceSchema = new Schema({
     address: String,
     status: { type: String, enum: ["ON", "OFF", "UPCOMING"] },
     workplace_code: { type: String, unique: true },
+    create_at: {
+        type: Date, default: Date.now()
+    }
 })
 
 enum StatusWP {
@@ -16,6 +19,7 @@ export interface IWorkplace extends Document {
     address: string,
     status: StatusWP,
     workplace_code: string,
+    create_at?: string
 }
 
 export const Workplace = model<IWorkplace>("workplaces", workplaceSchema)
