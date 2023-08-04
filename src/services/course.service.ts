@@ -9,12 +9,12 @@ const CreateCourse = async (payload: ICourse) => {
     return await courseRepository.Create(payload)
 }
 
-const GetAllCourse = async (page: number, limit: number) => {
-    return await courseRepository.FindAllInfoAndPagination(page, limit, "workplace")
+const GetAllCourse = async (page: number, limit: number, title: string) => {
+    return await courseRepository.FindAllInfoAndPagination(page, limit, title)
 }
 
 const GetCourseById = async (id: ObjectId | string) => {
-    return await courseRepository.FindById(id, "workplace")
+    return await courseRepository.FindById(id)
 }
 
 const GetCourseByCode = async (code: string) => {

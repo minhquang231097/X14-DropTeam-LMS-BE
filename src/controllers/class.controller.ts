@@ -19,11 +19,12 @@ const CreateNewClass = async (req: Request, res: Response) => {
 }
 
 const GetAllClass = async (req: Request, res: Response) => {
-    const { page, limit } = req.query
+    const { page, limit, search } = req.query
     const p = Number(page)
     const l = Number(limit)
+    const s = String(search)
     try {
-        const allClasses = await classService.GetAllClass(p, l)
+        const allClasses = await classService.GetAllClass(p, l, s)
         if (!allClasses) {
             return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[404], 404))
         }

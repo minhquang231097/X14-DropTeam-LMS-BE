@@ -34,8 +34,9 @@ export abstract class BaseRepository<T extends Document> {
         return this.model.find();
     }
 
-    async FindAllInfoAndPagination(page: number, limit: number, populate?: any | null,): Promise<T[] | any> {
-        return await this.model.find().skip((page - 1) * limit).limit(limit).populate(populate)
+    async FindAllInfoAndPagination(page: number, limit: number, search: string, populate?: any | null,): Promise<T[] | any> {
+        const Search = search ? { name: { $regex: search, $option: "i" } } : {}
+        return await this.model.find(Search).skip((page - 1) * limit).limit(limit).populate(populate)
     }
 
     async Aggregate(option: any) {

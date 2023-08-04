@@ -18,11 +18,12 @@ const CreateWorkplace = async (req: Request, res: Response) => {
 }
 
 const GetAllWorkplace = async (req: Request, res: Response) => {
-    const { page, limit } = req.query
+    const { page, limit, search } = req.query
     const p = Number(page)
     const l = Number(limit)
+    const s = String(search)
     try {
-        const allWorkplaces = await WorkplaceService.GetAllWorkplace(p, l)
+        const allWorkplaces = await WorkplaceService.GetAllWorkplace(p, l, s)
         if (!allWorkplaces) {
             return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.WORKPLACE.NOT_FOUND, 404))
         }

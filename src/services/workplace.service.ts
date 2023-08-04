@@ -9,8 +9,8 @@ const CreateWorkplace = async (payload: IWorkplace) => {
     return await workplaceRepository.Create(payload)
 }
 
-const GetAllWorkplace = async (page: number, limit: number) => {
-    return await workplaceRepository.FindAllInfoAndPagination(page, limit)
+const GetAllWorkplace = async (page: number, limit: number, name: string) => {
+    return await workplaceRepository.FindAllInfoAndPagination(page, limit, name)
 }
 
 const GetWorkplaceByName = async (name: string) => {

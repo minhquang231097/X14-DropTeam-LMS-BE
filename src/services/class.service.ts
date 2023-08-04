@@ -18,8 +18,8 @@ const CreateOneClass = async (email_mentor: string, workplace_code: string, cour
     return await classRepository.CreateClass(id_mentor, id_workplace, id_course, payload)
 }
 
-const GetAllClass = async (page: number, limit: number) => {
-    return await classRepository.FindAllInfoAndPagination(page, limit, ["mentor", "workplace", "course"])
+const GetAllClass = async (page: number, limit: number, class_code: string) => {
+    return await classRepository.FindAllInfoAndPagination(page, limit, class_code, ["mentor", "workplace", "course"])
 }
 
 const GetClassById = async (id: ObjectId | string) => {

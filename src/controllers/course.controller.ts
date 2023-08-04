@@ -32,11 +32,12 @@ const UploadImage = async (req: Request, res: Response) => {
 }
 
 const GetAllCourse = async (req: Request, res: Response) => {
-    const { page, limit } = req.query
+    const { page, limit, search } = req.query
     const p = Number(page)
     const l = Number(limit)
+    const s = String(search)
     try {
-        const allCourses = await CourseService.GetAllCourse(p, l)
+        const allCourses = await CourseService.GetAllCourse(p, l, s)
         if (!allCourses) {
             return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.COURSE.NOT_FOUND, 404))
         }
