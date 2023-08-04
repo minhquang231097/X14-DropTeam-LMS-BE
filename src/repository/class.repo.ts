@@ -1,62 +1,29 @@
 import { Class, IClass } from "@/models/class.model";
-import { FilterQuery } from "mongoose";
+import { Model, ObjectId } from "mongoose";
+import { BaseRepository } from "./base.repo";
 
-export class ClassRepository {
-    constructor() { }
-
-    static async CreateClass(payload: IClass) {
-        return (await Class.create(payload)).toObject()
+export class ClassRepository extends BaseRepository<IClass> {
+    constructor(model: Model<IClass>) {
+        super(model)
     }
 
-    static async FindClassByCondition(
-        filter: FilterQuery<IClass> | any,
-        field?: any | null,
-        option?: any | null,
-        populate?: any | null): Promise<IClass[]> {
-        return await Class.find(filter, field, option).populate(populate)
+    async CreateClass(mentor:string, workplace:string, course:string, payload: IClass) {
+        return await this.model.create({ ...payload, mentor, workplace, course })
     }
 
-    static async FindOneByCondition(
-        filter: FilterQuery<IClass> | undefined,
-        field?: any | null,
-        option?: any | null,
-        populate?: any | null,
-    ) {
-        return await Class.findOne(filter, field, option).populate(populate);
+    async FindClassByCode(code: string) {
+        return await Class.findOne({ class_code: `${code}` }).populate(["mentor", "workplace", "course"])
     }
 
-    static async FindClassById(id: string) {
-        return await Class.findById(id)
+    async FindClassByMentorId(id:string) {
+        return await Class.find({ mentor: `${id}` }).populate(["mentor", "workplace", "course"])
     }
 
-    static async FindAllClass(page: number): Promise<IClass[]> {
-        const class_per_page = 12
-        return await Class.find().skip((page - 1) * class_per_page).limit(class_per_page)
+    async FindClassByWorkplaceId(id:string) {
+        return await Class.find({ workplace: `${id}` }).populate(["mentor", "workplace", "course"])
     }
 
-    static async FindByConditionAndUpdate(filter: any, update: IClass) {
-        return await Class.findOneAndUpdate(filter, update)
-    }
-
-    static async UpdateOneClass(
-        filter: FilterQuery<IClass> | any,
-        update?: any | null) {
-        return await Class.findOneAndUpdate(filter, update)
-    }
-
-    static async UpdateManyClass(
-        filter: FilterQuery<IClass> | any,
-        update?: any | null) {
-        return await Class.updateMany(filter, update)
-    }
-
-    static async DeleteClassByCondition(
-        filter: FilterQuery<IClass>) {
-        return await Class.deleteMany(filter)
-    }
-
-
-    static async DeleteClassById(id: string) {
-        return await Class.findByIdAndDelete(id)
+    async FindClassByCourseId(id:string) {
+        return await Class.find({ course: `${id}` }).populate(["mentor", "workplace", "course"])
     }
 }

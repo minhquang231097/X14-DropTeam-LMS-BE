@@ -1,10 +1,16 @@
+import { User } from "@/models/user.model";
 import { UserRepository } from "@/repository/user.repo";
 import bcrypt from "bcryptjs"
+import { ObjectId } from "mongoose";
+import courseService from "./course.service";
+import workplaceService from "./workplace.service";
+
+const userRepository = new UserRepository(User)
 
 const CreateUser = async (payload: any) => {
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(payload.password, salt);
-    const user = await UserRepository.CreateOne({
+    const user = await userRepository.Create({
         ...payload,
         password: hashedPassword,
     })
@@ -12,23 +18,39 @@ const CreateUser = async (payload: any) => {
 }
 
 const GetAllUser = async () => {
-    return await UserRepository.GetAllUser()
+    return await userRepository.FindAll()
 }
 
-const FindUserByUsername = async (username: string) => {
-    return await UserRepository.FindUserByUsername(username)
+const GetUserByUsername = async (username: string) => {
+    return await userRepository.FindByCondition({ username })
 }
 
-const FindUserByEmail = async (email: string) => {
-    return await UserRepository.FindUserByEmail(email)
+const GetUserByEmail = async (email: string) => {
+    return await userRepository.FindByCondition({ email })
 }
 
-const FindUserById = async (id: string) => {
-    return await UserRepository.FindUserById(id)
+const GetUserById = async (id: string) => {
+    return await userRepository.FindById(id)
 }
 
-const UpdateUser = async (id: string, payload: any) => {
-    return await UserRepository.UpdateUser(id, payload)
+const GetUserByCondition = async (filter: any) => {
+    return await userRepository.FindByCondition(filter)
 }
 
-export default { CreateUser, GetAllUser, FindUserByUsername, UpdateUser, FindUserByEmail, FindUserById }
+const UpdateUserById = async (id: string, payload: any) => {
+    return await userRepository.FindByIdAndUpdate(id, payload)
+}
+
+const UpdateUserByCondition = async (filter: any, payload: any) => {
+    return await userRepository.UpdateMany(filter, payload)
+}
+
+const DeleteUserById = async (id: string) => {
+    return await userRepository.DeleteOne(id)
+}
+
+const DeleteUserByCondition = async (filter: any) => {
+    return await userRepository.DeleteByCondition(filter)
+}
+
+export default { CreateUser, GetAllUser, GetUserByUsername, UpdateUserById, GetUserByEmail, GetUserById, DeleteUserById, DeleteUserByCondition, UpdateUserByCondition, GetUserByCondition }

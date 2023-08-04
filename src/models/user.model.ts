@@ -29,11 +29,11 @@ export interface IUser extends Document {
   username: string,
   password: string,
   refreshToken?: string,
-  create_at?: Date,
   role?: string,
   dob: string,
   gender: string,
   address: string,
+  create_at?: string
 }
 
 export const User = model<IUser>('users', userSchema)

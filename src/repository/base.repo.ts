@@ -1,30 +1,72 @@
-import { IWrite } from "./base/IWrite";
-import { IRead } from "./base/IRead";
-import { Collection, Db, InsertOneModel } from "mongodb";
+import { Model, FilterQuery, QueryOptions, ObjectId, Document } from 'mongoose';
 
-export abstract class BaseRepository<T> implements IWrite<T>, IRead<T> {
-    private readonly _collection: Collection;
-    constructor(db: Db, collectionName: string) {
-        this._collection = db.collection(collectionName)
+export abstract class BaseRepository<T extends Document> {
+    constructor(public model: Model<T>) {
+        this.model = model
     }
 
-    async CreateOne(payload: any): Promise<any> {
-        return await this._collection.insertOne(payload)
+    async Create(payload: T | any): Promise<T | any> {
+        const createdEntity = new this.model(payload);
+        return await createdEntity.save();
     }
 
-    async UpdateOne(id: any, payload: any): Promise<any> {
-        return await this._collection.updateOne(id, payload)
+    async FindById(id: string | undefined, populate?: any | null): Promise<T | any> {
+        return this.model.findById(`${id}`).populate(populate)
     }
 
-    async DeleteOne(id: any): Promise<any> {
-        return await this._collection.deleteOne(id)
+    async FindByCondition(
+        filter: any,
+        populate?: any | null,
+    ): Promise<T | any> {
+        return this.model.findOne(filter).populate(populate);
     }
 
-    async FindById(id: any): Promise<any> {
-        return await this._collection.findOne({ _id: id })
+    async GetByCondition(
+        filter: any,
+        field?: any | null,
+        option?: any | null,
+        populate?: any | null,
+    ): Promise<T[] | any> {
+        return this.model.find(filter, field, option).populate(populate);
     }
 
-    async FindByCondition(filter: any): Promise<any> {
-        return await this._collection.find(filter)
+    async FindAll(): Promise<T[] | any> {
+        return this.model.find();
+    }
+
+    async FindAllInfoAndPagination(page: number, limit: number, populate?: any | null, ): Promise<T[] | any> {
+        return await this.model.find().skip((page - 1) * limit).limit(limit).populate(populate)
+    }
+
+    async Aggregate(option: any) {
+        return this.model.aggregate(option);
+    }
+
+    async Populate(result: T[], option: any) {
+        return await this.model.populate(result, option);
+    }
+
+    async DeleteOne(id:string) {
+        return this.model.deleteOne({ _id: id } as FilterQuery<T>);
+    }
+
+    async DeleteMany(id: string[]) {
+        return this.model.deleteMany({ _id: { $in: id } } as FilterQuery<T>);
+    }
+
+    async DeleteByCondition(filter: any) {
+        return this.model.deleteMany(filter);
+    }
+
+    async FindByConditionAndUpdate(filter: any, update: any) {
+        return this.model.findOneAndUpdate(filter as FilterQuery<T>, update);
+    }
+
+    async UpdateMany(filter: any, update: any, option?: any | null) {
+        return this.model.updateMany(filter, update, option);
+    }
+
+    async FindByIdAndUpdate(id: string | ObjectId, update: any) {
+        return this.model.findByIdAndUpdate(id, update);
     }
 }

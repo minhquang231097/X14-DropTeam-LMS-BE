@@ -1,3 +1,5 @@
+import HttpException from "@/common/httpException";
+import { RESPONSE_CONFIG } from "@/configs/response.config";
 import { NextFunction, Request, Response } from "express";
 
 export class CheckRole {
