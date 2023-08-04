@@ -14,7 +14,7 @@ const CreateAttendance = async (session_code: string, class_code: string, payloa
     return newAttendance
 }
 
-const GetAttendanceById = async (id: ObjectId | string) => {
+const GetAttendanceById = async (id: string) => {
     return await attendanceRepository.FindById(id, ["session", "class"])
 }
 
@@ -32,11 +32,11 @@ const GetAttendanceByCondition = async (filter: FindAttendanceDto) => {
     return await attendanceRepository.FindByCondition(filter, ["session", "class"])
 }
 
-const UpdateAttendance = async (id: ObjectId | string, payload: UpdateAttendanceDto) => {
+const UpdateAttendance = async (id: string, payload: UpdateAttendanceDto) => {
     return await attendanceRepository.FindByIdAndUpdate(id, payload)
 }
 
-const DeleteAttendanceById = async (id: ObjectId | string) => {
+const DeleteAttendanceById = async (id: string) => {
     return await attendanceRepository.DeleteOne(id)
 }
 

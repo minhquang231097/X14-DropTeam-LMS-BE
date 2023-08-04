@@ -13,7 +13,7 @@ const GetAllCourse = async (page: number, limit: number) => {
     return await courseRepository.FindAllInfoAndPagination(page, limit, "workplace")
 }
 
-const GetCourseById = async (id: ObjectId | string) => {
+const GetCourseById = async (id: string) => {
     return await courseRepository.FindById(id, "workplace")
 }
 
@@ -21,7 +21,7 @@ const GetCourseByCode = async (code: string) => {
     return await courseRepository.FindCourseByCode(code)
 }
 
-const UpdateCourse = async (id: ObjectId | string, payload: ICourse) => {
+const UpdateCourse = async (id: string, payload: ICourse) => {
     return await courseRepository.FindByIdAndUpdate(id, payload)
 }
 
@@ -29,7 +29,7 @@ const UpdateManyCourse = async (filter: any, payload: ICourse) => {
     return await courseRepository.UpdateMany(filter, payload)
 }
 
-const DeletedCourse = async (id: ObjectId | string) => {
+const DeletedCourse = async (id: string) => {
     return await courseRepository.DeleteOne(id)
 }
 

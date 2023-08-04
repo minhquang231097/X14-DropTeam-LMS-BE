@@ -1,9 +1,9 @@
-import { FeedBack } from "@/models/feedback.model";
-import { FeedbackRepository } from "@/repository/feedback.repo";
+// import { FeedBack } from "@/models/feedback.model";
+// import { FeedbackRepository } from "@/repository/feedback.repo";
 import courseService from "./course.service";
 import userService from "./user.service";
 import { ObjectId } from "mongoose";
-import { FindFeedbackDto, UpdateFeedbackDto } from "@/types/feedback";
+// import { FindFeedbackDto, UpdateFeedbackDto } from "@/types/feedback";
 
 const feedbackRepository = new FeedbackRepository(FeedBack)
 

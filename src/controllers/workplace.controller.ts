@@ -3,6 +3,7 @@ import WorkplaceService from "@/services/workplace.service";
 import { RESPONSE_CONFIG } from "@/configs/response.config"
 import HttpResponseData from "@/common/httpResponseData";
 import HttpException from "@/common/httpException";
+import { clearConfigCache } from "prettier";
 
 const CreateWorkplace = async (req: Request, res: Response) => {
     try {
@@ -40,7 +41,7 @@ const GetWorkplaceById = async (req: Request, res: Response) => {
         if (!workplaceExist) {
             return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.WORKPLACE.NOT_FOUND, 404))
         }
-        return res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.WORKPLACE.FOUND_SUCCESS, 200, workplaceExist))
+        res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.WORKPLACE.FOUND_SUCCESS, 200, workplaceExist))
     } catch (error) {
         return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.WORKPLACE.WRONG, 404))
     }
