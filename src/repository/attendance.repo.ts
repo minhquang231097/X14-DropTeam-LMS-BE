@@ -7,11 +7,11 @@ export class AttendanceRepository extends BaseRepository<IAttendance>{
         super(model)
     }
 
-    async FindAttendanceBySessionId(id: ObjectId | string) {
+    async FindAttendanceBySessionId(id:string) {
         return await this.model.find({ session: id }).populate(["session", "class"])
     }
 
-    async FindAttendanceByClassId(id: ObjectId | string) {
+    async FindAttendanceByClassId(id:string) {
         return await this.model.find({ class: id }).populate(["session", "class"])
     }
 }

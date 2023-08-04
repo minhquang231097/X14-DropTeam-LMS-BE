@@ -22,7 +22,7 @@ const GetAllClass = async (page: number, limit: number) => {
     return await classRepository.FindAllInfoAndPagination(page, limit, ["mentor", "workplace", "course"])
 }
 
-const GetClassById = async (id: ObjectId | string) => {
+const GetClassById = async (id:string) => {
     return await classRepository.FindById(id, ["mentor", "workplace", "course"])
 }
 
@@ -30,11 +30,11 @@ const GetClassByCode = async (code: string) => {
     return await classRepository.FindClassByCode(code)
 }
 
-const GetClassByMentorId = async (id: ObjectId | string) => {
+const GetClassByMentorId = async (id:string) => {
     return await classRepository.FindClassByMentorId(id)
 }
 
-const GetClassByWorkplaceId = async (id: ObjectId | string) => {
+const GetClassByWorkplaceId = async (id:string) => {
     return await classRepository.FindClassByWorkplaceId(id)
 }
 
@@ -46,7 +46,7 @@ const GetClassByCondition = async (filter: IClass) => {
     return await classRepository.FindByCondition(filter, ["mentor", "workplace", "course"])
 }
 
-const UpdateOneClass = async (id: ObjectId | string, payload: UpdateClassDto) => {
+const UpdateOneClass = async (id:string, payload: UpdateClassDto) => {
     return await classRepository.FindByIdAndUpdate(id, payload)
 }
 
@@ -54,7 +54,7 @@ const UpdateManyClass = async (filter: UpdateClassDto, payload: UpdateClassDto) 
     return await classRepository.UpdateMany(filter, payload)
 }
 
-const DeleteClassById = async (id: ObjectId | string) => {
+const DeleteClassById = async (id:string) => {
     return await classRepository.DeleteOne(id)
 }
 

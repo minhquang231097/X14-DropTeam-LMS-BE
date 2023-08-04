@@ -35,6 +35,7 @@ const GetAllCourse = async (req: Request, res: Response) => {
     const { page, limit } = req.query
     const p = Number(page)
     const l = Number(limit)
+    
     try {
         const allCourses = await CourseService.GetAllCourse(p, l)
         if (!allCourses) {
@@ -48,9 +49,8 @@ const GetAllCourse = async (req: Request, res: Response) => {
 
 const GetCourseById = async (req: Request, res: Response) => {
     const { id } = req.query
-    const _id = String(id)
     try {
-        const courseExist = await CourseService.GetCourseById(_id)
+        const courseExist = await CourseService.GetCourseById(id as string)
         if (!courseExist) {
             return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[404], 404))
         }
@@ -62,9 +62,8 @@ const GetCourseById = async (req: Request, res: Response) => {
 
 const GetCourseByCode = async (req: Request, res: Response) => {
     const { code } = req.query
-    const _code = String(code)
     try {
-        const courseExist = await CourseService.GetCourseByCode(_code)
+        const courseExist = await CourseService.GetCourseByCode(code as string)
         if (!courseExist) {
             return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[404], 404))
         }
@@ -76,14 +75,13 @@ const GetCourseByCode = async (req: Request, res: Response) => {
 
 const UpdateCourse = async (req: Request, res: Response) => {
     const { id } = req.query
-    const _id = String(id)
     try {
         const update = req.body
-        const courseExist = await CourseService.GetCourseById(_id)
+        const courseExist = await CourseService.GetCourseById(id as string)
         if (!courseExist) {
             return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[400], 400))
         }
-        const updateCourse = await CourseService.UpdateCourse(_id, update)
+        const updateCourse = await CourseService.UpdateCourse(id as string, update)
         res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE[200], 200, updateCourse))
     } catch (error: any) {
         return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[400], 400, error.message))
@@ -92,13 +90,12 @@ const UpdateCourse = async (req: Request, res: Response) => {
 
 const DeletedCourse = async (req: Request, res: Response) => {
     const { id } = req.query
-    const _id = String(id)
     try {
-        const courseExist = await CourseService.GetCourseById(_id)
+        const courseExist = await CourseService.GetCourseById(id as string)
         if (!courseExist) {
             return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[400], 400))
         }
-        const deleteCourse = await CourseService.DeletedCourse(_id)
+        const deleteCourse = await CourseService.DeletedCourse(id as string)
         res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE[200], 200, deleteCourse))
     } catch (error: any) {
         return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[400], 400, error.message))

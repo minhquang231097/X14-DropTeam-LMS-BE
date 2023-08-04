@@ -7,15 +7,15 @@ export class RegistedCourseRepository extends BaseRepository<IRegistedCourse>{
         super(model)
     }
 
-    async FindRegistbyCourseId(id: ObjectId | string) {
+    async FindRegistbyCourseId(id:string) {
         return this.model.find({ course: id }).populate(["course", "workplaces", "student"])
     }
 
-    async FindRegistbyWorkplaceId(id: ObjectId | string) {
+    async FindRegistbyWorkplaceId(id:string) {
         return this.model.find({ workplace: id }).populate(["course", "workplaces", "student"])
     }
 
-    async FindRegistbyStudentId(id: ObjectId | string) {
+    async FindRegistbyStudentId(id:string) {
         return this.model.find({ student: id }).populate(["course", "workplaces", "student"])
     }
 }

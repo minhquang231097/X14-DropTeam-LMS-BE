@@ -7,11 +7,11 @@ export class FeedbackRepository extends BaseRepository<IFeedback>{
         super(model)
     }
 
-    async FindFeedbackByCourseId(id: ObjectId | string) {
+    async FindFeedbackByCourseId(id: string) {
         return await this.model.find({ course: id }).populate(["course", "student"])
     }
 
-    async FindFeedbackByStudentId(id: ObjectId | string) {
+    async FindFeedbackByStudentId(id: string) {
         return await this.model.find({ student: id }).populate(["course", "student"])
     }
 }

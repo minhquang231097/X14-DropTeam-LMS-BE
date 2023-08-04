@@ -35,9 +35,9 @@ const GetAllClass = async (req: Request, res: Response) => {
 
 const GetClassById = async (req: Request, res: Response) => {
     const { id } = req.query
-    const _id = String(id)
+
     try {
-        const classExist = await classService.GetClassById(_id)
+        const classExist = await classService.GetClassById(id as string)
         if (!classExist) {
             return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[404], 404))
         }
@@ -49,9 +49,8 @@ const GetClassById = async (req: Request, res: Response) => {
 
 const GetClassByCode = async (req: Request, res: Response) => {
     const { code } = req.query
-    const _code = String(code)
     try {
-        const classExist = await classService.GetClassById(_code)
+        const classExist = await classService.GetClassByCode(code as string)
         if (!classExist) {
             return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[404], 404))
         }
@@ -63,10 +62,9 @@ const GetClassByCode = async (req: Request, res: Response) => {
 
 const UpdateClass = async (req: Request, res: Response) => {
     const { id } = req.query
-    const _id = String(id)
     const update = req.body
     try {
-        const classUpdated = await classService.UpdateOneClass(_id, update)
+        const classUpdated = await classService.UpdateOneClass(id as string, update)
         if (!classUpdated) {
             return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[404], 404))
         }
@@ -78,9 +76,8 @@ const UpdateClass = async (req: Request, res: Response) => {
 
 const DeleteOneClass = async (req: Request, res: Response) => {
     const { id } = req.query
-    const _id = String(id)
     try {
-        const classDeleted = await classService.DeleteClassById(_id)
+        const classDeleted = await classService.DeleteClassById(id as string)
         if (!classDeleted) {
             return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[404], 404))
         }
