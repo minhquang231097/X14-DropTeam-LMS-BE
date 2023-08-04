@@ -10,8 +10,8 @@ export abstract class BaseRepository<T extends Document> {
         return await createdEntity.save();
     }
 
-    async FindById(id: ObjectId | string, populate?: any | null): Promise<T | any> {
-        return this.model.findById(id).populate(populate)
+    async FindById(id: string | undefined, populate?: any | null): Promise<T | any> {
+        return this.model.findById(`${id}`).populate(populate)
     }
 
     async FindByCondition(
@@ -46,11 +46,11 @@ export abstract class BaseRepository<T extends Document> {
         return await this.model.populate(result, option);
     }
 
-    async DeleteOne(id: ObjectId | string) {
+    async DeleteOne(id:string) {
         return this.model.deleteOne({ _id: id } as FilterQuery<T>);
     }
 
-    async DeleteMany(id: string[] | ObjectId[]) {
+    async DeleteMany(id: string[]) {
         return this.model.deleteMany({ _id: { $in: id } } as FilterQuery<T>);
     }
 

@@ -16,11 +16,11 @@ const GetAllSession = async (page: number, limit: number) => {
     return await sessionRepository.FindAllInfoAndPagination(page, limit, "course")
 }
 
-const GetSessionById = async (id: ObjectId | string) => {
+const GetSessionById = async (id: string) => {
     return await sessionRepository.FindById(id, "course")
 }
 
-const GetSessionByCourseId = async (id: ObjectId | string) => {
+const GetSessionByCourseId = async (id: string) => {
     return await sessionRepository.FindSessionByCourseId(id)
 }
 
@@ -28,7 +28,7 @@ const GetSessionByCode = async (code: string) => {
     return await sessionRepository.FindSessionByCode(code)
 }
 
-const UpdateSessionById = async (id: ObjectId | string, payload: UpdateSessionDto) => {
+const UpdateSessionById = async (id: string, payload: UpdateSessionDto) => {
     return await sessionRepository.FindByIdAndUpdate(id, payload)
 }
 
@@ -36,7 +36,7 @@ const UpdateCourseByCondition = async (filter: any, payload: UpdateSessionDto) =
     return await sessionRepository.UpdateMany(filter, payload)
 }
 
-const DeletedCourse = async (id: ObjectId | string) => {
+const DeletedCourse = async (id: string) => {
     return await sessionRepository.DeleteOne(id)
 }
 

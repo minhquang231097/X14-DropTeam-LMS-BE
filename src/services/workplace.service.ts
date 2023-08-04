@@ -17,7 +17,7 @@ const GetWorkplaceByName = async (name: string) => {
     return await workplaceRepository.FindByCondition({ name })
 }
 
-const GetWorkplaceById = async (id: ObjectId | string) => {
+const GetWorkplaceById = async (id: string) => {
     return await workplaceRepository.FindById(id)
 }
 
@@ -29,11 +29,11 @@ const GetWorkplaceByCodition = async (filter: FindWorkplaceDto) => {
     return await workplaceRepository.FindByCondition(filter)
 }
 
-const UpdateWorkplace = async (id: ObjectId | string, payload: UpdateWorkplaceDto) => {
+const UpdateWorkplace = async (id: string, payload: any) => {
     return await workplaceRepository.FindByIdAndUpdate(id, payload)
 }
 
-const DeletedWorkplace = async (id: ObjectId | string) => {
+const DeletedWorkplace = async (id: string) => {
     return await workplaceRepository.DeleteOne(id)
 }
 

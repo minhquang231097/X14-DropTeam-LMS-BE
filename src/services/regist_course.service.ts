@@ -8,9 +8,10 @@ import { IUser } from "@/models/user.model";
 
 const registCourseRepository = new RegistedCourseRepository(RegistedCourse)
 
-const CreateRegistCourse = async (course_code: string, student_id: ObjectId | string, note: string) => {
+const CreateRegistCourse = async (course_code: string, student_id: string, note: string) => {
     const _course: any = await courseService.GetCourseByCode(course_code)
     const _student: IUser = await userService.GetUserById(student_id)
+    
     return await registCourseRepository.Create({
         fullname: _student.fullname,
         email: _student.email,
@@ -37,11 +38,11 @@ const GetRegistByEmailStudent = async (email: string) => {
     return await registCourseRepository.FindRegistbyStudentId(_student?._id)
 }
 
-const UpdateRegist = async (id: ObjectId | string, payload: any) => {
+const UpdateRegist = async (id: string, payload: any) => {
     return await registCourseRepository.FindByIdAndUpdate(id, payload)
 }
 
-const DeleteRegist = async (id: ObjectId | string) => {
+const DeleteRegist = async (id: string) => {
     return await registCourseRepository.DeleteOne(id)
 }
 
