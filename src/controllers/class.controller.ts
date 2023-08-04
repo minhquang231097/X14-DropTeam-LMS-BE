@@ -9,9 +9,6 @@ const CreateNewClass = async (req: Request, res: Response) => {
     const payload = req.body
     try {
         const newClass = await classService.CreateOneClass(mentor, workplace, course, payload)
-        if (!newClass) {
-            return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[404], 404))
-        }
         res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE[200], 200, newClass))
     } catch (error) {
         return res.json(res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[400], 400)))
