@@ -126,7 +126,7 @@ const DeleteManyCourse = async (req: Request, res: Response) => {
 export default {
     CreateNewClass,
     GetClassById,
-    GetAllClass,
+    // GetAllClass,
     UpdateClass,
     DeleteOneClass,
     DeleteManyCourse,
