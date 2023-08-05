@@ -35,7 +35,6 @@ const GetAllCourse = async (req: Request, res: Response) => {
     const { page, limit, search } = req.query
     const p = Number(page)
     const l = Number(limit)
-    const s = String(search)
     try {
         const allCourses = await CourseService.GetAllCourse(p, l, s)
         if (!allCourses) {
@@ -49,9 +48,8 @@ const GetAllCourse = async (req: Request, res: Response) => {
 
 const GetCourseById = async (req: Request, res: Response) => {
     const { id } = req.query
-    const _id = String(id)
     try {
-        const courseExist = await CourseService.GetCourseById(_id)
+        const courseExist = await CourseService.GetCourseById(id as string)
         if (!courseExist) {
             return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.COURSE.NOT_FOUND, 404))
         }
@@ -63,9 +61,8 @@ const GetCourseById = async (req: Request, res: Response) => {
 
 const GetCourseByCode = async (req: Request, res: Response) => {
     const { code } = req.query
-    const _code = String(code)
     try {
-        const courseExist = await CourseService.GetCourseByCode(_code)
+        const courseExist = await CourseService.GetCourseByCode(code as string)
         if (!courseExist) {
             return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.COURSE.NOT_FOUND, 404))
         }
@@ -77,9 +74,25 @@ const GetCourseByCode = async (req: Request, res: Response) => {
 
 const UpdateCourse = async (req: Request, res: Response) => {
     const { id } = req.query
-    const _id = String(id)
     try {
         const update = req.body
+            <<<<<<<< <Temporary merge branch 1
+        const courseExist = await CourseService.FindCourseById(_id)
+        const courseNameExist = await CourseService.FindCourseByName(update.title)
+        const courseCodeExist = await CourseService.FindCourseByCode(update.course_code)
+        if (courseNameExist) {
+            return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[400], 400, "Course Exist"))
+        }
+        if (courseCodeExist) {
+            return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[400], 400, "Course Code Exist"))
+        }
+        if (!courseExist) {
+            return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[400], 400, "Course Not Exist"))
+        }
+        await CourseService.UpdateCourse(_id, update)
+        const updateCourse = await CourseService.FindCourseById(_id)
+        res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE[200], 200, updateCourse))
+=========
         const courseExist = await CourseService.GetCourseById(_id)
         if (!courseExist) {
             return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.COURSE.NOT_FOUND, 400))
@@ -87,6 +100,7 @@ const UpdateCourse = async (req: Request, res: Response) => {
         await CourseService.UpdateCourse(_id, update)
         const updateCourse = await CourseService.GetCourseById(_id)
         res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.COURSE.UPDATE_SUCCESS, 200, updateCourse))
+>>>>>>>>> Temporary merge branch 2
     } catch (error: any) {
         return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.WORKPLACE.WRONG, 400, error.message))
     }
@@ -94,13 +108,12 @@ const UpdateCourse = async (req: Request, res: Response) => {
 
 const DeletedCourse = async (req: Request, res: Response) => {
     const { id } = req.query
-    const _id = String(id)
     try {
-        const courseExist = await CourseService.GetCourseById(_id)
+        const courseExist = await CourseService.GetCourseById(id as string)
         if (!courseExist) {
             return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.COURSE.NOT_FOUND, 400))
         }
-        const deleteCourse = await CourseService.DeletedCourse(_id)
+        const deleteCourse = await CourseService.DeletedCourse(id as string)
         res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.COURSE.DELETE_SUCCESS, 200, deleteCourse))
     } catch (error: any) {
         return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.COURSE.WRONG, 400, error.message))

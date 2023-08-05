@@ -16,9 +16,6 @@ export const CourseSchema = {
             level: Joi.number().integer().min(0),
             rate: Joi.number().min(0),
             discount: Joi.number().integer().min(0)
-        }).messages({
-            'string.empty': `all field cannot be an empty `,
-            'any.required': `all field is a required`
         }),
         update_course: Joi.object<UpdateCourseDto>({
             course_code: Joi.string().max(10).required(),
@@ -32,9 +29,6 @@ export const CourseSchema = {
             level: Joi.number().integer().min(0),
             rate: Joi.number().min(0),
             discount: Joi.number().integer().min(0)
-        }).messages({
-            'string.empty': `all field cannot be an empty `,
-            'any.required': `all field is a required`
         })
     }
 }

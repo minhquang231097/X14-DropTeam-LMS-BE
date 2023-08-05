@@ -127,7 +127,6 @@ const SignOutUser = async (req: Request, res: Response) => {
 //Send email link for reset password
 const SendEmailVerifyUser = async (req: Request, res: Response) => {
     const { email } = req.body
-    const { address } = req.params
     if (!email) {
         return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.USER.NO_EMAIL, 400))
     }
@@ -140,7 +139,7 @@ const SendEmailVerifyUser = async (req: Request, res: Response) => {
                 from: process.env.EMAIL_USERNAME,
                 to: email,
                 subject: "Xac thuc nguoi dung",
-                text: `This link valid for 2 minutes ${process.env.HOST_FE}/${address}/${user._id}/${updatedUser.refreshToken}`
+                text: `This link valid for 2 minutes ${process.env.HOST_FE}/verify?id=${user._id}&token=${updatedUser.refreshToken}`
             }
             SendMailService.sendMail(mailOption, (err, payload) => {
                 if (err) return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.USER.WRONG, 400))
@@ -154,7 +153,6 @@ const SendEmailVerifyUser = async (req: Request, res: Response) => {
 
 const SendEmailForgotPassword = async (req: Request, res: Response) => {
     const { email } = req.body
-    const { address } = req.params
     if (!email) {
         return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.USER.NO_EMAIL, 400))
     }
@@ -170,7 +168,7 @@ const SendEmailForgotPassword = async (req: Request, res: Response) => {
                 from: process.env.EMAIL_USERNAME,
                 to: email,
                 subject: "Quen mat khau",
-                text: `This link valid for 2 minutes ${process.env.HOST_FE}/${address}/${user._id}/${updatedUser.refreshToken}`
+                text: `This link valid for 2 minutes ${process.env.HOST_FE}/reset-password?id=${user._id}&token=${updatedUser.refreshToken}`
             }
             SendMailService.sendMail(mailOption, (err, payload) => {
                 if (err) return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.USER.WRONG, 400))
@@ -184,19 +182,21 @@ const SendEmailForgotPassword = async (req: Request, res: Response) => {
 
 const ChangePassword = async (req: Request, res: Response) => {
     const { id, token } = req.query
-    const _id = String(id)
-    const _token = String(token)
     const { password } = req.body
     try {
-        const user: any = userService.GetUserById(_id)
+        const user: any = userService.GetUserById(id as string)
         if (!user) {
             return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[404], 404))
         }
-        const verifyToken: any = jwt.verify(_token, process.env.ACCESSTOKEN_KEY as string)
+        const verifyToken: any = jwt.verify(token as string, process.env.ACCESSTOKEN_KEY as string)
         if (user && verifyToken._id) {
             const salt = await bcrypt.genSalt(10);
             const newPassword = await bcrypt.hash(password, salt)
+                <<<<<<<< <Temporary merge branch 1
+            const updatedUser = await userService.UpdateUser(_id, { password: newPassword })
+=========
             const updatedUser = await userService.UpdateUserById(_id, { password: newPassword })
+>>>>>>>>> Temporary merge branch 2
             return res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.USER.PASSWORD_CHANGED, 200, updatedUser))
         }
     } catch (error) {
@@ -205,10 +205,13 @@ const ChangePassword = async (req: Request, res: Response) => {
 }
 
 const UpdateUserInfo = async (req: Request, res: Response) => {
-    const { _id } = req.user
+    const { id } = req.user
     const payload = req.body
     try {
-        const update = await userService.UpdateUserById(_id, payload)
+<<<<<<<<< Temporary merge branch 1
+        const update = await userService.UpdateUser(_id, payload)
+=========
+        const update = await userService.UpdateUserById(id, payload)
         if (!update) {
             return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.USER.NOT_FOUND, 404))
         }

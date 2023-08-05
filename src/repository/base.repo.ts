@@ -10,8 +10,8 @@ export abstract class BaseRepository<T extends Document> {
         return await createdEntity.save();
     }
 
-    async FindById(id: ObjectId | string, populate?: any | null): Promise<T | any> {
-        return this.model.findById(id).populate(populate)
+    async FindById(id: string | undefined, populate?: any | null): Promise<T | any> {
+        return this.model.findById(`${id}`).populate(populate)
     }
 
     async FindByCondition(
@@ -34,9 +34,8 @@ export abstract class BaseRepository<T extends Document> {
         return this.model.find();
     }
 
-    async FindAllInfoAndPagination(page: number, limit: number, search: string, populate?: any | null,): Promise<T[] | any> {
-        const Search = search ? { name: { $regex: search, $option: "i" } } : {}
-        return await this.model.find(Search).skip((page - 1) * limit).limit(limit).populate(populate)
+    async FindAllInfoAndPagination(page: number, limit: number, populate?: any | null,): Promise<T[] | any> {
+        return await this.model.find().skip((page - 1) * limit).limit(limit).populate(populate)
     }
 
     async Aggregate(option: any) {
@@ -47,11 +46,11 @@ export abstract class BaseRepository<T extends Document> {
         return await this.model.populate(result, option);
     }
 
-    async DeleteOne(id: ObjectId | string) {
+    async DeleteOne(id: string) {
         return this.model.deleteOne({ _id: id } as FilterQuery<T>);
     }
 
-    async DeleteMany(id: string[] | ObjectId[]) {
+    async DeleteMany(id: string[]) {
         return this.model.deleteMany({ _id: { $in: id } } as FilterQuery<T>);
     }
 

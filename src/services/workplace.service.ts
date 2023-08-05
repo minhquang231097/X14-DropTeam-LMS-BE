@@ -9,15 +9,20 @@ const CreateWorkplace = async (payload: IWorkplace) => {
     return await workplaceRepository.Create(payload)
 }
 
-const GetAllWorkplace = async (page: number, limit: number, name: string) => {
-    return await workplaceRepository.FindAllInfoAndPagination(page, limit, name)
+<<<<<<<< <Temporary merge branch 1
+const GetAllWorkplace = async (page: number) => {
+    return await WorkplaceRepository.GetAllWorkplace(page)
+=========
+const GetAllWorkplace = async (page: number, limit: number) => {
+    return await workplaceRepository.FindAllInfoAndPagination(page, limit)
+>>>>>>>>> Temporary merge branch 2
 }
 
 const GetWorkplaceByName = async (name: string) => {
     return await workplaceRepository.FindByCondition({ name })
 }
 
-const GetWorkplaceById = async (id: ObjectId | string) => {
+const GetWorkplaceById = async (id: string) => {
     return await workplaceRepository.FindById(id)
 }
 
@@ -29,11 +34,14 @@ const GetWorkplaceByCodition = async (filter: FindWorkplaceDto) => {
     return await workplaceRepository.FindByCondition(filter)
 }
 
+<<<<<<<<< Temporary merge branch 1
+export default { CreateWorkplace, GetAllWorkplace, FindWorkplaceByName, FindWorkplaceById, FindWorkplaceByCode, UpdateWorkplace, DeletedWorkplace }
+=========
 const UpdateWorkplace = async (id: ObjectId | string, payload: UpdateWorkplaceDto) => {
     return await workplaceRepository.FindByIdAndUpdate(id, payload)
 }
 
-const DeletedWorkplace = async (id: ObjectId | string) => {
+const DeletedWorkplace = async (id: string) => {
     return await workplaceRepository.DeleteOne(id)
 }
 

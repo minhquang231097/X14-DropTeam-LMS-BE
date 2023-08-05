@@ -7,7 +7,7 @@ export class SessionRepository extends BaseRepository<ISession> {
         super(model);
     }
 
-    async CreateSession(course_id: ObjectId, payload: any) {
+    async CreateSession(course_id: string, payload: any) {
         return await this.model.create({ ...payload, course: course_id })
     }
 
@@ -16,7 +16,7 @@ export class SessionRepository extends BaseRepository<ISession> {
         return session?.toObject()
     }
 
-    async FindSessionByCourseId(id: ObjectId | string) {
+    async FindSessionByCourseId(id: string) {
         const session = await this.model.findOne({ course: id }).populate("courses")
         return session?.toObject()
     }

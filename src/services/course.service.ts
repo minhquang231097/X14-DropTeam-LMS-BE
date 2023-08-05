@@ -14,13 +14,21 @@ const GetAllCourse = async (page: number, limit: number, title: string) => {
 }
 
 const GetCourseById = async (id: ObjectId | string) => {
-    return await courseRepository.FindById(id)
+    return await courseRepository.FindById(id, "workplace")
 }
 
 const GetCourseByCode = async (code: string) => {
     return await courseRepository.FindCourseByCode(code)
 }
 
+<<<<<<<< <Temporary merge branch 1
+const FindCourseByCode = async (course_code: string) => {
+    return await CourseRepository.FindCourseByCode(course_code)
+}
+
+const UpdateCourse = async (id: string, payload: ICourse) => {
+    return await CourseRepository.UpdateCourse(id, payload)
+=========
 const UpdateCourse = async (id: ObjectId | string, payload: ICourse) => {
     return await courseRepository.FindByIdAndUpdate(id, payload)
 }
@@ -29,6 +37,9 @@ const UpdateManyCourse = async (filter: any, payload: ICourse) => {
     return await courseRepository.UpdateMany(filter, payload)
 }
 
+<<<<<<<<< Temporary merge branch 1
+export default { CreateCourse, GetAllCourse, FindCourseByName, FindCourseById, FindCourseByCode, UpdateCourse, DeletedCourse }
+=========
 const DeletedCourse = async (id: ObjectId | string) => {
     return await courseRepository.DeleteOne(id)
 }

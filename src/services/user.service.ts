@@ -29,7 +29,7 @@ const GetUserByEmail = async (email: string) => {
     return await userRepository.FindByCondition({ email })
 }
 
-const GetUserById = async (id: ObjectId | string) => {
+const GetUserById = async (id: string) => {
     return await userRepository.FindById(id)
 }
 
@@ -37,7 +37,7 @@ const GetUserByCondition = async (filter: any) => {
     return await userRepository.FindByCondition(filter)
 }
 
-const UpdateUserById = async (id: ObjectId | string, payload: any) => {
+const UpdateUserById = async (id: string, payload: any) => {
     return await userRepository.FindByIdAndUpdate(id, payload)
 }
 
@@ -45,7 +45,7 @@ const UpdateUserByCondition = async (filter: any, payload: any) => {
     return await userRepository.UpdateMany(filter, payload)
 }
 
-const DeleteUserById = async (id: ObjectId | string) => {
+const DeleteUserById = async (id: string) => {
     return await userRepository.DeleteOne(id)
 }
 
