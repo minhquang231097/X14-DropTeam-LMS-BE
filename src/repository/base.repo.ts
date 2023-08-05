@@ -38,6 +38,26 @@ export abstract class BaseRepository<T extends Document> {
         return await this.model.find().skip((page - 1) * limit).limit(limit).populate(populate)
     }
 
+    async Search(
+        page: number,
+        limit: number,
+        populate?: any | null,
+        searchTerm?: string,
+        searchField?: string,
+    ): Promise<T[] | any> {
+        const query: any = {};
+
+        if (searchTerm && searchField) {
+            query[searchField] = { $regex: searchTerm, $options: "i" };
+        }
+
+        return await this.model
+            .find(query)
+            .skip((page - 1) * limit)
+            .limit(limit)
+            .populate(populate);
+    }
+
     async Aggregate(option: any) {
         return this.model.aggregate(option);
     }

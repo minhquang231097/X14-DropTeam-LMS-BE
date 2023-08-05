@@ -1,85 +1,99 @@
 import { Request, Response } from "express";
 import WorkplaceService from "@/services/workplace.service";
-import { RESPONSE_CONFIG } from "@/configs/response.config"
+import { RESPONSE_CONFIG } from "@/configs/response.config";
 import HttpResponseData from "@/common/httpResponseData";
 import HttpException from "@/common/httpException";
-import { clearConfigCache } from "prettier";
 
 const CreateWorkplace = async (req: Request, res: Response) => {
     try {
-        const workplace: any = await WorkplaceService.CreateWorkplace(req.body)
-        if (!workplace) {
-            return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.WORKPLACE.WRONG, 404))
-        }
-        res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.WORKPLACE.CREATE_SUCCES, 200, workplace))
+        const workplace: any = await WorkplaceService.CreateWorkplace(req.body);
+        res.json(
+            new HttpResponseData(RESPONSE_CONFIG.MESSAGE[200], 200, workplace),
+        );
     } catch (error: any) {
-        return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.WORKPLACE.WORKPLACE_EXIST, 400, error.message))
+        return res.json(
+            new HttpException(RESPONSE_CONFIG.MESSAGE[400], 400, error.message),
+        );
     }
-}
+};
 
 const GetAllWorkplace = async (req: Request, res: Response) => {
-    const { page, limit, search } = req.query
-    const p = Number(page)
-    const l = Number(limit)
-    const s = String(search)
     try {
-        const allWorkplaces = await WorkplaceService.GetAllWorkplace(p, l, s)
+        const allWorkplaces = await WorkplaceService.GetAllWorkplace();
         if (!allWorkplaces) {
-            return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.WORKPLACE.NOT_FOUND, 404))
+            return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[404], 404));
         }
-        return res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.WORKPLACE.FOUND_SUCCESS, 200, { list: allWorkplaces, page: p, count: allWorkplaces.length }))
+        return res.json(allWorkplaces);
+    } catch (error) {
+        return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[404], 404));
     }
-    catch (error) {
-        return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.WORKPLACE.WRONG, 404))
-    }
-}
+};
 
 const GetWorkplaceById = async (req: Request, res: Response) => {
-    const { id } = req.query
-    const _id = String(id)
+    const { id } = req.query;
     try {
-        const workplaceExist = await WorkplaceService.GetWorkplaceById(_id)
+        const workplaceExist = await WorkplaceService.GetWorkplaceById(
+            id as string,
+        );
         if (!workplaceExist) {
-            return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.WORKPLACE.NOT_FOUND, 404))
+            return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[404], 404));
         }
-        res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.WORKPLACE.FOUND_SUCCESS, 200, workplaceExist))
+        return res.json(workplaceExist);
     } catch (error) {
-        return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.WORKPLACE.WRONG, 404))
+        return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[404], 404));
     }
-}
+};
 
 const UpdateWorkplace = async (req: Request, res: Response) => {
-    const { id } = req.query
+    const { id } = req.query;
+    const update = req.body;
     try {
-        const update = req.body
-        const workplaceExist = await WorkplaceService.GetWorkplaceById(id as string)
+        const workplaceExist = await WorkplaceService.GetWorkplaceById(
+            id as string,
+        );
         if (!workplaceExist) {
-            return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.WORKPLACE.NOT_FOUND, 400))
+            return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[400], 400));
         }
-        await WorkplaceService.UpdateWorkplace(_id, update)
-        const updateWorkplace = await WorkplaceService.GetWorkplaceById(_id)
-        return res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.WORKPLACE.UPDATE_SUCCESS, 200, updateWorkplace))
+        const updateWorkplace = await WorkplaceService.UpdateWorkplace(
+            id as string,
+            update,
+        );
+        res.json(
+            new HttpResponseData(RESPONSE_CONFIG.MESSAGE[200], 200, updateWorkplace),
+        );
     } catch (error: any) {
-        return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.WORKPLACE.WRONG, 400, error.message))
+        return res.json(
+            new HttpException(RESPONSE_CONFIG.MESSAGE[400], 400, error.message),
+        );
     }
-}
+};
 
 const DeletedWorkplace = async (req: Request, res: Response) => {
-    const { id } = req.query
-    const _id = String(id)
+    const { id } = req.query;
     try {
-        const workplaceExist = await WorkplaceService.GetWorkplaceById(_id)
+        const workplaceExist = await WorkplaceService.GetWorkplaceById(
+            id as string,
+        );
         if (!workplaceExist) {
-            return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.WORKPLACE.NOT_FOUND, 400))
+            return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[400], 400));
         }
-        await WorkplaceService.DeletedWorkplace(_id)
-        const deleteWorkplace = await WorkplaceService.GetWorkplaceById(_id)
-        res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.WORKPLACE.DELETE_SUCCESS, 200, deleteWorkplace))
+        const deleteWorkplace = await WorkplaceService.DeletedWorkplace(
+            id as string,
+        );
+        res.json(
+            new HttpResponseData(RESPONSE_CONFIG.MESSAGE[200], 200, deleteWorkplace),
+        );
     } catch (error: any) {
-        return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.WORKPLACE.WRONG, 400, error.message))
+        return res.json(
+            new HttpException(RESPONSE_CONFIG.MESSAGE[400], 400, error.message),
+        );
     }
-}
+};
 
-
-
-export default { CreateWorkplace, GetAllWorkplace, UpdateWorkplace, DeletedWorkplace, GetWorkplaceById }
+export default {
+    CreateWorkplace,
+    GetAllWorkplace,
+    UpdateWorkplace,
+    DeletedWorkplace,
+    GetWorkplaceById,
+};

@@ -18,11 +18,11 @@ const CreateOneClass = async (email_mentor: string, workplace_code: string, cour
     return await classRepository.CreateClass(id_mentor, id_workplace, id_course, payload)
 }
 
-const GetAllClass = async (page: number, limit: number, class_code: string) => {
-    return await classRepository.FindAllInfoAndPagination(page, limit, class_code, ["mentor", "workplace", "course"])
-}
+// const GetAllClass = async (page: number, limit: number, class_code: string) => {
+//     return await classRepository.FindAllInfoAndPagination(page, limit, class_code, ["mentor", "workplace", "course"])
+// }
 
-const GetClassById = async (id:string) => {
+const GetClassById = async (id: string) => {
     return await classRepository.FindById(id, ["mentor", "workplace", "course"])
 }
 
@@ -30,23 +30,23 @@ const GetClassByCode = async (code: string) => {
     return await classRepository.FindClassByCode(code)
 }
 
-const GetClassByMentorId = async (id:string) => {
+const GetClassByMentorId = async (id: string) => {
     return await classRepository.FindClassByMentorId(id)
 }
 
-const GetClassByWorkplaceId = async (id:string) => {
+const GetClassByWorkplaceId = async (id: string) => {
     return await classRepository.FindClassByWorkplaceId(id)
 }
 
 const GetClassByCourseId = async (code: string) => {
-    return await classRepository.FindClassByCourseId(code)
+    return await classRepository.FindById(code)
 }
 
 const GetClassByCondition = async (filter: IClass) => {
     return await classRepository.FindByCondition(filter, ["mentor", "workplace", "course"])
 }
 
-const UpdateOneClass = async (id:string, payload: UpdateClassDto) => {
+const UpdateOneClass = async (id: string, payload: UpdateClassDto) => {
     return await classRepository.FindByIdAndUpdate(id, payload)
 }
 
@@ -54,7 +54,7 @@ const UpdateManyClass = async (filter: UpdateClassDto, payload: UpdateClassDto) 
     return await classRepository.UpdateMany(filter, payload)
 }
 
-const DeleteClassById = async (id:string) => {
+const DeleteClassById = async (id: string) => {
     return await classRepository.DeleteOne(id)
 }
 
@@ -62,4 +62,8 @@ const DeleteClassByCondition = async (filter: UpdateClassDto) => {
     return await classRepository.DeleteByCondition(filter)
 }
 
-export default { CreateOneClass, GetAllClass, GetClassById, GetClassByMentorId, GetClassByWorkplaceId, GetClassByCourseId, GetClassByCondition, UpdateOneClass, UpdateManyClass, DeleteClassById, DeleteClassByCondition, GetClassByCode }
+export default {
+    CreateOneClass,
+    // GetAllClass, 
+    GetClassById, GetClassByMentorId, GetClassByWorkplaceId, GetClassByCourseId, GetClassByCondition, UpdateOneClass, UpdateManyClass, DeleteClassById, DeleteClassByCondition, GetClassByCode
+}

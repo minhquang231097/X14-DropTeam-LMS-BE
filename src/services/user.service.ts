@@ -37,6 +37,10 @@ const GetUserByCondition = async (filter: any) => {
     return await userRepository.FindByCondition(filter)
 }
 
+const SearchUserByCondition = async (page: number, limit: number, field: any, filter: any) => {
+    return await userRepository.Search(page, limit, null, field, filter)
+}
+
 const UpdateUserById = async (id: string, payload: any) => {
     return await userRepository.FindByIdAndUpdate(id, payload)
 }
@@ -53,4 +57,4 @@ const DeleteUserByCondition = async (filter: any) => {
     return await userRepository.DeleteByCondition(filter)
 }
 
-export default { CreateUser, GetAllUser, GetUserByUsername, UpdateUserById, GetUserByEmail, GetUserById, DeleteUserById, DeleteUserByCondition, UpdateUserByCondition, GetUserByCondition }
+export default { CreateUser, GetAllUser, GetUserByUsername, UpdateUserById, GetUserByEmail, GetUserById, DeleteUserById, DeleteUserByCondition, UpdateUserByCondition, GetUserByCondition, SearchUserByCondition }
