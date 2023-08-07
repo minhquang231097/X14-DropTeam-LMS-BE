@@ -23,34 +23,28 @@ export class ClassRepository extends BaseRepository<IClass> {
         return await Class.find({ workplace: `${id}` }).populate(["mentor", "workplace", "course"])
     }
 
-<<<<<<<< <Temporary merge branch 1
     static async FindByConditionAndUpdate(filter: any, update: IClass) {
-    return await Class.findOneAndUpdate(filter, update)
-}
+        return await Class.findOneAndUpdate(filter, update)
+    }
 
-    static async UpdateOneClass(
-    filter: FilterQuery<IClass> | any,
-    update ?: any | null) {
-    return await Class.findOneAndUpdate(filter, update)
-}
+    static async UpdateOneClass(filter: any, update?: any | null) {
+        return await Class.findOneAndUpdate(filter, update)
+    }
 
-    static async UpdateManyClass(
-    filter: FilterQuery<IClass> | any,
-    update ?: any | null) {
-    return await Class.updateMany(filter, update)
-}
+    static async UpdateManyClass(filter: any, update?: any | null) {
+        return await Class.updateMany(filter, update)
+    }
 
-    static async DeleteClassByCondition(
-    filter: FilterQuery<IClass>) {
-    return await Class.deleteMany(filter)
-}
+    static async DeleteClassByCondition(filter: any) {
+        return await Class.deleteMany(filter)
+    }
 
 
     static async DeleteClassById(id: string) {
-    return await Class.findByIdAndDelete(id)
-=========
+        return await Class.findByIdAndDelete(id)
+    }
+
     async FindClassByCourseId(id: ObjectId | string) {
         return await Class.find({ course: id }).populate(["mentor", "workplace", "course"])
->>>>>>>>> Temporary merge branch 2
     }
 }

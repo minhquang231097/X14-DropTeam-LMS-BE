@@ -1,7 +1,6 @@
 import Joi from "joi";
 import { IUser } from "../models/user.model"
-import { SignInDto, SignOutDto, UpdateUserDto } from "@/types/user";
->>>>>>>>> Temporary merge branch 2
+import { ChangePassword, SignInDto, SignOutDto, UpdateUserDto } from "@/types/user";
 
 export const Schema = {
     User: {
@@ -35,7 +34,9 @@ export const Schema = {
             dob: Joi.string().optional(),
             gender: Joi.string().optional(),
             address: Joi.string().optional(),
->>>>>>>>> Temporary merge branch 2
+        }),
+        change_password: Joi.object<ChangePassword>({
+            password: Joi.string().min(6).max(100).required(),
         })
-}
+    }
 }

@@ -10,6 +10,7 @@ workplaceRouter.post("/", verifyAccessJWT, ValidateJoi(WorkplaceSchema.Workplace
 workplaceRouter.put("/", verifyAccessJWT, ValidateJoi(WorkplaceSchema.Workplace.update_workplace), workplaceController.UpdateWorkplace)
 workplaceRouter.get("/page", verifyAccessJWT, workplaceController.GetAllWorkplace)
 workplaceRouter.get("/", verifyAccessJWT, workplaceController.GetWorkplaceById)
+workplaceRouter.get("/search", verifyAccessJWT, workplaceController.SearchWorkplace)
 workplaceRouter.delete("/", verifyAccessJWT, workplaceController.DeletedWorkplace)
 
 export default workplaceRouter

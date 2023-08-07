@@ -135,6 +135,18 @@ const DeletedAllCourse = async (req: Request, res: Response) => {
     }
 };
 
+const SearchCourse = async (req: Request, res: Response) => {
+    const { field, filter, page, limit } = req.query;
+    const p = Number(page);
+    const l = Number(limit);
+    try {
+        const result = await CourseService.SearchCourseByCondition(p, l, filter, field);
+        res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.COURSE.FOUND_SUCCESS, 200, { list: result, page: p, count: result.length, }));
+    } catch (error) {
+        return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.COURSE.WRONG, 400));
+    }
+};
+
 export default {
     CreateCourse,
     GetAllCourse,
@@ -144,4 +156,5 @@ export default {
     UploadImage,
     DeletedAllCourse,
     GetCourseByCode,
+    SearchCourse,
 };

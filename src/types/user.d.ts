@@ -31,3 +31,7 @@ export interface FindUserDto {
     address?: string,
     refreshToken?: string
 }
+
+export interface ChangePassword {
+    password?: string,
+}

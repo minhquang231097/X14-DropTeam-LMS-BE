@@ -323,22 +323,10 @@ const SearchUser = async (req: Request, res: Response) => {
     const l = Number(limit);
     try {
         const result = await userService.SearchUserByCondition(p, l, filter, field);
-        res.json(result);
+        res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE[200], 200, { list: result, page: p, count: result.length, }));
     } catch (error) {
-        console.log(error);
+        return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.USER.WRONG, 400));
     }
 };
 
-export default {
-    SignUp,
-    SignIn,
-    SearchUser,
-    handleRefreshToken,
-    GetAllUser,
-    SignOutUser,
-    SendEmailForgotPassword,
-    ChangePassword,
-    SendEmailVerifyUser,
-    GetInfoUser,
-    UpdateUserInfo,
-};
+export default { SignUp, SignIn, SearchUser, handleRefreshToken, GetAllUser, SignOutUser, SendEmailForgotPassword, ChangePassword, SendEmailVerifyUser, GetInfoUser, UpdateUserInfo };

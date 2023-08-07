@@ -37,6 +37,10 @@ const DeletedWorkplace = async (id: string) => {
     return await workplaceRepository.DeleteOne(id);
 };
 
+const SearchUserByCondition = async (page: number, limit: number, field: any, filter: any) => {
+    return await workplaceRepository.Search(page, limit, null, field, filter)
+}
+
 export default {
     CreateWorkplace,
     GetWorkplaceByCodition,
@@ -46,4 +50,5 @@ export default {
     UpdateWorkplace,
     DeletedWorkplace,
     GetWorkplaceByCode,
+    SearchUserByCondition,
 };

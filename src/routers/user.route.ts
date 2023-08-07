@@ -15,13 +15,10 @@ userRouter.post("/sign-out", ValidateJoi(Schema.User.sign_out), userController.S
 userRouter.post("/refresh", userController.handleRefreshToken)
 userRouter.post("/forgot-password", userController.SendEmailForgotPassword)
 userRouter.post("/verify-user", userController.SendEmailVerifyUser)
-    <<<<<<<< <Temporary merge branch 1
 userRouter.post("/change-password", ValidateJoi(Schema.User.change_password), userController.ChangePassword)
-=========
-userRouter.put("/change-password", userController.ChangePassword)
->>>>>>>>> Temporary merge branch 2
 userRouter.get("/user", verifyAccessJWT, CheckRole.IsAdmin, userController.GetAllUser)
 userRouter.get("/user/info", verifyAccessJWT, userController.GetInfoUser)
 userRouter.put("/user/info", verifyAccessJWT, ValidateJoi(Schema.User.update), userController.UpdateUserInfo)
+userRouter.get("/search", verifyAccessJWT, userController.SearchUser);
 
 export default userRouter

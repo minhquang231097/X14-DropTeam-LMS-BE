@@ -37,6 +37,10 @@ const DeletedCourse = async (id: string) => {
     return await courseRepository.DeleteOne(id);
 };
 
+const SearchCourseByCondition = async (page: number, limit: number, field: any, filter: any) => {
+    return await courseRepository.Search(page, limit, null, field, filter)
+}
+
 export default {
     CreateCourse,
     GetAllCourse,
@@ -45,4 +49,5 @@ export default {
     DeletedCourse,
     GetCourseByCode,
     UpdateManyCourse,
+    SearchCourseByCondition,
 };
