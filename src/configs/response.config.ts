@@ -57,7 +57,12 @@ export const RESPONSE_CONFIG = {
             UPLOAD_IMG_SUCCESS: "Updaload image success",
         },
         CLASS: {
-
+            NOT_FOUND: "Can't find any class",
+            CREATE_SUCCES: "Create class success",
+            FOUND_SUCCESS: "Found class",
+            UPDATE_SUCCESS: "Update class success",
+            DELETE_SUCCESS: "Delete class success",
+            WRONG: "Something wrong...",
         },
         100: "Continue",
         101: "Switching Protocols",

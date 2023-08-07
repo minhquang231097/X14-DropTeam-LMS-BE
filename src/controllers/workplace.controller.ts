@@ -3,17 +3,16 @@ import WorkplaceService from "@/services/workplace.service";
 import { RESPONSE_CONFIG } from "@/configs/response.config";
 import HttpResponseData from "@/common/httpResponseData";
 import HttpException from "@/common/httpException";
-import workplaceService from "@/services/workplace.service";
 
 const CreateWorkplace = async (req: Request, res: Response) => {
     try {
         const workplace: any = await WorkplaceService.CreateWorkplace(req.body);
         res.json(
-            new HttpResponseData(RESPONSE_CONFIG.MESSAGE[200], 200, workplace),
+            new HttpResponseData(RESPONSE_CONFIG.MESSAGE.WORKPLACE.CREATE_SUCCES, 200, workplace),
         );
     } catch (error: any) {
         return res.json(
-            new HttpException(RESPONSE_CONFIG.MESSAGE[400], 400, error.message),
+            new HttpException(RESPONSE_CONFIG.MESSAGE.WORKPLACE.WRONG, 400, error.message),
         );
     }
 };
@@ -22,26 +21,24 @@ const GetAllWorkplace = async (req: Request, res: Response) => {
     try {
         const allWorkplaces = await WorkplaceService.GetAllWorkplace();
         if (!allWorkplaces) {
-            return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[404], 404));
+            return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.WORKPLACE.NOT_FOUND, 404));
         }
-        return res.json(allWorkplaces);
+        return res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.WORKPLACE.FOUND_SUCCESS, 302, allWorkplaces));
     } catch (error) {
-        return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[404], 404));
+        return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.WORKPLACE.WRONG, 404));
     }
 };
 
 const GetWorkplaceById = async (req: Request, res: Response) => {
     const { id } = req.query;
     try {
-        const workplaceExist = await WorkplaceService.GetWorkplaceById(
-            id as string,
-        );
+        const workplaceExist = await WorkplaceService.GetWorkplaceById(id as string);
         if (!workplaceExist) {
-            return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[404], 404));
+            return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.WORKPLACE.NOT_FOUND, 404));
         }
-        return res.json(workplaceExist);
+        return res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.WORKPLACE.FOUND_SUCCESS, 302, workplaceExist));
     } catch (error) {
-        return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[404], 404));
+        return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.WORKPLACE.WRONG, 404));
     }
 };
 
@@ -51,12 +48,12 @@ const UpdateWorkplace = async (req: Request, res: Response) => {
     try {
         const workplaceExist = await WorkplaceService.GetWorkplaceById(id as string,);
         if (!workplaceExist) {
-            return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[400], 400));
+            return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.WORKPLACE.NOT_FOUND, 404));
         }
         await WorkplaceService.UpdateWorkplace(id as string, update,);
-        res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE[200], 200));
+        res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.WORKPLACE.UPDATE_SUCCESS, 200));
     } catch (error: any) {
-        return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[400], 400, error.message));
+        return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.WORKPLACE.WRONG, 406, error.message));
     }
 };
 
@@ -65,12 +62,12 @@ const DeletedWorkplace = async (req: Request, res: Response) => {
     try {
         const workplaceExist = await WorkplaceService.GetWorkplaceById(id as string);
         if (!workplaceExist) {
-            return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[400], 400));
+            return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.WORKPLACE.NOT_FOUND, 400));
         }
         const deleteWorkplace = await WorkplaceService.DeletedWorkplace(id as string,);
-        res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE[200], 200, deleteWorkplace));
+        res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.WORKPLACE.DELETE_SUCCESS, 200, deleteWorkplace));
     } catch (error: any) {
-        return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[400], 400, error.message));
+        return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.WORKPLACE.WRONG, 400, error.message));
     }
 };
 

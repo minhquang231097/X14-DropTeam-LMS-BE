@@ -9,19 +9,23 @@ const registe_CourseSchema = new Schema({
     note: String,
     student: { type: Schema.Types.ObjectId, ref: "students" },
     create_at: {
-        type: Date, default: Date.now()
-    }
-})
+        type: Date,
+        default: Date.now(),
+    },
+});
 
 export interface IRegistedCourse extends Document {
-    fullname: string,
-    email: string,
-    phone_number: number,
-    course: string,
-    workplace: string,
-    note?: string,
-    student?: string,
-    create_at?: string
+    fullname: string;
+    email: string;
+    phone_number: number;
+    course: string;
+    workplace: string;
+    note?: string;
+    student?: string;
+    create_at?: string;
 }
 
-export const RegistedCourse = model<IRegistedCourse>("registed_course", registe_CourseSchema)
+export const RegistedCourse = model<IRegistedCourse>(
+    "registed_course",
+    registe_CourseSchema,
+);

@@ -10,11 +10,11 @@ const CreateCourse = async (req: Request, res: Response) => {
     try {
         const newCourse: ICourse = await CourseService.CreateCourse(payload);
         res.json(
-            new HttpResponseData(RESPONSE_CONFIG.MESSAGE[200], 200, newCourse),
+            new HttpResponseData(RESPONSE_CONFIG.MESSAGE.COURSE.CREATE_SUCCES, 200, newCourse),
         );
     } catch (error: any) {
         return res.json(
-            new HttpException(RESPONSE_CONFIG.MESSAGE[400], 400, error.message),
+            new HttpException(RESPONSE_CONFIG.MESSAGE.COURSE.WRONG, 400, error.message),
         );
     }
 };
@@ -26,10 +26,10 @@ const UploadImage = async (req: Request, res: Response) => {
         for (let i = 0; i < file.length; i++) {
             result.push(file[i].path);
         }
-        res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE[200], 200, result));
+        res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.COURSE.UPLOAD_IMG_SUCCESS, 200, result));
     } catch (error: any) {
         return res.json(
-            new HttpException(RESPONSE_CONFIG.MESSAGE[400], 400, error.message),
+            new HttpException(RESPONSE_CONFIG.MESSAGE.COURSE.WRONG, 400, error.message),
         );
     }
 };
@@ -38,21 +38,16 @@ const GetAllCourse = async (req: Request, res: Response) => {
     const { page, limit } = req.query;
     const p = Number(page);
     const l = Number(limit);
-
     try {
         const allCourses = await CourseService.GetAllCourse(p, l);
         if (!allCourses) {
-            return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[404], 404));
+            return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.COURSE.NOT_FOUND, 404));
         }
         return res.json(
-            new HttpResponseData(RESPONSE_CONFIG.MESSAGE[200], 200, {
-                list: allCourses,
-                page: p,
-                count: allCourses.length,
-            }),
+            new HttpResponseData(RESPONSE_CONFIG.MESSAGE.COURSE.FOUND_SUCCESS, 200, { list: allCourses, page: p, count: allCourses.length }),
         );
-    } catch (error) {
-        return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[404], 404));
+    } catch (error: any) {
+        return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.COURSE.WRONG, 404, error.message));
     }
 };
 
@@ -61,13 +56,13 @@ const GetCourseById = async (req: Request, res: Response) => {
     try {
         const courseExist = await CourseService.GetCourseById(id as string);
         if (!courseExist) {
-            return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[404], 404));
+            return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.COURSE.NOT_FOUND, 404));
         }
         return res.json(
-            new HttpResponseData(RESPONSE_CONFIG.MESSAGE[200], 200, courseExist),
+            new HttpResponseData(RESPONSE_CONFIG.MESSAGE.COURSE.FOUND_SUCCESS, 200, courseExist),
         );
     } catch (error) {
-        return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[404], 404));
+        return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.COURSE.WRONG, 400));
     }
 };
 
@@ -76,13 +71,13 @@ const GetCourseByCode = async (req: Request, res: Response) => {
     try {
         const courseExist = await CourseService.GetCourseByCode(code as string);
         if (!courseExist) {
-            return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[404], 404));
+            return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.COURSE.NOT_FOUND, 404));
         }
         return res.json(
-            new HttpResponseData(RESPONSE_CONFIG.MESSAGE[200], 200, courseExist),
+            new HttpResponseData(RESPONSE_CONFIG.MESSAGE.COURSE.FOUND_SUCCESS, 200, courseExist),
         );
     } catch (error) {
-        return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[404], 404));
+        return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.COURSE.WRONG, 404));
     }
 };
 
@@ -92,15 +87,15 @@ const UpdateCourse = async (req: Request, res: Response) => {
         const update = req.body;
         const courseExist = await CourseService.GetCourseById(id as string);
         if (!courseExist) {
-            return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[400], 400));
+            return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.COURSE.NOT_FOUND, 400));
         }
         const updateCourse = await CourseService.UpdateCourse(id as string, update);
         res.json(
-            new HttpResponseData(RESPONSE_CONFIG.MESSAGE[200], 200, updateCourse),
+            new HttpResponseData(RESPONSE_CONFIG.MESSAGE.COURSE.FOUND_SUCCESS, 200, updateCourse),
         );
     } catch (error: any) {
         return res.json(
-            new HttpException(RESPONSE_CONFIG.MESSAGE[400], 400, error.message),
+            new HttpException(RESPONSE_CONFIG.MESSAGE.COURSE.WRONG, 400, error.message),
         );
     }
 };
@@ -141,7 +136,7 @@ const SearchCourse = async (req: Request, res: Response) => {
     const l = Number(limit);
     try {
         const result = await CourseService.SearchCourseByCondition(p, l, filter, field);
-        res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.COURSE.FOUND_SUCCESS, 200, { list: result, page: p, count: result.length, }));
+        res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.COURSE.FOUND_SUCCESS, 200, { list: result, page: p, count: result.length }));
     } catch (error) {
         return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.COURSE.WRONG, 400));
     }
