@@ -19,40 +19,82 @@ const RegistedNewCourse = async (req: Request, res: Response) => {
   }
 };
 
-const GetAllRegist = async (req: Request, res: Response) => {
-  const { page, limit } = req.query;
+const GetRegist = async (req: Request, res: Response) => {
+  const { wp_code, course_code, email, page, limit } = req.query;
   const p = Number(page);
   const l = Number(limit);
   try {
-    const allRegist = await registCourseService.GetAllRegist(p, l);
-    if (!allRegist)
-      return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[404], 404));
-    res.json(
-      new HttpResponseData(RESPONSE_CONFIG.MESSAGE[200], 200, allRegist),
-    );
+    if (page && limit) {
+      const allRegist = await registCourseService.GetAllRegist(p, l);
+      if (!allRegist)
+        return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[404], 404));
+      res.json(
+        new HttpResponseData(RESPONSE_CONFIG.MESSAGE[200], 200, allRegist),
+      );
+    } else if (page && limit && course_code) {
+      const allRegist = await registCourseService.GetRegistByCourseCode(
+        course_code as string,
+        p,
+        l,
+      );
+      if (!allRegist)
+        return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[404], 404));
+      res.json(
+        new HttpResponseData(RESPONSE_CONFIG.MESSAGE[200], 200, allRegist),
+      );
+    } else if (page && limit && wp_code) {
+      const allRegist = await registCourseService.GetRegistByWorkplaceCode(
+        wp_code as string,
+        p,
+        l,
+      );
+      if (!allRegist)
+        return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[404], 404));
+      res.json(
+        new HttpResponseData(RESPONSE_CONFIG.MESSAGE[200], 200, allRegist),
+      );
+    } else if (page && limit && email) {
+      const allRegist = await registCourseService.GetRegistByCourseCode(
+        wp_code as string,
+        p,
+        l,
+      );
+      if (!allRegist)
+        return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[404], 404));
+      res.json(
+        new HttpResponseData(RESPONSE_CONFIG.MESSAGE[200], 200, allRegist),
+      );
+    }
   } catch (error) {
     return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[404], 404));
   }
 };
 
-const GetRegistByCourse = async (req: Request, res: Response) => {
-  const { course_code, page, limit } = req.query;
-  const p = Number(page);
-  const l = Number(limit);
+const UpdateRegist = async (req: Request, res: Response) => {
+  const { id } = req.query;
+  const { payload } = req.body;
   try {
-    const allRegist = await registCourseService.GetRegistByCourseCode(
-      course_code as string,
-      p,
-      l,
-    );
-    if (!allRegist)
+    const exist = await registCourseService.GetRegistById(id as string);
+    if (!exist) {
       return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[404], 404));
-    res.json(
-      new HttpResponseData(RESPONSE_CONFIG.MESSAGE[200], 200, allRegist),
-    );
+    }
+    await registCourseService.UpdateRegist(id as string, payload);
+    res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE[200], 200));
   } catch (error) {
-    return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[404], 404));
+    return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[400], 400));
   }
 };
 
-export default { RegistedNewCourse, GetAllRegist, GetRegistByCourse };
+const DeleteRegist = async (req: Request, res: Response) => {
+  const { id } = req.query;
+  try {
+    const updatedRegist = await registCourseService.DeleteRegist(id as string);
+    if (!updatedRegist)
+      return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[404], 404));
+    res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE[200], 200));
+  } catch (error) {
+    return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[400], 400));
+  }
+};
+
+export default { RegistedNewCourse, GetRegist, UpdateRegist, DeleteRegist };

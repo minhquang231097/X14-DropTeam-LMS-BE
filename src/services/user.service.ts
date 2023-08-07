@@ -1,9 +1,6 @@
 import { User } from "@/models/user.model";
 import { UserRepository } from "@/repository/user.repo";
 import bcrypt from "bcryptjs"
-import { ObjectId } from "mongoose";
-import courseService from "./course.service";
-import workplaceService from "./workplace.service";
 
 const userRepository = new UserRepository(User)
 
@@ -17,8 +14,8 @@ const CreateUser = async (payload: any) => {
     return user
 }
 
-const GetAllUser = async () => {
-    return await userRepository.FindAll()
+const GetAllUser = async (page: number, limit: number) => {
+    return await userRepository.FindAllInfoAndPagination(page, limit)
 }
 
 const GetUserByUsername = async (username: string) => {
@@ -37,7 +34,7 @@ const GetUserByCondition = async (filter: any) => {
     return await userRepository.FindByCondition(filter)
 }
 
-const SearchUserByCondition = async (page: number, limit: number, field: any, filter: any) => {
+const SearchUserByCondition = async (page: number, limit: number, field?: any, filter?: any) => {
     return await userRepository.Search(page, limit, null,field, filter)
 }
 

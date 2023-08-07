@@ -3,10 +3,9 @@ import express from "express";
 
 const sessionRouter = express.Router();
 
-// const sessionRepository = new SessionRepository(Session)
-// const sessionService = new SessionService(sessionRepository)
-// const sessionController = new SessionController(sessionService)
-
-// sessionRouter.get("/", sessionController.GetAll)
+sessionRouter.get("/", sessionController.GetSession);
+sessionRouter.post("/", sessionController.CreateNewSession);
+sessionRouter.put("/", sessionController.UpdateSession);
+sessionRouter.delete("/", sessionController.DeleteSession);
 
 export default sessionRouter;

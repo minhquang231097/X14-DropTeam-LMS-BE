@@ -8,8 +8,7 @@ const workplaceRouter = express.Router()
 
 workplaceRouter.post("/", verifyAccessJWT, ValidateJoi(WorkplaceSchema.Workplace.create_workplace), workplaceController.CreateWorkplace)
 workplaceRouter.put("/", verifyAccessJWT, ValidateJoi(WorkplaceSchema.Workplace.update_workplace), workplaceController.UpdateWorkplace)
-workplaceRouter.get("/all", verifyAccessJWT, workplaceController.GetAllWorkplace)
-workplaceRouter.get("/", verifyAccessJWT, workplaceController.GetWorkplaceById)
+workplaceRouter.get("/", verifyAccessJWT, workplaceController.GetWorkplace)
 workplaceRouter.delete("/", verifyAccessJWT, workplaceController.DeletedWorkplace)
 
 export default workplaceRouter

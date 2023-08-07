@@ -1,20 +1,21 @@
 import HttpException from "@/common/httpException";
 import HttpResponseData from "@/common/httpResponseData";
 import { RESPONSE_CONFIG } from "@/configs/response.config";
+import attendanceService from "@/services/attendance.service";
 import classService from "@/services/class.service";
 import { Request, Response } from "express";
 
-const CreateNewClass = async (req: Request, res: Response) => {
-  const { mentor, workplace, course } = req.body;
+const CreateNewAttendance = async (req: Request, res: Response) => {
   const payload = req.body;
   try {
-    const newClass = await classService.CreateOneClass(
-      mentor,
-      workplace,
-      course,
+    const newAttendance = await attendanceService.CreateAttendance(
+      payload.session_code,
+      payload.class_code,
       payload,
     );
-    res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE[200], 200, newClass));
+    res.json(
+      new HttpResponseData(RESPONSE_CONFIG.MESSAGE[200], 200, newAttendance),
+    );
   } catch (error) {
     return res.json(
       res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[400], 400)),
@@ -22,26 +23,30 @@ const CreateNewClass = async (req: Request, res: Response) => {
   }
 };
 
-const GetClass = async (req: Request, res: Response) => {
-  const { page, limit, id, code } = req.query;
+const GetAttendance = async (req: Request, res: Response) => {
+  const { page, limit, class_code, day } = req.query;
   const p = Number(page);
   const l = Number(limit);
   try {
-    if (id) {
-      const classExist = await classService.GetClassById(id as string);
-      if (!classExist) {
-        return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[404], 404));
-      }
-      return res.json(
-        new HttpResponseData(RESPONSE_CONFIG.MESSAGE[200], 200, classExist),
+    if (page && limit && class_code) {
+      const result = await attendanceService.GetAttendanceByClassCode(
+        class_code as string,
+        p,
+        l,
       );
-    } else if (code) {
-      const classExist = await classService.GetClassByCode(code as string);
-      if (!classExist) {
+      if (!result) {
         return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[404], 404));
       }
       return res.json(
-        new HttpResponseData(RESPONSE_CONFIG.MESSAGE[200], 200, classExist),
+        new HttpResponseData(RESPONSE_CONFIG.MESSAGE[200], 200, result),
+      );
+    } else if (page && limit && day) {
+      const result = await classService.GetClassByCode(day as string);
+      if (!result) {
+        return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[404], 404));
+      }
+      return res.json(
+        new HttpResponseData(RESPONSE_CONFIG.MESSAGE[200], 200, result),
       );
     } else if (page && limit) {
       const allClasses = await classService.GetAllClass(p, l);
@@ -110,10 +115,4 @@ const DeleteManyCourse = async (req: Request, res: Response) => {
   }
 };
 
-export default {
-  CreateNewClass,
-  GetClass,
-  UpdateClass,
-  DeleteOneClass,
-  DeleteManyCourse,
-};
+export default {};

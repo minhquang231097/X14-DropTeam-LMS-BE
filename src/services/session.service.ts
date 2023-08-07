@@ -1,8 +1,8 @@
 import { Session } from "@/models/session.model";
 import { SessionRepository } from "@/repository/session.repo";
 import courseService from "./course.service";
-import { ObjectId } from "mongoose";
 import { UpdateSessionDto } from "@/types/session";
+import classService from "./class.service";
 
 const sessionRepository = new SessionRepository(Session);
 
@@ -24,12 +24,17 @@ const GetSessionById = async (id: string) => {
   return await sessionRepository.FindById(id, "course");
 };
 
+const GetSessionByCode = async (code: string) => {
+  return await sessionRepository.FindByCondition({ course: code }, "course");
+};
+
 const GetSessionByCourseId = async (id: string) => {
   return await sessionRepository.FindSessionByCourseId(id);
 };
 
-const GetSessionByCode = async (code: string) => {
-  return await sessionRepository.FindSessionByCode(code);
+const GetSessionByCourseCode = async (code: string) => {
+  const result = await courseService.GetCourseByCode(code);
+  return await sessionRepository.FindSessionByCourseId(result?._id);
 };
 
 const UpdateSessionById = async (id: string, payload: UpdateSessionDto) => {
@@ -52,8 +57,9 @@ export default {
   GetAllSession,
   GetSessionById,
   GetSessionByCourseId,
-  GetSessionByCode,
+  GetSessionByCourseCode,
   UpdateSessionById,
   UpdateCourseByCondition,
   DeletedCourse,
+  GetSessionByCode,
 };

@@ -11,7 +11,11 @@ export class LessonRepository extends BaseRepository<ILesson> {
     return this.model.create({ ...payload, session: session_id });
   }
 
-  async FindLessonBySessionId(id: string) {
-    return this.model.find({ session: id }).populate("session");
+  async FindLessonBySessionId(id: string, page: number, limit: number) {
+    return this.model
+      .find({ session: id })
+      .skip((page - 1) * limit)
+      .limit(limit)
+      .populate("session");
   }
 }

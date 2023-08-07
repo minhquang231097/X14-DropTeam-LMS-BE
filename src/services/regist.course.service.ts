@@ -3,7 +3,7 @@ import workplaceService from "./workplace.service";
 import userService from "./user.service";
 import { IUser } from "@/models/user.model";
 import { RegistedCourse } from "@/models/registe.course.model";
-import { RegistedCourseRepository } from "@/repository/regist_course.repo";
+import { RegistedCourseRepository } from "@/repository/regist.course.repo";
 
 const registCourseRepository = new RegistedCourseRepository(RegistedCourse);
 
@@ -43,14 +43,26 @@ const GetRegistByCourseCode = async (
   );
 };
 
-const GetRegistByWorkplaceCode = async (code: string) => {
+const GetRegistByWorkplaceCode = async (
+  code: string,
+  page: number,
+  limit: number,
+) => {
   const _workplace = await workplaceService.GetWorkplaceByCode(code);
-  return await registCourseRepository.FindRegistbyWorkplaceId(_workplace?._id);
+  return await registCourseRepository.FindRegistbyWorkplaceId(
+    _workplace?._id,
+    page,
+    limit,
+  );
 };
 
 const GetRegistByEmailStudent = async (email: string) => {
   const _student = await userService.GetUserByEmail(email);
   return await registCourseRepository.FindRegistbyStudentId(_student?._id);
+};
+
+const GetRegistById = async (id: string) => {
+  return await registCourseRepository.FindById(id);
 };
 
 const UpdateRegist = async (id: string, payload: any) => {
@@ -69,4 +81,5 @@ export default {
   GetRegistByWorkplaceCode,
   GetRegistByEmailStudent,
   GetAllRegist,
+  GetRegistById,
 };

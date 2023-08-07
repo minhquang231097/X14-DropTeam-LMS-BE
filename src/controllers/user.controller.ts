@@ -1,7 +1,6 @@
-import { NextFunction, Request, Response } from "express";
+import { Request, Response } from "express";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
-import { UserRepository } from "@/repository/user.repo";
 import HttpException from "@/common/httpException";
 import HttpResponseData from "@/common/httpResponseData";
 import { RESPONSE_CONFIG } from "@/configs/response.config";
@@ -134,34 +133,48 @@ const SignIn = async (req: Request, res: Response) => {
   }
 };
 
-const GetInfoUser = async (req: Request, res: Response, next: NextFunction) => {
+const GetUser = async (req: Request, res: Response) => {
+  const { page, limit, email, field, filter } = req.query;
   const idUser = req.user._id;
+  const p = Number(page);
+  const l = Number(limit);
   try {
-    const info = await userService.GetUserById(idUser);
-    if (!info) {
+    if (email) {
+      const user = await userService.GetUserByEmail(email as string);
+      if (!user) {
+        return res.json(
+          new HttpException(RESPONSE_CONFIG.MESSAGE.USER.NOT_FOUND, 404),
+        );
+      }
       return res.json(
-        new HttpException(RESPONSE_CONFIG.MESSAGE.USER.NOT_LOGIN, 404),
+        new HttpResponseData(RESPONSE_CONFIG.MESSAGE.USER.FOUND, 200, user),
+      );
+    } else if (page && limit) {
+      const allUsers = await userService.SearchUserByCondition(
+        p,
+        l,
+        field as string,
+        filter as string,
+      );
+      if (!allUsers) {
+        return res.json(
+          new HttpException(RESPONSE_CONFIG.MESSAGE.USER.NOT_FOUND, 404),
+        );
+      }
+      return res.json(
+        new HttpResponseData(RESPONSE_CONFIG.MESSAGE.USER.FOUND, 200, allUsers),
+      );
+    } else {
+      const info = await userService.GetUserById(idUser);
+      if (!info) {
+        return res.json(
+          new HttpException(RESPONSE_CONFIG.MESSAGE.USER.NOT_LOGIN, 404),
+        );
+      }
+      res.json(
+        new HttpResponseData(RESPONSE_CONFIG.MESSAGE.USER.FOUND, 200, info),
       );
     }
-    res.json(
-      new HttpResponseData(RESPONSE_CONFIG.MESSAGE.USER.FOUND, 200, info),
-    );
-  } catch (error) {
-    return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.USER.WRONG, 404));
-  }
-};
-
-const GetAllUser = async (req: Request, res: Response) => {
-  try {
-    const allUsers = await userService.GetAllUser();
-    if (!allUsers) {
-      return res.json(
-        new HttpException(RESPONSE_CONFIG.MESSAGE.USER.NOT_FOUND, 404),
-      );
-    }
-    return res.json(
-      new HttpResponseData(RESPONSE_CONFIG.MESSAGE.USER.FOUND, 302, allUsers),
-    );
   } catch (error) {
     return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.USER.WRONG, 404));
   }
@@ -317,28 +330,32 @@ const UpdateUserInfo = async (req: Request, res: Response) => {
   }
 };
 
-const SearchUser = async (req: Request, res: Response) => {
-  const { field, filter, page, limit } = req.query;
-  const p = Number(page);
-  const l = Number(limit);
+const UpdatePassword = async (req: Request, res: Response) => {
+  const { password } = req.body;
   try {
-    const result = await userService.SearchUserByCondition(p, l, filter, field);
-    res.json(result);
+    const exist = await userService.GetUserByCondition(password);
+    if (!exist) {
+      return res.json(
+        new HttpException(RESPONSE_CONFIG.MESSAGE.USER.NOT_FOUND, 404),
+      );
+    }
+    res.json(
+      new HttpResponseData(RESPONSE_CONFIG.MESSAGE.USER.SUCCESS, 200, exist),
+    );
   } catch (error) {
-    console.log(error);
+    return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.USER.WRONG, 400));
   }
 };
 
 export default {
   SignUp,
   SignIn,
-  SearchUser,
   handleRefreshToken,
-  GetAllUser,
+  GetUser,
   SignOutUser,
   SendEmailForgotPassword,
   ChangePassword,
   SendEmailVerifyUser,
-  GetInfoUser,
   UpdateUserInfo,
+  UpdatePassword,
 };

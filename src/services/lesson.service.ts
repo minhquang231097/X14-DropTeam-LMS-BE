@@ -1,7 +1,6 @@
 import { ILesson, Lesson } from "@/models/lesson.model";
 import { LessonRepository } from "@/repository/lesson.repo";
 import sessionService from "./session.service";
-import { ObjectId } from "mongoose";
 import { UpdateLessonDto } from "@/types/lesson";
 
 const lessonRepository = new LessonRepository(Lesson);
@@ -23,8 +22,13 @@ const GetLessonById = async (id: string) => {
   return await lessonRepository.FindById(id, "session");
 };
 
-const GetLessonBySessionId = async (id: string) => {
-  return await lessonRepository.FindLessonBySessionId(id);
+const GetLessonBySessionCode = async (
+  code: string,
+  page: number,
+  limit: number,
+) => {
+  const result = await sessionService.GetSessionByCode(code);
+  return await lessonRepository.FindLessonBySessionId(result?._id, page, limit);
 };
 
 const UpdateLessonById = async (id: string, payload: UpdateLessonDto) => {
@@ -46,7 +50,7 @@ export default {
   CreateLesson,
   GetAllLesson,
   GetLessonById,
-  GetLessonBySessionId,
+  GetLessonBySessionCode,
   UpdateLessonById,
   UpdateCourseByCondition,
   DeletedLessonById,

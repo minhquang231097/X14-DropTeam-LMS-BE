@@ -13,7 +13,11 @@ export class AttendanceRepository extends BaseRepository<IAttendance> {
       .populate(["session", "class"]);
   }
 
-  async FindAttendanceByClassId(id: string) {
-    return await this.model.find({ class: id }).populate(["session", "class"]);
+  async FindAttendanceByClassId(id: string, page: number, limit: number) {
+    return await this.model
+      .find({ class: id })
+      .skip((page - 1) * limit)
+      .limit(limit)
+      .populate(["session", "class"]);
   }
 }

@@ -25,10 +25,16 @@ const GetAttendanceById = async (id: string) => {
   return await attendanceRepository.FindById(id, ["session", "class"]);
 };
 
-const GetAttendanceByClassCode = async (code: string) => {
+const GetAttendanceByClassCode = async (
+  code: string,
+  page: number,
+  limit: number,
+) => {
   const foundAttendance: any = await classService.GetClassByCode(code);
   return await attendanceRepository.FindAttendanceByClassId(
     foundAttendance._id,
+    page,
+    limit,
   );
 };
 

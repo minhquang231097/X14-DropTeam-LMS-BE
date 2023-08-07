@@ -34,53 +34,40 @@ const UploadImage = async (req: Request, res: Response) => {
   }
 };
 
-const GetAllCourse = async (req: Request, res: Response) => {
-  const { page, limit } = req.query;
+const GetCourse = async (req: Request, res: Response) => {
+  const { code, id, page, limit } = req.query;
   const p = Number(page);
   const l = Number(limit);
-
   try {
-    const allCourses = await CourseService.GetAllCourse(p, l);
-    if (!allCourses) {
-      return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[404], 404));
+    if (id) {
+      const courseExist = await CourseService.GetCourseById(id as string);
+      if (!courseExist) {
+        return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[404], 404));
+      }
+      return res.json(
+        new HttpResponseData(RESPONSE_CONFIG.MESSAGE[200], 200, courseExist),
+      );
+    } else if (code) {
+      const courseExist = await CourseService.GetCourseByCode(code as string);
+      if (!courseExist) {
+        return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[404], 404));
+      }
+      return res.json(
+        new HttpResponseData(RESPONSE_CONFIG.MESSAGE[200], 200, courseExist),
+      );
+    }else if (page && limit){
+      const allCourses = await CourseService.GetAllCourse(p, l);
+      if (!allCourses) {
+        return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[404], 404));
+      }
+      return res.json(
+        new HttpResponseData(RESPONSE_CONFIG.MESSAGE[200], 200, {
+          list: allCourses,
+          page: p,
+          count: allCourses.length,
+        }),
+      );
     }
-    return res.json(
-      new HttpResponseData(RESPONSE_CONFIG.MESSAGE[200], 200, {
-        list: allCourses,
-        page: p,
-        count: allCourses.length,
-      }),
-    );
-  } catch (error) {
-    return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[404], 404));
-  }
-};
-
-const GetCourseById = async (req: Request, res: Response) => {
-  const { id } = req.query;
-  try {
-    const courseExist = await CourseService.GetCourseById(id as string);
-    if (!courseExist) {
-      return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[404], 404));
-    }
-    return res.json(
-      new HttpResponseData(RESPONSE_CONFIG.MESSAGE[200], 200, courseExist),
-    );
-  } catch (error) {
-    return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[404], 404));
-  }
-};
-
-const GetCourseByCode = async (req: Request, res: Response) => {
-  const { code } = req.query;
-  try {
-    const courseExist = await CourseService.GetCourseByCode(code as string);
-    if (!courseExist) {
-      return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[404], 404));
-    }
-    return res.json(
-      new HttpResponseData(RESPONSE_CONFIG.MESSAGE[200], 200, courseExist),
-    );
   } catch (error) {
     return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[404], 404));
   }
@@ -137,11 +124,9 @@ const DeletedAllCourse = async (req: Request, res: Response) => {
 
 export default {
   CreateCourse,
-  GetAllCourse,
-  GetCourseById,
   UpdateCourse,
   DeletedCourse,
   UploadImage,
   DeletedAllCourse,
-  GetCourseByCode,
+  GetCourse,
 };

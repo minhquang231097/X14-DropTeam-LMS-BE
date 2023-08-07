@@ -18,9 +18,7 @@ classRouter.put(
   ValidateJoi(CourseSchema.Course.update_course),
   classController.UpdateClass,
 );
-classRouter.get("/all", classController.GetAllClass);
-classRouter.get("/", classController.GetClassByCode);
-classRouter.get("/", classController.GetClassById);
+classRouter.get("/", classController.GetClass);
 classRouter.delete("/all", classController.DeleteManyCourse);
 classRouter.delete("/", verifyAccessJWT, classController.DeleteOneClass);
 

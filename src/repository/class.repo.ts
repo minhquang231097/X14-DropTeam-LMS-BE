@@ -1,5 +1,5 @@
 import { Class, IClass } from "@/models/class.model";
-import { Model, ObjectId } from "mongoose";
+import { Model } from "mongoose";
 import { BaseRepository } from "./base.repo";
 
 export class ClassRepository extends BaseRepository<IClass> {

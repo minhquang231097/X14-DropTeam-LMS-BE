@@ -17,28 +17,33 @@ const CreateWorkplace = async (req: Request, res: Response) => {
   }
 };
 
-const GetAllWorkplace = async (req: Request, res: Response) => {
+const GetWorkplace = async (req: Request, res: Response) => {
+  const { page, limit, id, code } = req.query;
+  const p = Number(page);
+  const l = Number(limit);
   try {
-    const allWorkplaces = await WorkplaceService.GetAllWorkplace();
-    if (!allWorkplaces) {
-      return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[404], 404));
+    if (id) {
+      const wp = await WorkplaceService.GetWorkplaceById(id as string);
+      if (!wp)
+        return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[404], 404));
+      return res.json(
+        new HttpResponseData(RESPONSE_CONFIG.MESSAGE[200], 200, wp),
+      );
+    } else if (code) {
+      const wp = await WorkplaceService.GetWorkplaceByCode(code as string);
+      if (!wp)
+        return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[404], 404));
+      return res.json(
+        new HttpResponseData(RESPONSE_CONFIG.MESSAGE[200], 200, wp)
+      );
+    }else if (page && limit) {
+      const all = await WorkplaceService.GetAllWorkplace(p, l);
+      if (!all)
+        return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[404], 404));
+      return res.json(
+        new HttpResponseData(RESPONSE_CONFIG.MESSAGE[200], 200, all)
+      );
     }
-    return res.json(allWorkplaces);
-  } catch (error) {
-    return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[404], 404));
-  }
-};
-
-const GetWorkplaceById = async (req: Request, res: Response) => {
-  const { id } = req.query;
-  try {
-    const workplaceExist = await WorkplaceService.GetWorkplaceById(
-      id as string,
-    );
-    if (!workplaceExist) {
-      return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[404], 404));
-    }
-    return res.json(workplaceExist);
   } catch (error) {
     return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[404], 404));
   }
@@ -92,8 +97,7 @@ const DeletedWorkplace = async (req: Request, res: Response) => {
 
 export default {
   CreateWorkplace,
-  GetAllWorkplace,
+  GetWorkplace,
   UpdateWorkplace,
   DeletedWorkplace,
-  GetWorkplaceById,
 };
