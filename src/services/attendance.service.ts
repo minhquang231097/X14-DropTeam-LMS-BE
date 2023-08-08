@@ -25,6 +25,13 @@ const GetAttendanceById = async (id: string) => {
   return await attendanceRepository.FindById(id, ["session", "class"]);
 };
 
+const GetAttendanceByClassAndDay = async (class_id: string, day: number) => {
+  return await attendanceRepository.FindByCondition({
+    class: class_id,
+    day: day,
+  });
+};
+
 const GetAttendanceByClassCode = async (
   code: string,
   page: number,
@@ -57,4 +64,5 @@ export default {
   DeleteAttendanceById,
   GetAttendanceById,
   GetAttendanceByClassCode,
+  GetAttendanceByClassAndDay,
 };

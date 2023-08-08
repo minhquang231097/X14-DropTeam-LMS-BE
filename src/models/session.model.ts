@@ -1,3 +1,4 @@
+import moment from "moment";
 import { Document, Schema, model } from "mongoose";
 
 const sessionSchema = new Schema({
@@ -9,6 +10,12 @@ const sessionSchema = new Schema({
     type: Date,
     default: Date.now(),
   },
+  formated_date: String,
+});
+
+sessionSchema.pre("save", function (next) {
+  this.formated_date = moment(this.create_at).format("DD/MM/YYYY");
+  next();
 });
 
 export interface ISession extends Document {

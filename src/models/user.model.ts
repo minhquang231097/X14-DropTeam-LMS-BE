@@ -1,3 +1,4 @@
+import moment from "moment";
 import { Document, model, Schema } from "mongoose";
 
 const userSchema = new Schema({
@@ -24,6 +25,12 @@ const userSchema = new Schema({
     type: Date,
     default: Date.now(),
   },
+  formated_date: String,
+});
+
+userSchema.pre("save", function (next) {
+  this.formated_date = moment(this.create_at).format("DD/MM/YYYY");
+  next();
 });
 
 export interface IUser extends Document {
@@ -38,6 +45,7 @@ export interface IUser extends Document {
   dob: string;
   gender: string;
   address: string;
+  formated_date: string;
 }
 
 export const User = model<IUser>("users", userSchema);

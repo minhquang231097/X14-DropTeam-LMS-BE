@@ -1,3 +1,4 @@
+import moment from "moment";
 import { Document, Schema, model } from "mongoose";
 
 const classSchema = new Schema({
@@ -15,6 +16,12 @@ const classSchema = new Schema({
     type: Date,
     default: Date.now(),
   },
+  formated_date: String,
+});
+
+classSchema.pre("save", function (next) {
+  this.formated_date = moment(this.create_at).format("DD/MM/YYYY");
+  next();
 });
 
 export interface IClass extends Document {
@@ -28,6 +35,7 @@ export interface IClass extends Document {
   hour_per_class?: string;
   schedule: string;
   class_size?: number;
+  formated_date?: string;
 }
 
 export const Class = model<IClass>("classes", classSchema);

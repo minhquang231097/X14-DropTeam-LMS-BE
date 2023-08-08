@@ -6,7 +6,7 @@ import { Request, Response } from "express";
 
 const CreateNewSession = async (req: Request, res: Response) => {
   const payload = req.body;
-  const course_code = payload.course_code;
+  const { course_code } = payload;
   try {
     const session = await sessionService.CreateSession(course_code, payload);
     res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE[200], 200, session));

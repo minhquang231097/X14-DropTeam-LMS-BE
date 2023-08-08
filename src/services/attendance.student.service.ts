@@ -2,20 +2,23 @@ import { AttendanceStudentRepository } from "@/repository/attendance.student.rep
 import attendanceService from "./attendance.service";
 import userService from "./user.service";
 import { Attendace_Student } from "@/models/attendance.student.model";
-import { IAttendance } from "@/models/attendance.model";
+import classService from "./class.service";
 
 const attendanceStudentRepository = new AttendanceStudentRepository(
   Attendace_Student,
 );
-const AddStudentToAttendance = async (email: string, code: string) => {
+const AddStudentToAttendance = async (
+  email: string,
+  code: string,
+  day: number,
+) => {
   const _student: any = await userService.GetUserByEmail(email);
-  const _attendance: any = await attendanceService.GetAttendanceByClassCode(
-    code,
+  const _class: any = await classService.GetClassByCode(code);
+  const _attendance: any = await attendanceService.GetAttendanceByClassAndDay(
+    _class._id,
+    day,
   );
-  const exist = await attendanceStudentRepository.FindByCondition(
-    { student: _student._id } || { attendance: _attendance._id },
-  );
-  if (!exist) {
+  if (!_attendance) {
     return attendanceStudentRepository.Create({
       student: _student._id,
       attendance: _attendance._id,

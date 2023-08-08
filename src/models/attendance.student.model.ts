@@ -1,3 +1,4 @@
+import moment from "moment";
 import { Document, Schema, model } from "mongoose";
 
 const attendance_studentSchema = new Schema({
@@ -7,12 +8,19 @@ const attendance_studentSchema = new Schema({
     type: Date,
     default: Date.now(),
   },
+  formated_date: String,
+});
+
+attendance_studentSchema.pre("save", function (next) {
+  this.formated_date = moment(this.create_at).format("DD/MM/YYYY");
+  next();
 });
 
 export interface IAttendance_Student extends Document {
   attendance: string;
   student: string;
   create_at?: string;
+  formated_date?: string;
 }
 
 export const Attendace_Student = model<IAttendance_Student>(
