@@ -11,8 +11,10 @@ const CreateFeedback = async (
   email_student: string,
   payload: any,
 ) => {
-  const _course = await courseService.GetCourseByCode(course_code);
-  const _student = await userService.GetUserByEmail(email_student);
+  const [_course, _student] = await Promise.all([
+    courseService.GetCourseByCode(course_code),
+    userService.GetUserByEmail(email_student),
+  ]);
   const newFeedback = await feedbackRepository.Create({
     ...payload,
     course: _course?._id,

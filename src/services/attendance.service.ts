@@ -11,8 +11,10 @@ const CreateAttendance = async (
   class_code: string,
   payload: any,
 ) => {
-  const _session = await sessionService.GetSessionByCode(session_code);
-  const _class = await classService.GetClassByCode(class_code);
+  const [_session, _class] = await Promise.all([
+    sessionService.GetSessionByCode(session_code),
+    classService.GetClassByCode(class_code),
+  ]);
   const newAttendance = await attendanceRepository.Create({
     ...payload,
     session: _session?._id,

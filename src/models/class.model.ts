@@ -6,11 +6,14 @@ const classSchema = new Schema({
   workplace: { type: Schema.Types.ObjectId, ref: "workplaces" },
   course: { type: Schema.Types.ObjectId, ref: "courses" },
   class_code: { type: String, unique: true },
-  start_at: String,
+  session_per_class: Number,
+  start_at: Date,
   end_at: String,
-  expected_time_start: String,
-  hour_per_class: String,
-  schedule: String,
+  total_hours: Number,
+  total_session: Number,
+  session_per_week: Number,
+  hour_per_session: Number,
+  schedule: [Number],
   class_size: Number,
   create_at: {
     type: Date,
@@ -29,11 +32,14 @@ export interface IClass extends Document {
   workplace: string;
   course: string;
   class_code: string;
-  start_at?: string;
+  start_at: Date;
   end_at?: string;
-  expected_time_start?: string;
-  hour_per_class?: string;
-  schedule: string;
+  total_hours?: number;
+  total_session: number;
+  session_per_class: number;
+  session_per_week?: number;
+  hour_per_session: number;
+  schedule: [number];
   class_size?: number;
   formated_date?: string;
 }

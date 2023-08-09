@@ -11,9 +11,16 @@ export class ClassRepository extends BaseRepository<IClass> {
     mentor: string,
     workplace: string,
     course: string,
+    end_at: string,
     payload: IClass,
   ) {
-    return await this.model.create({ ...payload, mentor, workplace, course });
+    return await this.model.create({
+      ...payload,
+      mentor,
+      workplace,
+      course,
+      end_at,
+    });
   }
 
   async FindClassByCode(code: string) {

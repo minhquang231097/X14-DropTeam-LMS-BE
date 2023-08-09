@@ -12,15 +12,17 @@ const CreateRegistCourse = async (
   student_id: string,
   note: string,
 ) => {
-  const _course: any = await courseService.GetCourseByCode(course_code);
-  const _student: IUser = await userService.GetUserById(student_id);
+  const [_course, _student] = await Promise.all([
+    courseService.GetCourseByCode(course_code),
+    userService.GetUserById(student_id),
+  ]);
 
   return await registCourseRepository.Create({
     fullname: _student.fullname,
     email: _student.email,
     phone_number: _student.phone_number,
-    course: _course._id,
-    workplace: _course.workplace,
+    course: _course?._id,
+    workplace: _course?.workplace,
     note: note,
     student: _student._id,
   });

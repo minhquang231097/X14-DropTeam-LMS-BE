@@ -12,10 +12,12 @@ const AddStudentToAttendance = async (
   code: string,
   day: number,
 ) => {
-  const _student: any = await userService.GetUserByEmail(email);
-  const _class: any = await classService.GetClassByCode(code);
+  const [_student, _class] = await Promise.all([
+    userService.GetUserByEmail(email),
+    classService.GetClassByCode(code),
+  ]);
   const _attendance: any = await attendanceService.GetAttendanceByClassAndDay(
-    _class._id,
+    _class?._id,
     day,
   );
   if (!_attendance) {

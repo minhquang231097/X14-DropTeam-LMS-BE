@@ -1,7 +1,5 @@
 import { Course, ICourse } from "@/models/course.model";
 import { CourseRepository } from "@/repository/course.repo";
-import { FindCourseDto } from "@/types/course";
-import { ObjectId } from "mongoose";
 
 const courseRepository = new CourseRepository(Course);
 

@@ -23,4 +23,5 @@ export interface ClassResponseDto {
   hour_per_class?: string;
   schedule?: string;
   class_size?: number;
+  formated_date?: string;
 }

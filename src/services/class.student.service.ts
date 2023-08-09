@@ -6,8 +6,10 @@ import { Class_Student } from "@/models/class.student.model";
 const classStudentRepository = new ClassStudentRepository(Class_Student);
 
 const AddStudentToClass = async (email: string, class_code: string) => {
-  const _student = await userService.GetUserByEmail(email);
-  const _class = await classService.GetClassByCode(class_code);
+  const [_student, _class] = await Promise.all([
+    userService.GetUserByEmail(email),
+    classService.GetClassByCode(class_code),
+  ]);
   const exist = await classStudentRepository.FindByCondition(
     { student: _student?._id } || { class: _class?._id },
   );

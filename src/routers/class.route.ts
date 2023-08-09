@@ -8,7 +8,7 @@ const classRouter = express.Router();
 
 classRouter.post(
   "/",
-  verifyAccessJWT,
+  // verifyAccessJWT,
   ValidateJoi(ClassSchema.Class.create_class),
   classController.CreateNewClass,
 );
