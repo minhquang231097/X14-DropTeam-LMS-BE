@@ -28,12 +28,14 @@ import courseRouter from "./routers/course.route";
 import classRouter from "./routers/class.route";
 import sessionRouter from "./routers/session.route";
 import regist_courseRouter from "./routers/regist.course.route";
+import feedbackRouter from "./routers/feedback.route";
 app.use("/api/v1/auth", userRouter);
 app.use("/api/v1/workplace", workplaceRouter);
 app.use("/api/v1/course", courseRouter);
 app.use("/api/v1/class", classRouter);
 app.use("/api/v1/session", sessionRouter);
 app.use("/api/vi/regist-course", regist_courseRouter);
+app.use("/api/vi/feedback", feedbackRouter);
 
 app.listen(port, () => {
   console.log(`Server is running at http://localhost:${port}`);

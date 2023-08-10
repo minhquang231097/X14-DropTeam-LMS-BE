@@ -29,24 +29,20 @@ const GetSession = async (req: Request, res: Response) => {
       res.json(
         new HttpResponseData(RESPONSE_CONFIG.MESSAGE[200], 200, session),
       );
-    }else if(class_code){
+    } else if (class_code) {
       const found = await sessionService.GetSessionByClassCode(
         class_code as string,
       );
       if (!found)
         return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[400], 400));
-      res.json(
-        new HttpResponseData(RESPONSE_CONFIG.MESSAGE[200], 200, found),
-      );
+      res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE[200], 200, found));
     } else if (page && limit) {
       const all = await sessionService.GetAllSession(p, l);
       if (!all)
         return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[400], 400));
-      res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE[200], 200,all));
+      res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE[200], 200, all));
     }
-    return res.json(
-      new HttpException(RESPONSE_CONFIG.MESSAGE[400], 400),
-    );
+    return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[400], 400));
   } catch (error) {
     return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[400], 400));
   }
