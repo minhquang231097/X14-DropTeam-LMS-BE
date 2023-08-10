@@ -20,7 +20,7 @@ export class SessionRepository extends BaseRepository<ISession> {
 
   async FindSessionByCourseId(id: string) {
     const session = await this.model
-      .findOne({ course: id })
+      .find({ course: id })
       .populate(["course", "class"]);
     return session;
   }

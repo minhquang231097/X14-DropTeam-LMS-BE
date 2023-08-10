@@ -68,9 +68,6 @@ const GetCourse = async (req: Request, res: Response) => {
         }),
       );
     }
-    return res.json(
-      new HttpException(RESPONSE_CONFIG.MESSAGE[400], 400),
-    );
   } catch (error) {
     return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[404], 404));
   }

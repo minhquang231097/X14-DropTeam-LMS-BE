@@ -24,11 +24,10 @@ const GetSession = async (req: Request, res: Response) => {
       const session = await sessionService.GetSessionByCourseCode(
         course_code as string,
       );
-      if (!session)
-        return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[400], 400));
+      if (!session) return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[400], 400));
       res.json(
         new HttpResponseData(RESPONSE_CONFIG.MESSAGE[200], 200, session),
-      );
+        );
     } else if (class_code) {
       const found = await sessionService.GetSessionByClassCode(
         class_code as string,
@@ -42,7 +41,6 @@ const GetSession = async (req: Request, res: Response) => {
         return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[400], 400));
       res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE[200], 200, all));
     }
-    return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[400], 400));
   } catch (error) {
     return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[400], 400));
   }

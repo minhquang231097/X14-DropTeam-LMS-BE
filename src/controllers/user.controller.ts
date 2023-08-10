@@ -175,9 +175,6 @@ const GetUser = async (req: Request, res: Response) => {
         new HttpResponseData(RESPONSE_CONFIG.MESSAGE.USER.FOUND, 200, info),
       );
     }
-    return res.json(
-      new HttpException(RESPONSE_CONFIG.MESSAGE[400], 400),
-    );
   } catch (error) {
     return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.USER.WRONG, 404));
   }
