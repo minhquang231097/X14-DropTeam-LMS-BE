@@ -116,7 +116,7 @@ const SignIn = async (req: Request, res: Response) => {
         },
       );
 
-      return res.status(200).json({
+      res.status(200).json({
         username: userExist.username,
         id: userExist._id,
         accessToken,
@@ -146,7 +146,7 @@ const GetUser = async (req: Request, res: Response) => {
           new HttpException(RESPONSE_CONFIG.MESSAGE.USER.NOT_FOUND, 404),
         );
       }
-      return res.json(
+      res.json(
         new HttpResponseData(RESPONSE_CONFIG.MESSAGE.USER.FOUND, 200, user),
       );
     } else if (page && limit) {
@@ -161,7 +161,7 @@ const GetUser = async (req: Request, res: Response) => {
           new HttpException(RESPONSE_CONFIG.MESSAGE.USER.NOT_FOUND, 404),
         );
       }
-      return res.json(
+      res.json(
         new HttpResponseData(RESPONSE_CONFIG.MESSAGE.USER.FOUND, 200, allUsers),
       );
     } else {

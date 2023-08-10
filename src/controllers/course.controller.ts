@@ -44,7 +44,7 @@ const GetCourse = async (req: Request, res: Response) => {
       if (!courseExist) {
         return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[404], 404));
       }
-      return res.json(
+      res.json(
         new HttpResponseData(RESPONSE_CONFIG.MESSAGE[200], 200, courseExist),
       );
     } else if (code) {
@@ -52,7 +52,7 @@ const GetCourse = async (req: Request, res: Response) => {
       if (!courseExist) {
         return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[404], 404));
       }
-      return res.json(
+      res.json(
         new HttpResponseData(RESPONSE_CONFIG.MESSAGE[200], 200, courseExist),
       );
     }else if (page && limit){
@@ -60,7 +60,7 @@ const GetCourse = async (req: Request, res: Response) => {
       if (!allCourses) {
         return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[404], 404));
       }
-      return res.json(
+      res.json(
         new HttpResponseData(RESPONSE_CONFIG.MESSAGE[200], 200, {
           list: allCourses,
           page: p,

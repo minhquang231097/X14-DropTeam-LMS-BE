@@ -40,7 +40,7 @@ const GetClass = async (req: Request, res: Response) => {
       if (!classExist) {
         return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[404], 404));
       }
-      return res.json(
+      res.json(
         new HttpResponseData(RESPONSE_CONFIG.MESSAGE[200], 200, classExist),
       );
     } else if (page && limit) {

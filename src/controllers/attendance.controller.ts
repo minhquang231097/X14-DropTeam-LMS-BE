@@ -37,7 +37,7 @@ const GetAttendance = async (req: Request, res: Response) => {
       if (!result) {
         return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[404], 404));
       }
-      return res.json(
+      res.json(
         new HttpResponseData(RESPONSE_CONFIG.MESSAGE[200], 200, result),
       );
     } else if (page && limit && day) {
@@ -45,7 +45,7 @@ const GetAttendance = async (req: Request, res: Response) => {
       if (!result) {
         return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[404], 404));
       }
-      return res.json(
+      res.json(
         new HttpResponseData(RESPONSE_CONFIG.MESSAGE[200], 200, result),
       );
     } else if (page && limit) {
