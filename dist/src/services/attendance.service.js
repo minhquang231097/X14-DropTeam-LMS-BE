@@ -20,12 +20,13 @@ const CreateAttendance = async (session_code, class_code, payload) => {
     });
     return newAttendance;
 };
-const GetAttendanceById = async (id) => {
-    return await attendanceRepository.FindById(id, ["session", "class"]);
+const GetAttendanceByDay = async (day, page, limit) => {
+    return await attendanceRepository.FindByConditionAndPagination(page, limit, { day }, ["session", "class"]);
 };
-const GetAttendanceByClassAndDay = async (class_id, day) => {
+const GetAttendanceByClassCodeAndDay = async (class_code, day) => {
+    const _class = await class_service_1.default.GetClassByCode(class_code);
     return await attendanceRepository.FindByCondition({
-        class: class_id,
+        class: _class?._id,
         day: day,
     });
 };
@@ -47,8 +48,8 @@ exports.default = {
     UpdateAttendance,
     DeleteAttendanceByCondition,
     DeleteAttendanceById,
-    GetAttendanceById,
     GetAttendanceByClassCode,
-    GetAttendanceByClassAndDay,
+    GetAttendanceByClassCodeAndDay,
+    GetAttendanceByDay,
 };
 //# sourceMappingURL=attendance.service.js.map

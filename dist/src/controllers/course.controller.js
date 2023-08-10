@@ -18,19 +18,6 @@ const CreateCourse = async (req, res) => {
         return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE[400], 400, error.message));
     }
 };
-const UploadImage = async (req, res) => {
-    const file = req.files;
-    try {
-        let result = [];
-        for (let i = 0; i < file.length; i++) {
-            result.push(file[i].path);
-        }
-        res.json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE[200], 200, result));
-    }
-    catch (error) {
-        return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE[400], 400, error.message));
-    }
-};
 const GetCourse = async (req, res) => {
     const { code, id, page, limit } = req.query;
     const p = Number(page);
@@ -61,7 +48,6 @@ const GetCourse = async (req, res) => {
                 count: allCourses.length,
             }));
         }
-        return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE[400], 400));
     }
     catch (error) {
         return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE[404], 404));
@@ -112,7 +98,6 @@ exports.default = {
     CreateCourse,
     UpdateCourse,
     DeletedCourse,
-    UploadImage,
     DeletedAllCourse,
     GetCourse,
 };

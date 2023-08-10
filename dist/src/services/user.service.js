@@ -6,6 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const user_model_1 = require("@/models/user.model");
 const user_repo_1 = require("@/repository/user.repo");
 const bcryptjs_1 = __importDefault(require("bcryptjs"));
+const attendance_student_service_1 = __importDefault(require("./attendance.student.service"));
 const userRepository = new user_repo_1.UserRepository(user_model_1.User);
 const CreateUser = async (payload) => {
     const salt = await bcryptjs_1.default.genSalt(10);
@@ -31,6 +32,9 @@ const GetUserById = async (id) => {
 const GetUserByCondition = async (filter) => {
     return await userRepository.FindByCondition(filter);
 };
+const GetUserByAttendance = async (attendanceId, page, limit) => {
+    return await attendance_student_service_1.default.GetAllStudentInAttendance(attendanceId, page, limit);
+};
 const SearchUserByCondition = async (page, limit, field, filter) => {
     return await userRepository.Search(page, limit, null, field, filter);
 };
@@ -46,5 +50,18 @@ const DeleteUserById = async (id) => {
 const DeleteUserByCondition = async (filter) => {
     return await userRepository.DeleteByCondition(filter);
 };
-exports.default = { CreateUser, SearchUserByCondition, GetAllUser, GetUserByUsername, UpdateUserById, GetUserByEmail, GetUserById, DeleteUserById, DeleteUserByCondition, UpdateUserByCondition, GetUserByCondition };
+exports.default = {
+    CreateUser,
+    SearchUserByCondition,
+    GetAllUser,
+    GetUserByUsername,
+    UpdateUserById,
+    GetUserByEmail,
+    GetUserById,
+    DeleteUserById,
+    DeleteUserByCondition,
+    UpdateUserByCondition,
+    GetUserByCondition,
+    GetUserByAttendance,
+};
 //# sourceMappingURL=user.service.js.map

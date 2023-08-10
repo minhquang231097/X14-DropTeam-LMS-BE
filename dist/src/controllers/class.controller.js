@@ -7,6 +7,7 @@ const httpException_1 = __importDefault(require("@/common/httpException"));
 const httpResponseData_1 = __importDefault(require("@/common/httpResponseData"));
 const response_config_1 = require("@/configs/response.config");
 const class_service_1 = __importDefault(require("@/services/class.service"));
+const class_student_service_1 = __importDefault(require("@/services/class.student.service"));
 const CreateNewClass = async (req, res) => {
     const { mentor, workplace, course } = req.body;
     const payload = req.body;
@@ -18,8 +19,18 @@ const CreateNewClass = async (req, res) => {
         return res.json(res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE[400], 400)));
     }
 };
+const AddStudentToClass = async (req, res) => {
+    const { email, class_code } = req.body;
+    try {
+        const result = await class_student_service_1.default.AddStudentToClass(email, class_code);
+        res.json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE[200], 200));
+    }
+    catch (error) {
+        return res.json(res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE[400], 400)));
+    }
+};
 const GetClass = async (req, res) => {
-    const { page, limit, id, code } = req.query;
+    const { page, limit, id, code, email } = req.query;
     const p = Number(page);
     const l = Number(limit);
     try {
@@ -37,6 +48,13 @@ const GetClass = async (req, res) => {
             }
             res.json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE[200], 200, classExist));
         }
+        else if (email) {
+            const classExist = await class_student_service_1.default.GetClassByStudentEmail(p, l, email);
+            if (!classExist) {
+                return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE[404], 404));
+            }
+            res.json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE[200], 200, classExist));
+        }
         else if (page && limit) {
             const allClasses = await class_service_1.default.GetAllClass(p, l);
             if (!allClasses) {
@@ -48,7 +66,6 @@ const GetClass = async (req, res) => {
                 count: allClasses.length,
             }));
         }
-        return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE[400], 400));
     }
     catch (error) {
         return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE[404], 404));
@@ -100,5 +117,6 @@ exports.default = {
     UpdateClass,
     DeleteOneClass,
     DeleteManyCourse,
+    AddStudentToClass,
 };
 //# sourceMappingURL=class.controller.js.map

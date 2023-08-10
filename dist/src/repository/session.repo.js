@@ -17,7 +17,7 @@ class SessionRepository extends base_repo_1.BaseRepository {
     }
     async FindSessionByCourseId(id) {
         const session = await this.model
-            .findOne({ course: id })
+            .find({ course: id })
             .populate(["course", "class"]);
         return session;
     }

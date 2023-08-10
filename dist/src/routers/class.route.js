@@ -10,6 +10,7 @@ const validatejoi_1 = require("@/validation/validatejoi");
 const class_joi_1 = require("@/validation/class.joi");
 const classRouter = express_1.default.Router();
 classRouter.post("/", (0, validatejoi_1.ValidateJoi)(class_joi_1.ClassSchema.Class.create_class), class_controller_1.default.CreateNewClass);
+classRouter.post("/add-student", verifyAccessToken_1.verifyAccessJWT, class_controller_1.default.AddStudentToClass);
 classRouter.put("/", verifyAccessToken_1.verifyAccessJWT, class_controller_1.default.UpdateClass);
 classRouter.get("/", class_controller_1.default.GetClass);
 classRouter.delete("/all", class_controller_1.default.DeleteManyCourse);
