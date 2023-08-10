@@ -22,6 +22,7 @@ export interface UpdateUserDto {
 }
 
 export interface FindUserDto {
+  _id?: string;
   fullname?: string;
   email?: string;
   phone_number?: string;

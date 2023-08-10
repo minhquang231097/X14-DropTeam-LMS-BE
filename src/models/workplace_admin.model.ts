@@ -19,7 +19,7 @@ worplace_adminSchema.pre("save", function (next) {
 export interface IWorkplace_Admin extends Document {
   workplace: string;
   admin: string;
-  create_at?: string;
+  create_at: string;
   formated_date: string;
 }
 

@@ -27,10 +27,10 @@ export interface IRegistedCourse extends Document {
   phone_number: number;
   course: string;
   workplace: string;
-  note?: string;
-  student?: string;
-  create_at?: string;
-  formated_date?: string;
+  note: string;
+  student: string;
+  create_at: string;
+  formated_date: string;
 }
 
 export const RegistedCourse = model<IRegistedCourse>(

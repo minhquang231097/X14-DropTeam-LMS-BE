@@ -23,7 +23,7 @@ export interface ILesson extends Document {
   title: string;
   content: string;
   no: number;
-  create_at?: string;
+  create_at: string;
   formated_date: string;
 }
 

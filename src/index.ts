@@ -22,20 +22,28 @@ import { connectDB } from "./common/connectDB";
 connectDB();
 
 //Routes
-import userRouter from "./routers/user.route";
+import userRouter from "./routers/auth.route";
 import workplaceRouter from "./routers/workplace.route";
 import courseRouter from "./routers/course.route";
 import classRouter from "./routers/class.route";
 import sessionRouter from "./routers/session.route";
 import regist_courseRouter from "./routers/regist.course.route";
 import feedbackRouter from "./routers/feedback.route";
-app.use("/api/v1/auth", userRouter);
+import authRouter from "./routers/auth.route";
+import lessonRouter from "./routers/lesson.route";
+import attendanceRouter from "./routers/attendance.route";
+import uploadRouter from "./routers/upload.route";
+app.use("/api/v1/auth", authRouter);
+app.use("/api/v1/user", userRouter);
 app.use("/api/v1/workplace", workplaceRouter);
 app.use("/api/v1/course", courseRouter);
 app.use("/api/v1/class", classRouter);
 app.use("/api/v1/session", sessionRouter);
+app.use("/api/v1/lesson", lessonRouter);
 app.use("/api/vi/regist-course", regist_courseRouter);
 app.use("/api/vi/feedback", feedbackRouter);
+app.use("/api/vi/attendance", attendanceRouter);
+app.use("/api/vi/upload", uploadRouter);
 
 app.listen(port, () => {
   console.log(`Server is running at http://localhost:${port}`);

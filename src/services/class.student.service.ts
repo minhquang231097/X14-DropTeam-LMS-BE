@@ -1,7 +1,7 @@
 import { ClassStudentRepository } from "@/repository/class.student.repo";
 import classService from "./class.service";
-import userService from "./user.service";
 import { Class_Student } from "@/models/class.student.model";
+import userService from "./user.service";
 
 const classStudentRepository = new ClassStudentRepository(Class_Student);
 
@@ -29,6 +29,20 @@ const GetAllStudentInClass = async (page: number, limit: number) => {
   );
 };
 
+const GetClassByStudentEmail = async (
+  page: number,
+  limit: number,
+  email: string,
+) => {
+  const student = await userService.GetUserByEmail(email);
+  return await classStudentRepository.FindByConditionAndPagination(
+    page,
+    limit,
+    { student: student?._id },
+    "student",
+  );
+};
+
 const RemoveStudentOutOfClass = async (id: string) => {
   return await classStudentRepository.DeleteOne(id);
 };
@@ -37,4 +51,5 @@ export default {
   AddStudentToClass,
   RemoveStudentOutOfClass,
   GetAllStudentInClass,
+  GetClassByStudentEmail,
 };

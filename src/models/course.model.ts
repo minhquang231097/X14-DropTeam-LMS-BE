@@ -29,18 +29,18 @@ courseSchema.pre("save", function (next) {
 export interface ICourse extends Document {
   course_code: string;
   title: string;
-  image?: [string];
+  image: [string];
   session_per_course: number;
   price: number;
   desc: string;
-  lesson_list?: [string];
+  lesson_list: [string];
   duration: number;
   level: number;
   rate: number;
   discount: number;
   workplace: string;
-  create_at?: string;
-  formated_date?: string;
+  create_at: string;
+  formated_date: string;
 }
 
 export const Course = model<ICourse>("courses", courseSchema);

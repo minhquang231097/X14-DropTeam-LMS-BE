@@ -3,6 +3,8 @@ import { AttendanceRepository } from "@/repository/attendance.repo";
 import sessionService from "./session.service";
 import classService from "./class.service";
 import { FindAttendanceDto, UpdateAttendanceDto } from "@/types/attendance";
+import userService from "./user.service";
+import attendanceStudentService from "./attendance.student.service";
 
 const attendanceRepository = new AttendanceRepository(Attendance);
 
@@ -23,13 +25,22 @@ const CreateAttendance = async (
   return newAttendance;
 };
 
-const GetAttendanceById = async (id: string) => {
-  return await attendanceRepository.FindById(id, ["session", "class"]);
+const GetAttendanceByDay = async (day: number, page: number, limit: number) => {
+  return await attendanceRepository.FindByConditionAndPagination(
+    page,
+    limit,
+    { day },
+    ["session", "class"],
+  );
 };
 
-const GetAttendanceByClassAndDay = async (class_id: string, day: number) => {
+const GetAttendanceByClassCodeAndDay = async (
+  class_code: string,
+  day: number,
+) => {
+  const _class = await classService.GetClassByCode(class_code);
   return await attendanceRepository.FindByCondition({
-    class: class_id,
+    class: _class?._id,
     day: day,
   });
 };
@@ -64,7 +75,7 @@ export default {
   UpdateAttendance,
   DeleteAttendanceByCondition,
   DeleteAttendanceById,
-  GetAttendanceById,
   GetAttendanceByClassCode,
-  GetAttendanceByClassAndDay,
+  GetAttendanceByClassCodeAndDay,
+  GetAttendanceByDay,
 };

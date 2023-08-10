@@ -17,10 +17,10 @@ class_studentSchema.pre("save", function (next) {
 });
 
 export interface IClass_Student extends Document {
-  class?: string;
-  student?: string;
-  create_at?: string;
-  formated_date?: string;
+  class: string;
+  student: string;
+  create_at: string;
+  formated_date: string;
 }
 
 export const Class_Student = model<IClass_Student>(

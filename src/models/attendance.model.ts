@@ -20,12 +20,12 @@ attendanceSchema.pre("save", function (next) {
 });
 
 export interface IAttendance extends Document {
-  session?: string;
-  class?: string;
+  session: string;
+  class: string;
   day: number;
   absence: string;
   class_size: number;
-  create_at?: string;
+  create_at: string;
   formated_date: string;
 }
 

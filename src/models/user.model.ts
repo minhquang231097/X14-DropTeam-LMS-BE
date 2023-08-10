@@ -39,9 +39,9 @@ export interface IUser extends Document {
   phone_number: string;
   username: string;
   password: string;
-  refreshToken?: string;
-  create_at?: string;
-  role?: string;
+  refreshToken: string;
+  create_at: string;
+  role: string;
   dob: string;
   gender: string;
   address: string;
