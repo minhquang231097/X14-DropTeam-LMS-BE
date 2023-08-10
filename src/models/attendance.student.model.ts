@@ -19,8 +19,8 @@ attendance_studentSchema.pre("save", function (next) {
 export interface IAttendance_Student extends Document {
   attendance: string;
   student: string;
-  create_at?: string;
-  formated_date?: string;
+  create_at: string;
+  formated_date: string;
 }
 
 export const Attendace_Student = model<IAttendance_Student>(

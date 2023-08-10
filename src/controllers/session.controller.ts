@@ -42,7 +42,6 @@ const GetSession = async (req: Request, res: Response) => {
         return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[400], 400));
       res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE[200], 200, all));
     }
-    return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[400], 400));
   } catch (error) {
     return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[400], 400));
   }

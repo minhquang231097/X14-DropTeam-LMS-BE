@@ -33,15 +33,15 @@ export interface IClass extends Document {
   course: string;
   class_code: string;
   start_at: Date;
-  end_at?: string;
-  total_hours?: number;
+  end_at: string;
+  total_hours: number;
   total_session: number;
   session_per_class: number;
-  session_per_week?: number;
+  session_per_week: number;
   hour_per_session: number;
   schedule: [number];
-  class_size?: number;
-  formated_date?: string;
+  class_size: number;
+  formated_date: string;
 }
 
 export const Class = model<IClass>("classes", classSchema);

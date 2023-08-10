@@ -7,7 +7,7 @@ const sessionSchema = new Schema({
   session_code: { type: String, unique: true },
   session_name: { type: String, unique: true },
   desc: String,
-  status: { type: String, enum: ["COMPLETED","UNCOMPLETED" ] },
+  status: { type: String, enum: ["COMPLETED", "UNCOMPLETED"] },
   create_at: {
     type: Date,
     default: Date.now(),
@@ -17,7 +17,7 @@ const sessionSchema = new Schema({
 
 enum StatusSS {
   "COMPLETED",
-  "UNCOMPLETED"
+  "UNCOMPLETED",
 }
 
 sessionSchema.pre("save", function (next) {
@@ -32,7 +32,7 @@ export interface ISession extends Document {
   session_name: string;
   desc: string;
   status: StatusSS;
-  create_at?: string;
+  create_at: string;
 }
 
 export const Session = model<ISession>("sessions", sessionSchema);

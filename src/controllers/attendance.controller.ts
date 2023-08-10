@@ -2,6 +2,7 @@ import HttpException from "@/common/httpException";
 import HttpResponseData from "@/common/httpResponseData";
 import { RESPONSE_CONFIG } from "@/configs/response.config";
 import attendanceService from "@/services/attendance.service";
+import attendanceStudentService from "@/services/attendance.student.service";
 import classService from "@/services/class.service";
 import { Request, Response } from "express";
 
@@ -24,7 +25,7 @@ const CreateNewAttendance = async (req: Request, res: Response) => {
 };
 
 const GetAttendance = async (req: Request, res: Response) => {
-  const { page, limit, class_code, day } = req.query;
+  const { page, limit, class_code, day, email } = req.query;
   const p = Number(page);
   const l = Number(limit);
   try {
@@ -37,39 +38,58 @@ const GetAttendance = async (req: Request, res: Response) => {
       if (!result) {
         return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[404], 404));
       }
+      res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE[200], 200, result));
+    } else if (class_code && day) {
+      const attendance = await attendanceService.GetAttendanceByClassCodeAndDay(
+        class_code as string,
+        Number(day),
+      );
+      if (!attendance) {
+        return res.json(
+          new HttpException(RESPONSE_CONFIG.MESSAGE.USER.NOT_FOUND, 404),
+        );
+      }
       res.json(
-        new HttpResponseData(RESPONSE_CONFIG.MESSAGE[200], 200, result),
+        new HttpResponseData(
+          RESPONSE_CONFIG.MESSAGE.USER.FOUND,
+          200,
+          attendance,
+        ),
       );
     } else if (page && limit && day) {
-      const result = await classService.GetClassByCode(day as string);
+      const result = await attendanceService.GetAttendanceByDay(
+        Number(day),
+        p,
+        l,
+      );
       if (!result) {
         return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[404], 404));
       }
-      res.json(
-        new HttpResponseData(RESPONSE_CONFIG.MESSAGE[200], 200, result),
-      );
-    } else if (page && limit) {
-      const allClasses = await classService.GetAllClass(p, l);
-      if (!allClasses) {
+      res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE[200], 200, result));
+    } else if (email) {
+      const attendances =
+        await attendanceStudentService.GetAttendanceByEmailStudent(
+          email as string,
+          p,
+          l,
+        );
+      if (!attendances) {
         return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[404], 404));
       }
       res.json(
         new HttpResponseData(RESPONSE_CONFIG.MESSAGE[200], 200, {
-          list: allClasses,
+          list: attendances,
           page: p,
-          count: allClasses.length,
+          count: attendances.length,
         }),
       );
     }
-    return res.json(
-      new HttpException(RESPONSE_CONFIG.MESSAGE[400], 400),
-    );
   } catch (error) {
     return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[404], 404));
   }
 };
 
-const UpdateClass = async (req: Request, res: Response) => {
+const UpdateAttendance = async (req: Request, res: Response) => {
   const { id } = req.query;
   const update = req.body;
   try {
@@ -88,7 +108,7 @@ const UpdateClass = async (req: Request, res: Response) => {
   }
 };
 
-const DeleteOneClass = async (req: Request, res: Response) => {
+const DeleteAttendance = async (req: Request, res: Response) => {
   const { id } = req.query;
   try {
     const classDeleted = await classService.DeleteClassById(id as string);
@@ -103,19 +123,9 @@ const DeleteOneClass = async (req: Request, res: Response) => {
   }
 };
 
-const DeleteManyCourse = async (req: Request, res: Response) => {
-  const filter = req.body;
-  try {
-    const classDeleted = await classService.DeleteClassByCondition(filter);
-    if (!classDeleted) {
-      return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[404], 404));
-    }
-    res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE[200], 200));
-  } catch (error: any) {
-    return res.json(
-      new HttpException(RESPONSE_CONFIG.MESSAGE[400], 400, error.message),
-    );
-  }
+export default {
+  GetAttendance,
+  CreateNewAttendance,
+  UpdateAttendance,
+  DeleteAttendance,
 };
-
-export default {};

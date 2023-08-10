@@ -12,6 +12,11 @@ classRouter.post(
   ValidateJoi(ClassSchema.Class.create_class),
   classController.CreateNewClass,
 );
+classRouter.post(
+  "/add-student",
+  verifyAccessJWT,
+  classController.AddStudentToClass,
+);
 classRouter.put("/", verifyAccessJWT, classController.UpdateClass);
 classRouter.get("/", classController.GetClass);
 classRouter.delete("/all", classController.DeleteManyCourse);

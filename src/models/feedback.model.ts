@@ -20,8 +20,8 @@ export interface IFeedback extends Document {
   student: string;
   rating: string;
   content: string;
-  create_at?: string;
-  formated_date?: string;
+  create_at: string;
+  formated_date: string;
 }
 
 export const FeedBack = model<IFeedback>("feedbacks", feedbackSchema);

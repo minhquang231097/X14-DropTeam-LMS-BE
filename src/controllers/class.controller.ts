@@ -2,6 +2,7 @@ import HttpException from "@/common/httpException";
 import HttpResponseData from "@/common/httpResponseData";
 import { RESPONSE_CONFIG } from "@/configs/response.config";
 import classService from "@/services/class.service";
+import classStudentService from "@/services/class.student.service";
 import { Request, Response } from "express";
 
 const CreateNewClass = async (req: Request, res: Response) => {
@@ -22,8 +23,23 @@ const CreateNewClass = async (req: Request, res: Response) => {
   }
 };
 
+const AddStudentToClass = async (req: Request, res: Response) => {
+  const { email, class_code } = req.body;
+  try {
+    const result = await classStudentService.AddStudentToClass(
+      email,
+      class_code,
+    );
+    res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE[200], 200));
+  } catch (error) {
+    return res.json(
+      res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[400], 400)),
+    );
+  }
+};
+
 const GetClass = async (req: Request, res: Response) => {
-  const { page, limit, id, code } = req.query;
+  const { page, limit, id, code, email } = req.query;
   const p = Number(page);
   const l = Number(limit);
   try {
@@ -43,6 +59,18 @@ const GetClass = async (req: Request, res: Response) => {
       res.json(
         new HttpResponseData(RESPONSE_CONFIG.MESSAGE[200], 200, classExist),
       );
+    } else if (email) {
+      const classExist = await classStudentService.GetClassByStudentEmail(
+        p,
+        l,
+        email as string,
+      );
+      if (!classExist) {
+        return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[404], 404));
+      }
+      res.json(
+        new HttpResponseData(RESPONSE_CONFIG.MESSAGE[200], 200, classExist),
+      );
     } else if (page && limit) {
       const allClasses = await classService.GetAllClass(p, l);
       if (!allClasses) {
@@ -56,9 +84,6 @@ const GetClass = async (req: Request, res: Response) => {
         }),
       );
     }
-    return res.json(
-      new HttpException(RESPONSE_CONFIG.MESSAGE[400], 400),
-    );
   } catch (error) {
     return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[404], 404));
   }
@@ -119,4 +144,5 @@ export default {
   UpdateClass,
   DeleteOneClass,
   DeleteManyCourse,
+  AddStudentToClass,
 };
