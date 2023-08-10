@@ -21,15 +21,12 @@ const GetAllSession = async (page: number, limit: number) => {
 };
 
 const GetSessionById = async (id: string) => {
-  return await sessionRepository.FindById(id, "course");
+  return await sessionRepository.FindById(id, ["course", "class"]);
 };
 
-const GetSessionByCode = async (code: string) => {
-  return await sessionRepository.FindByCondition({ course: code }, "course");
-};
-
-const GetSessionByCourseId = async (id: string) => {
-  return await sessionRepository.FindSessionByCourseId(id);
+const GetSessionByClassCode = async (code: string) => {
+  const result = await classService.GetClassByCode(code);
+  return await sessionRepository.FindSessionByClassId(result?._id);
 };
 
 const GetSessionByCourseCode = async (code: string) => {
@@ -56,10 +53,9 @@ export default {
   CreateSession,
   GetAllSession,
   GetSessionById,
-  GetSessionByCourseId,
   GetSessionByCourseCode,
   UpdateSessionById,
   UpdateCourseByCondition,
   DeletedCourse,
-  GetSessionByCode,
+  GetSessionByClassCode,
 };

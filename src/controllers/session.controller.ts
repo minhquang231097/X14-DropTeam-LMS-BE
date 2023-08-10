@@ -16,24 +16,33 @@ const CreateNewSession = async (req: Request, res: Response) => {
 };
 
 const GetSession = async (req: Request, res: Response) => {
-  const { page, limit, code } = req.query;
+  const { page, limit, course_code, class_code } = req.query;
   const p = Number(page);
   const l = Number(limit);
   try {
-    if (code) {
+    if (course_code) {
       const session = await sessionService.GetSessionByCourseCode(
-        code as string,
+        course_code as string,
       );
       if (!session)
         return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[400], 400));
       res.json(
         new HttpResponseData(RESPONSE_CONFIG.MESSAGE[200], 200, session),
       );
+    }else if(class_code){
+      const found = await sessionService.GetSessionByClassCode(
+        class_code as string,
+      );
+      if (!found)
+        return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[400], 400));
+      res.json(
+        new HttpResponseData(RESPONSE_CONFIG.MESSAGE[200], 200, found),
+      );
     } else if (page && limit) {
       const all = await sessionService.GetAllSession(p, l);
       if (!all)
         return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[400], 400));
-      res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE[200], all));
+      res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE[200], 200,all));
     }
     return res.json(
       new HttpException(RESPONSE_CONFIG.MESSAGE[400], 400),
