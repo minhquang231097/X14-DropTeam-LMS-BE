@@ -1,5 +1,4 @@
-import { Course, ICourse } from "@/models/course.model";
-import { UpdateCourseDto } from "@/types/course";
+import { ICourse } from "@/models/course.model";
 import { Model } from "mongoose";
 import { BaseRepository } from "./base.repo";
 
