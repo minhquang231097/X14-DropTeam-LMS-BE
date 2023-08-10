@@ -24,6 +24,10 @@ const GetSessionById = async (id: string) => {
   return await sessionRepository.FindById(id, ["course", "class"]);
 };
 
+const GetSessionByCode = async (code: string) => {
+  return await sessionRepository.FindSessionByCode(code);
+};
+
 const GetSessionByClassCode = async (code: string) => {
   const result = await classService.GetClassByCode(code);
   return await sessionRepository.FindSessionByClassId(result?._id);
@@ -58,4 +62,5 @@ export default {
   UpdateCourseByCondition,
   DeletedCourse,
   GetSessionByClassCode,
+  GetSessionByCode,
 };
