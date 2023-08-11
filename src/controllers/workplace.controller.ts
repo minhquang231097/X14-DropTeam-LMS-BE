@@ -34,14 +34,21 @@ const GetWorkplace = async (req: Request, res: Response) => {
       if (!wp)
         return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[404], 404));
       return res.json(
-        new HttpResponseData(RESPONSE_CONFIG.MESSAGE[200], 200, wp)
+        new HttpResponseData(RESPONSE_CONFIG.MESSAGE[200], 200, wp),
       );
-    }else if (page && limit) {
+    } else if (page && limit) {
       const all = await WorkplaceService.GetAllWorkplace(p, l);
       if (!all)
         return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[404], 404));
       return res.json(
-        new HttpResponseData(RESPONSE_CONFIG.MESSAGE[200], 200, all)
+        new HttpResponseData(RESPONSE_CONFIG.MESSAGE[200], 200, all),
+      );
+    } else {
+      const all = await WorkplaceService.GetAllWorkplace(1, 10);
+      if (!all)
+        return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[404], 404));
+      return res.json(
+        new HttpResponseData(RESPONSE_CONFIG.MESSAGE[200], 200, all),
       );
     }
   } catch (error) {

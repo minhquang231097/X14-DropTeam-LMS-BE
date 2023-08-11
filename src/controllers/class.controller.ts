@@ -59,7 +59,7 @@ const GetClass = async (req: Request, res: Response) => {
       res.json(
         new HttpResponseData(RESPONSE_CONFIG.MESSAGE[200], 200, classExist),
       );
-    } else if (email) {
+    } else if (email && page && limit) {
       const classExist = await classStudentService.GetClassByStudentEmail(
         p,
         l,
@@ -83,9 +83,42 @@ const GetClass = async (req: Request, res: Response) => {
           count: allClasses.length,
         }),
       );
+    } else {
+      const allClasses = await classService.GetAllClass(1, 10);
+      if (!allClasses) {
+        return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[404], 404));
+      }
+      res.json(
+        new HttpResponseData(RESPONSE_CONFIG.MESSAGE[200], 200, allClasses),
+      );
     }
   } catch (error) {
     return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[404], 404));
+  }
+};
+
+const SearchClass = async (req: Request, res: Response) => {
+  const { q, p, l } = req.query;
+  const page = Number(p);
+  const limit = Number(l);
+  try {
+    const _class = await classService.SearchClassByCondition(
+      page,
+      limit,
+      q as string,
+      "class_code",
+    );
+    if (_class.length > 0) {
+      res.json(
+        new HttpResponseData(RESPONSE_CONFIG.MESSAGE.USER.FOUND, 200, _class),
+      );
+    } else {
+      res.json(
+        new HttpResponseData(RESPONSE_CONFIG.MESSAGE.USER.NOT_FOUND, 404),
+      );
+    }
+  } catch (error) {
+    return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.USER.WRONG, 404));
   }
 };
 
@@ -141,6 +174,7 @@ const DeleteManyCourse = async (req: Request, res: Response) => {
 export default {
   CreateNewClass,
   GetClass,
+  SearchClass,
   UpdateClass,
   DeleteOneClass,
   DeleteManyCourse,

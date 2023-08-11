@@ -64,6 +64,13 @@ const GetRegist = async (req: Request, res: Response) => {
       res.json(
         new HttpResponseData(RESPONSE_CONFIG.MESSAGE[200], 200, allRegist),
       );
+    } else {
+      const allRegist = await registCourseService.GetAllRegist(1, 10);
+      if (!allRegist)
+        return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[404], 404));
+      res.json(
+        new HttpResponseData(RESPONSE_CONFIG.MESSAGE[200], 200, allRegist),
+      );
     }
   } catch (error) {
     return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[404], 404));

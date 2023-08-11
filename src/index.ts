@@ -22,7 +22,6 @@ import { connectDB } from "./common/connectDB";
 connectDB();
 
 //Routes
-import userRouter from "./routers/auth.route";
 import workplaceRouter from "./routers/workplace.route";
 import courseRouter from "./routers/course.route";
 import classRouter from "./routers/class.route";
@@ -33,6 +32,7 @@ import authRouter from "./routers/auth.route";
 import lessonRouter from "./routers/lesson.route";
 import attendanceRouter from "./routers/attendance.route";
 import uploadRouter from "./routers/upload.route";
+import userRouter from "./routers/user.route";
 app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/user", userRouter);
 app.use("/api/v1/workplace", workplaceRouter);

@@ -50,10 +50,10 @@ const GetUserByAttendance = async (
 const SearchUserByCondition = async (
   page: number,
   limit: number,
-  field?: any,
   filter?: any,
+  field?: any,
 ) => {
-  return await userRepository.Search(page, limit, null, field, filter);
+  return await userRepository.Search(page, limit, null, filter, field);
 };
 
 const UpdateUserById = async (id: string, payload: any) => {

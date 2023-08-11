@@ -23,6 +23,15 @@ const GetCourseByCode = async (code: string) => {
   return await courseRepository.FindCourseByCode(code);
 };
 
+const SearcCourseByCondition = async (
+  page: number,
+  limit: number,
+  filter: any,
+  feild: any,
+) => {
+  return await courseRepository.Search(page, limit, "workplace", filter, feild);
+};
+
 const UpdateCourse = async (id: string, payload: ICourse) => {
   return await courseRepository.FindByIdAndUpdate(id, payload);
 };
@@ -39,6 +48,7 @@ export default {
   CreateCourse,
   GetAllCourse,
   GetCourseById,
+  SearcCourseByCondition,
   UpdateCourse,
   DeletedCourse,
   GetCourseByCode,

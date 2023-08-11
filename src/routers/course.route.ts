@@ -19,6 +19,7 @@ courseRouter.put(
   courseController.UpdateCourse,
 );
 courseRouter.get("/", courseController.GetCourse);
+courseRouter.get("/search", courseController.SearchCourse);
 courseRouter.delete("/all", courseController.DeletedAllCourse);
 courseRouter.delete("/", verifyAccessJWT, courseController.DeletedCourse);
 

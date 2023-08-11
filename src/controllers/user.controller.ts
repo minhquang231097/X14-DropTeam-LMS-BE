@@ -2,13 +2,13 @@ import HttpException from "@/common/httpException";
 import HttpResponseData from "@/common/httpResponseData";
 import { RESPONSE_CONFIG } from "@/configs/response.config";
 import userService from "@/services/user.service";
-import { Request, Response } from "express-serve-static-core";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
+import { Request, Response } from "express";
+import classStudentService from "@/services/class.student.service";
 
 const GetUser = async (req: Request, res: Response) => {
-  const { page, limit, email, field, filter, attendanceId } = req.query;
-  const idUser = req.user._id;
+  const { page, limit, email, attendanceId, class_code } = req.query;
   const p = Number(page);
   const l = Number(limit);
   try {
@@ -23,12 +23,7 @@ const GetUser = async (req: Request, res: Response) => {
         new HttpResponseData(RESPONSE_CONFIG.MESSAGE.USER.FOUND, 200, user),
       );
     } else if (page && limit) {
-      const allUsers = await userService.SearchUserByCondition(
-        p,
-        l,
-        field as string,
-        filter as string,
-      );
+      const allUsers = await userService.GetAllUser(p, l);
       if (!allUsers) {
         return res.json(
           new HttpException(RESPONSE_CONFIG.MESSAGE.USER.NOT_FOUND, 404),
@@ -51,15 +46,54 @@ const GetUser = async (req: Request, res: Response) => {
       res.json(
         new HttpResponseData(RESPONSE_CONFIG.MESSAGE.USER.FOUND, 200, allUsers),
       );
-    } else {
-      const info = await userService.GetUserById(idUser);
-      if (!info) {
+    } else if (page && limit && class_code) {
+      const allUsers = await classStudentService.GetAllStudentInClass(
+        p,
+        l,
+        class_code as string,
+      );
+      if (!allUsers) {
         return res.json(
-          new HttpException(RESPONSE_CONFIG.MESSAGE.USER.NOT_LOGIN, 404),
+          new HttpException(RESPONSE_CONFIG.MESSAGE.USER.NOT_FOUND, 404),
         );
       }
       res.json(
-        new HttpResponseData(RESPONSE_CONFIG.MESSAGE.USER.FOUND, 200, info),
+        new HttpResponseData(RESPONSE_CONFIG.MESSAGE.USER.FOUND, 200, allUsers),
+      );
+    } else {
+      const allUsers = await userService.GetAllUser(1, 10);
+      if (!allUsers) {
+        return res.json(
+          new HttpException(RESPONSE_CONFIG.MESSAGE.USER.NOT_FOUND, 404),
+        );
+      }
+      res.json(
+        new HttpResponseData(RESPONSE_CONFIG.MESSAGE.USER.FOUND, 200, allUsers),
+      );
+    }
+  } catch (error) {
+    return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.USER.WRONG, 404));
+  }
+};
+
+const SearchUser = async (req: Request, res: Response) => {
+  const { q, page, limit } = req.query;
+  const p = Number(page);
+  const l = Number(limit);
+  try {
+    const [_username, _email, _phone] = await Promise.all([
+      userService.SearchUserByCondition(p, l, q as string, "username"),
+      userService.SearchUserByCondition(p, l, q as string, "email"),
+      userService.SearchUserByCondition(p, l, q as string, "phone_number"),
+    ]);
+    const all = _username.concat(_email).concat(_phone);
+    if (all.length > 0) {
+      res.json(
+        new HttpResponseData(RESPONSE_CONFIG.MESSAGE.USER.FOUND, 200, all),
+      );
+    } else {
+      res.json(
+        new HttpResponseData(RESPONSE_CONFIG.MESSAGE.USER.NOT_FOUND, 404),
       );
     }
   } catch (error) {
@@ -116,17 +150,25 @@ const UpdateUserInfo = async (req: Request, res: Response) => {
 };
 
 const UpdatePassword = async (req: Request, res: Response) => {
-  const { password } = req.body;
+  const { password, newPassword } = req.body;
+  const { _id } = req.user;
   try {
-    const exist = await userService.GetUserByCondition(password);
+    const exist = await userService.GetUserById(_id);
     if (!exist) {
       return res.json(
         new HttpException(RESPONSE_CONFIG.MESSAGE.USER.NOT_FOUND, 404),
       );
     }
-    res.json(
-      new HttpResponseData(RESPONSE_CONFIG.MESSAGE.USER.SUCCESS, 200, exist),
-    );
+    const checkPassword = bcrypt.compareSync(password, exist.password);
+    if (!checkPassword) {
+      return res.json(
+        new HttpException(RESPONSE_CONFIG.MESSAGE.USER.NOT_FOUND, 404),
+      );
+    }
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(newPassword, salt);
+    await userService.UpdateUserById(_id, { password: hashedPassword });
+    res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.USER.SUCCESS, 200));
   } catch (error) {
     return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.USER.WRONG, 400));
   }
@@ -165,4 +207,5 @@ export default {
   UpdateUserInfo,
   UpdatePassword,
   DeleteUser,
+  SearchUser,
 };

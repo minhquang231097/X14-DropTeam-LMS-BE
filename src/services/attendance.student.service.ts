@@ -37,6 +37,14 @@ const GetAllStudentInAttendance = async (
   );
 };
 
+const GetAllAttendance = async (page: number, limit: number) => {
+  return await attendanceStudentRepository.FindAllInfoAndPagination(
+    page,
+    limit,
+    ["student", "attendance"],
+  );
+};
+
 const GetAttendanceByStudentId = async (
   id: string,
   page: number,
@@ -77,6 +85,7 @@ export default {
   GetAllStudentInAttendance,
   GetAttendanceByStudentId,
   GetAttendanceByEmailStudent,
+  GetAllAttendance,
   RemoveOne,
   RemoveMany,
 };

@@ -21,10 +21,15 @@ const AddStudentToClass = async (email: string, class_code: string) => {
   }
 };
 
-const GetAllStudentInClass = async (page: number, limit: number) => {
-  return await classStudentRepository.FindAllInfoAndPagination(
+const GetAllStudentInClass = async (
+  page: number,
+  limit: number,
+  class_code: string,
+) => {
+  return await classStudentRepository.FindByConditionAndPagination(
     page,
     limit,
+    { class: class_code },
     "student",
   );
 };

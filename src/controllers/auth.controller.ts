@@ -8,8 +8,9 @@ import { SendMailService } from "@/services/sendMail.service";
 import userService from "@/services/user.service";
 
 const SignUp = async (req: Request, res: Response) => {
+  const payload = req.body;
   try {
-    const user: any = await userService.CreateUser(req.body);
+    const user: any = await userService.CreateUser(payload);
     const refreshToken = jwt.sign(
       {
         _id: user._id,
@@ -122,10 +123,11 @@ const SignIn = async (req: Request, res: Response) => {
         accessToken,
         refreshToken: userExist.refreshToken,
       });
+    } else {
+      res.json(
+        new HttpException(RESPONSE_CONFIG.MESSAGE.USER.NOT_CORRECT, 400),
+      );
     }
-    return res.json(
-      new HttpException(RESPONSE_CONFIG.MESSAGE.USER.NOT_CORRECT, 400),
-    );
   } catch (error: any) {
     return res.json(
       new HttpException(RESPONSE_CONFIG.MESSAGE.USER.WRONG, 400, error.message),

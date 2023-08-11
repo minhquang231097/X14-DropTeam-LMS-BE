@@ -24,7 +24,7 @@ const GetLesson = async (req: Request, res: Response) => {
   const p = Number(page);
   const l = Number(limit);
   try {
-    if (ss_code) {
+    if (ss_code && page && limit) {
       const all = await lessonService.GetLessonBySessionCode(
         ss_code as string,
         p,
@@ -33,8 +33,13 @@ const GetLesson = async (req: Request, res: Response) => {
       if (!all)
         return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[404], 404));
       res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE[200], 200, all));
-    } else {
+    } else if (page && limit) {
       const all = await lessonService.GetAllLesson(p, l);
+      if (!all)
+        return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[404], 404));
+      res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE[200], 200, all));
+    } else {
+      const all = await lessonService.GetAllLesson(1, 10);
       if (!all)
         return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[404], 404));
       res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE[200], 200, all));

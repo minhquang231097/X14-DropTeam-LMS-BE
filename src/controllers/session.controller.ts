@@ -20,7 +20,7 @@ const GetSession = async (req: Request, res: Response) => {
   const p = Number(page);
   const l = Number(limit);
   try {
-    if (course_code) {
+    if (course_code && page && limit) {
       const session = await sessionService.GetSessionByCourseCode(
         course_code as string,
       );
@@ -29,7 +29,7 @@ const GetSession = async (req: Request, res: Response) => {
       res.json(
         new HttpResponseData(RESPONSE_CONFIG.MESSAGE[200], 200, session),
       );
-    } else if (class_code) {
+    } else if (class_code && page && limit) {
       const found = await sessionService.GetSessionByClassCode(
         class_code as string,
       );
@@ -38,6 +38,11 @@ const GetSession = async (req: Request, res: Response) => {
       res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE[200], 200, found));
     } else if (page && limit) {
       const all = await sessionService.GetAllSession(p, l);
+      if (!all)
+        return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[400], 400));
+      res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE[200], 200, all));
+    } else {
+      const all = await sessionService.GetAllSession(1, 10);
       if (!all)
         return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[400], 400));
       res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE[200], 200, all));

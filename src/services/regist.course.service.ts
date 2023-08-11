@@ -1,7 +1,6 @@
 import courseService from "./course.service";
 import workplaceService from "./workplace.service";
 import userService from "./user.service";
-import { IUser } from "@/models/user.model";
 import { RegistedCourse } from "@/models/registe.course.model";
 import { RegistedCourseRepository } from "@/repository/regist.course.repo";
 
