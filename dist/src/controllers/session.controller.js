@@ -23,13 +23,13 @@ const GetSession = async (req, res) => {
     const p = Number(page);
     const l = Number(limit);
     try {
-        if (course_code) {
+        if (course_code && page && limit) {
             const session = await session_service_1.default.GetSessionByCourseCode(course_code);
             if (!session)
                 return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE[400], 400));
             res.json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE[200], 200, session));
         }
-        else if (class_code) {
+        else if (class_code && page && limit) {
             const found = await session_service_1.default.GetSessionByClassCode(class_code);
             if (!found)
                 return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE[400], 400));
@@ -37,6 +37,12 @@ const GetSession = async (req, res) => {
         }
         else if (page && limit) {
             const all = await session_service_1.default.GetAllSession(p, l);
+            if (!all)
+                return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE[400], 400));
+            res.json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE[200], 200, all));
+        }
+        else {
+            const all = await session_service_1.default.GetAllSession(1, 10);
             if (!all)
                 return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE[400], 400));
             res.json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE[200], 200, all));

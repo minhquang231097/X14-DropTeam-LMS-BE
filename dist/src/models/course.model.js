@@ -11,7 +11,6 @@ const courseSchema = new mongoose_1.Schema({
     title: String,
     image: [String],
     desc: String,
-    lesson_list: [{ type: mongoose_1.Schema.Types.ObjectId, ref: "lessons" }],
     session_per_course: Number,
     price: Number,
     duration: Number,

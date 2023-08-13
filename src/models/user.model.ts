@@ -33,6 +33,8 @@ userSchema.pre("save", function (next) {
   next();
 });
 
+userSchema.index({ username: "text", email: "text", fullname: "text" });
+
 export interface IUser extends Document {
   fullname: string;
   email: string;

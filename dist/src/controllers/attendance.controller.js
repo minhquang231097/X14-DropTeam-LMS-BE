@@ -45,8 +45,19 @@ const GetAttendance = async (req, res) => {
             }
             res.json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE[200], 200, result));
         }
-        else if (email) {
+        else if (email && page && limit) {
             const attendances = await attendance_student_service_1.default.GetAttendanceByEmailStudent(email, p, l);
+            if (!attendances) {
+                return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE[404], 404));
+            }
+            res.json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE[200], 200, {
+                list: attendances,
+                page: p,
+                count: attendances.length,
+            }));
+        }
+        else {
+            const attendances = await attendance_student_service_1.default.GetAllAttendance(1, 10);
             if (!attendances) {
                 return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE[404], 404));
             }

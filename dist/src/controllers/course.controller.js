@@ -48,9 +48,26 @@ const GetCourse = async (req, res) => {
                 count: allCourses.length,
             }));
         }
+        else {
+            const allCourses = await course_service_1.default.GetAllCourse(1, 10);
+            if (!allCourses) {
+                return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE[404], 404));
+            }
+            res.json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE[200], 200, allCourses));
+        }
     }
     catch (error) {
         return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE[404], 404));
+    }
+};
+const SearchCourse = async (req, res) => {
+    const { q, page, limit } = req.query;
+    const p = Number(page);
+    const l = Number(limit);
+    try {
+    }
+    catch (error) {
+        return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.USER.WRONG, 404));
     }
 };
 const UpdateCourse = async (req, res) => {
@@ -100,5 +117,6 @@ exports.default = {
     DeletedCourse,
     DeletedAllCourse,
     GetCourse,
+    SearchCourse,
 };
 //# sourceMappingURL=course.controller.js.map

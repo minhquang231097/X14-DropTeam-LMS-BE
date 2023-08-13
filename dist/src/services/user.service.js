@@ -35,8 +35,8 @@ const GetUserByCondition = async (filter) => {
 const GetUserByAttendance = async (attendanceId, page, limit) => {
     return await attendance_student_service_1.default.GetAllStudentInAttendance(attendanceId, page, limit);
 };
-const SearchUserByCondition = async (page, limit, field, filter) => {
-    return await userRepository.Search(page, limit, null, field, filter);
+const SearchUserByCondition = async (page, limit, searchTerm) => {
+    return await userRepository.SearchByCondition(page, limit, searchTerm);
 };
 const UpdateUserById = async (id, payload) => {
     return await userRepository.FindByIdAndUpdate(id, payload);

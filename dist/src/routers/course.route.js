@@ -12,6 +12,7 @@ const courseRouter = express_1.default.Router();
 courseRouter.post("/", verifyAccessToken_1.verifyAccessJWT, (0, validatejoi_1.ValidateJoi)(course_joi_1.CourseSchema.Course.create_course), course_controller_1.default.CreateCourse);
 courseRouter.put("/", verifyAccessToken_1.verifyAccessJWT, (0, validatejoi_1.ValidateJoi)(course_joi_1.CourseSchema.Course.update_course), course_controller_1.default.UpdateCourse);
 courseRouter.get("/", course_controller_1.default.GetCourse);
+courseRouter.get("/search", course_controller_1.default.SearchCourse);
 courseRouter.delete("/all", course_controller_1.default.DeletedAllCourse);
 courseRouter.delete("/", verifyAccessToken_1.verifyAccessJWT, course_controller_1.default.DeletedCourse);
 exports.default = courseRouter;

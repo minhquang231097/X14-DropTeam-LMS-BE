@@ -23,13 +23,13 @@ const GetFeedback = async (req, res) => {
     const p = Number(page);
     const l = Number(limit);
     try {
-        if (course_code) {
+        if (course_code && page && limit) {
             const feedback = await feedback_service_1.default.GetFeedbackByCourseCode(course_code);
             if (!feedback)
                 return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE[400], 400));
             res.json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE[200], 200, feedback));
         }
-        else if (email) {
+        else if (email && page && limit) {
             const student = await feedback_service_1.default.GetFeedbackByEmailStudent(email);
             if (!student)
                 return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE[400], 400));
@@ -37,6 +37,12 @@ const GetFeedback = async (req, res) => {
         }
         else if (page && limit) {
             const all = await feedback_service_1.default.GetFeedbackByCondition(p, l);
+            if (!all)
+                return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE[400], 400));
+            res.json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE[200], 200, all));
+        }
+        else {
+            const all = await feedback_service_1.default.GetFeedbackByCondition(1, 10);
             if (!all)
                 return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE[400], 400));
             res.json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE[200], 200, all));

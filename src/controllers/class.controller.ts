@@ -98,25 +98,19 @@ const GetClass = async (req: Request, res: Response) => {
 };
 
 const SearchClass = async (req: Request, res: Response) => {
-  const { q, p, l } = req.query;
-  const page = Number(p);
-  const limit = Number(l);
+  const { q, page, limit } = req.query;
+  const p = Number(page);
+  const l = Number(limit);
   try {
-    const _class = await classService.SearchClassByCondition(
-      page,
-      limit,
-      q as string,
-      "class_code",
-    );
-    if (_class.length > 0) {
-      res.json(
-        new HttpResponseData(RESPONSE_CONFIG.MESSAGE.USER.FOUND, 200, _class),
-      );
-    } else {
-      res.json(
-        new HttpResponseData(RESPONSE_CONFIG.MESSAGE.USER.NOT_FOUND, 404),
+    const result = await classService.SearchClassByCondition(p, l, q as string);
+    if (result.length == 0) {
+      return res.json(
+        new HttpException(RESPONSE_CONFIG.MESSAGE.USER.NOT_FOUND, 404),
       );
     }
+    res.json(
+      new HttpResponseData(RESPONSE_CONFIG.MESSAGE.USER.FOUND, 200, result),
+    );
   } catch (error) {
     return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.USER.WRONG, 404));
   }

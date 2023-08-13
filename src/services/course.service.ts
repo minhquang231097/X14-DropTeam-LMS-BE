@@ -23,13 +23,18 @@ const GetCourseByCode = async (code: string) => {
   return await courseRepository.FindCourseByCode(code);
 };
 
-const SearcCourseByCondition = async (
+const SearchCourseByCondition = async (
   page: number,
   limit: number,
-  filter: any,
-  feild: any,
+  searchTerm?: string,
 ) => {
-  return await courseRepository.Search(page, limit, "workplace", filter, feild);
+  const query = {
+    $or: [
+      { title: { $regex: searchTerm, $options: "i" } },
+      { course_code: { $regex: searchTerm, $options: "i" } },
+    ],
+  };
+  return await courseRepository.SearchByCondition(page, limit, query);
 };
 
 const UpdateCourse = async (id: string, payload: ICourse) => {
@@ -48,7 +53,7 @@ export default {
   CreateCourse,
   GetAllCourse,
   GetCourseById,
-  SearcCourseByCondition,
+  SearchCourseByCondition,
   UpdateCourse,
   DeletedCourse,
   GetCourseByCode,

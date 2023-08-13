@@ -124,6 +124,9 @@ const GetClassByCondition = async (filter) => {
         "course",
     ]);
 };
+const SearchClassByCondition = async (page, limit, filter, feild) => {
+    return await classRepository.SearchByCondition(page, limit, filter);
+};
 const UpdateOneClass = async (id, payload) => {
     return await classRepository.FindByIdAndUpdate(id, payload);
 };
@@ -144,6 +147,7 @@ exports.default = {
     GetClassByWorkplaceId,
     GetClassByCourseId,
     GetClassByCondition,
+    SearchClassByCondition,
     UpdateOneClass,
     UpdateManyClass,
     DeleteClassById,

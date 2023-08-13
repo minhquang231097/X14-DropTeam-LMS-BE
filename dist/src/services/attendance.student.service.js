@@ -21,6 +21,9 @@ const AddStudentToAttendance = async (email, class_code, day) => {
 const GetAllStudentInAttendance = async (id, page, limit) => {
     return await attendanceStudentRepository.FindByConditionAndPagination(page, limit, { attendance: id }, "student");
 };
+const GetAllAttendance = async (page, limit) => {
+    return await attendanceStudentRepository.FindAllInfoAndPagination(page, limit, ["student", "attendance"]);
+};
 const GetAttendanceByStudentId = async (id, page, limit) => {
     return await attendanceStudentRepository.FindByConditionAndPagination(page, limit, { student: id }, "attendance");
 };
@@ -39,6 +42,7 @@ exports.default = {
     GetAllStudentInAttendance,
     GetAttendanceByStudentId,
     GetAttendanceByEmailStudent,
+    GetAllAttendance,
     RemoveOne,
     RemoveMany,
 };

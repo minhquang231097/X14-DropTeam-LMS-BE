@@ -48,7 +48,7 @@ const GetClass = async (req, res) => {
             }
             res.json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE[200], 200, classExist));
         }
-        else if (email) {
+        else if (email && page && limit) {
             const classExist = await class_student_service_1.default.GetClassByStudentEmail(p, l, email);
             if (!classExist) {
                 return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE[404], 404));
@@ -66,9 +66,26 @@ const GetClass = async (req, res) => {
                 count: allClasses.length,
             }));
         }
+        else {
+            const allClasses = await class_service_1.default.GetAllClass(1, 10);
+            if (!allClasses) {
+                return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE[404], 404));
+            }
+            res.json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE[200], 200, allClasses));
+        }
     }
     catch (error) {
         return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE[404], 404));
+    }
+};
+const SearchClass = async (req, res) => {
+    const { q, p, l } = req.query;
+    const page = Number(p);
+    const limit = Number(l);
+    try {
+    }
+    catch (error) {
+        return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.USER.WRONG, 404));
     }
 };
 const UpdateClass = async (req, res) => {
@@ -114,6 +131,7 @@ const DeleteManyCourse = async (req, res) => {
 exports.default = {
     CreateNewClass,
     GetClass,
+    SearchClass,
     UpdateClass,
     DeleteOneClass,
     DeleteManyCourse,

@@ -81,21 +81,15 @@ const SearchUser = async (req: Request, res: Response) => {
   const p = Number(page);
   const l = Number(limit);
   try {
-    const [_username, _email, _phone] = await Promise.all([
-      userService.SearchUserByCondition(p, l, q as string, "username"),
-      userService.SearchUserByCondition(p, l, q as string, "email"),
-      userService.SearchUserByCondition(p, l, q as string, "phone_number"),
-    ]);
-    const all = _username.concat(_email).concat(_phone);
-    if (all.length > 0) {
-      res.json(
-        new HttpResponseData(RESPONSE_CONFIG.MESSAGE.USER.FOUND, 200, all),
-      );
-    } else {
-      res.json(
-        new HttpResponseData(RESPONSE_CONFIG.MESSAGE.USER.NOT_FOUND, 404),
+    const result = await userService.SearchUserByCondition(p, l, q as string);
+    if (result.length == 0) {
+      return res.json(
+        new HttpException(RESPONSE_CONFIG.MESSAGE.USER.NOT_FOUND, 404),
       );
     }
+    res.json(
+      new HttpResponseData(RESPONSE_CONFIG.MESSAGE.USER.FOUND, 200, result),
+    );
   } catch (error) {
     return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.USER.WRONG, 404));
   }
@@ -116,7 +110,7 @@ const ChangePassword = async (req: Request, res: Response) => {
     if (user && verifyToken._id) {
       const salt = await bcrypt.genSalt(10);
       const newPassword = await bcrypt.hash(password, salt);
-      const updatedUser = await userService.UpdateUserById(id as string, {
+      await userService.UpdateUserById(id as string, {
         password: newPassword,
       });
       return res.json(
