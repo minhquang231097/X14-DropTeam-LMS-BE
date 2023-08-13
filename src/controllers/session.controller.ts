@@ -16,11 +16,16 @@ const CreateNewSession = async (req: Request, res: Response) => {
 };
 
 const GetSession = async (req: Request, res: Response) => {
-  const { page, limit, course_code, class_code } = req.query;
+  const { page, limit, course_code, class_code, id } = req.query;
   const p = Number(page);
   const l = Number(limit);
   try {
-    if (course_code && page && limit) {
+    if (id) {
+      const found = await sessionService.GetSessionById(id as string);
+      if (!found)
+        return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[400], 400));
+      res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE[200], 200, found));
+    } else if (course_code && page && limit) {
       const session = await sessionService.GetSessionByCourseCode(
         course_code as string,
       );
