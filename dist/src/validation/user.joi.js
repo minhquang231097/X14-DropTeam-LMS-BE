@@ -5,18 +5,41 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Schema = void 0;
 const joi_1 = __importDefault(require("joi"));
+const response_config_1 = require("@/configs/response.config");
 exports.Schema = {
     User: {
         sign_up: joi_1.default.object({
-            fullname: joi_1.default.string().min(5).max(100).required(),
-            email: joi_1.default.string().min(5).max(100).required(),
-            phone_number: joi_1.default.string()
-                .regex(/^[0-9]/)
-                .min(5)
-                .max(100)
-                .required(),
-            username: joi_1.default.string().min(5).max(100).required(),
-            password: joi_1.default.string().min(5).max(100).required(),
+            fullname: joi_1.default.string().min(5).max(100).required().messages({
+                'string.empty': response_config_1.RESPONSE_CONFIG.MESSAGE.USER.NO_FULLNAME,
+                'string.min': `{{#label}} should have a minimum length of {#limit}`,
+                'string.max': `{{#label}} should have a maximum length of {#limit}`,
+                'any.required': `{{#label}} is a required field`
+            }),
+            email: joi_1.default.string().min(5).max(100).required().messages({
+                'string.empty': response_config_1.RESPONSE_CONFIG.MESSAGE.USER.NO_EMAIL,
+                'string.min': `{{#label}} should have a minimum length of {#limit}`,
+                'string.max': `{{#label}} should have a maximum length of {#limit}`,
+                'any.required': `{{#label}} is a required field`
+            }),
+            phone_number: joi_1.default.string().regex(/^[0-9]/).min(5).max(100).required().messages({
+                'string.empty': response_config_1.RESPONSE_CONFIG.MESSAGE.USER.NO_PHONE_NUM,
+                'string.pattern.base': `{{#label}} have to match the required pattern: 0-9`,
+                'string.min': `{{#label}} should have a minimum length of {#limit}`,
+                'string.max': `{{#label}} should have a maximum length of {#limit}`,
+                'any.required': `{{#label}} is a required field`
+            }),
+            username: joi_1.default.string().min(5).max(100).required().messages({
+                'string.empty': response_config_1.RESPONSE_CONFIG.MESSAGE.USER.NO_USERNAME,
+                'string.min': `{{#label}} should have a minimum length of {#limit}`,
+                'string.max': `{{#label}} should have a maximum length of {#limit}`,
+                'any.required': `{{#label}} is a required field`
+            }),
+            password: joi_1.default.string().min(5).max(100).required().messages({
+                'string.empty': response_config_1.RESPONSE_CONFIG.MESSAGE.USER.NO_PASSWORD,
+                'string.min': `{{#label}} should have a minimum length of {#limit}`,
+                'string.max': `{{#label}} should have a maximum length of {#limit}`,
+                'any.required': `{{#label}} is a required field`
+            }),
             create_at: joi_1.default.string().optional(),
             role: joi_1.default.string().required(),
             dob: joi_1.default.string().optional(),
@@ -24,22 +47,57 @@ exports.Schema = {
             address: joi_1.default.string().optional(),
         }),
         sign_in: joi_1.default.object({
-            username: joi_1.default.string().min(5).max(100).required(),
-            password: joi_1.default.string().min(5).max(100).required(),
+            username: joi_1.default.string().min(5).max(100).required().messages({
+                'string.empty': response_config_1.RESPONSE_CONFIG.MESSAGE.USER.NO_USERNAME,
+                'string.min': `{{#label}} should have a minimum length of {#limit}`,
+                'string.max': `{{#label}} should have a maximum length of {#limit}`,
+                'any.required': `{{#label}} is a required field`
+            }),
+            password: joi_1.default.string().min(5).max(100).required().messages({
+                'string.empty': response_config_1.RESPONSE_CONFIG.MESSAGE.USER.NO_PASSWORD,
+                'string.min': `{{#label}} should have a minimum length of {#limit}`,
+                'string.max': `{{#label}} should have a maximum length of {#limit}`,
+                'any.required': `{{#label}} is a required field`
+            }),
         }),
         sign_out: joi_1.default.object({
-            id: joi_1.default.string().required(),
+            id: joi_1.default.string().required().messages({
+                'string.empty': `No id found`,
+                'any.require': `No id found`
+            }),
         }),
         update: joi_1.default.object({
-            fullname: joi_1.default.string().min(5).max(100).optional(),
-            email: joi_1.default.string().min(5).max(100).optional(),
-            phone_number: joi_1.default.string()
-                .regex(/^[0-9]/)
-                .min(5)
-                .max(100)
-                .optional(),
-            username: joi_1.default.string().min(5).max(100).optional(),
-            password: joi_1.default.string().min(5).max(100).optional(),
+            fullname: joi_1.default.string().min(5).max(100).optional().messages({
+                'string.empty': response_config_1.RESPONSE_CONFIG.MESSAGE.USER.NO_FULLNAME,
+                'string.min': `{{#label}} should have a minimum length of {#limit}`,
+                'string.max': `{{#label}} should have a maximum length of {#limit}`,
+                'any.required': `{{#label}} is a required field`
+            }),
+            email: joi_1.default.string().min(5).max(100).optional().messages({
+                'string.empty': response_config_1.RESPONSE_CONFIG.MESSAGE.USER.NO_EMAIL,
+                'string.min': `{{#label}} should have a minimum length of {#limit}`,
+                'string.max': `{{#label}} should have a maximum length of {#limit}`,
+                'any.required': `{{#label}} is a required field`
+            }),
+            phone_number: joi_1.default.string().regex(/^[0-9]/).min(5).max(100).optional().messages({
+                'string.empty': response_config_1.RESPONSE_CONFIG.MESSAGE.USER.NO_PHONE_NUM,
+                'string.pattern.base': `{{#label}} have to match the required pattern: 0-9`,
+                'string.min': `{{#label}} should have a minimum length of {#limit}`,
+                'string.max': `{{#label}} should have a maximum length of {#limit}`,
+                'any.required': `{{#label}} is a required field`
+            }),
+            username: joi_1.default.string().min(5).max(100).optional().messages({
+                'string.empty': response_config_1.RESPONSE_CONFIG.MESSAGE.USER.NO_USERNAME,
+                'string.min': `{{#label}} should have a minimum length of {#limit}`,
+                'string.max': `{{#label}} should have a maximum length of {#limit}`,
+                'any.required': `{{#label}} is a required field`
+            }),
+            password: joi_1.default.string().min(5).max(100).optional().messages({
+                'string.empty': response_config_1.RESPONSE_CONFIG.MESSAGE.USER.NO_PASSWORD,
+                'string.min': `{{#label}} should have a minimum length of {#limit}`,
+                'string.max': `{{#label}} should have a maximum length of {#limit}`,
+                'any.required': `{{#label}} is a required field`
+            }),
             create_at: joi_1.default.string().optional(),
             role: joi_1.default.string().optional(),
             dob: joi_1.default.string().optional(),

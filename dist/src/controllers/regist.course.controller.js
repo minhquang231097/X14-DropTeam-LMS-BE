@@ -12,10 +12,10 @@ const RegistedNewCourse = async (req, res) => {
     const { course_code, note } = req.body;
     try {
         const newRegist = await regist_course_service_1.default.CreateRegistCourse(course_code, _id, note);
-        res.json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE[200], newRegist));
+        res.json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.REGIST.CREATE_SUCCES, newRegist));
     }
     catch (error) {
-        return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE[400], 400));
+        return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.REGIST.WRONG, 400));
     }
 };
 const GetRegist = async (req, res) => {
@@ -26,36 +26,36 @@ const GetRegist = async (req, res) => {
         if (page && limit) {
             const allRegist = await regist_course_service_1.default.GetAllRegist(p, l);
             if (!allRegist)
-                return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE[404], 404));
-            res.json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE[200], 200, allRegist));
+                return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.REGIST.NOT_FOUND, 404));
+            res.json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.REGIST.FOUND_SUCCESS, 200, allRegist));
         }
         else if (page && limit && course_code) {
             const allRegist = await regist_course_service_1.default.GetRegistByCourseCode(course_code, p, l);
             if (!allRegist)
-                return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE[404], 404));
-            res.json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE[200], 200, allRegist));
+                return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.REGIST.NOT_FOUND, 404));
+            res.json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.REGIST.FOUND_SUCCESS, 200, allRegist));
         }
         else if (page && limit && wp_code) {
             const allRegist = await regist_course_service_1.default.GetRegistByWorkplaceCode(wp_code, p, l);
             if (!allRegist)
-                return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE[404], 404));
-            res.json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE[200], 200, allRegist));
+                return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.REGIST.NOT_FOUND, 404));
+            res.json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.REGIST.FOUND_SUCCESS, 200, allRegist));
         }
         else if (page && limit && email) {
             const allRegist = await regist_course_service_1.default.GetRegistByCourseCode(wp_code, p, l);
             if (!allRegist)
-                return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE[404], 404));
-            res.json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE[200], 200, allRegist));
+                return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.REGIST.NOT_FOUND, 404));
+            res.json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.REGIST.FOUND_SUCCESS, 200, allRegist));
         }
         else {
             const allRegist = await regist_course_service_1.default.GetAllRegist(1, 10);
             if (!allRegist)
-                return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE[404], 404));
-            res.json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE[200], 200, allRegist));
+                return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.REGIST.NOT_FOUND, 404));
+            res.json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.REGIST.FOUND_SUCCESS, 200, allRegist));
         }
     }
     catch (error) {
-        return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE[404], 404));
+        return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.REGIST.WRONG, 404));
     }
 };
 const UpdateRegist = async (req, res) => {
@@ -64,13 +64,13 @@ const UpdateRegist = async (req, res) => {
     try {
         const exist = await regist_course_service_1.default.GetRegistById(id);
         if (!exist) {
-            return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE[404], 404));
+            return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.REGIST.NOT_FOUND, 404));
         }
         await regist_course_service_1.default.UpdateRegist(id, payload);
-        res.json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE[200], 200));
+        res.json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.REGIST.FOUND_SUCCESS, 200));
     }
     catch (error) {
-        return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE[400], 400));
+        return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.REGIST.WRONG, 400));
     }
 };
 const DeleteRegist = async (req, res) => {
@@ -78,11 +78,11 @@ const DeleteRegist = async (req, res) => {
     try {
         const updatedRegist = await regist_course_service_1.default.DeleteRegist(id);
         if (!updatedRegist)
-            return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE[404], 404));
-        res.json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE[200], 200));
+            return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.REGIST.FOUND_SUCCESS, 404));
+        res.json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.REGIST.DELETE_SUCCESS, 200));
     }
     catch (error) {
-        return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE[400], 400));
+        return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.REGIST.WRONG, 400));
     }
 };
 exports.default = { RegistedNewCourse, GetRegist, UpdateRegist, DeleteRegist };

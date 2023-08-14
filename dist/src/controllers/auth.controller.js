@@ -139,7 +139,7 @@ const SendEmailForgotPassword = async (req, res) => {
     try {
         const user = await user_service_1.default.GetUserByEmail(email);
         if (!user) {
-            return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE[404], 404));
+            return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.USER.NOT_FOUND, 404));
         }
         const token = jsonwebtoken_1.default.sign({ _id: user._id }, process.env.ACCESSTOKEN_KEY, { expiresIn: "2m" });
         const updatedUser = await user_service_1.default.UpdateUserById(user._id, {

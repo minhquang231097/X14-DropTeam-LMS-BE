@@ -12,10 +12,10 @@ const CreateNewSession = async (req, res) => {
     const { course_code } = payload;
     try {
         const session = await session_service_1.default.CreateSession(course_code, payload);
-        res.json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE[200], 200, session));
+        res.json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.SESSION.CREATE_SUCCES, 200, session));
     }
     catch (error) {
-        return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE[400], 400));
+        return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.SESSION.WRONG, 400));
     }
 };
 const GetSession = async (req, res) => {
@@ -26,36 +26,36 @@ const GetSession = async (req, res) => {
         if (id) {
             const found = await session_service_1.default.GetSessionById(id);
             if (!found)
-                return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE[400], 400));
-            res.json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE[200], 200, found));
+                return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.SESSION.NOT_FOUND, 404));
+            res.json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.SESSION.FOUND_SUCCESS, 200, found));
         }
         else if (course_code && page && limit) {
             const session = await session_service_1.default.GetSessionByCourseCode(course_code);
             if (!session)
-                return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE[400], 400));
-            res.json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE[200], 200, session));
+                return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.SESSION.NOT_FOUND, 404));
+            res.json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.SESSION.FOUND_SUCCESS, 200, session));
         }
         else if (class_code && page && limit) {
             const found = await session_service_1.default.GetSessionByClassCode(class_code);
             if (!found)
-                return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE[400], 400));
-            res.json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE[200], 200, found));
+                return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.SESSION.NOT_FOUND, 404));
+            res.json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.SESSION.FOUND_SUCCESS, 200, found));
         }
         else if (page && limit) {
             const all = await session_service_1.default.GetAllSession(p, l);
             if (!all)
-                return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE[400], 400));
-            res.json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE[200], 200, all));
+                return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.SESSION.NOT_FOUND, 404));
+            res.json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.SESSION.FOUND_SUCCESS, 200, all));
         }
         else {
             const all = await session_service_1.default.GetAllSession(1, 10);
             if (!all)
-                return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE[400], 400));
-            res.json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE[200], 200, all));
+                return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.SESSION.NOT_FOUND, 404));
+            res.json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.SESSION.FOUND_SUCCESS, 200, all));
         }
     }
     catch (error) {
-        return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE[400], 400));
+        return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.SESSION.WRONG, 400));
     }
 };
 const UpdateSession = async (req, res) => {
@@ -64,11 +64,11 @@ const UpdateSession = async (req, res) => {
     try {
         const session = await session_service_1.default.UpdateSessionById(id, payload);
         if (!session)
-            return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE[404], 404));
-        res.json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE[200], 200));
+            return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.SESSION.NOT_FOUND, 404));
+        res.json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.SESSION.UPDATE_SUCCESS, 200));
     }
     catch (error) {
-        return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE[400], 400));
+        return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.SESSION.WRONG, 400));
     }
 };
 const DeleteSession = async (req, res) => {
@@ -76,11 +76,11 @@ const DeleteSession = async (req, res) => {
     try {
         const session = await session_service_1.default.DeletedCourse(id);
         if (!session)
-            return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE[404], 404));
-        res.json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE[200], 200));
+            return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.SESSION.NOT_FOUND, 404));
+        res.json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.SESSION.DELETE_SUCCESS, 200));
     }
     catch (error) {
-        return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE[400], 400));
+        return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.SESSION.WRONG, 400));
     }
 };
 exports.default = { CreateNewSession, GetSession, UpdateSession, DeleteSession };

@@ -32,7 +32,7 @@ export const ClassSchema = {
         'any.option': `{{#label}} is a option field`
       }),
       schedule: Joi.array().required().messages({
-        'string.empty': RESPONSE_CONFIG.MESSAGE.CLASS.NO_SCHEDULE,
+        'array.empty': RESPONSE_CONFIG.MESSAGE.CLASS.NO_SCHEDULE,
         'any.required': `{{#label}} is a required field`
       }),
       total_session: Joi.number().integer().required().messages({

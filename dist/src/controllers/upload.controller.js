@@ -13,10 +13,10 @@ const UploadImage = async (req, res) => {
         for (let i = 0; i < file.length; i++) {
             result.push(file[i].path);
         }
-        res.json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE[200], 200, result));
+        res.json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.IMAGE.UPLOAD_SUCCESS, 200, result));
     }
     catch (error) {
-        return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE[400], 400, error.message));
+        return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.IMAGE.UPLOAD_FAIL, 400, error.message));
     }
 };
 exports.default = UploadImage;

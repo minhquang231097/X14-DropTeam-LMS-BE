@@ -1,28 +1,15 @@
 import registCourseController from "@/controllers/regist.course.controller";
 import { CheckRole } from "@/middlewares/checkRole";
 import { verifyAccessJWT } from "@/middlewares/verifyAccessToken";
+import { RegistSchema } from "@/validation/regist.course.joi";
+import { ValidateJoi } from "@/validation/validatejoi";
 import express from "express";
 
 const registCourseRouter = express.Router();
 
-registCourseRouter.post(
-  "/",
-  verifyAccessJWT,
-  registCourseController.RegistedNewCourse,
-);
-
+registCourseRouter.post("/", ValidateJoi(RegistSchema.Regist.regist_course), verifyAccessJWT, registCourseController.RegistedNewCourse,);
 registCourseRouter.get("/", verifyAccessJWT, registCourseController.GetRegist);
-
-registCourseRouter.put(
-  "/",
-  verifyAccessJWT,
-  registCourseController.UpdateRegist,
-);
-
-registCourseRouter.delete(
-  "/",
-  verifyAccessJWT,
-  registCourseController.DeleteRegist,
-);
+registCourseRouter.put("/", verifyAccessJWT, registCourseController.UpdateRegist,);
+registCourseRouter.delete("/", verifyAccessJWT, registCourseController.DeleteRegist,);
 
 export default registCourseRouter;
