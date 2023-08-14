@@ -8,6 +8,7 @@ const response_config_1 = require("@/configs/response.config");
 const httpResponseData_1 = __importDefault(require("@/common/httpResponseData"));
 const httpException_1 = __importDefault(require("@/common/httpException"));
 const course_model_1 = require("@/models/course.model");
+const course_service_2 = __importDefault(require("@/services/course.service"));
 const CreateCourse = async (req, res) => {
     const payload = req.body;
     try {
@@ -65,6 +66,11 @@ const SearchCourse = async (req, res) => {
     const p = Number(page);
     const l = Number(limit);
     try {
+        const result = await course_service_2.default.SearchCourseByCondition(p, l, q);
+        if (result.length == 0) {
+            return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.USER.NOT_FOUND, 404));
+        }
+        res.json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.USER.FOUND, 200, result));
     }
     catch (error) {
         return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.USER.WRONG, 404));

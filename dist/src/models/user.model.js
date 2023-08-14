@@ -36,6 +36,6 @@ userSchema.pre("save", function (next) {
     this.formated_date = (0, moment_1.default)(this.create_at).format("DD/MM/YYYY");
     next();
 });
-userSchema.index({ username: "text", email: "text", fullname: "text" }, { unique: true });
+userSchema.index({ username: "text", email: "text", fullname: "text" });
 exports.User = (0, mongoose_1.model)("users", userSchema);
 //# sourceMappingURL=user.model.js.map
