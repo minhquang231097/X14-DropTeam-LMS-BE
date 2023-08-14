@@ -36,7 +36,14 @@ const GetUserByAttendance = async (attendanceId, page, limit) => {
     return await attendance_student_service_1.default.GetAllStudentInAttendance(attendanceId, page, limit);
 };
 const SearchUserByCondition = async (page, limit, searchTerm) => {
-    return await userRepository.SearchByCondition(page, limit, searchTerm);
+    const query = {
+        $or: [
+            { username: { $regex: searchTerm, $options: "i" } },
+            { email: { $regex: searchTerm, $options: "i" } },
+            { fullname: { $regex: searchTerm, $options: "i" } },
+        ],
+    };
+    return await userRepository.SearchByCondition(page, limit, query);
 };
 const UpdateUserById = async (id, payload) => {
     return await userRepository.FindByIdAndUpdate(id, payload);
