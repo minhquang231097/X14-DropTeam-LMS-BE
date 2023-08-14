@@ -82,12 +82,18 @@ const SearchUser = async (req: Request, res: Response) => {
   const l = Number(limit);
   try {
     const [_username, _email, _phone] = await Promise.all([
-      userService.SearchUserByCondition(p, l, q as string, "username"),
-      userService.SearchUserByCondition(p, l, q as string, "email"),
-      userService.SearchUserByCondition(p, l, q as string, "phone_number"),
+      userService.SearchUserByCondition(p, l, q as string, "username",),
+      userService.SearchUserByCondition(p, l, q as string, "email",),
+      userService.SearchUserByCondition(p, l, q as string, "phone_number",),
     ]);
+    console.log(_username)
+    console.log(q)
+    // console.log(_email)
+    // console.log(_phone)
     const all = _username.concat(_email).concat(_phone);
     if (all.length > 0) {
+      console.log(all.length)
+
       res.json(
         new HttpResponseData(RESPONSE_CONFIG.MESSAGE.USER.FOUND, 200, all),
       );
@@ -162,7 +168,7 @@ const UpdatePassword = async (req: Request, res: Response) => {
     const checkPassword = bcrypt.compareSync(password, exist.password);
     if (!checkPassword) {
       return res.json(
-        new HttpException(RESPONSE_CONFIG.MESSAGE.USER.NOT_FOUND, 404),
+        new HttpException(RESPONSE_CONFIG.MESSAGE.USER.PASS_NOT_CORRECT, 404),
       );
     }
     const salt = await bcrypt.genSalt(10);

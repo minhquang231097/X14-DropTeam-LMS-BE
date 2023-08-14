@@ -1,8 +1,9 @@
+import { RESPONSE_CONFIG } from "@/configs/response.config";
 import moment from "moment";
 import { Document, Schema, model } from "mongoose";
 
 const courseSchema = new Schema({
-  course_code: { type: String, unique: true },
+  course_code: { type: String, unique: [true, RESPONSE_CONFIG.MESSAGE.COURSE.CODE_EXIST] },
   title: String,
   image: [String],
   desc: String,

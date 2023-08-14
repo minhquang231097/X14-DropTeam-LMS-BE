@@ -9,6 +9,8 @@ const mongoose_1 = require("mongoose");
 const attendance_studentSchema = new mongoose_1.Schema({
     attendance: { type: mongoose_1.Schema.Types.ObjectId, ref: "attendances" },
     student: { type: mongoose_1.Schema.Types.ObjectId, ref: "students" },
+    score: String,
+    comment: String,
     create_at: {
         type: Date,
         default: Date.now(),

@@ -11,8 +11,9 @@ const response_config_1 = require("@/configs/response.config");
 const sendMail_service_1 = require("@/services/sendMail.service");
 const user_service_1 = __importDefault(require("@/services/user.service"));
 const SignUp = async (req, res) => {
+    const payload = req.body;
     try {
-        const user = await user_service_1.default.CreateUser(req.body);
+        const user = await user_service_1.default.CreateUser(payload);
         const refreshToken = jsonwebtoken_1.default.sign({
             _id: user._id,
         }, process.env.REFRESHTOKEN_KEY, { expiresIn: process.env.REFRESHTOKEN_TIME });
@@ -83,7 +84,9 @@ const SignIn = async (req, res) => {
                 refreshToken: userExist.refreshToken,
             });
         }
-        return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.USER.NOT_CORRECT, 400));
+        else {
+            res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.USER.NOT_CORRECT, 400));
+        }
     }
     catch (error) {
         return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.USER.WRONG, 400, error.message));

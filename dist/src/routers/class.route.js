@@ -13,6 +13,7 @@ classRouter.post("/", (0, validatejoi_1.ValidateJoi)(class_joi_1.ClassSchema.Cla
 classRouter.post("/add-student", verifyAccessToken_1.verifyAccessJWT, class_controller_1.default.AddStudentToClass);
 classRouter.put("/", verifyAccessToken_1.verifyAccessJWT, class_controller_1.default.UpdateClass);
 classRouter.get("/", class_controller_1.default.GetClass);
+classRouter.get("/search", class_controller_1.default.SearchClass);
 classRouter.delete("/all", class_controller_1.default.DeleteManyCourse);
 classRouter.delete("/", verifyAccessToken_1.verifyAccessJWT, class_controller_1.default.DeleteOneClass);
 exports.default = classRouter;

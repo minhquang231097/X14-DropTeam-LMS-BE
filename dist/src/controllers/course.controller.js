@@ -8,6 +8,7 @@ const response_config_1 = require("@/configs/response.config");
 const httpResponseData_1 = __importDefault(require("@/common/httpResponseData"));
 const httpException_1 = __importDefault(require("@/common/httpException"));
 const course_model_1 = require("@/models/course.model");
+const course_service_2 = __importDefault(require("@/services/course.service"));
 const CreateCourse = async (req, res) => {
     const payload = req.body;
     try {
@@ -48,9 +49,37 @@ const GetCourse = async (req, res) => {
                 count: allCourses.length,
             }));
         }
+        else {
+            const allCourses = await course_service_1.default.GetAllCourse(1, 10);
+            if (!allCourses) {
+                return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE[404], 404));
+            }
+            res.json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE[200], 200, allCourses));
+        }
     }
     catch (error) {
         return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE[404], 404));
+    }
+};
+const SearchCourse = async (req, res) => {
+    const { q, page, limit } = req.query;
+    const p = Number(page);
+    const l = Number(limit);
+    try {
+        const [course_code, title] = await Promise.all([
+            course_service_2.default.SearcCourseByCondition(p, l, q, "course_code"),
+            course_service_2.default.SearcCourseByCondition(p, l, q, "title"),
+        ]);
+        const all = course_code.concat(title);
+        if (all.length > 0) {
+            res.json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.COURSE.CODE_EXIST, 200, all));
+        }
+        else {
+            res.json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.COURSE.CODE_EXIST, 404));
+        }
+    }
+    catch (error) {
+        return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.USER.WRONG, 404));
     }
 };
 const UpdateCourse = async (req, res) => {
@@ -100,5 +129,6 @@ exports.default = {
     DeletedCourse,
     DeletedAllCourse,
     GetCourse,
+    SearchCourse,
 };
 //# sourceMappingURL=course.controller.js.map

@@ -1,3 +1,4 @@
+import { RESPONSE_CONFIG } from "@/configs/response.config";
 import moment from "moment";
 import { Document, Schema, model } from "mongoose";
 
@@ -5,7 +6,7 @@ const classSchema = new Schema({
   mentor: { type: Schema.Types.ObjectId, ref: "mentors" },
   workplace: { type: Schema.Types.ObjectId, ref: "workplaces" },
   course: { type: Schema.Types.ObjectId, ref: "courses" },
-  class_code: { type: String, unique: true },
+  class_code: { type: String, unique: [true, RESPONSE_CONFIG.MESSAGE.CLASS.CODE_EXIST] },
   session_per_class: Number,
   start_at: Date,
   end_at: String,

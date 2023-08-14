@@ -11,17 +11,7 @@ userRouter.get("/", verifyAccessJWT, CheckRole.IsAdmin, userController.GetUser);
 userRouter.get("/search", verifyAccessJWT, userController.SearchUser);
 userRouter.put("/reset-password", userController.ChangePassword);
 userRouter.put("/", verifyAccessJWT, userController.UpdatePassword);
-userRouter.put(
-  "/info",
-  verifyAccessJWT,
-  ValidateJoi(Schema.User.update),
-  userController.UpdateUserInfo,
-);
-userRouter.delete(
-  "/",
-  CheckRole.IsAdmin,
-  verifyAccessJWT,
-  userController.DeleteUser,
-);
+userRouter.put("/info", verifyAccessJWT, ValidateJoi(Schema.User.update), userController.UpdateUserInfo,);
+userRouter.delete("/", CheckRole.IsAdmin, verifyAccessJWT, userController.DeleteUser,);
 
 export default userRouter;

@@ -8,7 +8,7 @@ const CreateWorkplace = async (req: Request, res: Response) => {
   try {
     const workplace: any = await WorkplaceService.CreateWorkplace(req.body);
     res.json(
-      new HttpResponseData(RESPONSE_CONFIG.MESSAGE[200], 200, workplace),
+      new HttpResponseData(RESPONSE_CONFIG.MESSAGE.WORKPLACE.CREATE_SUCCES, 200, workplace),
     );
   } catch (error: any) {
     return res.json(

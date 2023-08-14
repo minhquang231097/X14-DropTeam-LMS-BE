@@ -21,8 +21,8 @@ const AddStudentToClass = async (email, class_code) => {
         });
     }
 };
-const GetAllStudentInClass = async (page, limit) => {
-    return await classStudentRepository.FindAllInfoAndPagination(page, limit, "student");
+const GetAllStudentInClass = async (page, limit, class_code) => {
+    return await classStudentRepository.FindByConditionAndPagination(page, limit, { class: class_code }, "student");
 };
 const GetClassByStudentEmail = async (page, limit, email) => {
     const student = await user_service_1.default.GetUserByEmail(email);

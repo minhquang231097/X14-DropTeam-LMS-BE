@@ -6,18 +6,8 @@ import { verifyAccessJWT } from "@/middlewares/verifyAccessToken";
 
 const courseRouter = express.Router();
 
-courseRouter.post(
-  "/",
-  verifyAccessJWT,
-  ValidateJoi(CourseSchema.Course.create_course),
-  courseController.CreateCourse,
-);
-courseRouter.put(
-  "/",
-  verifyAccessJWT,
-  ValidateJoi(CourseSchema.Course.update_course),
-  courseController.UpdateCourse,
-);
+courseRouter.post("/", verifyAccessJWT, ValidateJoi(CourseSchema.Course.create_course), courseController.CreateCourse,);
+courseRouter.put("/", verifyAccessJWT, ValidateJoi(CourseSchema.Course.update_course), courseController.UpdateCourse,);
 courseRouter.get("/", courseController.GetCourse);
 courseRouter.get("/search", courseController.SearchCourse);
 courseRouter.delete("/all", courseController.DeletedAllCourse);
