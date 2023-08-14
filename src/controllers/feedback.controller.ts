@@ -24,7 +24,7 @@ const GetFeedback = async (req: Request, res: Response) => {
   const p = Number(page);
   const l = Number(limit);
   try {
-    if (course_code && page && limit) {
+    if (course_code) {
       const feedback = await feedbackService.GetFeedbackByCourseCode(
         course_code as string,
       );
@@ -33,7 +33,7 @@ const GetFeedback = async (req: Request, res: Response) => {
       res.json(
         new HttpResponseData(RESPONSE_CONFIG.MESSAGE[200], 200, feedback),
       );
-    } else if (email && page && limit) {
+    } else if (email) {
       const student = await feedbackService.GetFeedbackByEmailStudent(
         email as string,
       );

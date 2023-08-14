@@ -23,12 +23,8 @@ export class ClassRepository extends BaseRepository<IClass> {
     });
   }
 
-  async FindClassByCode(code: string) {
-    return await Class.findOne({ class_code: `${code}` }).populate([
-      "mentor",
-      "workplace",
-      "course",
-    ]);
+  async FindClassByCode(code: string, populate?: any | null) {
+    return await Class.findOne({ class_code: code }).populate(populate);
   }
 
   async FindClassByMentorId(id: string) {
@@ -47,11 +43,10 @@ export class ClassRepository extends BaseRepository<IClass> {
     ]);
   }
 
-  async FindClassByCourseId(id: string) {
-    return await Class.find({ course: `${id}` }).populate([
-      "mentor",
-      "workplace",
-      "course",
-    ]);
+  async FindClassByCourseId(id: string, page: number, limit: number) {
+    return await Class.find({ course: `${id}` })
+      .skip((page - 1) * limit)
+      .limit(limit)
+      .populate(["mentor", "workplace", "course"]);
   }
 }

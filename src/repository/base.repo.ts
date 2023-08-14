@@ -14,7 +14,7 @@ export abstract class BaseRepository<T extends Document> {
     id: string | undefined,
     populate?: any | null,
   ): Promise<T | any> {
-    return this.model.findById(`${id}`).populate(populate);
+    return this.model.findById(id).populate(populate);
   }
 
   async FindByCondition(filter: any, populate?: any | null): Promise<T | any> {
@@ -29,9 +29,9 @@ export abstract class BaseRepository<T extends Document> {
   ): Promise<T[] | any> {
     return this.model
       .find(filter)
+      .populate(populate)
       .skip((page - 1) * limit)
-      .limit(limit)
-      .populate(populate);
+      .limit(limit);
   }
 
   async FindAll(): Promise<T[] | any> {

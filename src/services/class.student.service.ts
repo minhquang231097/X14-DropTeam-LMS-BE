@@ -26,12 +26,9 @@ const GetAllStudentInClass = async (
   limit: number,
   class_code: string,
 ) => {
-  return await classStudentRepository.FindByConditionAndPagination(
-    page,
-    limit,
-    { class: class_code },
-    "student",
-  );
+  const _class = await classService.GetClassByCode(class_code);
+  const id: string = _class?._id;
+  return await classStudentRepository.FindByClassId(id, page, limit, "student");
 };
 
 const GetClassByStudentEmail = async (

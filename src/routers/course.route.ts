@@ -8,8 +8,8 @@ const courseRouter = express.Router();
 
 courseRouter.post(
   "/",
-  verifyAccessJWT,
-  ValidateJoi(CourseSchema.Course.create_course),
+  // verifyAccessJWT,
+  // ValidateJoi(CourseSchema.Course.create_course),
   courseController.CreateCourse,
 );
 courseRouter.put(
@@ -19,7 +19,6 @@ courseRouter.put(
   courseController.UpdateCourse,
 );
 courseRouter.get("/", courseController.GetCourse);
-courseRouter.get("/search", courseController.SearchCourse);
 courseRouter.delete("/all", courseController.DeletedAllCourse);
 courseRouter.delete("/", verifyAccessJWT, courseController.DeletedCourse);
 

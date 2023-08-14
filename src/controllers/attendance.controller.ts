@@ -29,17 +29,7 @@ const GetAttendance = async (req: Request, res: Response) => {
   const p = Number(page);
   const l = Number(limit);
   try {
-    if (page && limit && class_code) {
-      const result = await attendanceService.GetAttendanceByClassCode(
-        class_code as string,
-        p,
-        l,
-      );
-      if (!result) {
-        return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[404], 404));
-      }
-      res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE[200], 200, result));
-    } else if (class_code && day) {
+    if (class_code && day) {
       const attendance = await attendanceService.GetAttendanceByClassCodeAndDay(
         class_code as string,
         Number(day),
@@ -56,7 +46,17 @@ const GetAttendance = async (req: Request, res: Response) => {
           attendance,
         ),
       );
-    } else if (page && limit && day) {
+    } else if (class_code) {
+      const result = await attendanceService.GetAttendanceByClassCode(
+        class_code as string,
+        p,
+        l,
+      );
+      if (!result) {
+        return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[404], 404));
+      }
+      res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE[200], 200, result));
+    } else if (day) {
       const result = await attendanceService.GetAttendanceByDay(
         Number(day),
         p,
@@ -66,7 +66,7 @@ const GetAttendance = async (req: Request, res: Response) => {
         return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[404], 404));
       }
       res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE[200], 200, result));
-    } else if (email && page && limit) {
+    } else if (email) {
       const attendances =
         await attendanceStudentService.GetAttendanceByEmailStudent(
           email as string,

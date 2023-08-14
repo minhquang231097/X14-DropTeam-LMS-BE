@@ -5,6 +5,7 @@ import courseService from "./course.service";
 import userService from "./user.service";
 import workplaceService from "./workplace.service";
 import moment from "moment";
+import { WorkplaceRepository } from "@/repository/workplace.repo";
 
 const classRepository = new ClassRepository(Class);
 
@@ -154,8 +155,21 @@ const GetAllClass = async (page: number, limit: number) => {
   ]);
 };
 
+const GetTotalClass = async () => {
+  return (await classRepository.FindAll()).length;
+};
+
 const GetClassById = async (id: string) => {
   return await classRepository.FindById(id, ["mentor", "workplace", "course"]);
+};
+
+const GetClassByCourseCode = async (
+  code: string,
+  page: number,
+  limit: number,
+) => {
+  const _course = await courseService.GetCourseByCode(code);
+  return await classRepository.FindClassByCourseId(_course?._id, page, limit);
 };
 
 const GetClassByCode = async (code: string) => {
@@ -168,10 +182,6 @@ const GetClassByMentorId = async (id: string) => {
 
 const GetClassByWorkplaceId = async (id: string) => {
   return await classRepository.FindClassByWorkplaceId(id);
-};
-
-const GetClassByCourseId = async (code: string) => {
-  return await classRepository.FindClassByCourseId(code);
 };
 
 const GetClassByCondition = async (filter: IClass) => {
@@ -223,7 +233,7 @@ export default {
   GetClassById,
   GetClassByMentorId,
   GetClassByWorkplaceId,
-  GetClassByCourseId,
+  GetClassByCourseCode,
   GetClassByCondition,
   SearchClassByCondition,
   UpdateOneClass,
@@ -231,4 +241,5 @@ export default {
   DeleteClassById,
   DeleteClassByCondition,
   GetClassByCode,
+  GetTotalClass,
 };

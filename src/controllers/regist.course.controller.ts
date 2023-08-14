@@ -13,60 +13,62 @@ const RegistedNewCourse = async (req: Request, res: Response) => {
       _id,
       note,
     );
-    res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE[200], newRegist));
+    res.json(
+      new HttpResponseData(RESPONSE_CONFIG.MESSAGE[200], 200, newRegist),
+    );
   } catch (error) {
     return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[400], 400));
   }
 };
 
 const GetRegist = async (req: Request, res: Response) => {
-  const { wp_code, course_code, email, page, limit } = req.query;
+  const { _wp, _course, email, page, limit } = req.query;
   const p = Number(page);
   const l = Number(limit);
   try {
-    if (page && limit) {
-      const allRegist = await registCourseService.GetAllRegist(p, l);
-      if (!allRegist)
-        return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[404], 404));
-      res.json(
-        new HttpResponseData(RESPONSE_CONFIG.MESSAGE[200], 200, allRegist),
-      );
-    } else if (page && limit && course_code) {
+    if (_course) {
       const allRegist = await registCourseService.GetRegistByCourseCode(
-        course_code as string,
+        _course as string,
         p,
         l,
       );
-      if (!allRegist)
+      if (allRegist.length === 0)
         return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[404], 404));
       res.json(
         new HttpResponseData(RESPONSE_CONFIG.MESSAGE[200], 200, allRegist),
       );
-    } else if (page && limit && wp_code) {
+    } else if (_wp) {
       const allRegist = await registCourseService.GetRegistByWorkplaceCode(
-        wp_code as string,
+        _wp as string,
         p,
         l,
       );
-      if (!allRegist)
+      if (allRegist.length === 0)
         return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[404], 404));
       res.json(
         new HttpResponseData(RESPONSE_CONFIG.MESSAGE[200], 200, allRegist),
       );
-    } else if (page && limit && email) {
+    } else if (email) {
       const allRegist = await registCourseService.GetRegistByCourseCode(
-        wp_code as string,
+        _wp as string,
         p,
         l,
       );
-      if (!allRegist)
+      if (allRegist.length === 0)
+        return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[404], 404));
+      res.json(
+        new HttpResponseData(RESPONSE_CONFIG.MESSAGE[200], 200, allRegist),
+      );
+    } else if (page && limit) {
+      const allRegist = await registCourseService.GetAllRegist(p, l);
+      if (allRegist.length === 0)
         return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[404], 404));
       res.json(
         new HttpResponseData(RESPONSE_CONFIG.MESSAGE[200], 200, allRegist),
       );
     } else {
       const allRegist = await registCourseService.GetAllRegist(1, 10);
-      if (!allRegist)
+      if (allRegist.length === 0)
         return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[404], 404));
       res.json(
         new HttpResponseData(RESPONSE_CONFIG.MESSAGE[200], 200, allRegist),

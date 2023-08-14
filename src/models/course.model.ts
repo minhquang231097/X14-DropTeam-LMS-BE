@@ -8,10 +8,9 @@ const courseSchema = new Schema({
   desc: String,
   session_per_course: Number,
   price: Number,
-  duration: Number,
-  level: Number,
+  level: { type: String, enum: ["BEGINNER", "INTERMEDIATE", "ADVANCED"] },
   rate: Number,
-  discount: Number,
+  discount: { type: Number, default: 0 },
   workplace: { type: Schema.Types.ObjectId, ref: "workplaces" },
   create_at: {
     type: Date,
@@ -32,8 +31,7 @@ export interface ICourse extends Document {
   session_per_course: number;
   price: number;
   desc: string;
-  duration: number;
-  level: number;
+  level: string;
   rate: number;
   discount: number;
   workplace: string;

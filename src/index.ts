@@ -40,10 +40,10 @@ app.use("/api/v1/course", courseRouter);
 app.use("/api/v1/class", classRouter);
 app.use("/api/v1/session", sessionRouter);
 app.use("/api/v1/lesson", lessonRouter);
-app.use("/api/vi/regist-course", regist_courseRouter);
-app.use("/api/vi/feedback", feedbackRouter);
-app.use("/api/vi/attendance", attendanceRouter);
-app.use("/api/vi/upload", uploadRouter);
+app.use("/api/v1/regist-course", regist_courseRouter);
+app.use("/api/v1/feedback", feedbackRouter);
+app.use("/api/v1/attendance", attendanceRouter);
+app.use("/api/v1/upload", uploadRouter);
 
 app.listen(port, () => {
   console.log(`Server is running at http://localhost:${port}`);
