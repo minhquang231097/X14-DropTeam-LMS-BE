@@ -50,10 +50,16 @@ const GetUserByAttendance = async (
 const SearchUserByCondition = async (
   page: number,
   limit: number,
-  filter?: any,
-  field?: any,
+  searchTerm?: string,
 ) => {
-  return await userRepository.Search(page, limit, null, filter, field);
+  const query = {
+    $or: [
+      { username: { $regex: searchTerm, $options: "i" } },
+      { email: { $regex: searchTerm, $options: "i" } },
+      { fullname: { $regex: searchTerm, $options: "i" } },
+    ],
+  };
+  return await userRepository.SearchByCondition(page, limit, query);
 };
 
 const UpdateUserById = async (id: string, payload: any) => {

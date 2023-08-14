@@ -60,18 +60,11 @@ const SearchUser = async (req, res) => {
     const p = Number(page);
     const l = Number(limit);
     try {
-        const [_username, _email, _phone] = await Promise.all([
-            user_service_1.default.SearchUserByCondition(p, l, q, "username"),
-            user_service_1.default.SearchUserByCondition(p, l, q, "email"),
-            user_service_1.default.SearchUserByCondition(p, l, q, "phone_number"),
-        ]);
-        const all = _username.concat(_email).concat(_phone);
-        if (all.length > 0) {
-            res.json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.USER.FOUND, 200, all));
+        const result = await user_service_1.default.SearchUserByCondition(p, l, q);
+        if (result.length == 0) {
+            return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.USER.NOT_FOUND, 404));
         }
-        else {
-            res.json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.USER.NOT_FOUND, 404));
-        }
+        res.json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.USER.FOUND, 200, result));
     }
     catch (error) {
         return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.USER.WRONG, 404));
@@ -83,13 +76,13 @@ const ChangePassword = async (req, res) => {
     try {
         const user = user_service_1.default.GetUserById(id);
         if (!user) {
-            return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE[404], 404));
+            return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.USER.NOT_CORRECT, 404));
         }
         const verifyToken = jsonwebtoken_1.default.verify(token, process.env.ACCESSTOKEN_KEY);
         if (user && verifyToken._id) {
             const salt = await bcryptjs_1.default.genSalt(10);
             const newPassword = await bcryptjs_1.default.hash(password, salt);
-            const updatedUser = await user_service_1.default.UpdateUserById(id, {
+            await user_service_1.default.UpdateUserById(id, {
                 password: newPassword,
             });
             return res.json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.USER.PASSWORD_CHANGED, 200));
@@ -123,7 +116,7 @@ const UpdatePassword = async (req, res) => {
         }
         const checkPassword = bcryptjs_1.default.compareSync(password, exist.password);
         if (!checkPassword) {
-            return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.USER.NOT_FOUND, 404));
+            return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.USER.PASS_NOT_CORRECT, 404));
         }
         const salt = await bcryptjs_1.default.genSalt(10);
         const hashedPassword = await bcryptjs_1.default.hash(newPassword, salt);

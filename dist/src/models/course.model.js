@@ -4,10 +4,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Course = void 0;
+const response_config_1 = require("@/configs/response.config");
 const moment_1 = __importDefault(require("moment"));
 const mongoose_1 = require("mongoose");
 const courseSchema = new mongoose_1.Schema({
-    course_code: { type: String, unique: true },
+    course_code: { type: String, unique: [true, response_config_1.RESPONSE_CONFIG.MESSAGE.COURSE.CODE_EXIST] },
     title: String,
     image: [String],
     desc: String,

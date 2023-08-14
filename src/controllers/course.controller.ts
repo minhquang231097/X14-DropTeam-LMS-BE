@@ -11,11 +11,11 @@ const CreateCourse = async (req: Request, res: Response) => {
   try {
     const newCourse: ICourse = await CourseService.CreateCourse(payload);
     res.json(
-      new HttpResponseData(RESPONSE_CONFIG.MESSAGE[200], 200, newCourse),
+      new HttpResponseData(RESPONSE_CONFIG.MESSAGE.COURSE.CREATE_SUCCES, 200, newCourse),
     );
   } catch (error: any) {
     return res.json(
-      new HttpException(RESPONSE_CONFIG.MESSAGE[400], 400, error.message),
+      new HttpException(RESPONSE_CONFIG.MESSAGE.COURSE.WRONG, 400, error.message),
     );
   }
 };
@@ -28,26 +28,26 @@ const GetCourse = async (req: Request, res: Response) => {
     if (id) {
       const courseExist = await CourseService.GetCourseById(id as string);
       if (!courseExist) {
-        return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[404], 404));
+        return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.COURSE.NOT_FOUND, 404));
       }
       res.json(
-        new HttpResponseData(RESPONSE_CONFIG.MESSAGE[200], 200, courseExist),
+        new HttpResponseData(RESPONSE_CONFIG.MESSAGE.COURSE.FOUND_SUCCESS, 200, courseExist),
       );
     } else if (code) {
       const courseExist = await CourseService.GetCourseByCode(code as string);
       if (!courseExist) {
-        return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[404], 404));
+        return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.COURSE.NOT_FOUND, 404));
       }
       res.json(
-        new HttpResponseData(RESPONSE_CONFIG.MESSAGE[200], 200, courseExist),
+        new HttpResponseData(RESPONSE_CONFIG.MESSAGE.COURSE.FOUND_SUCCESS, 200, courseExist),
       );
     } else if (page && limit) {
       const allCourses = await CourseService.GetAllCourse(p, l);
       if (!allCourses) {
-        return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[404], 404));
+        return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.COURSE.NOT_FOUND, 404));
       }
       res.json(
-        new HttpResponseData(RESPONSE_CONFIG.MESSAGE[200], 200, {
+        new HttpResponseData(RESPONSE_CONFIG.MESSAGE.COURSE.FOUND_SUCCESS, 200, {
           list: allCourses,
           page: p,
           count: allCourses.length,
@@ -56,14 +56,14 @@ const GetCourse = async (req: Request, res: Response) => {
     } else {
       const allCourses = await CourseService.GetAllCourse(1, 10);
       if (!allCourses) {
-        return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[404], 404));
+        return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.COURSE.NOT_FOUND, 404));
       }
       res.json(
-        new HttpResponseData(RESPONSE_CONFIG.MESSAGE[200], 200, allCourses),
+        new HttpResponseData(RESPONSE_CONFIG.MESSAGE.COURSE.FOUND_SUCCESS, 200, allCourses),
       );
     }
   } catch (error) {
-    return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[404], 404));
+    return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.COURSE.WRONG, 400));
   }
 };
 
@@ -72,24 +72,19 @@ const SearchCourse = async (req: Request, res: Response) => {
   const p = Number(page);
   const l = Number(limit);
   try {
-    const [course_code, title] = await Promise.all([
-      courseService.SearcCourseByCondition(p, l, q as string, "course_code"),
-      courseService.SearcCourseByCondition(p, l, q as string, "title"),
-    ]);
-    const all = course_code.concat(title);
-    if (all.length > 0) {
-      res.json(
-        new HttpResponseData(
-          RESPONSE_CONFIG.MESSAGE.COURSE.CODE_EXIST,
-          200,
-          all,
-        ),
-      );
-    } else {
-      res.json(
-        new HttpResponseData(RESPONSE_CONFIG.MESSAGE.COURSE.CODE_EXIST, 404),
+    const result = await courseService.SearchCourseByCondition(
+      p,
+      l,
+      q as string,
+    );
+    if (result.length == 0) {
+      return res.json(
+        new HttpException(RESPONSE_CONFIG.MESSAGE.USER.NOT_FOUND, 404),
       );
     }
+    res.json(
+      new HttpResponseData(RESPONSE_CONFIG.MESSAGE.USER.FOUND, 200, result),
+    );
   } catch (error) {
     return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.USER.WRONG, 404));
   }

@@ -12,7 +12,7 @@ const CreateWorkplace = async (req: Request, res: Response) => {
     );
   } catch (error: any) {
     return res.json(
-      new HttpException(RESPONSE_CONFIG.MESSAGE[400], 400, error.message),
+      new HttpException(RESPONSE_CONFIG.MESSAGE.WORKPLACE.WRONG, 400, error.message),
     );
   }
 };
@@ -25,34 +25,34 @@ const GetWorkplace = async (req: Request, res: Response) => {
     if (id) {
       const wp = await WorkplaceService.GetWorkplaceById(id as string);
       if (!wp)
-        return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[404], 404));
+        return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.WORKPLACE.NOT_FOUND, 404));
       return res.json(
-        new HttpResponseData(RESPONSE_CONFIG.MESSAGE[200], 200, wp),
+        new HttpResponseData(RESPONSE_CONFIG.MESSAGE.WORKPLACE.FOUND_SUCCESS, 200, wp),
       );
     } else if (code) {
       const wp = await WorkplaceService.GetWorkplaceByCode(code as string);
       if (!wp)
-        return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[404], 404));
+        return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.WORKPLACE.NOT_FOUND, 404));
       return res.json(
-        new HttpResponseData(RESPONSE_CONFIG.MESSAGE[200], 200, wp),
+        new HttpResponseData(RESPONSE_CONFIG.MESSAGE.WORKPLACE.FOUND_SUCCESS, 200, wp),
       );
     } else if (page && limit) {
       const all = await WorkplaceService.GetAllWorkplace(p, l);
       if (!all)
-        return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[404], 404));
+        return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.WORKPLACE.NOT_FOUND, 404));
       return res.json(
-        new HttpResponseData(RESPONSE_CONFIG.MESSAGE[200], 200, all),
+        new HttpResponseData(RESPONSE_CONFIG.MESSAGE.WORKPLACE.FOUND_SUCCESS, 200, all),
       );
     } else {
       const all = await WorkplaceService.GetAllWorkplace(1, 10);
       if (!all)
-        return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[404], 404));
+        return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.WORKPLACE.NOT_FOUND, 404));
       return res.json(
-        new HttpResponseData(RESPONSE_CONFIG.MESSAGE[200], 200, all),
+        new HttpResponseData(RESPONSE_CONFIG.MESSAGE.WORKPLACE.FOUND_SUCCESS, 200, all),
       );
     }
   } catch (error) {
-    return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[404], 404));
+    return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.WORKPLACE.WRONG, 404));
   }
 };
 
@@ -64,18 +64,18 @@ const UpdateWorkplace = async (req: Request, res: Response) => {
       id as string,
     );
     if (!workplaceExist) {
-      return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[400], 400));
+      return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.WORKPLACE.NOT_FOUND, 400));
     }
     const updateWorkplace = await WorkplaceService.UpdateWorkplace(
       id as string,
       update,
     );
     res.json(
-      new HttpResponseData(RESPONSE_CONFIG.MESSAGE[200], 200, updateWorkplace),
+      new HttpResponseData(RESPONSE_CONFIG.MESSAGE.WORKPLACE.UPDATE_SUCCESS, 200, updateWorkplace),
     );
   } catch (error: any) {
     return res.json(
-      new HttpException(RESPONSE_CONFIG.MESSAGE[400], 400, error.message),
+      new HttpException(RESPONSE_CONFIG.MESSAGE.WORKPLACE.WRONG, 400, error.message),
     );
   }
 };
@@ -87,17 +87,17 @@ const DeletedWorkplace = async (req: Request, res: Response) => {
       id as string,
     );
     if (!workplaceExist) {
-      return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[400], 400));
+      return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.WORKPLACE.NOT_FOUND, 400));
     }
     const deleteWorkplace = await WorkplaceService.DeletedWorkplace(
       id as string,
     );
     res.json(
-      new HttpResponseData(RESPONSE_CONFIG.MESSAGE[200], 200, deleteWorkplace),
+      new HttpResponseData(RESPONSE_CONFIG.MESSAGE.WORKPLACE.DELETE_SUCCESS, 200, deleteWorkplace),
     );
   } catch (error: any) {
     return res.json(
-      new HttpException(RESPONSE_CONFIG.MESSAGE[400], 400, error.message),
+      new HttpException(RESPONSE_CONFIG.MESSAGE.WORKPLACE.WRONG, 400, error.message),
     );
   }
 };

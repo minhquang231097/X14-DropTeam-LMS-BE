@@ -38,12 +38,8 @@ class BaseRepository {
             .limit(limit)
             ?.populate(populate);
     }
-    async Search(page, limit, populate, searchTerm, searchField) {
-        const query = {};
-        if (searchTerm && searchField) {
-            query[searchField] = { $regex: searchTerm, $options: "i" };
-        }
-        return await this.model
+    async SearchByCondition(page, limit, query, populate) {
+        return this.model
             .find(query)
             .skip((page - 1) * limit)
             .limit(limit)

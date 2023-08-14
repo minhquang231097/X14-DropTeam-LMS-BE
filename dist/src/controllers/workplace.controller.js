@@ -10,7 +10,7 @@ const httpException_1 = __importDefault(require("@/common/httpException"));
 const CreateWorkplace = async (req, res) => {
     try {
         const workplace = await workplace_service_1.default.CreateWorkplace(req.body);
-        res.json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE[200], 200, workplace));
+        res.json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.WORKPLACE.CREATE_SUCCES, 200, workplace));
     }
     catch (error) {
         return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE[400], 400, error.message));

@@ -4,17 +4,15 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Workplace = void 0;
+const response_config_1 = require("@/configs/response.config");
 const moment_1 = __importDefault(require("moment"));
 const mongoose_1 = require("mongoose");
 const workplaceSchema = new mongoose_1.Schema({
-    name: { type: String, unique: true },
+    name: { type: String, unique: [true, response_config_1.RESPONSE_CONFIG.MESSAGE.WORKPLACE.WORKPLACE_EXIST] },
     address: String,
     status: { type: String, enum: ["ON", "OFF", "UPCOMING"] },
-    workplace_code: { type: String, unique: true },
-    create_at: {
-        type: Date,
-        default: Date.now(),
-    },
+    workplace_code: { type: String, unique: [true, "Workplace code exist"] },
+    create_at: { type: Date, default: Date.now(), },
     formated_date: String,
 });
 var StatusWP;

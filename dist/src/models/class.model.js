@@ -4,13 +4,14 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Class = void 0;
+const response_config_1 = require("@/configs/response.config");
 const moment_1 = __importDefault(require("moment"));
 const mongoose_1 = require("mongoose");
 const classSchema = new mongoose_1.Schema({
     mentor: { type: mongoose_1.Schema.Types.ObjectId, ref: "mentors" },
     workplace: { type: mongoose_1.Schema.Types.ObjectId, ref: "workplaces" },
     course: { type: mongoose_1.Schema.Types.ObjectId, ref: "courses" },
-    class_code: { type: String, unique: true },
+    class_code: { type: String, unique: [true, response_config_1.RESPONSE_CONFIG.MESSAGE.CLASS.CODE_EXIST] },
     session_per_class: Number,
     start_at: Date,
     end_at: String,

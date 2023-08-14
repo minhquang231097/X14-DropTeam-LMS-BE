@@ -66,17 +66,11 @@ const SearchCourse = async (req, res) => {
     const p = Number(page);
     const l = Number(limit);
     try {
-        const [course_code, title] = await Promise.all([
-            course_service_2.default.SearcCourseByCondition(p, l, q, "course_code"),
-            course_service_2.default.SearcCourseByCondition(p, l, q, "title"),
-        ]);
-        const all = course_code.concat(title);
-        if (all.length > 0) {
-            res.json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.COURSE.CODE_EXIST, 200, all));
+        const result = await course_service_2.default.SearchCourseByCondition(p, l, q);
+        if (result.length == 0) {
+            return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.USER.NOT_FOUND, 404));
         }
-        else {
-            res.json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.COURSE.CODE_EXIST, 404));
-        }
+        res.json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.USER.FOUND, 200, result));
     }
     catch (error) {
         return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.USER.WRONG, 404));

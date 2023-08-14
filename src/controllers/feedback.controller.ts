@@ -13,9 +13,9 @@ const CreateNewFeekback = async (req: Request, res: Response) => {
       email,
       payload,
     );
-    res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE[200], 200, session));
+    res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.FEEDBACK.CREATE_SUCCES, 200, session));
   } catch (error) {
-    return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[400], 400));
+    return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.FEEDBACK.WRONG, 400));
   }
 };
 
@@ -29,32 +29,32 @@ const GetFeedback = async (req: Request, res: Response) => {
         course_code as string,
       );
       if (!feedback)
-        return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[400], 400));
+        return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.FEEDBACK.NOT_FOUND, 404));
       res.json(
-        new HttpResponseData(RESPONSE_CONFIG.MESSAGE[200], 200, feedback),
+        new HttpResponseData(RESPONSE_CONFIG.MESSAGE.FEEDBACK.FOUND_SUCCESS, 200, feedback),
       );
     } else if (email && page && limit) {
       const student = await feedbackService.GetFeedbackByEmailStudent(
         email as string,
       );
       if (!student)
-        return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[400], 400));
+        return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.FEEDBACK.NOT_FOUND, 404));
       res.json(
-        new HttpResponseData(RESPONSE_CONFIG.MESSAGE[200], 200, student),
+        new HttpResponseData(RESPONSE_CONFIG.MESSAGE.FEEDBACK.FOUND_SUCCESS, 200, student),
       );
     } else if (page && limit) {
       const all = await feedbackService.GetFeedbackByCondition(p, l);
       if (!all)
-        return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[400], 400));
-      res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE[200], 200, all));
+        return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.FEEDBACK.NOT_FOUND, 404));
+      res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.FEEDBACK.FOUND_SUCCESS, 200, all));
     } else {
       const all = await feedbackService.GetFeedbackByCondition(1, 10);
       if (!all)
-        return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[400], 400));
-      res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE[200], 200, all));
+        return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.FEEDBACK.NOT_FOUND, 404));
+      res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.FEEDBACK.FOUND_SUCCESS, 200, all));
     }
-  } catch (error) {
-    return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[400], 400));
+  } catch (error: any) {
+    return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.FEEDBACK.WRONG, 400, error.message));
   }
 };
 
@@ -67,10 +67,10 @@ const UpdateFeedback = async (req: Request, res: Response) => {
       payload,
     );
     if (!feedback)
-      return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[404], 404));
-    res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE[200], 200, feedback));
+      return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.FEEDBACK.NOT_FOUND, 404));
+    res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.FEEDBACK.UPDATE_SUCCESS, 200, feedback));
   } catch (error) {
-    return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[400], 400));
+    return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.FEEDBACK.WRONG, 400));
   }
 };
 
@@ -79,10 +79,10 @@ const DeleteFeedback = async (req: Request, res: Response) => {
   try {
     const feedback = await feedbackService.DeleteFeedbackById(id as string);
     if (!feedback)
-      return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[404], 404));
-    res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE[200], 200));
+      return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.FEEDBACK.NOT_FOUND, 404));
+    res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.FEEDBACK.DELETE_SUCCESS, 200));
   } catch (error) {
-    return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[400], 400));
+    return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.FEEDBACK.WRONG, 400));
   }
 };
 

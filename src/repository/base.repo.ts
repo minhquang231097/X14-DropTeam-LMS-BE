@@ -50,20 +50,18 @@ export abstract class BaseRepository<T extends Document> {
       ?.populate(populate);
   }
 
-  async Search(
+  async SearchByCondition(
     page: number,
     limit: number,
+    // searchTerm?: string,
+    query?: any | null,
     populate?: any | null,
-    searchTerm?: string,
-    searchField?: string,
   ): Promise<T[] | any> {
-    const query: any = {};
-
-    if (searchTerm && searchField) {
-      query[searchField] = { $regex: searchTerm, $options: "i" };
-    }
-
-    return await this.model
+    // let query = {};
+    // if (searchTerm) {
+    //   query = { $text: { $regex: searchTerm, $options: "i" } };
+    // }
+    return this.model
       .find(query)
       .skip((page - 1) * limit)
       .limit(limit)

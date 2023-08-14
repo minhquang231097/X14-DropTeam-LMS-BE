@@ -15,10 +15,10 @@ const CreateNewClass = async (req: Request, res: Response) => {
       course,
       payload,
     );
-    res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE[200], 200, newClass));
+    res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.CLASS.CREATE_SUCCES, 200, newClass));
   } catch (error) {
     return res.json(
-      res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[400], 400)),
+      res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.CLASS.WRONG, 400)),
     );
   }
 };
@@ -30,10 +30,10 @@ const AddStudentToClass = async (req: Request, res: Response) => {
       email,
       class_code,
     );
-    res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE[200], 200));
+    res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.CLASS.ADD_STU_SUCCESS, 200));
   } catch (error) {
     return res.json(
-      res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[400], 400)),
+      res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.CLASS.WRONG, 400)),
     );
   }
 };
@@ -46,18 +46,18 @@ const GetClass = async (req: Request, res: Response) => {
     if (id) {
       const classExist = await classService.GetClassById(id as string);
       if (!classExist) {
-        return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[404], 404));
+        return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.CLASS.NOT_FOUND, 404));
       }
       return res.json(
-        new HttpResponseData(RESPONSE_CONFIG.MESSAGE[200], 200, classExist),
+        new HttpResponseData(RESPONSE_CONFIG.MESSAGE.CLASS.FOUND_SUCCESS, 200, classExist),
       );
     } else if (code) {
       const classExist = await classService.GetClassByCode(code as string);
       if (!classExist) {
-        return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[404], 404));
+        return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.CLASS.NOT_FOUND, 404));
       }
       res.json(
-        new HttpResponseData(RESPONSE_CONFIG.MESSAGE[200], 200, classExist),
+        new HttpResponseData(RESPONSE_CONFIG.MESSAGE.CLASS.FOUND_SUCCESS, 200, classExist),
       );
     } else if (email && page && limit) {
       const classExist = await classStudentService.GetClassByStudentEmail(
@@ -66,18 +66,18 @@ const GetClass = async (req: Request, res: Response) => {
         email as string,
       );
       if (!classExist) {
-        return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[404], 404));
+        return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.CLASS.NOT_FOUND, 404));
       }
       res.json(
-        new HttpResponseData(RESPONSE_CONFIG.MESSAGE[200], 200, classExist),
+        new HttpResponseData(RESPONSE_CONFIG.MESSAGE.CLASS.FOUND_SUCCESS, 200, classExist),
       );
     } else if (page && limit) {
       const allClasses = await classService.GetAllClass(p, l);
       if (!allClasses) {
-        return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[404], 404));
+        return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.CLASS.NOT_FOUND, 404));
       }
       res.json(
-        new HttpResponseData(RESPONSE_CONFIG.MESSAGE[200], 200, {
+        new HttpResponseData(RESPONSE_CONFIG.MESSAGE.CLASS.FOUND_SUCCESS, 200, {
           list: allClasses,
           page: p,
           count: allClasses.length,
@@ -86,37 +86,31 @@ const GetClass = async (req: Request, res: Response) => {
     } else {
       const allClasses = await classService.GetAllClass(1, 10);
       if (!allClasses) {
-        return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[404], 404));
+        return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.CLASS.NOT_FOUND, 404));
       }
       res.json(
-        new HttpResponseData(RESPONSE_CONFIG.MESSAGE[200], 200, allClasses),
+        new HttpResponseData(RESPONSE_CONFIG.MESSAGE.CLASS.FOUND_SUCCESS, 200, allClasses),
       );
     }
   } catch (error) {
-    return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[404], 404));
+    return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.CLASS.WRONG, 404));
   }
 };
 
 const SearchClass = async (req: Request, res: Response) => {
-  const { q, p, l } = req.query;
-  const page = Number(p);
-  const limit = Number(l);
+  const { q, page, limit } = req.query;
+  const p = Number(page);
+  const l = Number(limit);
   try {
-    const _class = await classService.SearchClassByCondition(
-      page,
-      limit,
-      q as string,
-      "class_code",
-    );
-    if (_class.length > 0) {
-      res.json(
-        new HttpResponseData(RESPONSE_CONFIG.MESSAGE.USER.FOUND, 200, _class),
-      );
-    } else {
-      res.json(
-        new HttpResponseData(RESPONSE_CONFIG.MESSAGE.USER.NOT_FOUND, 404),
+    const result = await classService.SearchClassByCondition(p, l, q as string);
+    if (result.length == 0) {
+      return res.json(
+        new HttpException(RESPONSE_CONFIG.MESSAGE.USER.NOT_FOUND, 404),
       );
     }
+    res.json(
+      new HttpResponseData(RESPONSE_CONFIG.MESSAGE.USER.FOUND, 200, result),
+    );
   } catch (error) {
     return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.USER.WRONG, 404));
   }
@@ -131,13 +125,13 @@ const UpdateClass = async (req: Request, res: Response) => {
       update,
     );
     if (!classUpdated) {
-      return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[404], 404));
+      return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.CLASS.NOT_FOUND, 404));
     }
     res.json(
-      new HttpResponseData(RESPONSE_CONFIG.MESSAGE[200], 200, classUpdated),
+      new HttpResponseData(RESPONSE_CONFIG.MESSAGE.CLASS.UPDATE_SUCCESS, 200, classUpdated),
     );
   } catch (error: any) {
-    return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[400], 400));
+    return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.CLASS.WRONG, 400));
   }
 };
 
@@ -146,12 +140,12 @@ const DeleteOneClass = async (req: Request, res: Response) => {
   try {
     const classDeleted = await classService.DeleteClassById(id as string);
     if (!classDeleted) {
-      return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[404], 404));
+      return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.CLASS.NOT_FOUND, 404));
     }
-    res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE[200], 200));
+    res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.CLASS.DELETE_SUCCESS, 200));
   } catch (error: any) {
     return res.json(
-      new HttpException(RESPONSE_CONFIG.MESSAGE[400], 400, error.message),
+      new HttpException(RESPONSE_CONFIG.MESSAGE.CLASS.WRONG, 400, error.message),
     );
   }
 };
@@ -161,12 +155,12 @@ const DeleteManyCourse = async (req: Request, res: Response) => {
   try {
     const classDeleted = await classService.DeleteClassByCondition(filter);
     if (!classDeleted) {
-      return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[404], 404));
+      return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.CLASS.NOT_FOUND, 404));
     }
-    res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE[200], 200));
+    res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.CLASS.DELETE_SUCCESS, 200));
   } catch (error: any) {
     return res.json(
-      new HttpException(RESPONSE_CONFIG.MESSAGE[400], 400, error.message),
+      new HttpException(RESPONSE_CONFIG.MESSAGE.CLASS.WRONG, 400, error.message),
     );
   }
 };

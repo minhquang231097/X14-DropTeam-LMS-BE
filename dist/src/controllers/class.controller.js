@@ -79,17 +79,15 @@ const GetClass = async (req, res) => {
     }
 };
 const SearchClass = async (req, res) => {
-    const { q, p, l } = req.query;
-    const page = Number(p);
-    const limit = Number(l);
+    const { q, page, limit } = req.query;
+    const p = Number(page);
+    const l = Number(limit);
     try {
-        const _class = await class_service_1.default.SearchClassByCondition(page, limit, q, "class_code");
-        if (_class.length > 0) {
-            res.json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.USER.FOUND, 200, _class));
+        const result = await class_service_1.default.SearchClassByCondition(p, l, q);
+        if (result.length == 0) {
+            return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.USER.NOT_FOUND, 404));
         }
-        else {
-            res.json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.USER.NOT_FOUND, 404));
-        }
+        res.json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.USER.FOUND, 200, result));
     }
     catch (error) {
         return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.USER.WRONG, 404));

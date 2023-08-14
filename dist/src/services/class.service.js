@@ -124,8 +124,16 @@ const GetClassByCondition = async (filter) => {
         "course",
     ]);
 };
-const SearchClassByCondition = async (page, limit, filter, feild) => {
-    return await classRepository.Search(page, limit, ["workplace", "course", "mentor"], filter, feild);
+const SearchClassByCondition = async (page, limit, searchTerm) => {
+    const query = {
+        $or: [
+            { mentor: { $regex: searchTerm, $options: "i" } },
+            { workplace: { $regex: searchTerm, $options: "i" } },
+            { course: { $regex: searchTerm, $options: "i" } },
+            { class_code: { $regex: searchTerm, $options: "i" } },
+        ],
+    };
+    return await classRepository.SearchByCondition(page, limit, query);
 };
 const UpdateOneClass = async (id, payload) => {
     return await classRepository.FindByIdAndUpdate(id, payload);
