@@ -57,6 +57,9 @@ const DeleteUserById = async (id) => {
 const DeleteUserByCondition = async (filter) => {
     return await userRepository.DeleteByCondition(filter);
 };
+const GetTotalUser = async () => {
+    return (await userRepository.FindAll()).length;
+};
 exports.default = {
     CreateUser,
     SearchUserByCondition,
@@ -70,5 +73,6 @@ exports.default = {
     UpdateUserByCondition,
     GetUserByCondition,
     GetUserByAttendance,
+    GetTotalUser,
 };
 //# sourceMappingURL=user.service.js.map

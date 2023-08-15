@@ -8,7 +8,7 @@ const lessonRouter = express.Router();
 
 lessonRouter.get("/", lessonController.GetLesson);
 lessonRouter.post("/", ValidateJoi(LessonSchema.Lesson.create_lesson), lessonController.CreateNewLesson);
-lessonRouter.put("/", ValidateJoi(LessonSchema.Lesson.update_lesson), lessonController.UpdateLesson);
-lessonRouter.delete("/", lessonController.DeleteLesson);
+lessonRouter.put("/:id", ValidateJoi(LessonSchema.Lesson.update_lesson), lessonController.UpdateLesson);
+lessonRouter.delete("/:id", lessonController.DeleteLesson);
 
 export default lessonRouter;

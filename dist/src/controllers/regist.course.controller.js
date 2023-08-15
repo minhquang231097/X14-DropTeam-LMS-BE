@@ -36,7 +36,7 @@ const GetRegist = async (req, res) => {
             res.json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.REGIST.FOUND_SUCCESS, 200, allRegist));
         }
         else if (email) {
-            const allRegist = await regist_course_service_1.default.GetRegistByCourseCode(_wp, p, l);
+            const allRegist = await regist_course_service_1.default.GetRegistByEmailStudent(email, p, l);
             if (allRegist.length === 0)
                 return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.REGIST.NOT_FOUND, 404));
             res.json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.REGIST.FOUND_SUCCESS, 200, allRegist));
@@ -59,7 +59,7 @@ const GetRegist = async (req, res) => {
     }
 };
 const UpdateRegist = async (req, res) => {
-    const { id } = req.query;
+    const { id } = req.params;
     const { payload } = req.body;
     try {
         const exist = await regist_course_service_1.default.GetRegistById(id);
@@ -74,7 +74,7 @@ const UpdateRegist = async (req, res) => {
     }
 };
 const DeleteRegist = async (req, res) => {
-    const { id } = req.query;
+    const { id } = req.params;
     try {
         const updatedRegist = await regist_course_service_1.default.DeleteRegist(id);
         if (!updatedRegist)

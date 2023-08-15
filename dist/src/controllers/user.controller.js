@@ -14,13 +14,14 @@ const GetUser = async (req, res) => {
     const { page, limit, email, attendanceId, _class, search } = req.query;
     const p = Number(page);
     const l = Number(limit);
+    const total = await user_service_1.default.GetTotalUser();
     try {
         if (_class) {
             const allUsers = await class_student_service_1.default.GetAllStudentInClass(p, l, _class);
             if (!allUsers) {
                 return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.USER.NOT_FOUND, 404));
             }
-            res.json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.USER.FOUND, 200, allUsers));
+            res.json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.USER.FOUND, 200, { allUsers, page: p, limit: l, }));
         }
         else if (email) {
             const user = await user_service_1.default.GetUserByEmail(email);
@@ -41,21 +42,21 @@ const GetUser = async (req, res) => {
             if (!result) {
                 return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.USER.NOT_FOUND, 404));
             }
-            res.json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.USER.FOUND, 200, result));
+            res.json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.USER.FOUND, 200, { result, page: 1, limit: 10, }));
         }
         else if (page && limit) {
             const allUsers = await user_service_1.default.GetAllUser(p, l);
             if (!allUsers) {
                 return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.USER.NOT_FOUND, 404));
             }
-            res.json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.USER.FOUND, 200, allUsers));
+            res.json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.USER.FOUND, 200, { allUsers, page: p, limit: l, total, }));
         }
         else {
             const allUsers = await user_service_1.default.GetAllUser(1, 10);
             if (!allUsers) {
                 return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.USER.NOT_FOUND, 404));
             }
-            res.json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.USER.FOUND, 200, allUsers));
+            res.json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.USER.FOUND, 200, { allUsers, page: 1, limit: 10, total, }));
         }
     }
     catch (error) {

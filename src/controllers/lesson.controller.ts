@@ -7,10 +7,10 @@ import sessionService from "@/services/session.service";
 import { Request, Response } from "express";
 
 const CreateNewLesson = async (req: Request, res: Response) => {
-  const { code } = req.query;
+  const { ss_code } = req.query;
   const payload = req.body;
   try {
-    const newLesson = await lessonService.CreateLesson(code as string, payload);
+    const newLesson = await lessonService.CreateLesson(ss_code as string, payload);
     res.json(
       new HttpResponseData(RESPONSE_CONFIG.MESSAGE.LESSON.CREATE_SUCCES, 200, newLesson),
     );
@@ -30,17 +30,17 @@ const GetLesson = async (req: Request, res: Response) => {
         p,
         l,
       );
-      if (!all)
+      if (all.length === 0)
         return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.LESSON.NOT_FOUND, 404));
       res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.LESSON.FOUND_SUCCESS, 200, all));
     } else if (page && limit) {
       const all = await lessonService.GetAllLesson(p, l);
-      if (!all)
+      if (all.length === 0)
         return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.LESSON.NOT_FOUND, 404));
       res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.LESSON.FOUND_SUCCESS, 200, all));
     } else {
       const all = await lessonService.GetAllLesson(1, 10);
-      if (!all)
+      if (all.length === 0)
         return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.LESSON.NOT_FOUND, 404));
       res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.LESSON.FOUND_SUCCESS, 200, all));
     }
@@ -50,7 +50,7 @@ const GetLesson = async (req: Request, res: Response) => {
 };
 
 const UpdateLesson = async (req: Request, res: Response) => {
-  const { id } = req.query;
+  const { id } = req.params;
   const { payload } = req.body;
   try {
     const exist = await lessonService.UpdateLessonById(id as string, payload);
@@ -64,7 +64,7 @@ const UpdateLesson = async (req: Request, res: Response) => {
 };
 
 const DeleteLesson = async (req: Request, res: Response) => {
-  const { id } = req.query;
+  const { id } = req.params;
   try {
     const found = await lessonService.DeletedLessonById(id as string);
     if (!found)

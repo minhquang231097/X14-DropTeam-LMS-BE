@@ -31,7 +31,6 @@ exports.CourseSchema = {
             price: joi_1.default.number().min(1).required().messages({
                 'number.base': `{{#label}} must be a number`,
                 'number.min': `{{#label}} must greater than or equal to {{#limit}}`,
-                'number.integer': `{{#label}} must be an integer `,
                 'any.required': `{{#label}} is a required field`
             }),
             desc: joi_1.default.string().max(500).required().messages({

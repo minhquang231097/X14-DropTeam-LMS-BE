@@ -8,10 +8,10 @@ const httpResponseData_1 = __importDefault(require("@/common/httpResponseData"))
 const response_config_1 = require("@/configs/response.config");
 const lesson_service_1 = __importDefault(require("@/services/lesson.service"));
 const CreateNewLesson = async (req, res) => {
-    const { code } = req.query;
+    const { ss_code } = req.query;
     const payload = req.body;
     try {
-        const newLesson = await lesson_service_1.default.CreateLesson(code, payload);
+        const newLesson = await lesson_service_1.default.CreateLesson(ss_code, payload);
         res.json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.LESSON.CREATE_SUCCES, 200, newLesson));
     }
     catch (error) {
@@ -25,19 +25,19 @@ const GetLesson = async (req, res) => {
     try {
         if (ss_code) {
             const all = await lesson_service_1.default.GetLessonBySessionCode(ss_code, p, l);
-            if (!all)
+            if (all.length === 0)
                 return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.LESSON.NOT_FOUND, 404));
             res.json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.LESSON.FOUND_SUCCESS, 200, all));
         }
         else if (page && limit) {
             const all = await lesson_service_1.default.GetAllLesson(p, l);
-            if (!all)
+            if (all.length === 0)
                 return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.LESSON.NOT_FOUND, 404));
             res.json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.LESSON.FOUND_SUCCESS, 200, all));
         }
         else {
             const all = await lesson_service_1.default.GetAllLesson(1, 10);
-            if (!all)
+            if (all.length === 0)
                 return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.LESSON.NOT_FOUND, 404));
             res.json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.LESSON.FOUND_SUCCESS, 200, all));
         }
@@ -47,7 +47,7 @@ const GetLesson = async (req, res) => {
     }
 };
 const UpdateLesson = async (req, res) => {
-    const { id } = req.query;
+    const { id } = req.params;
     const { payload } = req.body;
     try {
         const exist = await lesson_service_1.default.UpdateLessonById(id, payload);
@@ -61,7 +61,7 @@ const UpdateLesson = async (req, res) => {
     }
 };
 const DeleteLesson = async (req, res) => {
-    const { id } = req.query;
+    const { id } = req.params;
     try {
         const found = await lesson_service_1.default.DeletedLessonById(id);
         if (!found)

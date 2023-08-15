@@ -9,8 +9,8 @@ const validatejoi_1 = require("@/validation/validatejoi");
 const express_1 = __importDefault(require("express"));
 const feedbackRouter = express_1.default.Router();
 feedbackRouter.post("/", (0, validatejoi_1.ValidateJoi)(feedback_joi_1.FeedbackSchema.Feedback.create_feedback), feedback_controller_1.default.CreateNewFeekback);
-feedbackRouter.put("/", (0, validatejoi_1.ValidateJoi)(feedback_joi_1.FeedbackSchema.Feedback.update_feedback), feedback_controller_1.default.UpdateFeedback);
+feedbackRouter.put("/:id", (0, validatejoi_1.ValidateJoi)(feedback_joi_1.FeedbackSchema.Feedback.update_feedback), feedback_controller_1.default.UpdateFeedback);
 feedbackRouter.get("/", feedback_controller_1.default.GetFeedback);
-feedbackRouter.delete("/", feedback_controller_1.default.DeleteFeedback);
+feedbackRouter.delete("/:id", feedback_controller_1.default.DeleteFeedback);
 exports.default = feedbackRouter;
 //# sourceMappingURL=feedback.route.js.map

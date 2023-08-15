@@ -11,12 +11,13 @@ const attendance_student_service_1 = __importDefault(require("@/services/attenda
 const class_service_1 = __importDefault(require("@/services/class.service"));
 const CreateNewAttendance = async (req, res) => {
     const payload = req.body;
+    const { session_code, class_code } = payload;
     try {
-        const newAttendance = await attendance_service_1.default.CreateAttendance(payload.session_code, payload.class_code, payload);
-        res.json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE[200], 200, newAttendance));
+        const newAttendance = await attendance_service_1.default.CreateAttendance(session_code, class_code, payload);
+        res.json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.ATTENDANCE.CREATE_SUCCES, 200, newAttendance));
     }
     catch (error) {
-        return res.json(res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE[400], 400)));
+        return res.json(res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.ATTENDANCE.WRONG, 400)));
     }
 };
 const GetAttendance = async (req, res) => {
@@ -27,76 +28,68 @@ const GetAttendance = async (req, res) => {
         if (class_code && day) {
             const attendance = await attendance_service_1.default.GetAttendanceByClassCodeAndDay(class_code, Number(day));
             if (!attendance) {
-                return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.USER.NOT_FOUND, 404));
+                return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.ATTENDANCE.NOT_FOUND, 404));
             }
-            res.json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.USER.FOUND, 200, attendance));
+            res.json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.ATTENDANCE.FOUND_SUCCESS, 200, attendance));
         }
         else if (class_code) {
             const result = await attendance_service_1.default.GetAttendanceByClassCode(class_code, p, l);
             if (!result) {
-                return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE[404], 404));
+                return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.ATTENDANCE.NOT_FOUND, 404));
             }
-            res.json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE[200], 200, result));
+            res.json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.ATTENDANCE.FOUND_SUCCESS, 200, result));
         }
         else if (day) {
             const result = await attendance_service_1.default.GetAttendanceByDay(Number(day), p, l);
             if (!result) {
-                return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE[404], 404));
+                return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.ATTENDANCE.NOT_FOUND, 404));
             }
-            res.json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE[200], 200, result));
+            res.json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.ATTENDANCE.FOUND_SUCCESS, 200, result));
         }
         else if (email) {
             const attendances = await attendance_student_service_1.default.GetAttendanceByEmailStudent(email, p, l);
             if (!attendances) {
-                return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE[404], 404));
+                return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.ATTENDANCE.NOT_FOUND, 404));
             }
-            res.json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE[200], 200, {
-                list: attendances,
-                page: p,
-                count: attendances.length,
-            }));
+            res.json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.ATTENDANCE.FOUND_SUCCESS, 200, { list: attendances, page: p, count: attendances.length, }));
         }
         else {
             const attendances = await attendance_student_service_1.default.GetAllAttendance(1, 10);
             if (!attendances) {
-                return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE[404], 404));
+                return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.ATTENDANCE.NOT_FOUND, 404));
             }
-            res.json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE[200], 200, {
-                list: attendances,
-                page: p,
-                count: attendances.length,
-            }));
+            res.json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.ATTENDANCE.FOUND_SUCCESS, 200, { list: attendances, page: 1, count: attendances.length, }));
         }
     }
     catch (error) {
-        return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE[404], 404));
+        return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.ATTENDANCE.WRONG, 400));
     }
 };
 const UpdateAttendance = async (req, res) => {
-    const { id } = req.query;
+    const { id } = req.params;
     const update = req.body;
     try {
         const classUpdated = await class_service_1.default.UpdateOneClass(id, update);
         if (!classUpdated) {
-            return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE[404], 404));
+            return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.ATTENDANCE.NOT_FOUND, 404));
         }
-        res.json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE[200], 200, classUpdated));
+        res.json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.ATTENDANCE.UPDATE_SUCCESS, 200, classUpdated));
     }
     catch (error) {
-        return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE[400], 400));
+        return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.ATTENDANCE.WRONG, 400));
     }
 };
 const DeleteAttendance = async (req, res) => {
-    const { id } = req.query;
+    const { id } = req.params;
     try {
         const classDeleted = await class_service_1.default.DeleteClassById(id);
         if (!classDeleted) {
-            return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE[404], 404));
+            return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.ATTENDANCE.NOT_FOUND, 404));
         }
-        res.json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE[200], 200));
+        res.json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.ATTENDANCE.DELETE_SUCCESS, 200));
     }
     catch (error) {
-        return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE[400], 400, error.message));
+        return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.ATTENDANCE.WRONG, 400, error.message));
     }
 };
 exports.default = {

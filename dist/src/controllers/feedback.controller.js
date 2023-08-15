@@ -24,13 +24,13 @@ const GetFeedback = async (req, res) => {
     const l = Number(limit);
     try {
         if (course_code) {
-            const feedback = await feedback_service_1.default.GetFeedbackByCourseCode(course_code);
+            const feedback = await feedback_service_1.default.GetFeedbackByCourseCode(course_code, p, l);
             if (!feedback)
                 return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.FEEDBACK.NOT_FOUND, 404));
             res.json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.FEEDBACK.FOUND_SUCCESS, 200, feedback));
         }
         else if (email) {
-            const student = await feedback_service_1.default.GetFeedbackByEmailStudent(email);
+            const student = await feedback_service_1.default.GetFeedbackByEmailStudent(email, p, l);
             if (!student)
                 return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.FEEDBACK.NOT_FOUND, 404));
             res.json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.FEEDBACK.FOUND_SUCCESS, 200, student));
@@ -53,7 +53,7 @@ const GetFeedback = async (req, res) => {
     }
 };
 const UpdateFeedback = async (req, res) => {
-    const { id } = req.query;
+    const { id } = req.params;
     const payload = req.body;
     try {
         const feedback = await feedback_service_1.default.UpdateFeedback(id, payload);
@@ -66,7 +66,7 @@ const UpdateFeedback = async (req, res) => {
     }
 };
 const DeleteFeedback = async (req, res) => {
-    const { id } = req.query;
+    const { id } = req.params;
     try {
         const feedback = await feedback_service_1.default.DeleteFeedbackById(id);
         if (!feedback)

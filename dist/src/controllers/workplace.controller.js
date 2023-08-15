@@ -17,9 +17,10 @@ const CreateWorkplace = async (req, res) => {
     }
 };
 const GetWorkplace = async (req, res) => {
-    const { page, limit, id, code } = req.query;
+    const { page, limit, id, code, search } = req.query;
     const p = Number(page);
     const l = Number(limit);
+    const total = await workplace_service_1.default.GetTotalWorkplace();
     try {
         if (id) {
             const wp = await workplace_service_1.default.GetWorkplaceById(id);
@@ -33,17 +34,23 @@ const GetWorkplace = async (req, res) => {
                 return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.WORKPLACE.NOT_FOUND, 404));
             return res.json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.WORKPLACE.FOUND_SUCCESS, 200, wp));
         }
+        else if (search) {
+            const all = await workplace_service_1.default.SearchWorkplaceByCondition(1, 10, search);
+            if (!all)
+                return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.WORKPLACE.NOT_FOUND, 404));
+            return res.json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.WORKPLACE.FOUND_SUCCESS, 200, all));
+        }
         else if (page && limit) {
             const all = await workplace_service_1.default.GetAllWorkplace(p, l);
             if (!all)
                 return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.WORKPLACE.NOT_FOUND, 404));
-            return res.json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.WORKPLACE.FOUND_SUCCESS, 200, all));
+            return res.json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.WORKPLACE.FOUND_SUCCESS, 200, { all, page: 1, limit: 10, total }));
         }
         else {
             const all = await workplace_service_1.default.GetAllWorkplace(1, 10);
             if (!all)
                 return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.WORKPLACE.NOT_FOUND, 404));
-            return res.json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.WORKPLACE.FOUND_SUCCESS, 200, all));
+            return res.json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.WORKPLACE.FOUND_SUCCESS, 200, { all, page: 1, limit: 10, total }));
         }
     }
     catch (error) {

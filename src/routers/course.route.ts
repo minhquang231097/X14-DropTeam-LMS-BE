@@ -13,13 +13,13 @@ courseRouter.post(
   courseController.CreateCourse,
 );
 courseRouter.put(
-  "/",
+  "/:id",
   verifyAccessJWT,
   ValidateJoi(CourseSchema.Course.update_course),
   courseController.UpdateCourse,
 );
 courseRouter.get("/", courseController.GetCourse);
 courseRouter.delete("/all", courseController.DeletedAllCourse);
-courseRouter.delete("/", verifyAccessJWT, courseController.DeletedCourse);
+courseRouter.delete("/:id", verifyAccessJWT, courseController.DeletedCourse);
 
 export default courseRouter;

@@ -91,6 +91,10 @@ exports.RESPONSE_CONFIG = {
             WRONG: "Something wrong...",
         },
         ATTENDANCE: {
+            NO_SESSION: "Require session",
+            NO_CLASS: "Require class",
+            NO_COURSE: "Require course",
+            NO_CODE: "Require class code",
             NOT_FOUND: "Can't find any attendance",
             CREATE_SUCCES: "Create attendance success",
             FOUND_SUCCESS: "Found attendance",

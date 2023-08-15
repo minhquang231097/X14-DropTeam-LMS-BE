@@ -23,11 +23,11 @@ const GetLessonById = async (id: string) => {
 };
 
 const GetLessonBySessionCode = async (
-  code: string,
+  ss_code: string,
   page: number,
   limit: number,
 ) => {
-  const result = await sessionService.GetSessionByCode(code);
+  const result = await sessionService.GetSessionByCode(ss_code);
   return await lessonRepository.FindLessonBySessionId(result?._id, page, limit);
 };
 

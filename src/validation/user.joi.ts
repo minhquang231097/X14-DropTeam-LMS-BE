@@ -8,6 +8,7 @@ export const Schema = {
     sign_up: Joi.object<IUser>({
       fullname: Joi.string().min(5).max(100).required().messages({
         'string.empty': RESPONSE_CONFIG.MESSAGE.USER.NO_FULLNAME,
+        'string.base': `{{#label}} should be type of text`,
         'string.min': `{{#label}} should have a minimum length of {#limit}`,
         'string.max': `{{#label}} should have a maximum length of {#limit}`,
         'any.required': `{{#label}} is a required field`
@@ -65,6 +66,7 @@ export const Schema = {
     }),
     update: Joi.object<UpdateUserDto>({
       fullname: Joi.string().min(5).max(100).optional().messages({
+        'string.base': `{{#label}} should be type of text`,
         'string.empty': RESPONSE_CONFIG.MESSAGE.USER.NO_FULLNAME,
         'string.min': `{{#label}} should have a minimum length of {#limit}`,
         'string.max': `{{#label}} should have a maximum length of {#limit}`,

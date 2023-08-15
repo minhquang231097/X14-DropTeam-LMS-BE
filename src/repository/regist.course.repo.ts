@@ -7,12 +7,12 @@ export class RegistedCourseRepository extends BaseRepository<IRegistedCourse> {
     super(model);
   }
 
-  async FindRegistbyCourseId(id: string, page?: any, limit?: any) {
-    return await this.model
+  async FindRegistbyCourseId(id: string, page: number, limit: number) {
+    return this.model
       .find({ course: id })
       .skip((page - 1) * limit)
       .limit(limit)
-      .populate(["course", "workplace", "student"]);
+      .populate("course").populate("student")
   }
 
   async FindRegistbyWorkplaceId(id: string, page: number, limit: number) {
@@ -23,9 +23,11 @@ export class RegistedCourseRepository extends BaseRepository<IRegistedCourse> {
       .populate(["course", "workplace", "student"]);
   }
 
-  async FindRegistbyStudentId(id: string) {
+  async FindRegistbyStudentId(id: string, page: number, limit: number) {
     return this.model
       .find({ student: id })
+      .skip((page - 1) * limit)
+      .limit(limit)
       .populate(["course", "workplace", "student"]);
   }
 }

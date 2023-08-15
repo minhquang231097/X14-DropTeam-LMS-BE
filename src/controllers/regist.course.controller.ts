@@ -49,8 +49,8 @@ const GetRegist = async (req: Request, res: Response) => {
         new HttpResponseData(RESPONSE_CONFIG.MESSAGE.REGIST.FOUND_SUCCESS, 200, allRegist),
       );
     } else if (email) {
-      const allRegist = await registCourseService.GetRegistByCourseCode(
-        _wp as string,
+      const allRegist = await registCourseService.GetRegistByEmailStudent(
+        email as string,
         p,
         l,
       );
@@ -80,7 +80,7 @@ const GetRegist = async (req: Request, res: Response) => {
 };
 
 const UpdateRegist = async (req: Request, res: Response) => {
-  const { id } = req.query;
+  const { id } = req.params;
   const { payload } = req.body;
   try {
     const exist = await registCourseService.GetRegistById(id as string);
@@ -95,7 +95,7 @@ const UpdateRegist = async (req: Request, res: Response) => {
 };
 
 const DeleteRegist = async (req: Request, res: Response) => {
-  const { id } = req.query;
+  const { id } = req.params;
   try {
     const updatedRegist = await registCourseService.DeleteRegist(id as string);
     if (!updatedRegist)

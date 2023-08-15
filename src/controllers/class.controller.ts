@@ -119,7 +119,7 @@ const GetClass = async (req: Request, res: Response) => {
 };
 
 const UpdateClass = async (req: Request, res: Response) => {
-  const { id } = req.query;
+  const { id } = req.params;
   const update = req.body;
   try {
     const classUpdated = await classService.UpdateOneClass(
@@ -138,7 +138,7 @@ const UpdateClass = async (req: Request, res: Response) => {
 };
 
 const DeleteOneClass = async (req: Request, res: Response) => {
-  const { id } = req.query;
+  const { id } = req.params;
   try {
     const classDeleted = await classService.DeleteClassById(id as string);
     if (!classDeleted) {

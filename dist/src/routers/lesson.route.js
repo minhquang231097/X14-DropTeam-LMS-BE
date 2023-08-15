@@ -10,7 +10,7 @@ const express_1 = __importDefault(require("express"));
 const lessonRouter = express_1.default.Router();
 lessonRouter.get("/", lesson_controller_1.default.GetLesson);
 lessonRouter.post("/", (0, validatejoi_1.ValidateJoi)(lesson_joi_1.LessonSchema.Lesson.create_lesson), lesson_controller_1.default.CreateNewLesson);
-lessonRouter.put("/", (0, validatejoi_1.ValidateJoi)(lesson_joi_1.LessonSchema.Lesson.update_lesson), lesson_controller_1.default.UpdateLesson);
-lessonRouter.delete("/", lesson_controller_1.default.DeleteLesson);
+lessonRouter.put("/:id", (0, validatejoi_1.ValidateJoi)(lesson_joi_1.LessonSchema.Lesson.update_lesson), lesson_controller_1.default.UpdateLesson);
+lessonRouter.delete("/:id", lesson_controller_1.default.DeleteLesson);
 exports.default = lessonRouter;
 //# sourceMappingURL=lesson.route.js.map

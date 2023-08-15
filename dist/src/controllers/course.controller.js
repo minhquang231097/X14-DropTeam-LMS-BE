@@ -54,9 +54,9 @@ const GetCourse = async (req, res) => {
         else if (search) {
             const allCourses = await course_service_2.default.SearchCourseByCondition(p, l, search);
             if (!allCourses) {
-                return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE[404], 404));
+                return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.COURSE.NOT_FOUND, 404));
             }
-            res.json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE[200], 200, {
+            res.json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.COURSE.FOUND_SUCCESS, 200, {
                 allCourses,
                 total,
                 page: p,
@@ -81,53 +81,54 @@ const GetCourse = async (req, res) => {
             res.json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.COURSE.FOUND_SUCCESS, 200, {
                 allCourses,
                 total,
-                page: p,
+                page: 1,
+                limit: 10,
             }));
         }
     }
     catch (error) {
-        return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE[404], 404));
+        return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.COURSE.WRONG, 400));
     }
 };
 const UpdateCourse = async (req, res) => {
-    const { id } = req.query;
+    const { id } = req.params;
     try {
         const update = req.body;
         const courseExist = await course_service_1.default.GetCourseById(id);
         if (!courseExist) {
-            return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE[400], 400));
+            return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.COURSE.NOT_FOUND, 400));
         }
         const updateCourse = await course_service_1.default.UpdateCourse(id, update);
-        res.json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE[200], 200, updateCourse));
+        res.json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.COURSE.UPDATE_SUCCESS, 200, updateCourse));
     }
     catch (error) {
-        return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE[400], 400, error.message));
+        return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.COURSE.WRONG, 400, error.message));
     }
 };
 const DeletedCourse = async (req, res) => {
-    const { id } = req.query;
+    const { id } = req.params;
     try {
         const courseExist = await course_service_1.default.GetCourseById(id);
         if (!courseExist) {
-            return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE[400], 400));
+            return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.COURSE.NOT_FOUND, 400));
         }
         const deleteCourse = await course_service_1.default.DeletedCourse(id);
-        res.json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE[200], 200, deleteCourse));
+        res.json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.COURSE.DELETE_SUCCESS, 200, deleteCourse));
     }
     catch (error) {
-        return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE[400], 400, error.message));
+        return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.COURSE.WRONG, 400, error.message));
     }
 };
 const DeletedAllCourse = async (req, res) => {
     try {
         const courseDeleted = await course_model_1.Course.deleteMany();
         if (!courseDeleted) {
-            return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE[400], 400));
+            return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.COURSE.NOT_FOUND, 400));
         }
         res.sendStatus(200);
     }
     catch (error) {
-        console.log(error);
+        return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.COURSE.WRONG, 400, error.message));
     }
 };
 exports.default = {

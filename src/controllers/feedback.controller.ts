@@ -26,7 +26,7 @@ const GetFeedback = async (req: Request, res: Response) => {
   try {
     if (course_code) {
       const feedback = await feedbackService.GetFeedbackByCourseCode(
-        course_code as string,
+        course_code as string, p ,l
       );
       if (!feedback)
         return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.FEEDBACK.NOT_FOUND, 404));
@@ -35,7 +35,7 @@ const GetFeedback = async (req: Request, res: Response) => {
       );
     } else if (email) {
       const student = await feedbackService.GetFeedbackByEmailStudent(
-        email as string,
+        email as string, p ,l
       );
       if (!student)
         return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.FEEDBACK.NOT_FOUND, 404));
@@ -59,7 +59,7 @@ const GetFeedback = async (req: Request, res: Response) => {
 };
 
 const UpdateFeedback = async (req: Request, res: Response) => {
-  const { id } = req.query;
+  const { id } = req.params;
   const payload = req.body;
   try {
     const feedback = await feedbackService.UpdateFeedback(
@@ -75,7 +75,7 @@ const UpdateFeedback = async (req: Request, res: Response) => {
 };
 
 const DeleteFeedback = async (req: Request, res: Response) => {
-  const { id } = req.query;
+  const { id } = req.params;
   try {
     const feedback = await feedbackService.DeleteFeedbackById(id as string);
     if (!feedback)

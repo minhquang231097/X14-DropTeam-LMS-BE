@@ -57,9 +57,9 @@ const GetRegistByWorkplaceCode = async (
   );
 };
 
-const GetRegistByEmailStudent = async (email: string) => {
+const GetRegistByEmailStudent = async (email: string, page: number, limit: number) => {
   const _student = await userService.GetUserByEmail(email);
-  return await registCourseRepository.FindRegistbyStudentId(_student?._id);
+  return await registCourseRepository.FindRegistbyStudentId(_student?._id, page, limit);
 };
 
 const GetRegistById = async (id: string) => {
