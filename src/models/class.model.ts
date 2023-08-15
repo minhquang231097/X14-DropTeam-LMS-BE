@@ -2,7 +2,7 @@ import moment from "moment";
 import { Document, Schema, model } from "mongoose";
 
 const classSchema = new Schema({
-  mentor: { type: Schema.Types.ObjectId, ref: "mentors" },
+  mentor: { type: Schema.Types.ObjectId, ref: "users" },
   workplace: { type: Schema.Types.ObjectId, ref: "workplaces" },
   course: { type: Schema.Types.ObjectId, ref: "courses" },
   class_code: { type: String, unique: true },

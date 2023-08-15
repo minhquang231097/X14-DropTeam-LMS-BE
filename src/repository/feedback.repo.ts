@@ -7,15 +7,15 @@ export class FeedbackRepository extends BaseRepository<IFeedback> {
     super(model);
   }
 
-  async FindFeedbackByCourseId(id: string) {
+  async FindFeedbackByCourseId(id: string, page: number, limit: number) {
     return await this.model
-      .find({ course: id })
+      .find({ course: id }).skip((page-1)*limit).limit(limit)
       .populate(["course", "student"]);
   }
 
-  async FindFeedbackByStudentId(id: string) {
+  async FindFeedbackByStudentId(id: string, page: number, limit: number) {
     return await this.model
-      .find({ student: id })
+      .find({ student: id }).skip((page-1)*limit).limit(limit)
       .populate(["course", "student"]);
   }
 }

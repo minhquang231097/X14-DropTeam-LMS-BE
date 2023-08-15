@@ -3,7 +3,7 @@ import { Document, Schema, model } from "mongoose";
 
 const feedbackSchema = new Schema({
   course: { type: Schema.Types.ObjectId, ref: "courses" },
-  student: { type: Schema.Types.ObjectId, ref: "students" },
+  student: { type: Schema.Types.ObjectId, ref: "users" },
   rating: String,
   content: String,
   create_at: { type: Date, default: Date.now() },

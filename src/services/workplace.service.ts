@@ -21,7 +21,7 @@ const GetWorkplaceById = async (id: string) => {
 };
 
 const GetWorkplaceByCode = async (code: string) => {
-  return await workplaceRepository.FindWorkplaceByCode(code);
+  return await workplaceRepository.FindByCondition({ workplace_code: code });
 };
 
 const GetWorkplaceByCodition = async (filter: FindWorkplaceDto) => {

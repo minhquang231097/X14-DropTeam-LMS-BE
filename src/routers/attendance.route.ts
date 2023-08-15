@@ -4,8 +4,8 @@ import express from "express";
 const attendanceRouter = express.Router();
 
 attendanceRouter.post("/", attendanceController.CreateNewAttendance);
-attendanceRouter.put("/", attendanceController.UpdateAttendance);
+attendanceRouter.put("/:id", attendanceController.UpdateAttendance);
 attendanceRouter.get("/", attendanceController.GetAttendance);
-attendanceRouter.delete("/", attendanceController.DeleteAttendance);
+attendanceRouter.delete("/:id", attendanceController.DeleteAttendance);
 
 export default attendanceRouter;

@@ -14,13 +14,13 @@ registCourseRouter.post(
 registCourseRouter.get("/", verifyAccessJWT, registCourseController.GetRegist);
 
 registCourseRouter.put(
-  "/",
+  "/:id",
   verifyAccessJWT,
   registCourseController.UpdateRegist,
 );
 
 registCourseRouter.delete(
-  "/",
+  "/:id",
   verifyAccessJWT,
   registCourseController.DeleteRegist,
 );

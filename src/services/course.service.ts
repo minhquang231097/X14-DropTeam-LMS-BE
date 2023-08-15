@@ -1,10 +1,18 @@
 import { Course, ICourse } from "@/models/course.model";
 import { CourseRepository } from "@/repository/course.repo";
+import workplaceService from "./workplace.service";
+import { FindWorkplaceDto } from "@/types/workplace";
 
 const courseRepository = new CourseRepository(Course);
 
-const CreateCourse = async (payload: ICourse) => {
-  return await courseRepository.Create(payload);
+const CreateCourse = async (workplace_code: string, payload: ICourse) => {
+  const _workplace: any = await workplaceService.GetWorkplaceByCode(
+    workplace_code,
+  );
+  return await courseRepository.Create({
+    ...payload,
+    workplace: _workplace?._id,
+  });
 };
 
 const GetAllCourse = async (page: number, limit: number) => {
@@ -21,6 +29,10 @@ const GetCourseById = async (id: string) => {
 
 const GetCourseByCode = async (code: string) => {
   return await courseRepository.FindCourseByCode(code);
+};
+
+const GetTotalCourse = async () => {
+  return (await courseRepository.FindAll()).length;
 };
 
 const SearchCourseByCondition = async (
@@ -58,4 +70,5 @@ export default {
   DeletedCourse,
   GetCourseByCode,
   UpdateManyCourse,
+  GetTotalCourse,
 };

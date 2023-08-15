@@ -7,8 +7,8 @@ const registe_CourseSchema = new Schema({
   phone_number: Number,
   course: { type: Schema.Types.ObjectId, ref: "courses" },
   workplace: { type: Schema.Types.ObjectId, ref: "workplaces" },
+  student: { type: Schema.Types.ObjectId, ref: "users" },
   note: String,
-  student: { type: Schema.Types.ObjectId, ref: "students" },
   create_at: {
     type: Date,
     default: Date.now(),

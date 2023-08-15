@@ -5,7 +5,7 @@ const lessonRouter = express.Router();
 
 lessonRouter.get("/", lessonController.GetLesson);
 lessonRouter.post("/", lessonController.CreateNewLesson);
-lessonRouter.put("/", lessonController.UpdateLesson);
-lessonRouter.delete("/", lessonController.DeleteLesson);
+lessonRouter.put("/:id", lessonController.UpdateLesson);
+lessonRouter.delete("/:id", lessonController.DeleteLesson);
 
 export default lessonRouter;

@@ -3,7 +3,7 @@ import { Document, Schema, model } from "mongoose";
 
 const class_studentSchema = new Schema({
   class: { type: Schema.Types.ObjectId, ref: "classes" },
-  student: { type: Schema.Types.ObjectId, ref: "students" },
+  student: { type: Schema.Types.ObjectId, ref: "users" },
   create_at: {
     type: Date,
     default: Date.now(),

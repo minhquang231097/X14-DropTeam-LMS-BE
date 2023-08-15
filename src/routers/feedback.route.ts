@@ -4,8 +4,8 @@ import express from "express";
 const feedbackRouter = express.Router();
 
 feedbackRouter.post("/", feedbackController.CreateNewFeekback);
-feedbackRouter.put("/", feedbackController.UpdateFeedback);
+feedbackRouter.put("/:id", feedbackController.UpdateFeedback);
 feedbackRouter.get("/", feedbackController.GetFeedback);
-feedbackRouter.delete("/", feedbackController.DeleteFeedback);
+feedbackRouter.delete("/:id", feedbackController.DeleteFeedback);
 
 export default feedbackRouter;

@@ -3,7 +3,7 @@ import { Document, Schema, model } from "mongoose";
 
 const worplace_adminSchema = new Schema({
   workplace: { type: Schema.Types.ObjectId, ref: "workplaces" },
-  admin: { type: Schema.Types.ObjectId, ref: "admins" },
+  admin: { type: Schema.Types.ObjectId, ref: "users" },
   create_at: {
     type: Date,
     default: Date.now(),

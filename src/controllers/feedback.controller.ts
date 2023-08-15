@@ -24,18 +24,18 @@ const GetFeedback = async (req: Request, res: Response) => {
   const p = Number(page);
   const l = Number(limit);
   try {
-    if (course_code && page && limit) {
+    if (course_code) {
       const feedback = await feedbackService.GetFeedbackByCourseCode(
-        course_code as string,
+        course_code as string, p ,l
       );
       if (!feedback)
         return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[400], 400));
       res.json(
         new HttpResponseData(RESPONSE_CONFIG.MESSAGE[200], 200, feedback),
       );
-    } else if (email && page && limit) {
+    } else if (email) {
       const student = await feedbackService.GetFeedbackByEmailStudent(
-        email as string,
+        email as string, p ,l
       );
       if (!student)
         return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[400], 400));
@@ -59,7 +59,7 @@ const GetFeedback = async (req: Request, res: Response) => {
 };
 
 const UpdateFeedback = async (req: Request, res: Response) => {
-  const { id } = req.query;
+  const { id } = req.params;
   const payload = req.body;
   try {
     const feedback = await feedbackService.UpdateFeedback(
@@ -75,7 +75,7 @@ const UpdateFeedback = async (req: Request, res: Response) => {
 };
 
 const DeleteFeedback = async (req: Request, res: Response) => {
-  const { id } = req.query;
+  const { id } = req.params;
   try {
     const feedback = await feedbackService.DeleteFeedbackById(id as string);
     if (!feedback)

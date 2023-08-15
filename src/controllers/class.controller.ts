@@ -39,10 +39,11 @@ const AddStudentToClass = async (req: Request, res: Response) => {
 };
 
 const GetClass = async (req: Request, res: Response) => {
-  const { page, limit, id, code, email } = req.query;
+  const { page, limit, id, email, search, course_code } = req.query;
   const p = Number(page);
   const l = Number(limit);
   try {
+    const total = await classService.GetTotalClass();
     if (id) {
       const classExist = await classService.GetClassById(id as string);
       if (!classExist) {
@@ -51,15 +52,39 @@ const GetClass = async (req: Request, res: Response) => {
       return res.json(
         new HttpResponseData(RESPONSE_CONFIG.MESSAGE[200], 200, classExist),
       );
-    } else if (code) {
-      const classExist = await classService.GetClassByCode(code as string);
+    } else if (course_code) {
+      const _class = await classService.GetClassByCourseCode(
+        course_code as string,
+        p,
+        l,
+      );
+      if (!_class) {
+        return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[404], 404));
+      }
+      res.json(
+        new HttpResponseData(RESPONSE_CONFIG.MESSAGE[200], 200, {
+          _class,
+          page: p,
+          total,
+        }),
+      );
+    } else if (search) {
+      const classExist = await classService.SearchClassByCondition(
+        p,
+        l,
+        search as string,
+      );
       if (!classExist) {
         return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[404], 404));
       }
       res.json(
-        new HttpResponseData(RESPONSE_CONFIG.MESSAGE[200], 200, classExist),
+        new HttpResponseData(RESPONSE_CONFIG.MESSAGE[200], 200, {
+          classExist,
+          page: p,
+          total,
+        }),
       );
-    } else if (email && page && limit) {
+    } else if (email) {
       const classExist = await classStudentService.GetClassByStudentEmail(
         p,
         l,
@@ -69,7 +94,11 @@ const GetClass = async (req: Request, res: Response) => {
         return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[404], 404));
       }
       res.json(
-        new HttpResponseData(RESPONSE_CONFIG.MESSAGE[200], 200, classExist),
+        new HttpResponseData(RESPONSE_CONFIG.MESSAGE[200], 200, {
+          classExist,
+          page: p,
+          total,
+        }),
       );
     } else if (page && limit) {
       const allClasses = await classService.GetAllClass(p, l);
@@ -78,9 +107,9 @@ const GetClass = async (req: Request, res: Response) => {
       }
       res.json(
         new HttpResponseData(RESPONSE_CONFIG.MESSAGE[200], 200, {
-          list: allClasses,
+          allClasses,
           page: p,
-          count: allClasses.length,
+          total,
         }),
       );
     } else {
@@ -89,7 +118,11 @@ const GetClass = async (req: Request, res: Response) => {
         return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[404], 404));
       }
       res.json(
-        new HttpResponseData(RESPONSE_CONFIG.MESSAGE[200], 200, allClasses),
+        new HttpResponseData(RESPONSE_CONFIG.MESSAGE[200], 200, {
+          allClasses,
+          page: p,
+          total,
+        }),
       );
     }
   } catch (error) {
@@ -97,27 +130,8 @@ const GetClass = async (req: Request, res: Response) => {
   }
 };
 
-const SearchClass = async (req: Request, res: Response) => {
-  const { q, page, limit } = req.query;
-  const p = Number(page);
-  const l = Number(limit);
-  try {
-    const result = await classService.SearchClassByCondition(p, l, q as string);
-    if (result.length == 0) {
-      return res.json(
-        new HttpException(RESPONSE_CONFIG.MESSAGE.USER.NOT_FOUND, 404),
-      );
-    }
-    res.json(
-      new HttpResponseData(RESPONSE_CONFIG.MESSAGE.USER.FOUND, 200, result),
-    );
-  } catch (error) {
-    return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.USER.WRONG, 404));
-  }
-};
-
 const UpdateClass = async (req: Request, res: Response) => {
-  const { id } = req.query;
+  const { id } = req.params;
   const update = req.body;
   try {
     const classUpdated = await classService.UpdateOneClass(
@@ -136,7 +150,7 @@ const UpdateClass = async (req: Request, res: Response) => {
 };
 
 const DeleteOneClass = async (req: Request, res: Response) => {
-  const { id } = req.query;
+  const { id } = req.params;
   try {
     const classDeleted = await classService.DeleteClassById(id as string);
     if (!classDeleted) {
@@ -168,7 +182,6 @@ const DeleteManyCourse = async (req: Request, res: Response) => {
 export default {
   CreateNewClass,
   GetClass,
-  SearchClass,
   UpdateClass,
   DeleteOneClass,
   DeleteManyCourse,
