@@ -24,7 +24,7 @@ const GetLesson = async (req: Request, res: Response) => {
   const p = Number(page);
   const l = Number(limit);
   try {
-    if (ss_code && page && limit) {
+    if (ss_code) {
       const all = await lessonService.GetLessonBySessionCode(
         ss_code as string,
         p,

@@ -11,33 +11,40 @@ const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const bcryptjs_1 = __importDefault(require("bcryptjs"));
 const class_student_service_1 = __importDefault(require("@/services/class.student.service"));
 const GetUser = async (req, res) => {
-    const { page, limit, email, attendanceId, class_code } = req.query;
+    const { page, limit, email, attendanceId, _class, search } = req.query;
     const p = Number(page);
     const l = Number(limit);
     try {
-        if (email) {
+        if (_class) {
+            const allUsers = await class_student_service_1.default.GetAllStudentInClass(p, l, _class);
+            if (!allUsers) {
+                return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.USER.NOT_FOUND, 404));
+            }
+            res.json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.USER.FOUND, 200, allUsers));
+        }
+        else if (email) {
             const user = await user_service_1.default.GetUserByEmail(email);
             if (!user) {
                 return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.USER.NOT_FOUND, 404));
             }
             res.json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.USER.FOUND, 200, user));
         }
-        else if (page && limit) {
-            const allUsers = await user_service_1.default.GetAllUser(p, l);
-            if (!allUsers) {
-                return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.USER.NOT_FOUND, 404));
-            }
-            res.json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.USER.FOUND, 200, allUsers));
-        }
-        else if (page && limit && attendanceId) {
+        else if (attendanceId) {
             const allUsers = await user_service_1.default.GetUserByAttendance(attendanceId, p, l);
             if (!allUsers) {
                 return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.USER.NOT_FOUND, 404));
             }
             res.json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.USER.FOUND, 200, allUsers));
         }
-        else if (page && limit && class_code) {
-            const allUsers = await class_student_service_1.default.GetAllStudentInClass(p, l, class_code);
+        else if (search) {
+            const result = await user_service_1.default.SearchUserByCondition(p, l, search);
+            if (!result) {
+                return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.USER.NOT_FOUND, 404));
+            }
+            res.json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.USER.FOUND, 200, result));
+        }
+        else if (page && limit) {
+            const allUsers = await user_service_1.default.GetAllUser(p, l);
             if (!allUsers) {
                 return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.USER.NOT_FOUND, 404));
             }
@@ -50,21 +57,6 @@ const GetUser = async (req, res) => {
             }
             res.json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.USER.FOUND, 200, allUsers));
         }
-    }
-    catch (error) {
-        return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.USER.WRONG, 404));
-    }
-};
-const SearchUser = async (req, res) => {
-    const { q, page, limit } = req.query;
-    const p = Number(page);
-    const l = Number(limit);
-    try {
-        const result = await user_service_1.default.SearchUserByCondition(p, l, q);
-        if (result.length == 0) {
-            return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.USER.NOT_FOUND, 404));
-        }
-        res.json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.USER.FOUND, 200, result));
     }
     catch (error) {
         return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.USER.WRONG, 404));
@@ -155,6 +147,5 @@ exports.default = {
     UpdateUserInfo,
     UpdatePassword,
     DeleteUser,
-    SearchUser,
 };
 //# sourceMappingURL=user.controller.js.map

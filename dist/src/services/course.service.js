@@ -1,10 +1,18 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 const course_model_1 = require("@/models/course.model");
 const course_repo_1 = require("@/repository/course.repo");
+const workplace_service_1 = __importDefault(require("./workplace.service"));
 const courseRepository = new course_repo_1.CourseRepository(course_model_1.Course);
-const CreateCourse = async (payload) => {
-    return await courseRepository.Create(payload);
+const CreateCourse = async (workplace_code, payload) => {
+    const _workplace = await workplace_service_1.default.GetWorkplaceByCode(workplace_code);
+    return await courseRepository.Create({
+        ...payload,
+        workplace: _workplace?._id,
+    });
 };
 const GetAllCourse = async (page, limit) => {
     return await courseRepository.FindAllInfoAndPagination(page, limit, "workplace");
@@ -14,6 +22,9 @@ const GetCourseById = async (id) => {
 };
 const GetCourseByCode = async (code) => {
     return await courseRepository.FindCourseByCode(code);
+};
+const GetTotalCourse = async () => {
+    return (await courseRepository.FindAll()).length;
 };
 const SearchCourseByCondition = async (page, limit, searchTerm) => {
     const query = {
@@ -42,5 +53,6 @@ exports.default = {
     DeletedCourse,
     GetCourseByCode,
     UpdateManyCourse,
+    GetTotalCourse,
 };
 //# sourceMappingURL=course.service.js.map

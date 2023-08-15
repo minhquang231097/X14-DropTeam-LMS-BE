@@ -12,44 +12,44 @@ const RegistedNewCourse = async (req, res) => {
     const { course_code, note } = req.body;
     try {
         const newRegist = await regist_course_service_1.default.CreateRegistCourse(course_code, _id, note);
-        res.json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.REGIST.CREATE_SUCCES, newRegist));
+        res.json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.REGIST.CREATE_SUCCES, 200, newRegist));
     }
     catch (error) {
         return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.REGIST.WRONG, 400));
     }
 };
 const GetRegist = async (req, res) => {
-    const { wp_code, course_code, email, page, limit } = req.query;
+    const { _wp, _course, email, page, limit } = req.query;
     const p = Number(page);
     const l = Number(limit);
     try {
-        if (page && limit) {
+        if (_course) {
+            const allRegist = await regist_course_service_1.default.GetRegistByCourseCode(_course, p, l);
+            if (allRegist.length === 0)
+                return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.REGIST.NOT_FOUND, 404));
+            res.json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.REGIST.FOUND_SUCCESS, 200, allRegist));
+        }
+        else if (_wp) {
+            const allRegist = await regist_course_service_1.default.GetRegistByWorkplaceCode(_wp, p, l);
+            if (allRegist.length === 0)
+                return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.REGIST.NOT_FOUND, 404));
+            res.json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.REGIST.FOUND_SUCCESS, 200, allRegist));
+        }
+        else if (email) {
+            const allRegist = await regist_course_service_1.default.GetRegistByCourseCode(_wp, p, l);
+            if (allRegist.length === 0)
+                return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.REGIST.NOT_FOUND, 404));
+            res.json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.REGIST.FOUND_SUCCESS, 200, allRegist));
+        }
+        else if (page && limit) {
             const allRegist = await regist_course_service_1.default.GetAllRegist(p, l);
-            if (!allRegist)
-                return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.REGIST.NOT_FOUND, 404));
-            res.json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.REGIST.FOUND_SUCCESS, 200, allRegist));
-        }
-        else if (page && limit && course_code) {
-            const allRegist = await regist_course_service_1.default.GetRegistByCourseCode(course_code, p, l);
-            if (!allRegist)
-                return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.REGIST.NOT_FOUND, 404));
-            res.json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.REGIST.FOUND_SUCCESS, 200, allRegist));
-        }
-        else if (page && limit && wp_code) {
-            const allRegist = await regist_course_service_1.default.GetRegistByWorkplaceCode(wp_code, p, l);
-            if (!allRegist)
-                return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.REGIST.NOT_FOUND, 404));
-            res.json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.REGIST.FOUND_SUCCESS, 200, allRegist));
-        }
-        else if (page && limit && email) {
-            const allRegist = await regist_course_service_1.default.GetRegistByCourseCode(wp_code, p, l);
-            if (!allRegist)
+            if (allRegist.length === 0)
                 return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.REGIST.NOT_FOUND, 404));
             res.json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.REGIST.FOUND_SUCCESS, 200, allRegist));
         }
         else {
             const allRegist = await regist_course_service_1.default.GetAllRegist(1, 10);
-            if (!allRegist)
+            if (allRegist.length === 0)
                 return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.REGIST.NOT_FOUND, 404));
             res.json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.REGIST.FOUND_SUCCESS, 200, allRegist));
         }

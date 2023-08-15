@@ -39,10 +39,11 @@ const AddStudentToClass = async (req: Request, res: Response) => {
 };
 
 const GetClass = async (req: Request, res: Response) => {
-  const { page, limit, id, code, email } = req.query;
+  const { page, limit, id, email, search, course_code } = req.query;
   const p = Number(page);
   const l = Number(limit);
   try {
+    const total = await classService.GetTotalClass();
     if (id) {
       const classExist = await classService.GetClassById(id as string);
       if (!classExist) {
@@ -51,15 +52,35 @@ const GetClass = async (req: Request, res: Response) => {
       return res.json(
         new HttpResponseData(RESPONSE_CONFIG.MESSAGE.CLASS.FOUND_SUCCESS, 200, classExist),
       );
-    } else if (code) {
-      const classExist = await classService.GetClassByCode(code as string);
+    } else if (course_code) {
+      const _class = await classService.GetClassByCourseCode(
+        course_code as string,
+        p,
+        l,
+      );
+      if (!_class) {
+        return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.CLASS.NOT_FOUND, 404));
+      }
+      res.json(
+        new HttpResponseData(RESPONSE_CONFIG.MESSAGE.CLASS.FOUND_SUCCESS, 200, {
+          _class,
+          page: p,
+          total,
+        }),
+      );
+    } else if (search) {
+      const classExist = await classService.SearchClassByCondition(
+        p,
+        l,
+        search as string,
+      );
       if (!classExist) {
         return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.CLASS.NOT_FOUND, 404));
       }
       res.json(
-        new HttpResponseData(RESPONSE_CONFIG.MESSAGE.CLASS.FOUND_SUCCESS, 200, classExist),
+        new HttpResponseData(RESPONSE_CONFIG.MESSAGE.CLASS.FOUND_SUCCESS, 200, { classExist, page: p, limit: l, total }),
       );
-    } else if (email && page && limit) {
+    } else if (email) {
       const classExist = await classStudentService.GetClassByStudentEmail(
         p,
         l,
@@ -69,7 +90,7 @@ const GetClass = async (req: Request, res: Response) => {
         return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.CLASS.NOT_FOUND, 404));
       }
       res.json(
-        new HttpResponseData(RESPONSE_CONFIG.MESSAGE.CLASS.FOUND_SUCCESS, 200, classExist),
+        new HttpResponseData(RESPONSE_CONFIG.MESSAGE.CLASS.FOUND_SUCCESS, 200, { classExist, page: p, limit: l, total }),
       );
     } else if (page && limit) {
       const allClasses = await classService.GetAllClass(p, l);
@@ -80,7 +101,7 @@ const GetClass = async (req: Request, res: Response) => {
         new HttpResponseData(RESPONSE_CONFIG.MESSAGE.CLASS.FOUND_SUCCESS, 200, {
           list: allClasses,
           page: p,
-          count: allClasses.length,
+          total,
         }),
       );
     } else {
@@ -89,30 +110,11 @@ const GetClass = async (req: Request, res: Response) => {
         return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.CLASS.NOT_FOUND, 404));
       }
       res.json(
-        new HttpResponseData(RESPONSE_CONFIG.MESSAGE.CLASS.FOUND_SUCCESS, 200, allClasses),
+        new HttpResponseData(RESPONSE_CONFIG.MESSAGE.CLASS.FOUND_SUCCESS, 200, { allClasses, page: p, limit: l, total }),
       );
     }
   } catch (error) {
     return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.CLASS.WRONG, 404));
-  }
-};
-
-const SearchClass = async (req: Request, res: Response) => {
-  const { q, page, limit } = req.query;
-  const p = Number(page);
-  const l = Number(limit);
-  try {
-    const result = await classService.SearchClassByCondition(p, l, q as string);
-    if (result.length == 0) {
-      return res.json(
-        new HttpException(RESPONSE_CONFIG.MESSAGE.USER.NOT_FOUND, 404),
-      );
-    }
-    res.json(
-      new HttpResponseData(RESPONSE_CONFIG.MESSAGE.USER.FOUND, 200, result),
-    );
-  } catch (error) {
-    return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.USER.WRONG, 404));
   }
 };
 
@@ -168,7 +170,6 @@ const DeleteManyCourse = async (req: Request, res: Response) => {
 export default {
   CreateNewClass,
   GetClass,
-  SearchClass,
   UpdateClass,
   DeleteOneClass,
   DeleteManyCourse,

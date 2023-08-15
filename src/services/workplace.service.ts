@@ -21,7 +21,7 @@ const GetWorkplaceById = async (id: string) => {
 };
 
 const GetWorkplaceByCode = async (code: string) => {
-  return await workplaceRepository.FindWorkplaceByCode(code);
+  return await workplaceRepository.FindByCondition({ workplace_code: code });
 };
 
 const GetWorkplaceByCodition = async (filter: FindWorkplaceDto) => {
@@ -36,6 +36,24 @@ const DeletedWorkplace = async (id: string) => {
   return await workplaceRepository.DeleteOne(id);
 };
 
+const GetTotalWorkplace = async () => {
+  return (await workplaceRepository.FindAll()).length;
+};
+
+const SearchWorkplaceByCondition = async (
+  page: number,
+  limit: number,
+  searchTerm?: string,
+) => {
+  const query = {
+    $or: [
+      { name: { $regex: searchTerm, $options: "i" } },
+      { workplace_code: { $regex: searchTerm, $options: "i" } },
+    ],
+  };
+  return await workplaceRepository.SearchByCondition(page, limit, query);
+};
+
 export default {
   CreateWorkplace,
   GetWorkplaceByCodition,
@@ -45,4 +63,6 @@ export default {
   UpdateWorkplace,
   DeletedWorkplace,
   GetWorkplaceByCode,
+  GetTotalWorkplace,
+  SearchWorkplaceByCondition,
 };

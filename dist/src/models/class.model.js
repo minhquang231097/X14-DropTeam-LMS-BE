@@ -13,7 +13,7 @@ const classSchema = new mongoose_1.Schema({
     course: { type: mongoose_1.Schema.Types.ObjectId, ref: "courses" },
     class_code: { type: String, unique: [true, response_config_1.RESPONSE_CONFIG.MESSAGE.CLASS.CODE_EXIST] },
     session_per_class: Number,
-    start_at: Date,
+    start_at: String,
     end_at: String,
     total_hours: Number,
     total_session: Number,

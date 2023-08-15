@@ -23,13 +23,13 @@ const GetFeedback = async (req, res) => {
     const p = Number(page);
     const l = Number(limit);
     try {
-        if (course_code && page && limit) {
+        if (course_code) {
             const feedback = await feedback_service_1.default.GetFeedbackByCourseCode(course_code);
             if (!feedback)
                 return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.FEEDBACK.NOT_FOUND, 404));
             res.json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.FEEDBACK.FOUND_SUCCESS, 200, feedback));
         }
-        else if (email && page && limit) {
+        else if (email) {
             const student = await feedback_service_1.default.GetFeedbackByEmailStudent(email);
             if (!student)
                 return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.FEEDBACK.NOT_FOUND, 404));

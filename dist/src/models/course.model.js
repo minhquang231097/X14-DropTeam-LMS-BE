@@ -14,10 +14,9 @@ const courseSchema = new mongoose_1.Schema({
     desc: String,
     session_per_course: Number,
     price: Number,
-    duration: Number,
-    level: Number,
+    level: { type: String, enum: ["BEGINNER", "INTERMEDIATE", "ADVANCED"] },
     rate: Number,
-    discount: Number,
+    discount: { type: Number, default: 0 },
     workplace: { type: mongoose_1.Schema.Types.ObjectId, ref: "workplaces" },
     create_at: {
         type: Date,

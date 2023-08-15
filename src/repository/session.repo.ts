@@ -1,4 +1,4 @@
-import { Model, ObjectId, Types } from "mongoose";
+import { Model } from "mongoose";
 import { BaseRepository } from "./base.repo";
 import { ISession } from "@/models/session.model";
 
@@ -6,11 +6,6 @@ export class SessionRepository extends BaseRepository<ISession> {
   constructor(model: Model<ISession>) {
     super(model);
   }
-
-  async CreateSession(course_id: string, payload: any) {
-    return await this.model.create({ ...payload, course: course_id });
-  }
-
   async FindSessionByCode(session_code: string) {
     const session = await this.model
       .findOne({ session_code })

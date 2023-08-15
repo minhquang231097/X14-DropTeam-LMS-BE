@@ -8,8 +8,12 @@ import courseService from "@/services/course.service";
 
 const CreateCourse = async (req: Request, res: Response) => {
   const payload = req.body;
+  const { workplace_code } = payload;
   try {
-    const newCourse: ICourse = await CourseService.CreateCourse(payload);
+    const newCourse: ICourse = await CourseService.CreateCourse(
+      workplace_code,
+      payload,
+    );
     res.json(
       new HttpResponseData(RESPONSE_CONFIG.MESSAGE.COURSE.CREATE_SUCCES, 200, newCourse),
     );
@@ -21,10 +25,11 @@ const CreateCourse = async (req: Request, res: Response) => {
 };
 
 const GetCourse = async (req: Request, res: Response) => {
-  const { code, id, page, limit } = req.query;
+  const { code, id, page, limit, search } = req.query;
   const p = Number(page);
   const l = Number(limit);
   try {
+    const total = await CourseService.GetTotalCourse();
     if (id) {
       const courseExist = await CourseService.GetCourseById(id as string);
       if (!courseExist) {
@@ -41,6 +46,38 @@ const GetCourse = async (req: Request, res: Response) => {
       res.json(
         new HttpResponseData(RESPONSE_CONFIG.MESSAGE.COURSE.FOUND_SUCCESS, 200, courseExist),
       );
+    } else if (search) {
+      const allCourses = await courseService.SearchCourseByCondition(
+        p,
+        l,
+        search as string,
+      );
+      if (!allCourses) {
+        return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.COURSE.NOT_FOUND, 404));
+      }
+      res.json(
+        new HttpResponseData(RESPONSE_CONFIG.MESSAGE.COURSE.FOUND_SUCCESS, 200, {
+          allCourses,
+          total,
+          page: p,
+        }),
+      );
+    } else if (search) {
+      const allCourses = await courseService.SearchCourseByCondition(
+        p,
+        l,
+        search as string,
+      );
+      if (!allCourses) {
+        return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[404], 404));
+      }
+      res.json(
+        new HttpResponseData(RESPONSE_CONFIG.MESSAGE[200], 200, {
+          allCourses,
+          total,
+          page: p,
+        }),
+      );
     } else if (page && limit) {
       const allCourses = await CourseService.GetAllCourse(p, l);
       if (!allCourses) {
@@ -48,9 +85,9 @@ const GetCourse = async (req: Request, res: Response) => {
       }
       res.json(
         new HttpResponseData(RESPONSE_CONFIG.MESSAGE.COURSE.FOUND_SUCCESS, 200, {
-          list: allCourses,
+          allCourses,
+          total,
           page: p,
-          count: allCourses.length,
         }),
       );
     } else {
@@ -59,34 +96,15 @@ const GetCourse = async (req: Request, res: Response) => {
         return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.COURSE.NOT_FOUND, 404));
       }
       res.json(
-        new HttpResponseData(RESPONSE_CONFIG.MESSAGE.COURSE.FOUND_SUCCESS, 200, allCourses),
+        new HttpResponseData(RESPONSE_CONFIG.MESSAGE.COURSE.FOUND_SUCCESS, 200, {
+          allCourses,
+          total,
+          page: p,
+        }),
       );
     }
   } catch (error) {
-    return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.COURSE.WRONG, 400));
-  }
-};
-
-const SearchCourse = async (req: Request, res: Response) => {
-  const { q, page, limit } = req.query;
-  const p = Number(page);
-  const l = Number(limit);
-  try {
-    const result = await courseService.SearchCourseByCondition(
-      p,
-      l,
-      q as string,
-    );
-    if (result.length == 0) {
-      return res.json(
-        new HttpException(RESPONSE_CONFIG.MESSAGE.USER.NOT_FOUND, 404),
-      );
-    }
-    res.json(
-      new HttpResponseData(RESPONSE_CONFIG.MESSAGE.USER.FOUND, 200, result),
-    );
-  } catch (error) {
-    return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.USER.WRONG, 404));
+    return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE[404], 404));
   }
 };
 
@@ -145,5 +163,4 @@ export default {
   DeletedCourse,
   DeletedAllCourse,
   GetCourse,
-  SearchCourse,
 };

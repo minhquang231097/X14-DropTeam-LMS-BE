@@ -36,11 +36,6 @@ export const CourseSchema = {
         'string.max': `{{#label}} should have a maximum length of {#limit}`,
         'any.required': `{{#label}} is a required field`
       }),
-      duration: Joi.number().integer().min(0).messages({
-        'number.base': `{{#label}} must be a number`,
-        'number.min': `{{#label}} must greater than or equal to {{#limit}}`,
-        'number.integer': `{{#label}} must be an integer `,
-      }),
       level: Joi.number().integer().min(0).messages({
         'number.base': `{{#label}} must be a number`,
         'number.min': `{{#label}} must greater than or equal to {{#limit}}`,
@@ -63,8 +58,7 @@ export const CourseSchema = {
       session_per_course: Joi.number().required(),
       price: Joi.number().max(10).required(),
       desc: Joi.string().max(500).required(),
-      duration: Joi.number().integer().min(0),
-      level: Joi.number().integer().min(0),
+      level: Joi.string().min(0),
       rate: Joi.number().min(0),
       discount: Joi.number().integer().min(0),
     }),

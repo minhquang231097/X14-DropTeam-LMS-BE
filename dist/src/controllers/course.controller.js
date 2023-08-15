@@ -11,8 +11,9 @@ const course_model_1 = require("@/models/course.model");
 const course_service_2 = __importDefault(require("@/services/course.service"));
 const CreateCourse = async (req, res) => {
     const payload = req.body;
+    const { workplace_code } = payload;
     try {
-        const newCourse = await course_service_1.default.CreateCourse(payload);
+        const newCourse = await course_service_1.default.CreateCourse(workplace_code, payload);
         res.json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.COURSE.CREATE_SUCCES, 200, newCourse));
     }
     catch (error) {
@@ -20,10 +21,11 @@ const CreateCourse = async (req, res) => {
     }
 };
 const GetCourse = async (req, res) => {
-    const { code, id, page, limit } = req.query;
+    const { code, id, page, limit, search } = req.query;
     const p = Number(page);
     const l = Number(limit);
     try {
+        const total = await course_service_1.default.GetTotalCourse();
         if (id) {
             const courseExist = await course_service_1.default.GetCourseById(id);
             if (!courseExist) {
@@ -38,15 +40,37 @@ const GetCourse = async (req, res) => {
             }
             res.json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.COURSE.FOUND_SUCCESS, 200, courseExist));
         }
+        else if (search) {
+            const allCourses = await course_service_2.default.SearchCourseByCondition(p, l, search);
+            if (!allCourses) {
+                return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.COURSE.NOT_FOUND, 404));
+            }
+            res.json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.COURSE.FOUND_SUCCESS, 200, {
+                allCourses,
+                total,
+                page: p,
+            }));
+        }
+        else if (search) {
+            const allCourses = await course_service_2.default.SearchCourseByCondition(p, l, search);
+            if (!allCourses) {
+                return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE[404], 404));
+            }
+            res.json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE[200], 200, {
+                allCourses,
+                total,
+                page: p,
+            }));
+        }
         else if (page && limit) {
             const allCourses = await course_service_1.default.GetAllCourse(p, l);
             if (!allCourses) {
                 return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.COURSE.NOT_FOUND, 404));
             }
             res.json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.COURSE.FOUND_SUCCESS, 200, {
-                list: allCourses,
+                allCourses,
+                total,
                 page: p,
-                count: allCourses.length,
             }));
         }
         else {
@@ -54,26 +78,15 @@ const GetCourse = async (req, res) => {
             if (!allCourses) {
                 return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.COURSE.NOT_FOUND, 404));
             }
-            res.json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.COURSE.FOUND_SUCCESS, 200, allCourses));
+            res.json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.COURSE.FOUND_SUCCESS, 200, {
+                allCourses,
+                total,
+                page: p,
+            }));
         }
     }
     catch (error) {
-        return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.COURSE.WRONG, 400));
-    }
-};
-const SearchCourse = async (req, res) => {
-    const { q, page, limit } = req.query;
-    const p = Number(page);
-    const l = Number(limit);
-    try {
-        const result = await course_service_2.default.SearchCourseByCondition(p, l, q);
-        if (result.length == 0) {
-            return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.USER.NOT_FOUND, 404));
-        }
-        res.json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.USER.FOUND, 200, result));
-    }
-    catch (error) {
-        return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.USER.WRONG, 404));
+        return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE[404], 404));
     }
 };
 const UpdateCourse = async (req, res) => {
@@ -123,6 +136,5 @@ exports.default = {
     DeletedCourse,
     DeletedAllCourse,
     GetCourse,
-    SearchCourse,
 };
 //# sourceMappingURL=course.controller.js.map

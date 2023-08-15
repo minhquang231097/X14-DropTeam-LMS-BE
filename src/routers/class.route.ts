@@ -14,12 +14,11 @@ classRouter.post(
 );
 classRouter.post(
   "/add-student",
-  verifyAccessJWT,
+  // verifyAccessJWT,
   classController.AddStudentToClass,
 );
 classRouter.put("/", verifyAccessJWT, classController.UpdateClass);
 classRouter.get("/", classController.GetClass);
-classRouter.get("/search", classController.SearchClass);
 classRouter.delete("/all", classController.DeleteManyCourse);
 classRouter.delete("/", verifyAccessJWT, classController.DeleteOneClass);
 

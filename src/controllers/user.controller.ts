@@ -8,19 +8,42 @@ import { Request, Response } from "express";
 import classStudentService from "@/services/class.student.service";
 
 const GetUser = async (req: Request, res: Response) => {
-  const { page, limit, email, attendanceId, class_code } = req.query;
+  const { page, limit, email, attendanceId, _class, search } = req.query;
   const p = Number(page);
   const l = Number(limit);
+  const total = await userService.GetTotalUser();
   try {
-    if (email) {
+    if (_class) {
+      const allUsers = await classStudentService.GetAllStudentInClass(p, l, _class as string,);
+      if (!allUsers) {
+        return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.USER.NOT_FOUND, 404),);
+      }
+      res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.USER.FOUND, 200, { allUsers, page: p, limit: l, }),);
+    } else if (email) {
       const user = await userService.GetUserByEmail(email as string);
       if (!user) {
+        return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.USER.NOT_FOUND, 404),);
+      }
+      res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.USER.FOUND, 200, user),);
+    } else if (attendanceId) {
+      const allUsers = await userService.GetUserByAttendance(attendanceId as string, p, l,);
+      if (!allUsers) {
         return res.json(
           new HttpException(RESPONSE_CONFIG.MESSAGE.USER.NOT_FOUND, 404),
         );
       }
       res.json(
-        new HttpResponseData(RESPONSE_CONFIG.MESSAGE.USER.FOUND, 200, user),
+        new HttpResponseData(RESPONSE_CONFIG.MESSAGE.USER.FOUND, 200, allUsers),
+      );
+    } else if (search) {
+      const result = await userService.SearchUserByCondition(p, l, search as string,);
+      if (!result) {
+        return res.json(
+          new HttpException(RESPONSE_CONFIG.MESSAGE.USER.NOT_FOUND, 404),
+        );
+      }
+      res.json(
+        new HttpResponseData(RESPONSE_CONFIG.MESSAGE.USER.FOUND, 200, { result, page: 1, limit: 10, }),
       );
     } else if (page && limit) {
       const allUsers = await userService.GetAllUser(p, l);
@@ -30,35 +53,7 @@ const GetUser = async (req: Request, res: Response) => {
         );
       }
       res.json(
-        new HttpResponseData(RESPONSE_CONFIG.MESSAGE.USER.FOUND, 200, allUsers),
-      );
-    } else if (page && limit && attendanceId) {
-      const allUsers = await userService.GetUserByAttendance(
-        attendanceId as string,
-        p,
-        l,
-      );
-      if (!allUsers) {
-        return res.json(
-          new HttpException(RESPONSE_CONFIG.MESSAGE.USER.NOT_FOUND, 404),
-        );
-      }
-      res.json(
-        new HttpResponseData(RESPONSE_CONFIG.MESSAGE.USER.FOUND, 200, allUsers),
-      );
-    } else if (page && limit && class_code) {
-      const allUsers = await classStudentService.GetAllStudentInClass(
-        p,
-        l,
-        class_code as string,
-      );
-      if (!allUsers) {
-        return res.json(
-          new HttpException(RESPONSE_CONFIG.MESSAGE.USER.NOT_FOUND, 404),
-        );
-      }
-      res.json(
-        new HttpResponseData(RESPONSE_CONFIG.MESSAGE.USER.FOUND, 200, allUsers),
+        new HttpResponseData(RESPONSE_CONFIG.MESSAGE.USER.FOUND, 200, { allUsers, page: p, limit: l, total, }),
       );
     } else {
       const allUsers = await userService.GetAllUser(1, 10);
@@ -68,28 +63,9 @@ const GetUser = async (req: Request, res: Response) => {
         );
       }
       res.json(
-        new HttpResponseData(RESPONSE_CONFIG.MESSAGE.USER.FOUND, 200, allUsers),
+        new HttpResponseData(RESPONSE_CONFIG.MESSAGE.USER.FOUND, 200, { allUsers, page: 1, limit: 10, total, }),
       );
     }
-  } catch (error) {
-    return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.USER.WRONG, 404));
-  }
-};
-
-const SearchUser = async (req: Request, res: Response) => {
-  const { q, page, limit } = req.query;
-  const p = Number(page);
-  const l = Number(limit);
-  try {
-    const result = await userService.SearchUserByCondition(p, l, q as string);
-    if (result.length == 0) {
-      return res.json(
-        new HttpException(RESPONSE_CONFIG.MESSAGE.USER.NOT_FOUND, 404),
-      );
-    }
-    res.json(
-      new HttpResponseData(RESPONSE_CONFIG.MESSAGE.USER.FOUND, 200, result),
-    );
   } catch (error) {
     return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.USER.WRONG, 404));
   }
@@ -201,5 +177,4 @@ export default {
   UpdateUserInfo,
   UpdatePassword,
   DeleteUser,
-  SearchUser,
 };

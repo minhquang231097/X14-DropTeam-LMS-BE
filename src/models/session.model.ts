@@ -3,7 +3,7 @@ import moment from "moment";
 import { Document, Schema, model } from "mongoose";
 
 const sessionSchema = new Schema({
-  course: { type: Schema.Types.ObjectId, ref: "courses" },
+  course: { type: Schema.Types.ObjectId, ref: "courses", required: true },
   class: { type: Schema.Types.ObjectId, ref: "classes" },
   session_code: { type: String, unique: [true, RESPONSE_CONFIG.MESSAGE.SESSION.CODE_EXIST] },
   session_name: { type: String, unique: [true, RESPONSE_CONFIG.MESSAGE.SESSION.NAME_EXIST] },

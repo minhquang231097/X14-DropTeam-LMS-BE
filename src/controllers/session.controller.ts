@@ -6,9 +6,13 @@ import { Request, Response } from "express";
 
 const CreateNewSession = async (req: Request, res: Response) => {
   const payload = req.body;
-  const { course_code } = payload;
+  const { course_code, class_code } = payload;
   try {
-    const session = await sessionService.CreateSession(course_code, payload);
+    const session = await sessionService.CreateSession(
+      course_code as string,
+      class_code as string,
+      payload,
+    );
     res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.SESSION.CREATE_SUCCES, 200, session));
   } catch (error) {
     return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.SESSION.WRONG, 400));
@@ -16,27 +20,27 @@ const CreateNewSession = async (req: Request, res: Response) => {
 };
 
 const GetSession = async (req: Request, res: Response) => {
-  const { page, limit, course_code, class_code, id } = req.query;
+  const { page, limit, _course, _class, id } = req.query;
   const p = Number(page);
   const l = Number(limit);
   try {
     if (id) {
       const found = await sessionService.GetSessionById(id as string);
-      if (!found)
+      if (found.length === 0)
         return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.SESSION.NOT_FOUND, 404));
       res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.SESSION.FOUND_SUCCESS, 200, found));
-    } else if (course_code && page && limit) {
+    } else if (_course) {
       const session = await sessionService.GetSessionByCourseCode(
-        course_code as string,
+        _course as string,
       );
-      if (!session)
+      if (session.length === 0)
         return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.SESSION.NOT_FOUND, 404));
       res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.SESSION.FOUND_SUCCESS, 200, session));
-    } else if (class_code && page && limit) {
-      const found = await sessionService.GetSessionByClassCode(
-        class_code as string,
+    } else if (_class) {
+      const found: any = await sessionService.GetSessionByClassCode(
+        _class as string,
       );
-      if (!found)
+      if (found.length === 0)
         return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.SESSION.NOT_FOUND, 404));
       res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.SESSION.FOUND_SUCCESS, 200, found));
     } else if (page && limit) {
@@ -56,7 +60,7 @@ const GetSession = async (req: Request, res: Response) => {
 };
 
 const UpdateSession = async (req: Request, res: Response) => {
-  const { id } = req.query;
+  const { id } = req.params;
   const payload = req.body;
   try {
     const session = await sessionService.UpdateSessionById(
@@ -72,7 +76,7 @@ const UpdateSession = async (req: Request, res: Response) => {
 };
 
 const DeleteSession = async (req: Request, res: Response) => {
-  const { id } = req.query;
+  const { id } = req.params;
   try {
     const session = await sessionService.DeletedCourse(id as string);
     if (!session)

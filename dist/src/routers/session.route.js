@@ -10,7 +10,7 @@ const express_1 = __importDefault(require("express"));
 const sessionRouter = express_1.default.Router();
 sessionRouter.get("/", session_controller_1.default.GetSession);
 sessionRouter.post("/", (0, validatejoi_1.ValidateJoi)(session_joi_1.SessionSchema.Session.create_session), session_controller_1.default.CreateNewSession);
-sessionRouter.put("/", (0, validatejoi_1.ValidateJoi)(session_joi_1.SessionSchema.Session.update_session), session_controller_1.default.UpdateSession);
-sessionRouter.delete("/", session_controller_1.default.DeleteSession);
+sessionRouter.put("/:id", (0, validatejoi_1.ValidateJoi)(session_joi_1.SessionSchema.Session.update_session), session_controller_1.default.UpdateSession);
+sessionRouter.delete("/:id", session_controller_1.default.DeleteSession);
 exports.default = sessionRouter;
 //# sourceMappingURL=session.route.js.map

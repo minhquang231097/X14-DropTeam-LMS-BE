@@ -78,6 +78,10 @@ const DeleteUserByCondition = async (filter: any) => {
   return await userRepository.DeleteByCondition(filter);
 };
 
+const GetTotalUser = async () => {
+  return (await userRepository.FindAll()).length;
+};
+
 export default {
   CreateUser,
   SearchUserByCondition,
@@ -91,4 +95,5 @@ export default {
   UpdateUserByCondition,
   GetUserByCondition,
   GetUserByAttendance,
+  GetTotalUser,
 };

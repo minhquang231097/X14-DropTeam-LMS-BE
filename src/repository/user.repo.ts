@@ -1,6 +1,5 @@
-import { IUser, User } from "@/models/user.model";
-import { FindUserDto, UpdateUserDto } from "@/types/user";
-import { Model, ObjectId } from "mongoose";
+import { IUser } from "@/models/user.model";
+import { Model } from "mongoose";
 import { BaseRepository } from "./base.repo";
 
 export class UserRepository extends BaseRepository<IUser> {

@@ -16,7 +16,7 @@ class BaseRepository {
         return await createdEntity.save();
     }
     async FindById(id, populate) {
-        return this.model.findById(`${id}`).populate(populate);
+        return this.model.findById(id).populate(populate);
     }
     async FindByCondition(filter, populate) {
         return this.model.findOne(filter).populate(populate);
@@ -24,9 +24,9 @@ class BaseRepository {
     async FindByConditionAndPagination(page, limit, filter, populate) {
         return this.model
             .find(filter)
+            .populate(populate)
             .skip((page - 1) * limit)
-            .limit(limit)
-            .populate(populate);
+            .limit(limit);
     }
     async FindAll() {
         return this.model.find();

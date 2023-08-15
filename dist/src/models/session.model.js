@@ -8,7 +8,7 @@ const response_config_1 = require("@/configs/response.config");
 const moment_1 = __importDefault(require("moment"));
 const mongoose_1 = require("mongoose");
 const sessionSchema = new mongoose_1.Schema({
-    course: { type: mongoose_1.Schema.Types.ObjectId, ref: "courses" },
+    course: { type: mongoose_1.Schema.Types.ObjectId, ref: "courses", required: true },
     class: { type: mongoose_1.Schema.Types.ObjectId, ref: "classes" },
     session_code: { type: String, unique: [true, response_config_1.RESPONSE_CONFIG.MESSAGE.SESSION.CODE_EXIST] },
     session_name: { type: String, unique: [true, response_config_1.RESPONSE_CONFIG.MESSAGE.SESSION.NAME_EXIST] },

@@ -39,11 +39,6 @@ exports.CourseSchema = {
                 'string.max': `{{#label}} should have a maximum length of {#limit}`,
                 'any.required': `{{#label}} is a required field`
             }),
-            duration: joi_1.default.number().integer().min(0).messages({
-                'number.base': `{{#label}} must be a number`,
-                'number.min': `{{#label}} must greater than or equal to {{#limit}}`,
-                'number.integer': `{{#label}} must be an integer `,
-            }),
             level: joi_1.default.number().integer().min(0).messages({
                 'number.base': `{{#label}} must be a number`,
                 'number.min': `{{#label}} must greater than or equal to {{#limit}}`,
@@ -66,8 +61,7 @@ exports.CourseSchema = {
             session_per_course: joi_1.default.number().required(),
             price: joi_1.default.number().max(10).required(),
             desc: joi_1.default.string().max(500).required(),
-            duration: joi_1.default.number().integer().min(0),
-            level: joi_1.default.number().integer().min(0),
+            level: joi_1.default.string().min(0),
             rate: joi_1.default.number().min(0),
             discount: joi_1.default.number().integer().min(0),
         }),

@@ -8,7 +8,7 @@ const classSchema = new Schema({
   course: { type: Schema.Types.ObjectId, ref: "courses" },
   class_code: { type: String, unique: [true, RESPONSE_CONFIG.MESSAGE.CLASS.CODE_EXIST] },
   session_per_class: Number,
-  start_at: Date,
+  start_at: String,
   end_at: String,
   total_hours: Number,
   total_session: Number,
@@ -33,7 +33,7 @@ export interface IClass extends Document {
   workplace: string;
   course: string;
   class_code: string;
-  start_at: Date;
+  start_at: string;
   end_at: string;
   total_hours: number;
   total_session: number;

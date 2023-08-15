@@ -6,10 +6,22 @@ import classService from "./class.service";
 
 const sessionRepository = new SessionRepository(Session);
 
-const CreateSession = async (course_code: string, payload: any) => {
-  const course = await courseService.GetCourseByCode(course_code);
-  const course_id = course?._id;
-  return sessionRepository.CreateSession(course_id, payload);
+const CreateSession = async (
+  course_code: string,
+  class_code: string,
+  payload: any,
+) => {
+  const [_course, _class] = await Promise.all([
+    courseService.GetCourseByCode(course_code),
+    classService.GetClassByCode(class_code),
+  ]);
+  const course_id = _course?._id;
+  const class_id = _class?._id;
+  return sessionRepository.Create({
+    ...payload,
+    course: course_id,
+    class: class_id,
+  });
 };
 
 const GetAllSession = async (page: number, limit: number) => {

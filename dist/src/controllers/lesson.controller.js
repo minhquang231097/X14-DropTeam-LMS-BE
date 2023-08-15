@@ -23,7 +23,7 @@ const GetLesson = async (req, res) => {
     const p = Number(page);
     const l = Number(limit);
     try {
-        if (ss_code && page && limit) {
+        if (ss_code) {
             const all = await lesson_service_1.default.GetLessonBySessionCode(ss_code, p, l);
             if (!all)
                 return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.LESSON.NOT_FOUND, 404));
