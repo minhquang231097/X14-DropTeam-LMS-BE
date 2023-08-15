@@ -12,7 +12,7 @@ exports.ClassSchema = {
             workplace: joi_1.default.string().required(),
             course: joi_1.default.string().required(),
             class_code: joi_1.default.string().max(10).required(),
-            start_at: joi_1.default.date().required(),
+            start_at: joi_1.default.string().required(),
             end_at: joi_1.default.string().optional(),
             session_per_week: joi_1.default.number().integer().optional(),
             schedule: joi_1.default.array().required(),

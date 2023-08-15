@@ -9,7 +9,7 @@ export class RegistedCourseRepository extends BaseRepository<IRegistedCourse> {
 
   async FindRegistbyCourseId(id: string, page: number, limit: number) {
     return this.model
-      .find({ course: id })
+      .findOne({ course: id })
       .skip((page - 1) * limit)
       .limit(limit)
       .populate(["course", "workplaces", "student"]);

@@ -38,10 +38,10 @@ app.use("/api/v1/course", course_route_1.default);
 app.use("/api/v1/class", class_route_1.default);
 app.use("/api/v1/session", session_route_1.default);
 app.use("/api/v1/lesson", lesson_route_1.default);
-app.use("/api/vi/regist-course", regist_course_route_1.default);
-app.use("/api/vi/feedback", feedback_route_1.default);
-app.use("/api/vi/attendance", attendance_route_1.default);
-app.use("/api/vi/upload", upload_route_1.default);
+app.use("/api/v1/regist-course", regist_course_route_1.default);
+app.use("/api/v1/feedback", feedback_route_1.default);
+app.use("/api/v1/attendance", attendance_route_1.default);
+app.use("/api/v1/upload", upload_route_1.default);
 app.listen(port, () => {
     console.log(`Server is running at http://localhost:${port}`);
 });

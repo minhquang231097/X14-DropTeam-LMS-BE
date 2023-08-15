@@ -8,7 +8,7 @@ class RegistedCourseRepository extends base_repo_1.BaseRepository {
     }
     async FindRegistbyCourseId(id, page, limit) {
         return this.model
-            .find({ course: id })
+            .findOne({ course: id })
             .skip((page - 1) * limit)
             .limit(limit)
             .populate(["course", "workplaces", "student"]);

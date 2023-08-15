@@ -8,7 +8,7 @@ export const ClassSchema = {
       workplace: Joi.string().required(),
       course: Joi.string().required(),
       class_code: Joi.string().max(10).required(),
-      start_at: Joi.date().required(),
+      start_at: Joi.string().required(),
       end_at: Joi.string().optional(),
       session_per_week: Joi.number().integer().optional(),
       schedule: Joi.array().required(),

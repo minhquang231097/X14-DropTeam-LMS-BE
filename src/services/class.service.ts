@@ -14,97 +14,100 @@ const CreateOneClass = async (
   course_code: string,
   payload: IClass,
 ) => {
-  const { start_at, session_per_week, schedule, total_session } = payload;
-  const [_mentor, _workplace, _course] = await Promise.all([
+  const { start_at, session_per_week, schedule, total_session, class_code } = payload;
+  const [_mentor, _workplace, _course, _class_code] = await Promise.all([
     userService.GetUserByEmail(email_mentor),
     workplaceService.GetWorkplaceByCode(workplace_code),
     courseService.GetCourseByCode(course_code),
+    classRepository.FindByCondition({class_code: class_code as string }),
   ]);
   const id_mentor = _mentor?._id;
   const id_workplace = _workplace?._id;
   const id_course = _course?._id;
+  if(!_class_code){
+    const number_week = total_session / Number(session_per_week);
+    const day_start = new Date(start_at).getDay();
+    const weekStart = GetWeekNumber(new Date(start_at));
 
-  const number_week = total_session / Number(session_per_week);
-  const day_start = new Date(start_at).getDay();
-  const weekStart = GetWeekNumber(new Date(start_at));
-  const holidays: any = [
-    new Date("2023-01-01"), // New Year's Day
-    new Date("2023-02-01"), // Tết Nguyên Đán (Lunar New Year's Day)
-    new Date("2023-02-02"), // Tết Nguyên Đán (Lunar New Year's Day)
-    new Date("2023-02-03"), // Tết Nguyên Đán (Lunar New Year's Day)
-    new Date("2023-02-04"), // Tết Nguyên Đán (Lunar New Year's Day)
-    new Date("2023-02-05"), // Tết Nguyên Đán (Lunar New Year's Day)
-    new Date("2023-02-06"), // Tết Nguyên Đán (Lunar New Year's Day)
-    new Date("2023-02-07"), // Tết Nguyên Đán (Lunar New Year's Day)
-    new Date("2023-04-15"), // Anniversary of Hung Kings
-    new Date("2023-04-30"), // Reunification Day
-    new Date("2023-05-01"), // International Workers' Day
-    new Date("2023-09-02"), // National Day
-  ];
-
-  const start = schedule.indexOf(day_start);
-  let week_end;
-  let date_end;
-  if (start === 0 && Number.isInteger(number_week)) {
-    week_end = weekStart + number_week;
-    date_end = moment()
-      .week(week_end)
-      .day(schedule[schedule.length - 1])
-      .toDate();
-  } else if (
-    start > 0 &&
-    (total_session % Number(session_per_week)) + start > schedule.length
-  ) {
-    week_end = weekStart + number_week + 1;
-    const day =
-      schedule[
-        (total_session % Number(session_per_week)) +
-          start -
-          Number(session_per_week)
-      ];
-    date_end = moment().week(week_end).day(day).toDate();
-  } else if (
-    start > 0 &&
-    (total_session % Number(session_per_week)) + start < schedule.length
-  ) {
-    week_end = weekStart + number_week + 1;
-    const day = (total_session % Number(session_per_week)) + start;
-    date_end = moment().week(week_end).day(day).toDate();
-  }
-
-  let count = 0;
-  for (let i = 0; i < holidays.length; i++) {
-    if (date_end !== undefined) {
-      if (holidays[i] >= start_at && holidays[i] <= date_end) {
-        count++;
+    const holidays: any = [
+      new Date("2023-01-01"), // New Year's Day
+      new Date("2023-02-01"), // Tết Nguyên Đán (Lunar New Year's Day)
+      new Date("2023-02-02"), // Tết Nguyên Đán (Lunar New Year's Day)
+      new Date("2023-02-03"), // Tết Nguyên Đán (Lunar New Year's Day)
+      new Date("2023-02-04"), // Tết Nguyên Đán (Lunar New Year's Day)
+      new Date("2023-02-05"), // Tết Nguyên Đán (Lunar New Year's Day)
+      new Date("2023-02-06"), // Tết Nguyên Đán (Lunar New Year's Day)
+      new Date("2023-02-07"), // Tết Nguyên Đán (Lunar New Year's Day)
+      new Date("2023-04-15"), // Anniversary of Hung Kings
+      new Date("2023-04-30"), // Reunification Day
+      new Date("2023-05-01"), // International Workers' Day
+      new Date("2023-09-02"), // National Day
+    ];
+  
+    const start = schedule.indexOf(day_start);
+    let week_end;
+    let date_end;
+    if (start === 0 && Number.isInteger(number_week)) {
+      week_end = weekStart + number_week;
+      date_end = moment()
+        .week(week_end)
+        .day(schedule[schedule.length - 1])
+        .toDate();
+    } else if (
+      start > 0 &&
+      (total_session % Number(session_per_week)) + start > schedule.length
+    ) {
+      week_end = weekStart + number_week + 1;
+      const day =
+        schedule[
+          (total_session % Number(session_per_week)) +
+            start -
+            Number(session_per_week)
+        ];
+      date_end = moment().week(week_end).day(day).toDate();
+    } else if (
+      start > 0 &&
+      (total_session % Number(session_per_week)) + start < schedule.length
+    ) {
+      week_end = weekStart + number_week + 1;
+      const day = (total_session % Number(session_per_week)) + start;
+      date_end = moment().week(week_end).day(day).toDate();
+    }
+  
+    let count = 0;
+    for (let i = 0; i < holidays.length; i++) {
+      if (date_end !== undefined) {
+        if (holidays[i] >= (new Date(start_at)) && holidays[i] <= date_end) {
+          count++;
+        }
       }
     }
-  }
-  if (count > 0) {
-    const total = total_session + count;
-    const day = total % Number(session_per_week);
-    const week = total / Number(session_per_week);
-    const stt = schedule.indexOf(Number(date_end?.getDay()));
-    if (stt + day > Number(session_per_week)) {
-      date_end = moment()
-        .week(week + Number(week_end) + 1)
-        .day(schedule[(day + stt) % Number(session_per_week)])
-        .toDate();
-    } else {
-      date_end = moment()
-        .week(week + Number(week_end))
-        .day(schedule[day + stt])
-        .toDate();
+    if (count > 0) {
+      const total = total_session + count;
+      const day = total % Number(session_per_week);
+      const week = total / Number(session_per_week);
+      const stt = schedule.indexOf(Number(date_end?.getDay()));
+      if (stt + day > Number(session_per_week)) {
+        date_end = moment()
+          .week(week + Number(week_end) + 1)
+          .day(schedule[(day + stt) % Number(session_per_week)])
+          .toDate();
+      } else {
+        date_end = moment()
+          .week(week + Number(week_end))
+          .day(schedule[day + stt])
+          .toDate();
+      }
     }
+    const formatDate = moment(date_end).format("DD/MM/YYYY");
+    return await classRepository.CreateClass(
+      id_mentor,
+      id_workplace,
+      id_course,
+      formatDate,
+      payload,
+    );
   }
-  const formatDate = moment(date_end).format("DD/MM/YYYY");
-  return await classRepository.CreateClass(
-    id_mentor,
-    id_workplace,
-    id_course,
-    formatDate,
-    payload,
-  );
 };
 
 function GetWeekNumber(date: Date): number {
