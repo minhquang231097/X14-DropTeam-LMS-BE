@@ -13,9 +13,17 @@ const CreateNewSession = async (req: Request, res: Response) => {
       class_code as string,
       payload,
     );
-    res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.SESSION.CREATE_SUCCES, 200, session));
+    res.json(
+      new HttpResponseData(
+        RESPONSE_CONFIG.MESSAGE.SESSION.CREATE_SUCCES,
+        200,
+        session,
+      ),
+    );
   } catch (error) {
-    return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.SESSION.WRONG, 400));
+    return res.json(
+      new HttpException(RESPONSE_CONFIG.MESSAGE.SESSION.WRONG, 400),
+    );
   }
 };
 
@@ -27,35 +35,77 @@ const GetSession = async (req: Request, res: Response) => {
     if (id) {
       const found = await sessionService.GetSessionById(id as string);
       if (found.length === 0)
-        return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.SESSION.NOT_FOUND, 404));
-      res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.SESSION.FOUND_SUCCESS, 200, found));
+        return res.json(
+          new HttpException(RESPONSE_CONFIG.MESSAGE.SESSION.NOT_FOUND, 404),
+        );
+      res.json(
+        new HttpResponseData(
+          RESPONSE_CONFIG.MESSAGE.SESSION.FOUND_SUCCESS,
+          200,
+          found,
+        ),
+      );
     } else if (_course) {
       const session = await sessionService.GetSessionByCourseCode(
         _course as string,
       );
       if (session.length === 0)
-        return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.SESSION.NOT_FOUND, 404));
-      res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.SESSION.FOUND_SUCCESS, 200, session));
+        return res.json(
+          new HttpException(RESPONSE_CONFIG.MESSAGE.SESSION.NOT_FOUND, 404),
+        );
+      res.json(
+        new HttpResponseData(
+          RESPONSE_CONFIG.MESSAGE.SESSION.FOUND_SUCCESS,
+          200,
+          session,
+        ),
+      );
     } else if (_class) {
       const found: any = await sessionService.GetSessionByClassCode(
         _class as string,
       );
       if (found.length === 0)
-        return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.SESSION.NOT_FOUND, 404));
-      res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.SESSION.FOUND_SUCCESS, 200, found));
+        return res.json(
+          new HttpException(RESPONSE_CONFIG.MESSAGE.SESSION.NOT_FOUND, 404),
+        );
+      res.json(
+        new HttpResponseData(
+          RESPONSE_CONFIG.MESSAGE.SESSION.FOUND_SUCCESS,
+          200,
+          found,
+        ),
+      );
     } else if (page && limit) {
       const all = await sessionService.GetAllSession(p, l);
       if (!all)
-        return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.SESSION.NOT_FOUND, 404));
-      res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.SESSION.FOUND_SUCCESS, 200, all));
+        return res.json(
+          new HttpException(RESPONSE_CONFIG.MESSAGE.SESSION.NOT_FOUND, 404),
+        );
+      res.json(
+        new HttpResponseData(
+          RESPONSE_CONFIG.MESSAGE.SESSION.FOUND_SUCCESS,
+          200,
+          all,
+        ),
+      );
     } else {
       const all = await sessionService.GetAllSession(1, 10);
       if (!all)
-        return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.SESSION.NOT_FOUND, 404));
-      res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.SESSION.FOUND_SUCCESS, 200, all));
+        return res.json(
+          new HttpException(RESPONSE_CONFIG.MESSAGE.SESSION.NOT_FOUND, 404),
+        );
+      res.json(
+        new HttpResponseData(
+          RESPONSE_CONFIG.MESSAGE.SESSION.FOUND_SUCCESS,
+          200,
+          all,
+        ),
+      );
     }
   } catch (error) {
-    return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.SESSION.WRONG, 400));
+    return res.json(
+      new HttpException(RESPONSE_CONFIG.MESSAGE.SESSION.WRONG, 400),
+    );
   }
 };
 
@@ -68,10 +118,16 @@ const UpdateSession = async (req: Request, res: Response) => {
       payload,
     );
     if (!session)
-      return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.SESSION.NOT_FOUND, 404));
-    res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.SESSION.UPDATE_SUCCESS, 200));
+      return res.json(
+        new HttpException(RESPONSE_CONFIG.MESSAGE.SESSION.NOT_FOUND, 404),
+      );
+    res.json(
+      new HttpResponseData(RESPONSE_CONFIG.MESSAGE.SESSION.UPDATE_SUCCESS, 200),
+    );
   } catch (error) {
-    return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.SESSION.WRONG, 400));
+    return res.json(
+      new HttpException(RESPONSE_CONFIG.MESSAGE.SESSION.WRONG, 400),
+    );
   }
 };
 
@@ -80,10 +136,16 @@ const DeleteSession = async (req: Request, res: Response) => {
   try {
     const session = await sessionService.DeletedCourse(id as string);
     if (!session)
-      return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.SESSION.NOT_FOUND, 404));
-    res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.SESSION.DELETE_SUCCESS, 200));
+      return res.json(
+        new HttpException(RESPONSE_CONFIG.MESSAGE.SESSION.NOT_FOUND, 404),
+      );
+    res.json(
+      new HttpResponseData(RESPONSE_CONFIG.MESSAGE.SESSION.DELETE_SUCCESS, 200),
+    );
   } catch (error) {
-    return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.SESSION.WRONG, 400));
+    return res.json(
+      new HttpException(RESPONSE_CONFIG.MESSAGE.SESSION.WRONG, 400),
+    );
   }
 };
 

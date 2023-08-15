@@ -81,6 +81,11 @@ exports.RESPONSE_CONFIG = {
             ADD_STU_SUCCESS: "Add student success"
         },
         SESSION: {
+            NO_COURSE: "Require course",
+            NO_CLASS: "Require class",
+            NO_CODE: "Require code",
+            NO_NAME: "Require name",
+            NO_DES: "Require description",
             CODE_EXIST: "Session code exist!",
             NAME_EXIST: "Session name exist!",
             NOT_FOUND: "Can't find any session",
@@ -93,8 +98,6 @@ exports.RESPONSE_CONFIG = {
         ATTENDANCE: {
             NO_SESSION: "Require session",
             NO_CLASS: "Require class",
-            NO_COURSE: "Require course",
-            NO_CODE: "Require class code",
             NOT_FOUND: "Can't find any attendance",
             CREATE_SUCCES: "Create attendance success",
             FOUND_SUCCESS: "Found attendance",
@@ -103,6 +106,10 @@ exports.RESPONSE_CONFIG = {
             WRONG: "Something wrong...",
         },
         FEEDBACK: {
+            NO_STUDENT: "Require student",
+            NO_COURSE: "Require course",
+            NO_RATE: "Require rate",
+            NO_CONTENT: "Require content",
             NOT_FOUND: "Can't find any feedback",
             CREATE_SUCCES: "Create feedback success",
             FOUND_SUCCESS: "Found feedback",
@@ -111,6 +118,10 @@ exports.RESPONSE_CONFIG = {
             WRONG: "Something wrong...",
         },
         LESSON: {
+            NO_SESSION: "Require session",
+            NO_TITLE: "Require title",
+            NO_NO: "Require no",
+            NO_CONTENT: "Require content",
             NOT_FOUND: "Can't find any lesson",
             CREATE_SUCCES: "Create lesson success",
             FOUND_SUCCESS: "Found lesson",
@@ -119,6 +130,9 @@ exports.RESPONSE_CONFIG = {
             WRONG: "Something wrong...",
         },
         REGIST: {
+            NO_COURSE: "Require course",
+            NO_WORKPLACE: "Require workplace",
+            NO_STUDENT: "Require student",
             NOT_FOUND: "Can't find any regist",
             CREATE_SUCCES: "Create regist success",
             FOUND_SUCCESS: "Found regist",

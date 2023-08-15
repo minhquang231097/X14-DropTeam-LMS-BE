@@ -58,14 +58,24 @@ const GetClass = async (req, res) => {
             if (!classExist) {
                 return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.CLASS.NOT_FOUND, 404));
             }
-            res.json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.CLASS.FOUND_SUCCESS, 200, { classExist, page: p, limit: l, total }));
+            res.json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.CLASS.FOUND_SUCCESS, 200, {
+                classExist,
+                page: p,
+                limit: l,
+                total,
+            }));
         }
         else if (email) {
             const classExist = await class_student_service_1.default.GetClassByStudentEmail(p, l, email);
             if (!classExist) {
                 return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.CLASS.NOT_FOUND, 404));
             }
-            res.json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.CLASS.FOUND_SUCCESS, 200, { classExist, page: p, limit: l, total }));
+            res.json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.CLASS.FOUND_SUCCESS, 200, {
+                classExist,
+                page: p,
+                limit: l,
+                total,
+            }));
         }
         else if (page && limit) {
             const allClasses = await class_service_1.default.GetAllClass(p, l);
@@ -83,7 +93,12 @@ const GetClass = async (req, res) => {
             if (!allClasses) {
                 return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.CLASS.NOT_FOUND, 404));
             }
-            res.json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.CLASS.FOUND_SUCCESS, 200, { allClasses, page: p, limit: l, total }));
+            res.json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.CLASS.FOUND_SUCCESS, 200, {
+                allClasses,
+                page: p,
+                limit: l,
+                total,
+            }));
         }
     }
     catch (error) {

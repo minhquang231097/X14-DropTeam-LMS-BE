@@ -1,18 +1,17 @@
 import moment from "moment";
 import { Document, Schema, model } from "mongoose";
 
-
 enum statusStudent {
   A = "ABSENT",
   AP = "ABSENT WITH PERMISSION",
   AOP = "ABSENT WITHOUT PERMISSION",
-  R = "RESERVE"
+  R = "RESERVE",
 }
 
 const attendance_studentSchema = new Schema({
   attendance: { type: Schema.Types.ObjectId, ref: "attendances" },
   student: { type: Schema.Types.ObjectId, ref: "users" },
-  status: {type: String, enum: statusStudent},
+  status: { type: String, enum: statusStudent },
   score: String,
   comment: String,
   create_at: {
@@ -37,7 +36,4 @@ export interface IAttendance_Student extends Document {
   formated_date: string;
 }
 
-export const Attendace_Student = model<IAttendance_Student>(
-  "attendance_student",
-  attendance_studentSchema,
-);
+export const Attendace_Student = model<IAttendance_Student>("attendance_student", attendance_studentSchema);

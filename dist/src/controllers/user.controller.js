@@ -21,7 +21,11 @@ const GetUser = async (req, res) => {
             if (!allUsers) {
                 return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.USER.NOT_FOUND, 404));
             }
-            res.json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.USER.FOUND, 200, { allUsers, page: p, limit: l, }));
+            res.json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.USER.FOUND, 200, {
+                allUsers,
+                page: p,
+                limit: l,
+            }));
         }
         else if (email) {
             const user = await user_service_1.default.GetUserByEmail(email);
@@ -42,21 +46,35 @@ const GetUser = async (req, res) => {
             if (!result) {
                 return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.USER.NOT_FOUND, 404));
             }
-            res.json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.USER.FOUND, 200, { result, page: 1, limit: 10, }));
+            res.json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.USER.FOUND, 200, {
+                result,
+                page: 1,
+                limit: 10,
+            }));
         }
         else if (page && limit) {
             const allUsers = await user_service_1.default.GetAllUser(p, l);
             if (!allUsers) {
                 return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.USER.NOT_FOUND, 404));
             }
-            res.json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.USER.FOUND, 200, { allUsers, page: p, limit: l, total, }));
+            res.json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.USER.FOUND, 200, {
+                allUsers,
+                page: p,
+                limit: l,
+                total,
+            }));
         }
         else {
             const allUsers = await user_service_1.default.GetAllUser(1, 10);
             if (!allUsers) {
                 return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.USER.NOT_FOUND, 404));
             }
-            res.json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.USER.FOUND, 200, { allUsers, page: 1, limit: 10, total, }));
+            res.json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.USER.FOUND, 200, {
+                allUsers,
+                page: 1,
+                limit: 10,
+                total,
+            }));
         }
     }
     catch (error) {

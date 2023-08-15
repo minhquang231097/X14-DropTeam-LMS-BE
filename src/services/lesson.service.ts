@@ -11,15 +11,16 @@ const CreateLesson = async (session_code: string, payload: ILesson) => {
 };
 
 const GetAllLesson = async (page: number, limit: number) => {
-  return await lessonRepository.FindAllInfoAndPagination(
-    page,
-    limit,
-    "session",
-  );
+  return await lessonRepository.FindAllInfoAndPagination(page, limit, [
+    { path: "session", populate: [{ path: "class" }] },
+  ]);
 };
 
 const GetLessonById = async (id: string) => {
-  return await lessonRepository.FindById(id, "session");
+  return await lessonRepository.FindById(id, {
+    path: "session",
+    populate: [{ path: "class" }],
+  });
 };
 
 const GetLessonBySessionCode = async (

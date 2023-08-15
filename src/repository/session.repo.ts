@@ -9,21 +9,21 @@ export class SessionRepository extends BaseRepository<ISession> {
   async FindSessionByCode(session_code: string) {
     const session = await this.model
       .findOne({ session_code })
-      .populate(["course", "class"]);
+      .populate([{ path: "course", populate: [{ path: "workplace" }] }, "class"]);
     return session?.toObject();
   }
 
   async FindSessionByCourseId(id: string) {
     const session = await this.model
       .find({ course: id })
-      .populate(["course", "class"]);
+      .populate([{ path: "course", populate: [{ path: "workplace" }] }, "class"]);
     return session;
   }
 
   async FindSessionByClassId(id: string) {
     const session = await this.model
       .findOne({ class: id })
-      .populate(["course", "class"]);
+      .populate([{ path: "course", populate: [{ path: "workplace" }] }, "class"]);
     return session;
   }
 }

@@ -23,7 +23,4 @@ export interface IClass_Student extends Document {
   formated_date: string;
 }
 
-export const Class_Student = model<IClass_Student>(
-  "class_student",
-  class_studentSchema,
-);
+export const Class_Student = model<IClass_Student>("class_student", class_studentSchema);

@@ -9,12 +9,7 @@ import { WorkplaceRepository } from "@/repository/workplace.repo";
 
 const classRepository = new ClassRepository(Class);
 
-const CreateOneClass = async (
-  email_mentor: string,
-  workplace_code: string,
-  course_code: string,
-  payload: IClass,
-) => {
+const CreateOneClass = async (email_mentor: string, workplace_code: string, course_code: string, payload: IClass) => {
   const { start_at, session_per_week, schedule, total_session } = payload;
   const [_mentor, _workplace, _course] = await Promise.all([
     userService.GetUserByEmail(email_mentor),
@@ -52,22 +47,11 @@ const CreateOneClass = async (
       .week(week_end)
       .day(schedule[schedule.length - 1])
       .toDate();
-  } else if (
-    start > 0 &&
-    (total_session % Number(session_per_week)) + start > schedule.length
-  ) {
+  } else if (start > 0 && (total_session % Number(session_per_week)) + start > schedule.length) {
     week_end = weekStart + number_week + 1;
-    const day =
-      schedule[
-        (total_session % Number(session_per_week)) +
-          start -
-          Number(session_per_week)
-      ];
+    const day = schedule[(total_session % Number(session_per_week)) + start - Number(session_per_week)];
     date_end = moment().week(week_end).day(day).toDate();
-  } else if (
-    start > 0 &&
-    (total_session % Number(session_per_week)) + start < schedule.length
-  ) {
+  } else if (start > 0 && (total_session % Number(session_per_week)) + start < schedule.length) {
     week_end = weekStart + number_week + 1;
     const day = (total_session % Number(session_per_week)) + start;
     date_end = moment().week(week_end).day(day).toDate();
@@ -99,13 +83,7 @@ const CreateOneClass = async (
     }
   }
   const formatDate = moment(date_end).format("DD/MM/YYYY");
-  return await classRepository.CreateClass(
-    id_mentor,
-    id_workplace,
-    id_course,
-    formatDate,
-    payload,
-  );
+  return await classRepository.CreateClass(id_mentor, id_workplace, id_course, formatDate, payload);
 };
 
 function GetWeekNumber(date: Date): number {
@@ -118,7 +96,7 @@ const GetAllClass = async (page: number, limit: number) => {
   return await classRepository.FindAllInfoAndPagination(page, limit, [
     "mentor",
     "workplace",
-    "course",
+    { path: "course", populate: { path: "workplace" } },
   ]);
 };
 
@@ -127,14 +105,14 @@ const GetTotalClass = async () => {
 };
 
 const GetClassById = async (id: string) => {
-  return await classRepository.FindById(id, ["mentor", "workplace", "course"]);
+  return await classRepository.FindById(id, [
+    "mentor",
+    "workplace",
+    { path: "course", populate: { path: "workplace" } },
+  ]);
 };
 
-const GetClassByCourseCode = async (
-  code: string,
-  page: number,
-  limit: number,
-) => {
+const GetClassByCourseCode = async (code: string, page: number, limit: number) => {
   const _course = await courseService.GetCourseByCode(code);
   return await classRepository.FindClassByCourseId(_course?._id, page, limit);
 };
@@ -155,15 +133,11 @@ const GetClassByCondition = async (filter: IClass) => {
   return await classRepository.FindByCondition(filter, [
     "mentor",
     "workplace",
-    "course",
+    { path: "course", populate: { path: "workplace" } },
   ]);
 };
 
-const SearchClassByCondition = async (
-  page: number,
-  limit: number,
-  searchTerm?: string,
-) => {
+const SearchClassByCondition = async (page: number, limit: number, searchTerm?: string) => {
   const query = {
     $or: [
       { mentor: { $regex: searchTerm, $options: "i" } },
@@ -172,17 +146,18 @@ const SearchClassByCondition = async (
       { class_code: { $regex: searchTerm, $options: "i" } },
     ],
   };
-  return await classRepository.SearchByCondition(page, limit, query);
+  return await classRepository.SearchByCondition(page, limit, query, [
+    "mentor",
+    "workplace",
+    { path: "course", populate: { path: "workplace" } },
+  ]);
 };
 
 const UpdateOneClass = async (id: string, payload: UpdateClassDto) => {
   return await classRepository.FindByIdAndUpdate(id, payload);
 };
 
-const UpdateManyClass = async (
-  filter: UpdateClassDto,
-  payload: UpdateClassDto,
-) => {
+const UpdateManyClass = async (filter: UpdateClassDto, payload: UpdateClassDto) => {
   return await classRepository.UpdateMany(filter, payload);
 };
 

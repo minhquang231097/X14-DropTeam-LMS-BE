@@ -8,11 +8,7 @@ import attendanceStudentService from "./attendance.student.service";
 
 const attendanceRepository = new AttendanceRepository(Attendance);
 
-const CreateAttendance = async (
-  session_code: string,
-  class_code: string,
-  payload: any,
-) => {
+const CreateAttendance = async (session_code: string, class_code: string, payload: any) => {
   const [_session, _class] = await Promise.all([
     sessionService.GetSessionByCode(session_code),
     classService.GetClassByCode(class_code),
@@ -26,18 +22,10 @@ const CreateAttendance = async (
 };
 
 const GetAttendanceByDay = async (day: number, page: number, limit: number) => {
-  return await attendanceRepository.FindByConditionAndPagination(
-    page,
-    limit,
-    { day },
-    ["session", "class"],
-  );
+  return await attendanceRepository.FindByConditionAndPagination(page, limit, { day }, ["session", "class"]);
 };
 
-const GetAttendanceByClassCodeAndDay = async (
-  class_code: string,
-  day: number,
-) => {
+const GetAttendanceByClassCodeAndDay = async (class_code: string, day: number) => {
   const _class = await classService.GetClassByCode(class_code);
   return await attendanceRepository.FindByCondition({
     class: _class?._id,
@@ -45,17 +33,9 @@ const GetAttendanceByClassCodeAndDay = async (
   });
 };
 
-const GetAttendanceByClassCode = async (
-  code: string,
-  page: number,
-  limit: number,
-) => {
+const GetAttendanceByClassCode = async (code: string, page: number, limit: number) => {
   const foundAttendance: any = await classService.GetClassByCode(code);
-  return await attendanceRepository.FindAttendanceByClassId(
-    foundAttendance._id,
-    page,
-    limit,
-  );
+  return await attendanceRepository.FindAttendanceByClassId(foundAttendance._id, page, limit);
 };
 
 const UpdateAttendance = async (id: string, payload: UpdateAttendanceDto) => {

@@ -6,11 +6,7 @@ import { RegistedCourseRepository } from "@/repository/regist.course.repo";
 
 const registCourseRepository = new RegistedCourseRepository(RegistedCourse);
 
-const CreateRegistCourse = async (
-  course_code: string,
-  student_id: string,
-  note: string,
-) => {
+const CreateRegistCourse = async (course_code: string, student_id: string, note: string) => {
   const [_course, _student] = await Promise.all([
     courseService.GetCourseByCode(course_code),
     userService.GetUserById(student_id),
@@ -31,30 +27,14 @@ const GetAllRegist = async (page: number, limit: number) => {
   return await registCourseRepository.FindAllInfoAndPagination(page, limit);
 };
 
-const GetRegistByCourseCode = async (
-  code: string,
-  page: number,
-  limit: number,
-) => {
+const GetRegistByCourseCode = async (code: string, page: number, limit: number) => {
   const _course = await courseService.GetCourseByCode(code);
-  return await registCourseRepository.FindRegistbyCourseId(
-    _course?._id,
-    page,
-    limit,
-  );
+  return await registCourseRepository.FindRegistbyCourseId(_course?._id, page, limit);
 };
 
-const GetRegistByWorkplaceCode = async (
-  code: string,
-  page: number,
-  limit: number,
-) => {
+const GetRegistByWorkplaceCode = async (code: string, page: number, limit: number) => {
   const _workplace = await workplaceService.GetWorkplaceByCode(code);
-  return await registCourseRepository.FindRegistbyWorkplaceId(
-    _workplace?._id,
-    page,
-    limit,
-  );
+  return await registCourseRepository.FindRegistbyWorkplaceId(_workplace?._id, page, limit);
 };
 
 const GetRegistByEmailStudent = async (email: string, page: number, limit: number) => {

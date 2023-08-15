@@ -203,7 +203,9 @@ const SendEmailForgotPassword = async (req: Request, res: Response) => {
   try {
     const user: any = await userService.GetUserByEmail(email);
     if (!user) {
-      return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.USER.NOT_FOUND, 404));
+      return res.json(
+        new HttpException(RESPONSE_CONFIG.MESSAGE.USER.NOT_FOUND, 404),
+      );
     }
     const token: any = jwt.sign(
       { _id: user._id },

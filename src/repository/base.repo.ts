@@ -10,10 +10,7 @@ export abstract class BaseRepository<T extends Document> {
     return await createdEntity.save();
   }
 
-  async FindById(
-    id: string | undefined,
-    populate?: any | null,
-  ): Promise<T | any> {
+  async FindById(id: string | undefined, populate?: any | null): Promise<T | any> {
     return this.model.findById(id).populate(populate);
   }
 
@@ -38,11 +35,7 @@ export abstract class BaseRepository<T extends Document> {
     return this.model.find();
   }
 
-  async FindAllInfoAndPagination(
-    page: number,
-    limit: number,
-    populate?: any | null,
-  ): Promise<T[] | any> {
+  async FindAllInfoAndPagination(page: number, limit: number, populate?: any | null): Promise<T[] | any> {
     return await this.model
       .find()
       .skip((page - 1) * limit)
@@ -57,10 +50,6 @@ export abstract class BaseRepository<T extends Document> {
     query?: any | null,
     populate?: any | null,
   ): Promise<T[] | any> {
-    // let query = {};
-    // if (searchTerm) {
-    //   query = { $text: { $regex: searchTerm, $options: "i" } };
-    // }
     return this.model
       .find(query)
       .skip((page - 1) * limit)

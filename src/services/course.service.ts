@@ -6,9 +6,7 @@ import { FindWorkplaceDto } from "@/types/workplace";
 const courseRepository = new CourseRepository(Course);
 
 const CreateCourse = async (workplace_code: string, payload: ICourse) => {
-  const _workplace: any = await workplaceService.GetWorkplaceByCode(
-    workplace_code,
-  );
+  const _workplace: any = await workplaceService.GetWorkplaceByCode(workplace_code);
   return await courseRepository.Create({
     ...payload,
     workplace: _workplace?._id,
@@ -16,11 +14,7 @@ const CreateCourse = async (workplace_code: string, payload: ICourse) => {
 };
 
 const GetAllCourse = async (page: number, limit: number) => {
-  return await courseRepository.FindAllInfoAndPagination(
-    page,
-    limit,
-    "workplace",
-  );
+  return await courseRepository.FindAllInfoAndPagination(page, limit, "workplace");
 };
 
 const GetCourseById = async (id: string) => {
@@ -35,18 +29,11 @@ const GetTotalCourse = async () => {
   return (await courseRepository.FindAll()).length;
 };
 
-const SearchCourseByCondition = async (
-  page: number,
-  limit: number,
-  searchTerm?: string,
-) => {
+const SearchCourseByCondition = async (page: number, limit: number, searchTerm?: string) => {
   const query = {
-    $or: [
-      { title: { $regex: searchTerm, $options: "i" } },
-      { course_code: { $regex: searchTerm, $options: "i" } },
-    ],
+    $or: [{ title: { $regex: searchTerm, $options: "i" } }, { course_code: { $regex: searchTerm, $options: "i" } }],
   };
-  return await courseRepository.SearchByCondition(page, limit, query);
+  return await courseRepository.SearchByCondition(page, limit, query, "workplace");
 };
 
 const UpdateCourse = async (id: string, payload: ICourse) => {

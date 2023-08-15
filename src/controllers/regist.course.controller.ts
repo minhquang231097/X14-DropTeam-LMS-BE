@@ -14,10 +14,16 @@ const RegistedNewCourse = async (req: Request, res: Response) => {
       note,
     );
     res.json(
-      new HttpResponseData(RESPONSE_CONFIG.MESSAGE.REGIST.CREATE_SUCCES, 200, newRegist),
+      new HttpResponseData(
+        RESPONSE_CONFIG.MESSAGE.REGIST.CREATE_SUCCES,
+        200,
+        newRegist,
+      ),
     );
   } catch (error) {
-    return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.REGIST.WRONG, 400));
+    return res.json(
+      new HttpException(RESPONSE_CONFIG.MESSAGE.REGIST.WRONG, 400),
+    );
   }
 };
 
@@ -33,9 +39,15 @@ const GetRegist = async (req: Request, res: Response) => {
         l,
       );
       if (allRegist.length === 0)
-        return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.REGIST.NOT_FOUND, 404));
+        return res.json(
+          new HttpException(RESPONSE_CONFIG.MESSAGE.REGIST.NOT_FOUND, 404),
+        );
       res.json(
-        new HttpResponseData(RESPONSE_CONFIG.MESSAGE.REGIST.FOUND_SUCCESS, 200, allRegist),
+        new HttpResponseData(
+          RESPONSE_CONFIG.MESSAGE.REGIST.FOUND_SUCCESS,
+          200,
+          allRegist,
+        ),
       );
     } else if (_wp) {
       const allRegist = await registCourseService.GetRegistByWorkplaceCode(
@@ -44,9 +56,15 @@ const GetRegist = async (req: Request, res: Response) => {
         l,
       );
       if (allRegist.length === 0)
-        return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.REGIST.NOT_FOUND, 404));
+        return res.json(
+          new HttpException(RESPONSE_CONFIG.MESSAGE.REGIST.NOT_FOUND, 404),
+        );
       res.json(
-        new HttpResponseData(RESPONSE_CONFIG.MESSAGE.REGIST.FOUND_SUCCESS, 200, allRegist),
+        new HttpResponseData(
+          RESPONSE_CONFIG.MESSAGE.REGIST.FOUND_SUCCESS,
+          200,
+          allRegist,
+        ),
       );
     } else if (email) {
       const allRegist = await registCourseService.GetRegistByEmailStudent(
@@ -55,27 +73,47 @@ const GetRegist = async (req: Request, res: Response) => {
         l,
       );
       if (allRegist.length === 0)
-        return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.REGIST.NOT_FOUND, 404));
+        return res.json(
+          new HttpException(RESPONSE_CONFIG.MESSAGE.REGIST.NOT_FOUND, 404),
+        );
       res.json(
-        new HttpResponseData(RESPONSE_CONFIG.MESSAGE.REGIST.FOUND_SUCCESS, 200, allRegist),
+        new HttpResponseData(
+          RESPONSE_CONFIG.MESSAGE.REGIST.FOUND_SUCCESS,
+          200,
+          allRegist,
+        ),
       );
     } else if (page && limit) {
       const allRegist = await registCourseService.GetAllRegist(p, l);
       if (allRegist.length === 0)
-        return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.REGIST.NOT_FOUND, 404));
+        return res.json(
+          new HttpException(RESPONSE_CONFIG.MESSAGE.REGIST.NOT_FOUND, 404),
+        );
       res.json(
-        new HttpResponseData(RESPONSE_CONFIG.MESSAGE.REGIST.FOUND_SUCCESS, 200, allRegist),
+        new HttpResponseData(
+          RESPONSE_CONFIG.MESSAGE.REGIST.FOUND_SUCCESS,
+          200,
+          allRegist,
+        ),
       );
     } else {
       const allRegist = await registCourseService.GetAllRegist(1, 10);
       if (allRegist.length === 0)
-        return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.REGIST.NOT_FOUND, 404));
+        return res.json(
+          new HttpException(RESPONSE_CONFIG.MESSAGE.REGIST.NOT_FOUND, 404),
+        );
       res.json(
-        new HttpResponseData(RESPONSE_CONFIG.MESSAGE.REGIST.FOUND_SUCCESS, 200, allRegist),
+        new HttpResponseData(
+          RESPONSE_CONFIG.MESSAGE.REGIST.FOUND_SUCCESS,
+          200,
+          allRegist,
+        ),
       );
     }
   } catch (error) {
-    return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.REGIST.WRONG, 404));
+    return res.json(
+      new HttpException(RESPONSE_CONFIG.MESSAGE.REGIST.WRONG, 404),
+    );
   }
 };
 
@@ -85,12 +123,18 @@ const UpdateRegist = async (req: Request, res: Response) => {
   try {
     const exist = await registCourseService.GetRegistById(id as string);
     if (!exist) {
-      return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.REGIST.NOT_FOUND, 404));
+      return res.json(
+        new HttpException(RESPONSE_CONFIG.MESSAGE.REGIST.NOT_FOUND, 404),
+      );
     }
     await registCourseService.UpdateRegist(id as string, payload);
-    res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.REGIST.FOUND_SUCCESS, 200));
+    res.json(
+      new HttpResponseData(RESPONSE_CONFIG.MESSAGE.REGIST.FOUND_SUCCESS, 200),
+    );
   } catch (error) {
-    return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.REGIST.WRONG, 400));
+    return res.json(
+      new HttpException(RESPONSE_CONFIG.MESSAGE.REGIST.WRONG, 400),
+    );
   }
 };
 
@@ -99,10 +143,16 @@ const DeleteRegist = async (req: Request, res: Response) => {
   try {
     const updatedRegist = await registCourseService.DeleteRegist(id as string);
     if (!updatedRegist)
-      return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.REGIST.FOUND_SUCCESS, 404));
-    res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.REGIST.DELETE_SUCCESS, 200));
+      return res.json(
+        new HttpException(RESPONSE_CONFIG.MESSAGE.REGIST.FOUND_SUCCESS, 404),
+      );
+    res.json(
+      new HttpResponseData(RESPONSE_CONFIG.MESSAGE.REGIST.DELETE_SUCCESS, 200),
+    );
   } catch (error) {
-    return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.REGIST.WRONG, 400));
+    return res.json(
+      new HttpException(RESPONSE_CONFIG.MESSAGE.REGIST.WRONG, 400),
+    );
   }
 };
 

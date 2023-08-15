@@ -12,10 +12,10 @@ export class LessonRepository extends BaseRepository<ILesson> {
   }
 
   async FindLessonBySessionId(id: string, page: number, limit: number) {
-    console.log(id);
     return this.model
-      .find({ session: id})
+      .find({ session: id })
       .skip((page - 1) * limit)
       .limit(limit)
+      .populate({ path: "session", populate: [{ path: "class" }] });
   }
 }

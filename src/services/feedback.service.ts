@@ -6,11 +6,7 @@ import { FindFeedbackDto, UpdateFeedbackDto } from "@/types/feedback";
 
 const feedbackRepository = new FeedbackRepository(FeedBack);
 
-const CreateFeedback = async (
-  course_code: string,
-  email_student: string,
-  payload: any,
-) => {
+const CreateFeedback = async (course_code: string, email_student: string, payload: any) => {
   const [_course, _student] = await Promise.all([
     courseService.GetCourseByCode(course_code),
     userService.GetUserByEmail(email_student),
@@ -24,7 +20,7 @@ const CreateFeedback = async (
 };
 
 const GetFeedbackById = async (id: string) => {
-  return await feedbackRepository.FindById(id, ["course", "student"]);
+  return await feedbackRepository.FindById(id, [{ path: "course", populate: { path: "workplace" } }, "student"]);
 };
 
 const GetFeedbackByCourseCode = async (code: string, page: number, limit: number) => {
@@ -39,7 +35,7 @@ const GetFeedbackByEmailStudent = async (email: string, page: number, limit: num
 
 const GetFeedbackByCondition = async (page: number, limit: number) => {
   return await feedbackRepository.FindAllInfoAndPagination(page, limit, [
-    "course",
+    { path: "course", populate: { path: "workplace" } },
     "student",
   ]);
 };

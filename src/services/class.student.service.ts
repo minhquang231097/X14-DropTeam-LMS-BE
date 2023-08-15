@@ -10,9 +10,7 @@ const AddStudentToClass = async (email: string, class_code: string) => {
     userService.GetUserByEmail(email),
     classService.GetClassByCode(class_code),
   ]);
-  const exist = await classStudentRepository.FindByCondition(
-    { student: _student?._id } || { class: _class?._id },
-  );
+  const exist = await classStudentRepository.FindByCondition({ student: _student?._id } || { class: _class?._id });
   if (!exist) {
     return await classStudentRepository.Create({
       class: _class?._id,
@@ -21,28 +19,21 @@ const AddStudentToClass = async (email: string, class_code: string) => {
   }
 };
 
-const GetAllStudentInClass = async (
-  page: number,
-  limit: number,
-  class_code: string,
-) => {
+const GetAllStudentInClass = async (page: number, limit: number, class_code: string) => {
   const _class = await classService.GetClassByCode(class_code);
   const id: string = _class?._id;
-  return await classStudentRepository.FindByClassId(id, page, limit, "student");
+  return await classStudentRepository.FindByClassId(id, page, limit, [
+    "student",
+    { path: "course", populate: { path: "workplace" } },
+  ]);
 };
 
-const GetClassByStudentEmail = async (
-  page: number,
-  limit: number,
-  email: string,
-) => {
+const GetClassByStudentEmail = async (page: number, limit: number, email: string) => {
   const student = await userService.GetUserByEmail(email);
-  return await classStudentRepository.FindByConditionAndPagination(
-    page,
-    limit,
-    { student: student?._id },
+  return await classStudentRepository.FindByConditionAndPagination(page, limit, { student: student?._id }, [
     "student",
-  );
+    { path: "course", populate: { path: "workplace" } },
+  ]);
 };
 
 const RemoveStudentOutOfClass = async (id: string) => {

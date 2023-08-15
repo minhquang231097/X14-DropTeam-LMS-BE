@@ -10,12 +10,21 @@ const CreateNewLesson = async (req: Request, res: Response) => {
   const { ss_code } = req.query;
   const payload = req.body;
   try {
-    const newLesson = await lessonService.CreateLesson(ss_code as string, payload);
+    const newLesson = await lessonService.CreateLesson(
+      ss_code as string,
+      payload,
+    );
     res.json(
-      new HttpResponseData(RESPONSE_CONFIG.MESSAGE.LESSON.CREATE_SUCCES, 200, newLesson),
+      new HttpResponseData(
+        RESPONSE_CONFIG.MESSAGE.LESSON.CREATE_SUCCES,
+        200,
+        newLesson,
+      ),
     );
   } catch (error) {
-    return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.LESSON.WRONG, 400));
+    return res.json(
+      new HttpException(RESPONSE_CONFIG.MESSAGE.LESSON.WRONG, 400),
+    );
   }
 };
 
@@ -31,21 +40,47 @@ const GetLesson = async (req: Request, res: Response) => {
         l,
       );
       if (all.length === 0)
-        return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.LESSON.NOT_FOUND, 404));
-      res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.LESSON.FOUND_SUCCESS, 200, all));
+        return res.json(
+          new HttpException(RESPONSE_CONFIG.MESSAGE.LESSON.NOT_FOUND, 404),
+        );
+      res.json(
+        new HttpResponseData(
+          RESPONSE_CONFIG.MESSAGE.LESSON.FOUND_SUCCESS,
+          200,
+          all,
+        ),
+      );
     } else if (page && limit) {
       const all = await lessonService.GetAllLesson(p, l);
       if (all.length === 0)
-        return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.LESSON.NOT_FOUND, 404));
-      res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.LESSON.FOUND_SUCCESS, 200, all));
+        return res.json(
+          new HttpException(RESPONSE_CONFIG.MESSAGE.LESSON.NOT_FOUND, 404),
+        );
+      res.json(
+        new HttpResponseData(
+          RESPONSE_CONFIG.MESSAGE.LESSON.FOUND_SUCCESS,
+          200,
+          all,
+        ),
+      );
     } else {
       const all = await lessonService.GetAllLesson(1, 10);
       if (all.length === 0)
-        return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.LESSON.NOT_FOUND, 404));
-      res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.LESSON.FOUND_SUCCESS, 200, all));
+        return res.json(
+          new HttpException(RESPONSE_CONFIG.MESSAGE.LESSON.NOT_FOUND, 404),
+        );
+      res.json(
+        new HttpResponseData(
+          RESPONSE_CONFIG.MESSAGE.LESSON.FOUND_SUCCESS,
+          200,
+          all,
+        ),
+      );
     }
   } catch (error) {
-    return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.LESSON.WRONG, 404));
+    return res.json(
+      new HttpException(RESPONSE_CONFIG.MESSAGE.LESSON.WRONG, 404),
+    );
   }
 };
 
@@ -55,11 +90,17 @@ const UpdateLesson = async (req: Request, res: Response) => {
   try {
     const exist = await lessonService.UpdateLessonById(id as string, payload);
     if (!exist) {
-      return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.LESSON.NOT_FOUND, 404));
+      return res.json(
+        new HttpException(RESPONSE_CONFIG.MESSAGE.LESSON.NOT_FOUND, 404),
+      );
     }
-    res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.LESSON.FOUND_SUCCESS, 200));
+    res.json(
+      new HttpResponseData(RESPONSE_CONFIG.MESSAGE.LESSON.FOUND_SUCCESS, 200),
+    );
   } catch (error) {
-    return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.LESSON.WRONG, 400));
+    return res.json(
+      new HttpException(RESPONSE_CONFIG.MESSAGE.LESSON.WRONG, 400),
+    );
   }
 };
 
@@ -68,10 +109,16 @@ const DeleteLesson = async (req: Request, res: Response) => {
   try {
     const found = await lessonService.DeletedLessonById(id as string);
     if (!found)
-      return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.LESSON.NOT_FOUND, 404));
-    res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.LESSON.DELETE_SUCCESS, 200));
+      return res.json(
+        new HttpException(RESPONSE_CONFIG.MESSAGE.LESSON.NOT_FOUND, 404),
+      );
+    res.json(
+      new HttpResponseData(RESPONSE_CONFIG.MESSAGE.LESSON.DELETE_SUCCESS, 200),
+    );
   } catch (error) {
-    return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.LESSON.WRONG, 400));
+    return res.json(
+      new HttpException(RESPONSE_CONFIG.MESSAGE.LESSON.WRONG, 400),
+    );
   }
 };
 

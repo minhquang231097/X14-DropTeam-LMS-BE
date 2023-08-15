@@ -6,11 +6,7 @@ import classService from "./class.service";
 
 const sessionRepository = new SessionRepository(Session);
 
-const CreateSession = async (
-  course_code: string,
-  class_code: string,
-  payload: any,
-) => {
+const CreateSession = async (course_code: string, class_code: string, payload: any) => {
   const [_course, _class] = await Promise.all([
     courseService.GetCourseByCode(course_code),
     classService.GetClassByCode(class_code),
@@ -25,15 +21,11 @@ const CreateSession = async (
 };
 
 const GetAllSession = async (page: number, limit: number) => {
-  return await sessionRepository.FindAllInfoAndPagination(
-    page,
-    limit,
-    "course",
-  );
+  return await sessionRepository.FindAllInfoAndPagination(page, limit, ["course", "class"]);
 };
 
 const GetSessionById = async (id: string) => {
-  return await sessionRepository.FindById(id, ["course", "class"]);
+  return await sessionRepository.FindById(id, [[{ path: "course", populate: [{ path: "workplace" }] }], "class"]);
 };
 
 const GetSessionByCode = async (code: string) => {
@@ -54,10 +46,7 @@ const UpdateSessionById = async (id: string, payload: UpdateSessionDto) => {
   return await sessionRepository.FindByIdAndUpdate(id, payload);
 };
 
-const UpdateCourseByCondition = async (
-  filter: any,
-  payload: UpdateSessionDto,
-) => {
+const UpdateCourseByCondition = async (filter: any, payload: UpdateSessionDto) => {
   return await sessionRepository.UpdateMany(filter, payload);
 };
 

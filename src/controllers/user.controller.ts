@@ -14,19 +14,39 @@ const GetUser = async (req: Request, res: Response) => {
   const total = await userService.GetTotalUser();
   try {
     if (_class) {
-      const allUsers = await classStudentService.GetAllStudentInClass(p, l, _class as string,);
+      const allUsers = await classStudentService.GetAllStudentInClass(
+        p,
+        l,
+        _class as string,
+      );
       if (!allUsers) {
-        return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.USER.NOT_FOUND, 404),);
+        return res.json(
+          new HttpException(RESPONSE_CONFIG.MESSAGE.USER.NOT_FOUND, 404),
+        );
       }
-      res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.USER.FOUND, 200, { allUsers, page: p, limit: l, }),);
+      res.json(
+        new HttpResponseData(RESPONSE_CONFIG.MESSAGE.USER.FOUND, 200, {
+          allUsers,
+          page: p,
+          limit: l,
+        }),
+      );
     } else if (email) {
       const user = await userService.GetUserByEmail(email as string);
       if (!user) {
-        return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.USER.NOT_FOUND, 404),);
+        return res.json(
+          new HttpException(RESPONSE_CONFIG.MESSAGE.USER.NOT_FOUND, 404),
+        );
       }
-      res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.USER.FOUND, 200, user),);
+      res.json(
+        new HttpResponseData(RESPONSE_CONFIG.MESSAGE.USER.FOUND, 200, user),
+      );
     } else if (attendanceId) {
-      const allUsers = await userService.GetUserByAttendance(attendanceId as string, p, l,);
+      const allUsers = await userService.GetUserByAttendance(
+        attendanceId as string,
+        p,
+        l,
+      );
       if (!allUsers) {
         return res.json(
           new HttpException(RESPONSE_CONFIG.MESSAGE.USER.NOT_FOUND, 404),
@@ -36,14 +56,22 @@ const GetUser = async (req: Request, res: Response) => {
         new HttpResponseData(RESPONSE_CONFIG.MESSAGE.USER.FOUND, 200, allUsers),
       );
     } else if (search) {
-      const result = await userService.SearchUserByCondition(p, l, search as string,);
+      const result = await userService.SearchUserByCondition(
+        p,
+        l,
+        search as string,
+      );
       if (!result) {
         return res.json(
           new HttpException(RESPONSE_CONFIG.MESSAGE.USER.NOT_FOUND, 404),
         );
       }
       res.json(
-        new HttpResponseData(RESPONSE_CONFIG.MESSAGE.USER.FOUND, 200, { result, page: 1, limit: 10, }),
+        new HttpResponseData(RESPONSE_CONFIG.MESSAGE.USER.FOUND, 200, {
+          result,
+          page: 1,
+          limit: 10,
+        }),
       );
     } else if (page && limit) {
       const allUsers = await userService.GetAllUser(p, l);
@@ -53,7 +81,12 @@ const GetUser = async (req: Request, res: Response) => {
         );
       }
       res.json(
-        new HttpResponseData(RESPONSE_CONFIG.MESSAGE.USER.FOUND, 200, { allUsers, page: p, limit: l, total, }),
+        new HttpResponseData(RESPONSE_CONFIG.MESSAGE.USER.FOUND, 200, {
+          allUsers,
+          page: p,
+          limit: l,
+          total,
+        }),
       );
     } else {
       const allUsers = await userService.GetAllUser(1, 10);
@@ -63,7 +96,12 @@ const GetUser = async (req: Request, res: Response) => {
         );
       }
       res.json(
-        new HttpResponseData(RESPONSE_CONFIG.MESSAGE.USER.FOUND, 200, { allUsers, page: 1, limit: 10, total, }),
+        new HttpResponseData(RESPONSE_CONFIG.MESSAGE.USER.FOUND, 200, {
+          allUsers,
+          page: 1,
+          limit: 10,
+          total,
+        }),
       );
     }
   } catch (error) {
@@ -77,7 +115,9 @@ const ChangePassword = async (req: Request, res: Response) => {
   try {
     const user: any = userService.GetUserById(id as string);
     if (!user) {
-      return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.USER.NOT_CORRECT, 404));
+      return res.json(
+        new HttpException(RESPONSE_CONFIG.MESSAGE.USER.NOT_CORRECT, 404),
+      );
     }
     const verifyToken: any = jwt.verify(
       token as string,
