@@ -7,8 +7,7 @@ const workplaceSchema = new Schema({
   address: String,
   status: { type: String, enum: ["ON", "OFF", "UPCOMING"] },
   workplace_code: { type: String, unique: [true, "Workplace code exist"] },
-  create_at: { type: Date, default: Date.now(), },
-  formated_date: String,
+  create_at: { type: Date, default: Date.now() },
 });
 
 enum StatusWP {
@@ -17,17 +16,11 @@ enum StatusWP {
   "UPCOMING",
 }
 
-workplaceSchema.pre("save", function (next) {
-  this.formated_date = moment(this.create_at).format("DD/MM/YYYY");
-  next();
-});
-
 export interface IWorkplace extends Document {
   name: string;
   address: string;
   status: StatusWP;
   workplace_code: string;
-  formated_date: string;
 }
 
 export const Workplace = model<IWorkplace>("workplaces", workplaceSchema);

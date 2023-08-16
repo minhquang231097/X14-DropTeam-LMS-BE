@@ -17,12 +17,6 @@ const courseSchema = new Schema({
     type: Date,
     default: Date.now(),
   },
-  formated_date: String,
-});
-
-courseSchema.pre("save", function (next) {
-  this.formated_date = moment(this.create_at).format("DD/MM/YYYY");
-  next();
 });
 
 export interface ICourse extends Document {
@@ -37,7 +31,6 @@ export interface ICourse extends Document {
   discount: number;
   workplace: string;
   create_at: string;
-  formated_date: string;
 }
 
 export const Course = model<ICourse>("courses", courseSchema);

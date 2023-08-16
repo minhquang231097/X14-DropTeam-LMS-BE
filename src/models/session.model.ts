@@ -13,19 +13,12 @@ const sessionSchema = new Schema({
     type: Date,
     default: Date.now(),
   },
-  formated_date: String,
 });
 
 enum StatusSS {
   "COMPLETED",
   "UNCOMPLETED",
 }
-
-sessionSchema.pre("save", function (next) {
-  this.formated_date = moment(this.create_at).format("DD/MM/YYYY");
-  next();
-});
-
 export interface ISession extends Document {
   course: string;
   class: string;

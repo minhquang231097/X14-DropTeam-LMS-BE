@@ -13,17 +13,8 @@ const userSchema = new Schema({
   dob: String,
   gender: String,
   address: String,
-  create_at: { type: Date, default: Date.now(), },
-  formated_date: String,
+  create_at: { type: Date, default: Date.now() },
 });
-
-userSchema.pre("save", function (next) {
-  this.formated_date = moment(this.create_at).format("DD/MM/YYYY");
-  next();
-});
-
-userSchema.index({ username: "text", email: "text", fullname: "text" });
-
 export interface IUser extends Document {
   fullname: string;
   email: string;
@@ -36,7 +27,6 @@ export interface IUser extends Document {
   dob: string;
   gender: string;
   address: string;
-  formated_date: string;
 }
 
 export const User = model<IUser>("users", userSchema);

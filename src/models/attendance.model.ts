@@ -11,12 +11,6 @@ const attendanceSchema = new Schema({
     type: Date,
     default: Date.now(),
   },
-  formated_date: String,
-});
-
-attendanceSchema.pre("save", function (next) {
-  this.formated_date = moment(this.create_at).format("DD/MM/YYYY");
-  next();
 });
 
 export interface IAttendance extends Document {
@@ -26,7 +20,6 @@ export interface IAttendance extends Document {
   absence: number;
   class_size: number;
   create_at: string;
-  formated_date: string;
 }
 
 export const Attendance = model<IAttendance>("attendances", attendanceSchema);

@@ -7,7 +7,7 @@ export class ClassRepository extends BaseRepository<IClass> {
     super(model);
   }
 
-  async CreateClass(mentor: string, workplace: string, course: string, end_at: string, payload: IClass) {
+  async CreateClass(mentor: string, workplace: string, course: string, end_at: Date, payload: IClass) {
     return await this.model.create({
       ...payload,
       mentor,

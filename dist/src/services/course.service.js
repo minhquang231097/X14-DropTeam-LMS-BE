@@ -28,12 +28,9 @@ const GetTotalCourse = async () => {
 };
 const SearchCourseByCondition = async (page, limit, searchTerm) => {
     const query = {
-        $or: [
-            { title: { $regex: searchTerm, $options: "i" } },
-            { course_code: { $regex: searchTerm, $options: "i" } },
-        ],
+        $or: [{ title: { $regex: searchTerm, $options: "i" } }, { course_code: { $regex: searchTerm, $options: "i" } }],
     };
-    return await courseRepository.SearchByCondition(page, limit, query);
+    return await courseRepository.SearchByCondition(page, limit, query, "workplace");
 };
 const UpdateCourse = async (id, payload) => {
     return await courseRepository.FindByIdAndUpdate(id, payload);

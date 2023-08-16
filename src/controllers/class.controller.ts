@@ -9,40 +9,20 @@ const CreateNewClass = async (req: Request, res: Response) => {
   const { mentor, workplace, course } = req.body;
   const payload = req.body;
   try {
-    const newClass = await classService.CreateOneClass(
-      mentor,
-      workplace,
-      course,
-      payload,
-    );
-    res.json(
-      new HttpResponseData(
-        RESPONSE_CONFIG.MESSAGE.CLASS.CREATE_SUCCES,
-        200,
-        newClass,
-      ),
-    );
+    const newClass = await classService.CreateOneClass(mentor, workplace, course, payload);
+    res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.CLASS.CREATE_SUCCES, 200, newClass));
   } catch (error) {
-    return res.json(
-      res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.CLASS.WRONG, 400)),
-    );
+    return res.json(res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.CLASS.WRONG, 400)));
   }
 };
 
 const AddStudentToClass = async (req: Request, res: Response) => {
   const { email, class_code } = req.body;
   try {
-    const result = await classStudentService.AddStudentToClass(
-      email,
-      class_code,
-    );
-    res.json(
-      new HttpResponseData(RESPONSE_CONFIG.MESSAGE.CLASS.ADD_STU_SUCCESS, 200),
-    );
+    const result = await classStudentService.AddStudentToClass(email, class_code);
+    res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.CLASS.ADD_STU_SUCCESS, 200));
   } catch (error) {
-    return res.json(
-      res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.CLASS.WRONG, 400)),
-    );
+    return res.json(res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.CLASS.WRONG, 400)));
   }
 };
 
@@ -55,27 +35,13 @@ const GetClass = async (req: Request, res: Response) => {
     if (id) {
       const classExist = await classService.GetClassById(id as string);
       if (!classExist) {
-        return res.json(
-          new HttpException(RESPONSE_CONFIG.MESSAGE.CLASS.NOT_FOUND, 404),
-        );
+        return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.CLASS.NOT_FOUND, 404));
       }
-      return res.json(
-        new HttpResponseData(
-          RESPONSE_CONFIG.MESSAGE.CLASS.FOUND_SUCCESS,
-          200,
-          classExist,
-        ),
-      );
+      return res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.CLASS.FOUND_SUCCESS, 200, classExist));
     } else if (course_code) {
-      const _class = await classService.GetClassByCourseCode(
-        course_code as string,
-        p,
-        l,
-      );
+      const _class = await classService.GetClassByCourseCode(course_code as string, p, l);
       if (!_class) {
-        return res.json(
-          new HttpException(RESPONSE_CONFIG.MESSAGE.CLASS.NOT_FOUND, 404),
-        );
+        return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.CLASS.NOT_FOUND, 404));
       }
       res.json(
         new HttpResponseData(RESPONSE_CONFIG.MESSAGE.CLASS.FOUND_SUCCESS, 200, {
@@ -85,15 +51,9 @@ const GetClass = async (req: Request, res: Response) => {
         }),
       );
     } else if (search) {
-      const classExist = await classService.SearchClassByCondition(
-        p,
-        l,
-        search as string,
-      );
+      const classExist = await classService.SearchClassByCondition(p, l, search as string);
       if (!classExist) {
-        return res.json(
-          new HttpException(RESPONSE_CONFIG.MESSAGE.CLASS.NOT_FOUND, 404),
-        );
+        return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.CLASS.NOT_FOUND, 404));
       }
       res.json(
         new HttpResponseData(RESPONSE_CONFIG.MESSAGE.CLASS.FOUND_SUCCESS, 200, {
@@ -104,15 +64,9 @@ const GetClass = async (req: Request, res: Response) => {
         }),
       );
     } else if (email) {
-      const classExist = await classStudentService.GetClassByStudentEmail(
-        p,
-        l,
-        email as string,
-      );
+      const classExist = await classStudentService.GetClassByStudentEmail(p, l, email as string);
       if (!classExist) {
-        return res.json(
-          new HttpException(RESPONSE_CONFIG.MESSAGE.CLASS.NOT_FOUND, 404),
-        );
+        return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.CLASS.NOT_FOUND, 404));
       }
       res.json(
         new HttpResponseData(RESPONSE_CONFIG.MESSAGE.CLASS.FOUND_SUCCESS, 200, {
@@ -125,9 +79,7 @@ const GetClass = async (req: Request, res: Response) => {
     } else if (page && limit) {
       const allClasses = await classService.GetAllClass(p, l);
       if (!allClasses) {
-        return res.json(
-          new HttpException(RESPONSE_CONFIG.MESSAGE.CLASS.NOT_FOUND, 404),
-        );
+        return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.CLASS.NOT_FOUND, 404));
       }
       res.json(
         new HttpResponseData(RESPONSE_CONFIG.MESSAGE.CLASS.FOUND_SUCCESS, 200, {
@@ -139,9 +91,7 @@ const GetClass = async (req: Request, res: Response) => {
     } else {
       const allClasses = await classService.GetAllClass(1, 10);
       if (!allClasses) {
-        return res.json(
-          new HttpException(RESPONSE_CONFIG.MESSAGE.CLASS.NOT_FOUND, 404),
-        );
+        return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.CLASS.NOT_FOUND, 404));
       }
       res.json(
         new HttpResponseData(RESPONSE_CONFIG.MESSAGE.CLASS.FOUND_SUCCESS, 200, {
@@ -153,9 +103,7 @@ const GetClass = async (req: Request, res: Response) => {
       );
     }
   } catch (error) {
-    return res.json(
-      new HttpException(RESPONSE_CONFIG.MESSAGE.CLASS.WRONG, 404),
-    );
+    return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.CLASS.WRONG, 404));
   }
 };
 
@@ -163,26 +111,13 @@ const UpdateClass = async (req: Request, res: Response) => {
   const { id } = req.params;
   const update = req.body;
   try {
-    const classUpdated = await classService.UpdateOneClass(
-      id as string,
-      update,
-    );
+    const classUpdated = await classService.UpdateOneClass(id as string, update);
     if (!classUpdated) {
-      return res.json(
-        new HttpException(RESPONSE_CONFIG.MESSAGE.CLASS.NOT_FOUND, 404),
-      );
+      return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.CLASS.NOT_FOUND, 404));
     }
-    res.json(
-      new HttpResponseData(
-        RESPONSE_CONFIG.MESSAGE.CLASS.UPDATE_SUCCESS,
-        200,
-        classUpdated,
-      ),
-    );
+    res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.CLASS.UPDATE_SUCCESS, 200, classUpdated));
   } catch (error: any) {
-    return res.json(
-      new HttpException(RESPONSE_CONFIG.MESSAGE.CLASS.WRONG, 400),
-    );
+    return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.CLASS.WRONG, 400));
   }
 };
 
@@ -191,21 +126,11 @@ const DeleteOneClass = async (req: Request, res: Response) => {
   try {
     const classDeleted = await classService.DeleteClassById(id as string);
     if (!classDeleted) {
-      return res.json(
-        new HttpException(RESPONSE_CONFIG.MESSAGE.CLASS.NOT_FOUND, 404),
-      );
+      return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.CLASS.NOT_FOUND, 404));
     }
-    res.json(
-      new HttpResponseData(RESPONSE_CONFIG.MESSAGE.CLASS.DELETE_SUCCESS, 200),
-    );
+    res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.CLASS.DELETE_SUCCESS, 200));
   } catch (error: any) {
-    return res.json(
-      new HttpException(
-        RESPONSE_CONFIG.MESSAGE.CLASS.WRONG,
-        400,
-        error.message,
-      ),
-    );
+    return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.CLASS.WRONG, 400, error.message));
   }
 };
 
@@ -214,21 +139,11 @@ const DeleteManyCourse = async (req: Request, res: Response) => {
   try {
     const classDeleted = await classService.DeleteClassByCondition(filter);
     if (!classDeleted) {
-      return res.json(
-        new HttpException(RESPONSE_CONFIG.MESSAGE.CLASS.NOT_FOUND, 404),
-      );
+      return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.CLASS.NOT_FOUND, 404));
     }
-    res.json(
-      new HttpResponseData(RESPONSE_CONFIG.MESSAGE.CLASS.DELETE_SUCCESS, 200),
-    );
+    res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.CLASS.DELETE_SUCCESS, 200));
   } catch (error: any) {
-    return res.json(
-      new HttpException(
-        RESPONSE_CONFIG.MESSAGE.CLASS.WRONG,
-        400,
-        error.message,
-      ),
-    );
+    return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.CLASS.WRONG, 400, error.message));
   }
 };
 

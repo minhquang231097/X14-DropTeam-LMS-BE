@@ -10,12 +10,6 @@ const lessonSchema = new Schema({
     type: Date,
     default: Date.now(),
   },
-  formated_date: String,
-});
-
-lessonSchema.pre("save", function (next) {
-  this.formated_date = moment(this.create_at).format("DD/MM/YYYY");
-  next();
 });
 
 export interface ILesson extends Document {
@@ -24,7 +18,6 @@ export interface ILesson extends Document {
   content: string;
   no: number;
   create_at: string;
-  formated_date: string;
 }
 
 export const Lesson = model<ILesson>("lessons", lessonSchema);
