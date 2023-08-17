@@ -12,9 +12,10 @@ const CreateFeedback = async (course_code: string, email_student: string, payloa
     userService.GetUserByEmail(email_student),
   ]);
   const newFeedback = await feedbackRepository.Create({
-    ...payload,
     course: _course?._id,
     student: _student._id,
+    rating: payload.rating,
+    content: payload.content,
   });
   return newFeedback;
 };

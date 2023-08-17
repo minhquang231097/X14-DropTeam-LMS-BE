@@ -6,8 +6,7 @@ export abstract class BaseRepository<T extends Document> {
   }
 
   async Create(payload: T | any): Promise<T | any> {
-    const createdEntity = new this.model(payload);
-    return await createdEntity.save();
+    return await this.model.create(payload);
   }
 
   async FindById(id: string | undefined, populate?: any | null): Promise<T | any> {

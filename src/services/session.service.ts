@@ -13,10 +13,12 @@ const CreateSession = async (course_code: string, class_code: string, payload: a
   ]);
   const course_id = _course?._id;
   const class_id = _class?._id;
-  return sessionRepository.Create({
-    ...payload,
+  return await sessionRepository.Create({
     course: course_id,
     class: class_id,
+    session_code: payload.session_code,
+    desc: payload.desc,
+    status: payload.status,
   });
 };
 

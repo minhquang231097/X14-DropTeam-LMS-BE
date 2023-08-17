@@ -7,12 +7,10 @@ const classSchema = new Schema({
   workplace: { type: Schema.Types.ObjectId, ref: "workplaces" },
   course: { type: Schema.Types.ObjectId, ref: "courses" },
   class_code: { type: String, unique: [true, RESPONSE_CONFIG.MESSAGE.CLASS.CODE_EXIST] },
-  // session_per_class: Number,
   start_at: Date,
   end_at: Date,
   total_hours: Number,
   total_session: Number,
-  // session_per_week: Number,
   hour_per_session: Number,
   schedule: [Date],
   class_size: Number,
@@ -31,8 +29,6 @@ export interface IClass extends Document {
   end_at: Date;
   total_hours: number;
   total_session: number;
-  // session_per_class: number;
-  // session_per_week: number;
   hour_per_session: number;
   schedule: [Date];
   class_size: number;
