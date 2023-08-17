@@ -7,11 +7,11 @@ export const SessionSchema = {
     Session: {
         create_session: Joi.object<ISession>({
             course: Joi.string().required().messages({
-                'string.empty': RESPONSE_CONFIG.MESSAGE.SESSION.NO_COURSE,
+                'string.empty': `${RESPONSE_CONFIG.MESSAGE.SESSION.NO_COURSE} (import course code)`,
                 'any.required': `{{#label}} is a required field`
             }),
             class: Joi.string().required().messages({
-                'string.empty': RESPONSE_CONFIG.MESSAGE.SESSION.NO_COURSE,
+                'string.empty': `${RESPONSE_CONFIG.MESSAGE.SESSION.NO_CLASS} (import class code)`,
                 'any.required': `{{#label}} is a required field`
             }),
             session_code: Joi.string().required().messages({
@@ -32,11 +32,11 @@ export const SessionSchema = {
         }),
         update_session: Joi.object<ISession>({
             course: Joi.string().required().messages({
-                'string.empty': RESPONSE_CONFIG.MESSAGE.SESSION.NO_COURSE,
+                'string.empty': `${RESPONSE_CONFIG.MESSAGE.SESSION.NO_COURSE} (import course code)`,
                 'any.required': `{{#label}} is a required field`
             }),
             class: Joi.string().required().messages({
-                'string.empty': RESPONSE_CONFIG.MESSAGE.SESSION.NO_COURSE,
+                'string.empty': `${RESPONSE_CONFIG.MESSAGE.SESSION.NO_CLASS} (import class code)`,
                 'any.required': `{{#label}} is a required field`
             }),
             session_code: Joi.string().required().messages({

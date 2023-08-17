@@ -32,3 +32,7 @@ export interface FindUserDto {
   address?: string;
   refreshToken?: string;
 }
+
+export interface SendEmailForgotPasswordDto {
+  email?: string;
+}

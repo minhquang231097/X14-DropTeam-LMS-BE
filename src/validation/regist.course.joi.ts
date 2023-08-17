@@ -21,7 +21,7 @@ export const RegistSchema = {
                 'any.required': `{{#label}} is a required field`
             }),
             course: Joi.string().required().messages({
-                'string.empty': RESPONSE_CONFIG.MESSAGE.REGIST.NO_COURSE,
+                'string.empty': `${RESPONSE_CONFIG.MESSAGE.REGIST.NO_COURSE} (import course code)`,
                 'any.required': `{{#label}} is a required field`
             }),
             workplace: Joi.string().required().messages({

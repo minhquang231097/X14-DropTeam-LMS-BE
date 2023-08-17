@@ -10,7 +10,7 @@ const CreateNewClass = async (req: Request, res: Response) => {
   const payload = req.body;
   try {
     const exist = await classService.GetClassByCode(class_code)
-    if(exist) return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.CLASS.WRONG, 403))
+    if (exist) return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.CLASS.CLASS_EXIST, 403))
     const newClass = await classService.CreateOneClass(mentor, workplace, course, payload);
     res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.CLASS.CREATE_SUCCES, 200, newClass));
   } catch (error) {
@@ -101,6 +101,7 @@ const GetClass = async (req: Request, res: Response) => {
           page: p,
           limit: l,
           total,
+          total_page: Math.ceil(total / l),
         }),
       );
     }

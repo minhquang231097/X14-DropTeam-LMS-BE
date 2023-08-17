@@ -84,7 +84,7 @@ const GetWorkplace = async (req: Request, res: Response) => {
         new HttpResponseData(
           RESPONSE_CONFIG.MESSAGE.WORKPLACE.FOUND_SUCCESS,
           200,
-          { all, page: 1, limit: 10, total },
+          { all, page: p, limit: l, total, total_page: Math.ceil(total / l) },
         ),
       );
     } else {
@@ -97,7 +97,7 @@ const GetWorkplace = async (req: Request, res: Response) => {
         new HttpResponseData(
           RESPONSE_CONFIG.MESSAGE.WORKPLACE.FOUND_SUCCESS,
           200,
-          { all, page: 1, limit: 10, total },
+          { all, page: 1, limit: 10, total, total_page: Math.ceil(total / 10) },
         ),
       );
     }

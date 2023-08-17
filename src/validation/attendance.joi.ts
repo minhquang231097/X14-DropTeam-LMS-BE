@@ -7,12 +7,12 @@ export const AttendanceSchema = {
     Attendance: {
         create_attendance: Joi.object<IAttendance>({
             session: Joi.string().required().messages({
-                'string.empty': RESPONSE_CONFIG.MESSAGE.ATTENDANCE.NO_SESSION,
-                'any.required': `{{#label}} is a required field`
+                'string.empty': `${RESPONSE_CONFIG.MESSAGE.ATTENDANCE.NO_SESSION} (import session_code)`,
+                'any.required': `{{#label}} is a required field `
             }),
             class: Joi.string().required().messages({
-                'string.empty': RESPONSE_CONFIG.MESSAGE.ATTENDANCE.NO_CLASS,
-                'any.required': `{{#label}} is a required field`
+                'string.empty': `${RESPONSE_CONFIG.MESSAGE.ATTENDANCE.NO_CLASS} (import class_code)`,
+                'any.required': `{{#label}} is a required field `
             }),
             day: Joi.number().integer().min(1).required().messages({
                 'number.base': `{{#label}} must be a number`,

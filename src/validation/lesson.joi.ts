@@ -7,9 +7,9 @@ export const LessonSchema = {
     Lesson: {
         create_lesson: Joi.object<ILesson>({
             session: Joi.string().required().messages({
-                'string.empty': RESPONSE_CONFIG.MESSAGE.LESSON.NO_SESSION,
+                'string.empty': `${RESPONSE_CONFIG.MESSAGE.LESSON.NO_SESSION} (import session code)`,
                 'string.max': `{{#label}} should have a maximum length of {#limit}`,
-                'any.required': `{{#label}} is a required field`
+                'any.required': `{{#label}} is a required field (import session code)`
             }),
             title: Joi.string().required().messages({
                 'string.empty': RESPONSE_CONFIG.MESSAGE.LESSON.NO_TITLE,
@@ -29,7 +29,7 @@ export const LessonSchema = {
         }),
         update_lesson: Joi.object<UpdateLessonDto>({
             session: Joi.string().required().messages({
-                'string.empty': RESPONSE_CONFIG.MESSAGE.LESSON.NO_SESSION,
+                'string.empty': `${RESPONSE_CONFIG.MESSAGE.LESSON.NO_SESSION} (import session code)`,
                 'string.max': `{{#label}} should have a maximum length of {#limit}`,
                 'any.required': `{{#label}} is a required field`
             }),

@@ -105,8 +105,9 @@ const GetCourse = async (req: Request, res: Response) => {
           200,
           {
             allCourses,
-            total,
             page: p,
+            count: l,
+            total,
           },
         ),
       );
@@ -123,8 +124,10 @@ const GetCourse = async (req: Request, res: Response) => {
           200,
           {
             allCourses,
-            total,
             page: p,
+            count: l,
+            total_page: Math.ceil(total / l),
+            total,
           },
         ),
       );

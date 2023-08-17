@@ -68,6 +68,7 @@ export const RESPONSE_CONFIG = {
       NO_SCHEDULE: "Require schedule",
       NO_TOTAL_SESSION: "Require total session",
       NO_SIZE: "Require class size",
+      CLASS_EXIST: "Class exist",
       CODE_EXIST: "Class code exist!",
       NOT_FOUND: "Can't find any class",
       CREATE_SUCCES: "Create class success",

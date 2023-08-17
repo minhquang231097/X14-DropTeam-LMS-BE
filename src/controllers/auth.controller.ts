@@ -122,6 +122,7 @@ const SignIn = async (req: Request, res: Response) => {
         id: userExist._id,
         accessToken,
         refreshToken: userExist.refreshToken,
+        role: userExist.role,
       });
     } else {
       res.json(

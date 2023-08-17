@@ -1,6 +1,6 @@
 import Joi from "joi";
 import { IUser } from "../models/user.model";
-import { SignInDto, SignOutDto, UpdateUserDto } from "@/types/user";
+import { SendEmailForgotPasswordDto, SignInDto, SignOutDto, UpdateUserDto } from "@/types/user";
 import { RESPONSE_CONFIG } from "@/configs/response.config";
 
 export const Schema = {
@@ -103,5 +103,13 @@ export const Schema = {
       gender: Joi.string().optional(),
       address: Joi.string().optional(),
     }),
+    forgot_password: Joi.object<SendEmailForgotPasswordDto>({
+      email: Joi.string().min(5).max(100).optional().messages({
+        'string.empty': RESPONSE_CONFIG.MESSAGE.USER.NO_EMAIL,
+        'string.min': `{{#label}} should have a minimum length of {#limit}`,
+        'string.max': `{{#label}} should have a maximum length of {#limit}`,
+        'any.required': `{{#label}} is a required field`
+      }),
+    })
   },
 };

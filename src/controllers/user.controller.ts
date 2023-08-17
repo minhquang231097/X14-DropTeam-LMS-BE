@@ -86,6 +86,7 @@ const GetUser = async (req: Request, res: Response) => {
           page: p,
           limit: l,
           total,
+          total_page: Math.ceil(total / l),
         }),
       );
     } else {
@@ -101,6 +102,7 @@ const GetUser = async (req: Request, res: Response) => {
           page: 1,
           limit: 10,
           total,
+          total_page: Math.ceil(total / 10),
         }),
       );
     }

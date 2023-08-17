@@ -25,3 +25,8 @@ export interface ClassResponseDto {
   class_size?: number;
   formated_date?: string;
 }
+
+export interface AddStudentToClassDto {
+  email?: string;
+  class_code?: string;
+}
