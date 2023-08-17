@@ -9,11 +9,11 @@ const response_config_1 = require("@/configs/response.config");
 exports.AttendanceSchema = {
     Attendance: {
         create_attendance: joi_1.default.object({
-            session: joi_1.default.string().required().messages({
+            session_code: joi_1.default.string().required().messages({
                 'string.empty': `${response_config_1.RESPONSE_CONFIG.MESSAGE.ATTENDANCE.NO_SESSION} (import session_code)`,
                 'any.required': `{{#label}} is a required field `
             }),
-            class: joi_1.default.string().required().messages({
+            class_code: joi_1.default.string().required().messages({
                 'string.empty': `${response_config_1.RESPONSE_CONFIG.MESSAGE.ATTENDANCE.NO_CLASS} (import class_code)`,
                 'any.required': `{{#label}} is a required field `
             }),
@@ -23,7 +23,7 @@ exports.AttendanceSchema = {
                 'number.integer': `{{#label}} must be an integer `,
                 'any.required': `{{#label}} is a required field`
             }),
-            absence: joi_1.default.number().required(),
+            absence: joi_1.default.number().integer().min(1).required(),
             class_size: joi_1.default.number().integer().min(1).required().messages({
                 'number.base': `{{#label}} must be a number`,
                 'number.min': `{{#label}} must greater than or equal to {{#limit}}`,
@@ -46,7 +46,7 @@ exports.AttendanceSchema = {
                 'number.integer': `{{#label}} must be an integer `,
                 'any.required': `{{#label}} is a required field`
             }),
-            absence: joi_1.default.number().required(),
+            absence: joi_1.default.number().integer().min(1).required(),
             class_size: joi_1.default.number().integer().min(1).required().messages({
                 'number.base': `{{#label}} must be a number`,
                 'number.min': `{{#label}} must greater than or equal to {{#limit}}`,

@@ -14,6 +14,7 @@ classRouter.post(
 );
 classRouter.post(
   "/add-student",
+  ValidateJoi(ClassSchema.Class.add_student),
   // verifyAccessJWT,
   classController.AddStudentToClass,
 );

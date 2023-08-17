@@ -21,10 +21,6 @@ exports.SessionSchema = {
                 'string.empty': response_config_1.RESPONSE_CONFIG.MESSAGE.SESSION.NO_CODE,
                 'any.required': `{{#label}} is a required field`
             }),
-            session_name: joi_1.default.string().required().messages({
-                'string.empty': response_config_1.RESPONSE_CONFIG.MESSAGE.SESSION.NO_NAME,
-                'any.required': `{{#label}} is a required field`
-            }),
             desc: joi_1.default.string().required().messages({
                 'string.empty': response_config_1.RESPONSE_CONFIG.MESSAGE.SESSION.NO_DES,
                 'any.required': `{{#label}} is a required field`
@@ -36,10 +32,6 @@ exports.SessionSchema = {
         update_session: joi_1.default.object({
             session_code: joi_1.default.string().required().messages({
                 'string.empty': response_config_1.RESPONSE_CONFIG.MESSAGE.SESSION.NO_CODE,
-                'any.required': `{{#label}} is a required field`
-            }),
-            session_name: joi_1.default.string().required().messages({
-                'string.empty': response_config_1.RESPONSE_CONFIG.MESSAGE.SESSION.NO_NAME,
                 'any.required': `{{#label}} is a required field`
             }),
             desc: joi_1.default.string().required().messages({
