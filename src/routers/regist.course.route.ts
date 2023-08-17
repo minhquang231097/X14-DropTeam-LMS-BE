@@ -9,17 +9,7 @@ const registCourseRouter = express.Router();
 
 registCourseRouter.post("/", ValidateJoi(RegistSchema.Regist.regist_course), verifyAccessJWT, registCourseController.RegistedNewCourse,);
 registCourseRouter.get("/", verifyAccessJWT, registCourseController.GetRegist);
-
-registCourseRouter.put(
-  "/:id",
-  verifyAccessJWT,
-  registCourseController.UpdateRegist,
-);
-
-registCourseRouter.delete(
-  "/:id",
-  verifyAccessJWT,
-  registCourseController.DeleteRegist,
-);
+registCourseRouter.put("/:id", ValidateJoi(RegistSchema.Regist.update_course), verifyAccessJWT, registCourseController.UpdateRegist,);
+registCourseRouter.delete("/:id", verifyAccessJWT, registCourseController.DeleteRegist,);
 
 export default registCourseRouter;

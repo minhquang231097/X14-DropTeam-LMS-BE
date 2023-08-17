@@ -37,7 +37,7 @@ authRouter.post(
   authController.SignOutUser,
 );
 authRouter.post("/refresh", authController.handleRefreshToken);
-authRouter.post("/forgot-password", authController.SendEmailForgotPassword);
-authRouter.post("/verify-user", authController.SendEmailVerifyUser);
+authRouter.post("/forgot-password", ValidateJoi(Schema.User.forgot_password), authController.SendEmailForgotPassword);
+authRouter.post("/verify-user", ValidateJoi(Schema.User.forgot_password), authController.SendEmailVerifyUser);
 
 export default authRouter;
