@@ -1,4 +1,3 @@
-import moment from "moment";
 import { Document, Schema, model } from "mongoose";
 
 const class_studentSchema = new Schema({

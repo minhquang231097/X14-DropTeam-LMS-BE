@@ -1,4 +1,3 @@
-import moment from "moment";
 import { Document, model, Schema } from "mongoose";
 import { RESPONSE_CONFIG } from "@/configs/response.config";
 
@@ -15,16 +14,6 @@ const userSchema = new Schema({
   address: String,
   create_at: { type: Date, default: Date.now() },
 });
-
-// userSchema.path("email").validate(async (email) => {
-//   const emailExist = await userService.GetUserByEmail(email)
-//   return !emailExist
-// }, RESPONSE_CONFIG.MESSAGE.USER.EMAIL_ERROR)
-
-// userSchema.path("phone_number").validate(async (email) => {
-//   const emailExist = await userService.GetUserByEmail(email)
-//   return !emailExist
-// }, RESPONSE_CONFIG.MESSAGE.USER.PHONE_ERROR)
 
 export interface IUser extends Document {
   fullname: string;

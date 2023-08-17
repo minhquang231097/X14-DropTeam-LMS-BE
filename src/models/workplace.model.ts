@@ -1,5 +1,4 @@
 import { RESPONSE_CONFIG } from "@/configs/response.config";
-import moment from "moment";
 import { Document, Schema, model } from "mongoose";
 
 const workplaceSchema = new Schema({

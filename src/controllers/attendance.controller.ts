@@ -53,7 +53,7 @@ const GetAttendance = async (req: Request, res: Response) => {
         }),
       );
     } else {
-      const attendances = await attendanceStudentService.GetAllAttendance(1, 10);
+      const attendances = await attendanceService.GetAttendance(1, 10);
       if (!attendances) {
         return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.ATTENDANCE.NOT_FOUND, 404));
       }

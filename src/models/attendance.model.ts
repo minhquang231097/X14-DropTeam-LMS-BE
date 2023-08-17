@@ -1,4 +1,3 @@
-import moment from "moment";
 import { Document, Schema, model } from "mongoose";
 
 const attendanceSchema = new Schema({

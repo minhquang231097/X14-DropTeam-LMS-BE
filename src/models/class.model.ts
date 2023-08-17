@@ -1,5 +1,4 @@
 import { RESPONSE_CONFIG } from "@/configs/response.config";
-import moment from "moment";
 import { Document, Schema, model } from "mongoose";
 
 const classSchema = new Schema({
@@ -14,11 +13,18 @@ const classSchema = new Schema({
   hour_per_session: Number,
   schedule: [Date],
   class_size: Number,
+  status: { type: String, enum: ["ON", "OFF", "UPCOMING"] },
   create_at: {
     type: Date,
     default: Date.now(),
   },
 });
+
+enum StatusC {
+  "ON",
+  "OFF",
+  "UPCOMING",
+}
 
 export interface IClass extends Document {
   mentor: string;
@@ -27,6 +33,7 @@ export interface IClass extends Document {
   class_code: string;
   start_at: Date;
   end_at: Date;
+  status: StatusC;
   total_hours: number;
   total_session: number;
   hour_per_session: number;

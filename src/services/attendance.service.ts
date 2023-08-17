@@ -38,6 +38,10 @@ const GetAttendanceByClassCode = async (code: string, page: number, limit: numbe
   return await attendanceRepository.FindAttendanceByClassId(foundAttendance._id, page, limit);
 };
 
+const GetAttendance = async (page: number, limit: number) => {
+  return await attendanceRepository.FindAllInfoAndPagination(page, limit, ["session", "class"]);
+};
+
 const UpdateAttendance = async (id: string, payload: UpdateAttendanceDto) => {
   return await attendanceRepository.FindByIdAndUpdate(id, payload);
 };
@@ -58,4 +62,5 @@ export default {
   GetAttendanceByClassCode,
   GetAttendanceByClassCodeAndDay,
   GetAttendanceByDay,
+  GetAttendance,
 };
