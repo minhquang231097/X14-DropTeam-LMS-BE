@@ -20,22 +20,54 @@ const GetFeedback = async (req: Request, res: Response) => {
   const p = Number(page);
   const l = Number(limit);
   try {
+    const countDoc = await feedbackService.GetTotalFeedback();
     if (course_code) {
       const feedback = await feedbackService.GetFeedbackByCourseCode(course_code as string, p, l);
       if (!feedback) return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.FEEDBACK.NOT_FOUND, 404));
-      res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.FEEDBACK.FOUND_SUCCESS, 200, feedback));
+      res.json(
+        new HttpResponseData(RESPONSE_CONFIG.MESSAGE.FEEDBACK.FOUND_SUCCESS, 200, {
+          list: feedback,
+          count: feedback.length,
+          page: p,
+          total: countDoc,
+          total_page: Math.ceil(feedback.length / l),
+        }),
+      );
     } else if (email) {
       const student = await feedbackService.GetFeedbackByEmailStudent(email as string, p, l);
       if (!student) return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.FEEDBACK.NOT_FOUND, 404));
-      res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.FEEDBACK.FOUND_SUCCESS, 200, student));
+      res.json(
+        new HttpResponseData(RESPONSE_CONFIG.MESSAGE.FEEDBACK.FOUND_SUCCESS, 200, {
+          list: student,
+          count: student.length,
+          page: p,
+          total: countDoc,
+          total_page: Math.ceil(student.length / l),
+        }),
+      );
     } else if (page && limit) {
       const all = await feedbackService.GetFeedbackByCondition(p, l);
       if (!all) return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.FEEDBACK.NOT_FOUND, 404));
-      res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.FEEDBACK.FOUND_SUCCESS, 200, all));
+      res.json(
+        new HttpResponseData(RESPONSE_CONFIG.MESSAGE.FEEDBACK.FOUND_SUCCESS, 200, {
+          list: all,
+          count: all.length,
+          page: p,
+          total: countDoc,
+          total_page: Math.ceil(all.length / l),
+        }),
+      );
     } else {
       const all = await feedbackService.GetFeedbackByCondition(1, 10);
       if (!all) return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.FEEDBACK.NOT_FOUND, 404));
-      res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.FEEDBACK.FOUND_SUCCESS, 200, all));
+      res.json(
+        new HttpResponseData(RESPONSE_CONFIG.MESSAGE.FEEDBACK.FOUND_SUCCESS, 200, {
+          list: all,
+          count: all.length,
+          page: 1,
+          total: countDoc,
+        }),
+      );
     }
   } catch (error: any) {
     return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.FEEDBACK.WRONG, 400, error.message));

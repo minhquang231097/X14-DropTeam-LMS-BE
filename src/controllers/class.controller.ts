@@ -33,7 +33,7 @@ const GetClass = async (req: Request, res: Response) => {
   const p = Number(page);
   const l = Number(limit);
   try {
-    const total = await classService.GetTotalClass();
+    const countDoc = await classService.GetTotalClass();
     if (id) {
       const classExist = await classService.GetClassById(id as string);
       if (!classExist) {
@@ -47,9 +47,11 @@ const GetClass = async (req: Request, res: Response) => {
       }
       res.json(
         new HttpResponseData(RESPONSE_CONFIG.MESSAGE.CLASS.FOUND_SUCCESS, 200, {
-          _class,
+          list: _class,
           page: p,
-          total,
+          total: countDoc,
+          count: _class.length,
+          total_page: Math.ceil(_class.length / l),
         }),
       );
     } else if (search) {
@@ -59,10 +61,11 @@ const GetClass = async (req: Request, res: Response) => {
       }
       res.json(
         new HttpResponseData(RESPONSE_CONFIG.MESSAGE.CLASS.FOUND_SUCCESS, 200, {
-          classExist,
+          list: classExist,
           page: p,
-          limit: l,
-          total,
+          count: classExist.length,
+          total: countDoc,
+          total_page: Math.ceil(classExist.length / l),
         }),
       );
     } else if (email) {
@@ -72,10 +75,11 @@ const GetClass = async (req: Request, res: Response) => {
       }
       res.json(
         new HttpResponseData(RESPONSE_CONFIG.MESSAGE.CLASS.FOUND_SUCCESS, 200, {
-          classExist,
+          list: classExist,
           page: p,
-          limit: l,
-          total,
+          count: classExist.length,
+          total: countDoc,
+          total_page: Math.ceil(classExist.length / l),
         }),
       );
     } else if (page && limit) {
@@ -87,7 +91,9 @@ const GetClass = async (req: Request, res: Response) => {
         new HttpResponseData(RESPONSE_CONFIG.MESSAGE.CLASS.FOUND_SUCCESS, 200, {
           list: allClasses,
           page: p,
-          total,
+          count: allClasses.length,
+          total_page: Math.ceil(allClasses.length / l),
+          total: countDoc,
         }),
       );
     } else {
@@ -97,11 +103,9 @@ const GetClass = async (req: Request, res: Response) => {
       }
       res.json(
         new HttpResponseData(RESPONSE_CONFIG.MESSAGE.CLASS.FOUND_SUCCESS, 200, {
-          allClasses,
-          page: p,
-          limit: l,
-          total,
-          total_page: Math.ceil(total / l),
+          list: allClasses,
+          page: 1,
+          total: countDoc,
         }),
       );
     }

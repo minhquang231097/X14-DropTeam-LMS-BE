@@ -23,6 +23,10 @@ const CreateRegistCourse = async (course_code: string, student_id: string, note:
   });
 };
 
+const GetTotalRegist = async () => {
+  return await registCourseRepository.Count();
+};
+
 const GetAllRegist = async (page: number, limit: number) => {
   return await registCourseRepository.FindAllInfoAndPagination(page, limit);
 };
@@ -63,4 +67,5 @@ export default {
   GetRegistByEmailStudent,
   GetAllRegist,
   GetRegistById,
+  GetTotalRegist,
 };

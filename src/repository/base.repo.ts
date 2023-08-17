@@ -56,6 +56,10 @@ export abstract class BaseRepository<T extends Document> {
       .populate(populate);
   }
 
+  async Count(): Promise<number> {
+    return this.model.count();
+  }
+
   async Aggregate(option: any) {
     return this.model.aggregate(option);
   }

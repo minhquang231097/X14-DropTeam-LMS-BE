@@ -11,98 +11,81 @@ const GetUser = async (req: Request, res: Response) => {
   const { page, limit, email, attendanceId, _class, search } = req.query;
   const p = Number(page);
   const l = Number(limit);
-  const total = await userService.GetTotalUser();
   try {
+    const countDoc = await userService.GetTotalUser();
     if (_class) {
-      const allUsers = await classStudentService.GetAllStudentInClass(
-        p,
-        l,
-        _class as string,
-      );
+      const allUsers = await classStudentService.GetAllStudentInClass(p, l, _class as string);
       if (!allUsers) {
-        return res.json(
-          new HttpException(RESPONSE_CONFIG.MESSAGE.USER.NOT_FOUND, 404),
-        );
+        return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.USER.NOT_FOUND, 404));
       }
       res.json(
         new HttpResponseData(RESPONSE_CONFIG.MESSAGE.USER.FOUND, 200, {
-          allUsers,
+          list: allUsers,
           page: p,
-          limit: l,
+          count: allUsers.length,
+          total: countDoc,
+          total_page: Math.ceil(allUsers.length / l),
         }),
       );
     } else if (email) {
       const user = await userService.GetUserByEmail(email as string);
       if (!user) {
-        return res.json(
-          new HttpException(RESPONSE_CONFIG.MESSAGE.USER.NOT_FOUND, 404),
-        );
+        return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.USER.NOT_FOUND, 404));
       }
-      res.json(
-        new HttpResponseData(RESPONSE_CONFIG.MESSAGE.USER.FOUND, 200, user),
-      );
+      res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.USER.FOUND, 200, user));
     } else if (attendanceId) {
-      const allUsers = await userService.GetUserByAttendance(
-        attendanceId as string,
-        p,
-        l,
-      );
+      const allUsers = await userService.GetUserByAttendance(attendanceId as string, p, l);
       if (!allUsers) {
-        return res.json(
-          new HttpException(RESPONSE_CONFIG.MESSAGE.USER.NOT_FOUND, 404),
-        );
-      }
-      res.json(
-        new HttpResponseData(RESPONSE_CONFIG.MESSAGE.USER.FOUND, 200, allUsers),
-      );
-    } else if (search) {
-      const result = await userService.SearchUserByCondition(
-        p,
-        l,
-        search as string,
-      );
-      if (!result) {
-        return res.json(
-          new HttpException(RESPONSE_CONFIG.MESSAGE.USER.NOT_FOUND, 404),
-        );
+        return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.USER.NOT_FOUND, 404));
       }
       res.json(
         new HttpResponseData(RESPONSE_CONFIG.MESSAGE.USER.FOUND, 200, {
-          result,
-          page: 1,
-          limit: 10,
+          list: allUsers,
+          page: p,
+          count: allUsers.length,
+          total: countDoc,
+          total_page: Math.ceil(allUsers.length / l),
+        }),
+      );
+    } else if (search) {
+      const result = await userService.SearchUserByCondition(p, l, search as string);
+      if (!result) {
+        return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.USER.NOT_FOUND, 404));
+      }
+      res.json(
+        new HttpResponseData(RESPONSE_CONFIG.MESSAGE.USER.FOUND, 200, {
+          list: result,
+          page: p,
+          count: result.length,
+          total: countDoc,
+          total_page: Math.ceil(result.length / l),
         }),
       );
     } else if (page && limit) {
       const allUsers = await userService.GetAllUser(p, l);
       if (!allUsers) {
-        return res.json(
-          new HttpException(RESPONSE_CONFIG.MESSAGE.USER.NOT_FOUND, 404),
-        );
+        return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.USER.NOT_FOUND, 404));
       }
       res.json(
         new HttpResponseData(RESPONSE_CONFIG.MESSAGE.USER.FOUND, 200, {
-          allUsers,
+          list: allUsers,
           page: p,
-          limit: l,
-          total,
-          total_page: Math.ceil(total / l),
+          count: allUsers.length,
+          total: countDoc,
+          total_page: Math.ceil(allUsers.length / l),
         }),
       );
     } else {
       const allUsers = await userService.GetAllUser(1, 10);
       if (!allUsers) {
-        return res.json(
-          new HttpException(RESPONSE_CONFIG.MESSAGE.USER.NOT_FOUND, 404),
-        );
+        return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.USER.NOT_FOUND, 404));
       }
       res.json(
         new HttpResponseData(RESPONSE_CONFIG.MESSAGE.USER.FOUND, 200, {
-          allUsers,
+          list: allUsers,
           page: 1,
-          limit: 10,
-          total,
-          total_page: Math.ceil(total / 10),
+          count: allUsers.length,
+          total: countDoc,
         }),
       );
     }
@@ -117,26 +100,16 @@ const ChangePassword = async (req: Request, res: Response) => {
   try {
     const user: any = userService.GetUserById(id as string);
     if (!user) {
-      return res.json(
-        new HttpException(RESPONSE_CONFIG.MESSAGE.USER.NOT_CORRECT, 404),
-      );
+      return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.USER.NOT_CORRECT, 404));
     }
-    const verifyToken: any = jwt.verify(
-      token as string,
-      process.env.ACCESSTOKEN_KEY as string,
-    );
+    const verifyToken: any = jwt.verify(token as string, process.env.ACCESSTOKEN_KEY as string);
     if (user && verifyToken._id) {
       const salt = await bcrypt.genSalt(10);
       const newPassword = await bcrypt.hash(password, salt);
       await userService.UpdateUserById(id as string, {
         password: newPassword,
       });
-      return res.json(
-        new HttpResponseData(
-          RESPONSE_CONFIG.MESSAGE.USER.PASSWORD_CHANGED,
-          200,
-        ),
-      );
+      return res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.USER.PASSWORD_CHANGED, 200));
     }
   } catch (error) {
     return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.USER.WRONG, 400));
@@ -149,13 +122,9 @@ const UpdateUserInfo = async (req: Request, res: Response) => {
   try {
     const update = await userService.UpdateUserById(id, payload);
     if (!update) {
-      return res.json(
-        new HttpException(RESPONSE_CONFIG.MESSAGE.USER.NOT_FOUND, 404),
-      );
+      return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.USER.NOT_FOUND, 404));
     }
-    res.json(
-      new HttpResponseData(RESPONSE_CONFIG.MESSAGE.USER.SUCCESS, 200, update),
-    );
+    res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.USER.SUCCESS, 200, update));
   } catch (error) {
     return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.USER.WRONG, 400));
   }
@@ -167,15 +136,11 @@ const UpdatePassword = async (req: Request, res: Response) => {
   try {
     const exist = await userService.GetUserById(_id);
     if (!exist) {
-      return res.json(
-        new HttpException(RESPONSE_CONFIG.MESSAGE.USER.NOT_FOUND, 404),
-      );
+      return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.USER.NOT_FOUND, 404));
     }
     const checkPassword = bcrypt.compareSync(password, exist.password);
     if (!checkPassword) {
-      return res.json(
-        new HttpException(RESPONSE_CONFIG.MESSAGE.USER.PASS_NOT_CORRECT, 404),
-      );
+      return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.USER.PASS_NOT_CORRECT, 404));
     }
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(newPassword, salt);
@@ -192,19 +157,13 @@ const DeleteUser = async (req: Request, res: Response) => {
     if (id) {
       const user = await userService.DeleteUserById(id as string);
       if (!user) {
-        return res.json(
-          new HttpException(RESPONSE_CONFIG.MESSAGE.USER.NOT_FOUND, 404),
-        );
+        return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.USER.NOT_FOUND, 404));
       }
       res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.USER.SUCCESS, 200));
     } else if (email || username) {
-      const user = await userService.DeleteUserByCondition(
-        (email as string) || (username as string),
-      );
+      const user = await userService.DeleteUserByCondition((email as string) || (username as string));
       if (!user) {
-        return res.json(
-          new HttpException(RESPONSE_CONFIG.MESSAGE.USER.NOT_FOUND, 404),
-        );
+        return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.USER.NOT_FOUND, 404));
       }
       res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.USER.SUCCESS, 200));
     }

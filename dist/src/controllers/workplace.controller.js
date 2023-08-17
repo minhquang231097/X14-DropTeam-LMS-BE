@@ -20,8 +20,8 @@ const GetWorkplace = async (req, res) => {
     const { page, limit, id, code, search } = req.query;
     const p = Number(page);
     const l = Number(limit);
-    const total = await workplace_service_1.default.GetTotalWorkplace();
     try {
+        const countDoc = await workplace_service_1.default.GetTotalWorkplace();
         if (id) {
             const wp = await workplace_service_1.default.GetWorkplaceById(id);
             if (!wp)
@@ -35,22 +35,39 @@ const GetWorkplace = async (req, res) => {
             return res.json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.WORKPLACE.FOUND_SUCCESS, 200, wp));
         }
         else if (search) {
-            const all = await workplace_service_1.default.SearchWorkplaceByCondition(1, 10, search);
+            const all = await workplace_service_1.default.SearchWorkplaceByCondition(p, l, search);
             if (!all)
                 return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.WORKPLACE.NOT_FOUND, 404));
-            return res.json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.WORKPLACE.FOUND_SUCCESS, 200, all));
+            return res.json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.WORKPLACE.FOUND_SUCCESS, 200, {
+                list: all,
+                page: p,
+                count: all.length,
+                total: countDoc,
+                total_page: Math.ceil(countDoc / l),
+            }));
         }
         else if (page && limit) {
             const all = await workplace_service_1.default.GetAllWorkplace(p, l);
             if (!all)
                 return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.WORKPLACE.NOT_FOUND, 404));
-            return res.json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.WORKPLACE.FOUND_SUCCESS, 200, { all, page: p, limit: l, total, total_page: Math.ceil(total / l) }));
+            return res.json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.WORKPLACE.FOUND_SUCCESS, 200, {
+                list: all,
+                page: p,
+                count: all.length,
+                total: countDoc,
+                total_page: Math.ceil(countDoc / l),
+            }));
         }
         else {
             const all = await workplace_service_1.default.GetAllWorkplace(1, 10);
             if (!all)
                 return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.WORKPLACE.NOT_FOUND, 404));
-            return res.json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.WORKPLACE.FOUND_SUCCESS, 200, { all, page: 1, limit: 10, total, total_page: Math.ceil(total / 10) }));
+            return res.json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.WORKPLACE.FOUND_SUCCESS, 200, {
+                list: all,
+                page: 1,
+                count: all.length,
+                total: countDoc,
+            }));
         }
     }
     catch (error) {

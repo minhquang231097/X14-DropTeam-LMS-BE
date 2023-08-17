@@ -42,6 +42,10 @@ const GetAttendance = async (page: number, limit: number) => {
   return await attendanceRepository.FindAllInfoAndPagination(page, limit, ["session", "class"]);
 };
 
+const CountAttendance = async () => {
+  return await attendanceRepository.Count();
+};
+
 const UpdateAttendance = async (id: string, payload: UpdateAttendanceDto) => {
   return await attendanceRepository.FindByIdAndUpdate(id, payload);
 };
@@ -63,4 +67,5 @@ export default {
   GetAttendanceByClassCodeAndDay,
   GetAttendanceByDay,
   GetAttendance,
+  CountAttendance,
 };

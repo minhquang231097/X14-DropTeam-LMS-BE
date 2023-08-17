@@ -37,19 +37,12 @@ const DeletedWorkplace = async (id: string) => {
 };
 
 const GetTotalWorkplace = async () => {
-  return (await workplaceRepository.FindAll()).length;
+  return await workplaceRepository.Count();
 };
 
-const SearchWorkplaceByCondition = async (
-  page: number,
-  limit: number,
-  searchTerm?: string,
-) => {
+const SearchWorkplaceByCondition = async (page: number, limit: number, searchTerm?: string) => {
   const query = {
-    $or: [
-      { name: { $regex: searchTerm, $options: "i" } },
-      { workplace_code: { $regex: searchTerm, $options: "i" } },
-    ],
+    $or: [{ name: { $regex: searchTerm, $options: "i" } }, { workplace_code: { $regex: searchTerm, $options: "i" } }],
   };
   return await workplaceRepository.SearchByCondition(page, limit, query);
 };

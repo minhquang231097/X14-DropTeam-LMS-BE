@@ -26,7 +26,7 @@ const GetCourseByCode = async (code: string) => {
 };
 
 const GetTotalCourse = async () => {
-  return (await courseRepository.FindAll()).length;
+  return await courseRepository.Count();
 };
 
 const SearchCourseByCondition = async (page: number, limit: number, searchTerm?: string) => {

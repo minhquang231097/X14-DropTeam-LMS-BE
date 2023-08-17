@@ -37,7 +37,7 @@ const GetClass = async (req, res) => {
     const p = Number(page);
     const l = Number(limit);
     try {
-        const total = await class_service_1.default.GetTotalClass();
+        const countDoc = await class_service_1.default.GetTotalClass();
         if (id) {
             const classExist = await class_service_1.default.GetClassById(id);
             if (!classExist) {
@@ -51,9 +51,11 @@ const GetClass = async (req, res) => {
                 return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.CLASS.NOT_FOUND, 404));
             }
             res.json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.CLASS.FOUND_SUCCESS, 200, {
-                _class,
+                list: _class,
                 page: p,
-                total,
+                total: countDoc,
+                count: _class.length,
+                total_page: Math.ceil(_class.length / l),
             }));
         }
         else if (search) {
@@ -62,10 +64,11 @@ const GetClass = async (req, res) => {
                 return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.CLASS.NOT_FOUND, 404));
             }
             res.json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.CLASS.FOUND_SUCCESS, 200, {
-                classExist,
+                list: classExist,
                 page: p,
-                limit: l,
-                total,
+                count: classExist.length,
+                total: countDoc,
+                total_page: Math.ceil(classExist.length / l),
             }));
         }
         else if (email) {
@@ -74,10 +77,11 @@ const GetClass = async (req, res) => {
                 return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.CLASS.NOT_FOUND, 404));
             }
             res.json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.CLASS.FOUND_SUCCESS, 200, {
-                classExist,
+                list: classExist,
                 page: p,
-                limit: l,
-                total,
+                count: classExist.length,
+                total: countDoc,
+                total_page: Math.ceil(classExist.length / l),
             }));
         }
         else if (page && limit) {
@@ -88,7 +92,9 @@ const GetClass = async (req, res) => {
             res.json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.CLASS.FOUND_SUCCESS, 200, {
                 list: allClasses,
                 page: p,
-                total,
+                count: allClasses.length,
+                total_page: Math.ceil(allClasses.length / l),
+                total: countDoc,
             }));
         }
         else {
@@ -97,11 +103,9 @@ const GetClass = async (req, res) => {
                 return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.CLASS.NOT_FOUND, 404));
             }
             res.json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.CLASS.FOUND_SUCCESS, 200, {
-                allClasses,
-                page: p,
-                limit: l,
-                total,
-                total_page: Math.ceil(total / l),
+                list: allClasses,
+                page: 1,
+                total: countDoc,
             }));
         }
     }

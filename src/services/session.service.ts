@@ -22,6 +22,10 @@ const CreateSession = async (course_code: string, class_code: string, payload: a
   });
 };
 
+const CountSession = async () => {
+  return await sessionRepository.Count();
+};
+
 const GetAllSession = async (page: number, limit: number) => {
   return await sessionRepository.FindAllInfoAndPagination(page, limit, ["course", "class"]);
 };
@@ -66,4 +70,5 @@ export default {
   DeletedCourse,
   GetSessionByClassCode,
   GetSessionByCode,
+  CountSession,
 };

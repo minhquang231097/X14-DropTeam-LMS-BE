@@ -20,26 +20,66 @@ const GetRegist = async (req: Request, res: Response) => {
   const p = Number(page);
   const l = Number(limit);
   try {
+    const countDoc = await registCourseService.GetTotalRegist();
     if (_course) {
       const allRegist = await registCourseService.GetRegistByCourseCode(_course as string, p, l);
       if (allRegist.length === 0) return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.REGIST.NOT_FOUND, 404));
-      res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.REGIST.FOUND_SUCCESS, 200, allRegist));
+      res.json(
+        new HttpResponseData(RESPONSE_CONFIG.MESSAGE.REGIST.FOUND_SUCCESS, 200, {
+          list: allRegist,
+          count: allRegist.length,
+          page: p,
+          total: countDoc,
+          total_page: Math.ceil(allRegist.length / l),
+        }),
+      );
     } else if (_wp) {
       const allRegist = await registCourseService.GetRegistByWorkplaceCode(_wp as string, p, l);
       if (allRegist.length === 0) return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.REGIST.NOT_FOUND, 404));
-      res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.REGIST.FOUND_SUCCESS, 200, allRegist));
+      res.json(
+        new HttpResponseData(RESPONSE_CONFIG.MESSAGE.REGIST.FOUND_SUCCESS, 200, {
+          list: allRegist,
+          count: allRegist.length,
+          page: p,
+          total: countDoc,
+          total_page: Math.ceil(allRegist.length / l),
+        }),
+      );
     } else if (email) {
       const allRegist = await registCourseService.GetRegistByEmailStudent(email as string, p, l);
       if (allRegist.length === 0) return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.REGIST.NOT_FOUND, 404));
-      res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.REGIST.FOUND_SUCCESS, 200, allRegist));
+      res.json(
+        new HttpResponseData(RESPONSE_CONFIG.MESSAGE.REGIST.FOUND_SUCCESS, 200, {
+          list: allRegist,
+          count: allRegist.length,
+          page: p,
+          total: countDoc,
+          total_page: Math.ceil(allRegist.length / l),
+        }),
+      );
     } else if (page && limit) {
       const allRegist = await registCourseService.GetAllRegist(p, l);
       if (allRegist.length === 0) return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.REGIST.NOT_FOUND, 404));
-      res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.REGIST.FOUND_SUCCESS, 200, allRegist));
+      res.json(
+        new HttpResponseData(RESPONSE_CONFIG.MESSAGE.REGIST.FOUND_SUCCESS, 200, {
+          list: allRegist,
+          count: allRegist.length,
+          page: p,
+          total: countDoc,
+          total_page: Math.ceil(allRegist.length / l),
+        }),
+      );
     } else {
       const allRegist = await registCourseService.GetAllRegist(1, 10);
       if (allRegist.length === 0) return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.REGIST.NOT_FOUND, 404));
-      res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.REGIST.FOUND_SUCCESS, 200, allRegist));
+      res.json(
+        new HttpResponseData(RESPONSE_CONFIG.MESSAGE.REGIST.FOUND_SUCCESS, 200, {
+          list: allRegist,
+          count: allRegist.length,
+          page: 1,
+          total: countDoc,
+        }),
+      );
     }
   } catch (error) {
     return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.REGIST.WRONG, 404));

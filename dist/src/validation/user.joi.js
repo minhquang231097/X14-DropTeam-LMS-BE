@@ -75,12 +75,6 @@ exports.Schema = {
                 'string.max': `{{#label}} should have a maximum length of {#limit}`,
                 'any.required': `{{#label}} is a required field`
             }),
-            email: joi_1.default.string().min(5).max(100).optional().messages({
-                'string.empty': response_config_1.RESPONSE_CONFIG.MESSAGE.USER.NO_EMAIL,
-                'string.min': `{{#label}} should have a minimum length of {#limit}`,
-                'string.max': `{{#label}} should have a maximum length of {#limit}`,
-                'any.required': `{{#label}} is a required field`
-            }),
             phone_number: joi_1.default.string().regex(/^[0-9]/).min(5).max(100).optional().messages({
                 'string.empty': response_config_1.RESPONSE_CONFIG.MESSAGE.USER.NO_PHONE_NUM,
                 'string.pattern.base': `{{#label}} have to match the required pattern: 0-9`,
@@ -88,20 +82,6 @@ exports.Schema = {
                 'string.max': `{{#label}} should have a maximum length of {#limit}`,
                 'any.required': `{{#label}} is a required field`
             }),
-            username: joi_1.default.string().min(5).max(100).optional().messages({
-                'string.empty': response_config_1.RESPONSE_CONFIG.MESSAGE.USER.NO_USERNAME,
-                'string.min': `{{#label}} should have a minimum length of {#limit}`,
-                'string.max': `{{#label}} should have a maximum length of {#limit}`,
-                'any.required': `{{#label}} is a required field`
-            }),
-            password: joi_1.default.string().min(5).max(100).optional().messages({
-                'string.empty': response_config_1.RESPONSE_CONFIG.MESSAGE.USER.NO_PASSWORD,
-                'string.min': `{{#label}} should have a minimum length of {#limit}`,
-                'string.max': `{{#label}} should have a maximum length of {#limit}`,
-                'any.required': `{{#label}} is a required field`
-            }),
-            create_at: joi_1.default.string().optional(),
-            role: joi_1.default.string().optional(),
             dob: joi_1.default.string().optional(),
             gender: joi_1.default.string().optional(),
             address: joi_1.default.string().optional(),
@@ -109,6 +89,28 @@ exports.Schema = {
         forgot_password: joi_1.default.object({
             email: joi_1.default.string().min(5).max(100).optional().messages({
                 'string.empty': response_config_1.RESPONSE_CONFIG.MESSAGE.USER.NO_EMAIL,
+                'string.min': `{{#label}} should have a minimum length of {#limit}`,
+                'string.max': `{{#label}} should have a maximum length of {#limit}`,
+                'any.required': `{{#label}} is a required field`
+            }),
+        }),
+        new_password: joi_1.default.object({
+            password: joi_1.default.string().min(5).max(100).required().messages({
+                'string.empty': response_config_1.RESPONSE_CONFIG.MESSAGE.USER.NO_PASSWORD,
+                'string.min': `{{#label}} should have a minimum length of {#limit}`,
+                'string.max': `{{#label}} should have a maximum length of {#limit}`,
+                'any.required': `{{#label}} is a required field`
+            }),
+        }),
+        change_password: joi_1.default.object({
+            password: joi_1.default.string().min(5).max(100).required().messages({
+                'string.empty': response_config_1.RESPONSE_CONFIG.MESSAGE.USER.NO_PASSWORD,
+                'string.min': `{{#label}} should have a minimum length of {#limit}`,
+                'string.max': `{{#label}} should have a maximum length of {#limit}`,
+                'any.required': `{{#label}} is a required field`
+            }),
+            newPassword: joi_1.default.string().min(5).max(100).required().messages({
+                'string.empty': response_config_1.RESPONSE_CONFIG.MESSAGE.USER.NO_PASSWORD,
                 'string.min': `{{#label}} should have a minimum length of {#limit}`,
                 'string.max': `{{#label}} should have a maximum length of {#limit}`,
                 'any.required': `{{#label}} is a required field`

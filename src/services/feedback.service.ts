@@ -20,6 +20,10 @@ const CreateFeedback = async (course_code: string, email_student: string, payloa
   return newFeedback;
 };
 
+const GetTotalFeedback = async () => {
+  return await feedbackRepository.Count();
+};
+
 const GetFeedbackById = async (id: string) => {
   return await feedbackRepository.FindById(id, [{ path: "course", populate: { path: "workplace" } }, "student"]);
 };
@@ -61,4 +65,5 @@ export default {
   GetFeedbackByCondition,
   GetFeedbackByCourseCode,
   GetFeedbackByEmailStudent,
+  GetTotalFeedback,
 };

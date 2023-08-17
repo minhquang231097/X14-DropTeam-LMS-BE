@@ -10,6 +10,10 @@ const CreateLesson = async (session_code: string, payload: ILesson) => {
   return await lessonRepository.CreateLesson(session?._id, payload);
 };
 
+const CountLesson = async () => {
+  return await lessonRepository.Count();
+};
+
 const GetAllLesson = async (page: number, limit: number) => {
   return await lessonRepository.FindAllInfoAndPagination(page, limit, [
     { path: "session", populate: [{ path: "class" }] },
@@ -48,4 +52,5 @@ export default {
   UpdateLessonById,
   UpdateCourseByCondition,
   DeletedLessonById,
+  CountLesson,
 };

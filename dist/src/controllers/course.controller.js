@@ -25,7 +25,7 @@ const GetCourse = async (req, res) => {
     const p = Number(page);
     const l = Number(limit);
     try {
-        const total = await course_service_1.default.GetTotalCourse();
+        const countDoc = await course_service_1.default.GetTotalCourse();
         if (id) {
             const courseExist = await course_service_1.default.GetCourseById(id);
             if (!courseExist) {
@@ -46,9 +46,11 @@ const GetCourse = async (req, res) => {
                 return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.COURSE.NOT_FOUND, 404));
             }
             res.json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.COURSE.FOUND_SUCCESS, 200, {
-                allCourses,
-                total,
+                list: allCourses,
+                total: countDoc,
                 page: p,
+                count: allCourses.length,
+                total_page: Math.ceil(allCourses.length / l),
             }));
         }
         else if (search) {
@@ -57,10 +59,11 @@ const GetCourse = async (req, res) => {
                 return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.COURSE.NOT_FOUND, 404));
             }
             res.json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.COURSE.FOUND_SUCCESS, 200, {
-                allCourses,
+                list: allCourses,
                 page: p,
-                count: l,
-                total,
+                count: allCourses.length,
+                total: countDoc,
+                total_page: Math.ceil(allCourses.length / l),
             }));
         }
         else if (page && limit) {
@@ -69,11 +72,11 @@ const GetCourse = async (req, res) => {
                 return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.COURSE.NOT_FOUND, 404));
             }
             res.json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.COURSE.FOUND_SUCCESS, 200, {
-                allCourses,
+                list: allCourses,
                 page: p,
-                count: l,
-                total_page: Math.ceil(total / l),
-                total,
+                count: allCourses.length,
+                total: countDoc,
+                total_page: Math.ceil(allCourses.length / l),
             }));
         }
         else {
@@ -82,10 +85,9 @@ const GetCourse = async (req, res) => {
                 return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.COURSE.NOT_FOUND, 404));
             }
             res.json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.COURSE.FOUND_SUCCESS, 200, {
-                allCourses,
-                total,
+                list: allCourses,
                 page: 1,
-                limit: 10,
+                total: countDoc,
             }));
         }
     }

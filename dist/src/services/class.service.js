@@ -66,7 +66,7 @@ const GetAllClass = async (page, limit) => {
     ]);
 };
 const GetTotalClass = async () => {
-    return (await classRepository.FindAll()).length;
+    return await classRepository.Count();
 };
 const GetClassById = async (id) => {
     return await classRepository.FindById(id, [

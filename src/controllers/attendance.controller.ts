@@ -22,24 +22,49 @@ const GetAttendance = async (req: Request, res: Response) => {
   const p = Number(page);
   const l = Number(limit);
   try {
+    const countDoc = await attendanceService.CountAttendance();
     if (class_code && day) {
       const attendance = await attendanceService.GetAttendanceByClassCodeAndDay(class_code as string, Number(day));
       if (!attendance) {
         return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.ATTENDANCE.NOT_FOUND, 404));
       }
-      res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.ATTENDANCE.FOUND_SUCCESS, 200, attendance));
+      res.json(
+        new HttpResponseData(RESPONSE_CONFIG.MESSAGE.ATTENDANCE.FOUND_SUCCESS, 200, {
+          list: attendance,
+          page: p,
+          total: countDoc,
+          count: attendance.length,
+          total_page: Math.ceil(attendance.length / p),
+        }),
+      );
     } else if (class_code) {
       const result = await attendanceService.GetAttendanceByClassCode(class_code as string, p, l);
       if (!result) {
         return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.ATTENDANCE.NOT_FOUND, 404));
       }
-      res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.ATTENDANCE.FOUND_SUCCESS, 200, result));
+      res.json(
+        new HttpResponseData(RESPONSE_CONFIG.MESSAGE.ATTENDANCE.FOUND_SUCCESS, 200, {
+          list: result,
+          page: p,
+          total: countDoc,
+          count: result.length,
+          total_page: Math.ceil(result.length / p),
+        }),
+      );
     } else if (day) {
       const result = await attendanceService.GetAttendanceByDay(Number(day), p, l);
       if (!result) {
         return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.ATTENDANCE.NOT_FOUND, 404));
       }
-      res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.ATTENDANCE.FOUND_SUCCESS, 200, result));
+      res.json(
+        new HttpResponseData(RESPONSE_CONFIG.MESSAGE.ATTENDANCE.FOUND_SUCCESS, 200, {
+          list: result,
+          page: p,
+          total: countDoc,
+          count: result.length,
+          total_page: Math.ceil(result.length / p),
+        }),
+      );
     } else if (email) {
       const attendances = await attendanceStudentService.GetAttendanceByEmailStudent(email as string, p, l);
       if (!attendances) {
@@ -49,7 +74,9 @@ const GetAttendance = async (req: Request, res: Response) => {
         new HttpResponseData(RESPONSE_CONFIG.MESSAGE.ATTENDANCE.FOUND_SUCCESS, 200, {
           list: attendances,
           page: p,
+          total: countDoc,
           count: attendances.length,
+          total_page: Math.ceil(attendances.length / p),
         }),
       );
     } else {
@@ -61,7 +88,7 @@ const GetAttendance = async (req: Request, res: Response) => {
         new HttpResponseData(RESPONSE_CONFIG.MESSAGE.ATTENDANCE.FOUND_SUCCESS, 200, {
           list: attendances,
           page: 1,
-          count: attendances.length,
+          total: countDoc,
         }),
       );
     }

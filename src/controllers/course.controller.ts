@@ -22,7 +22,7 @@ const GetCourse = async (req: Request, res: Response) => {
   const p = Number(page);
   const l = Number(limit);
   try {
-    const total = await CourseService.GetTotalCourse();
+    const countDoc = await CourseService.GetTotalCourse();
     if (id) {
       const courseExist = await CourseService.GetCourseById(id as string);
       if (!courseExist) {
@@ -42,9 +42,11 @@ const GetCourse = async (req: Request, res: Response) => {
       }
       res.json(
         new HttpResponseData(RESPONSE_CONFIG.MESSAGE.COURSE.FOUND_SUCCESS, 200, {
-          allCourses,
-          total,
+          list: allCourses,
+          total: countDoc,
           page: p,
+          count: allCourses.length,
+          total_page: Math.ceil(allCourses.length / l),
         }),
       );
     } else if (search) {
@@ -54,10 +56,11 @@ const GetCourse = async (req: Request, res: Response) => {
       }
       res.json(
         new HttpResponseData(RESPONSE_CONFIG.MESSAGE.COURSE.FOUND_SUCCESS, 200, {
-          allCourses,
+          list: allCourses,
           page: p,
-          count: l,
-          total,
+          count: allCourses.length,
+          total: countDoc,
+          total_page: Math.ceil(allCourses.length / l),
         }),
       );
     } else if (page && limit) {
@@ -67,11 +70,11 @@ const GetCourse = async (req: Request, res: Response) => {
       }
       res.json(
         new HttpResponseData(RESPONSE_CONFIG.MESSAGE.COURSE.FOUND_SUCCESS, 200, {
-          allCourses,
+          list: allCourses,
           page: p,
-          count: l,
-          total_page: Math.ceil(total / l),
-          total,
+          count: allCourses.length,
+          total: countDoc,
+          total_page: Math.ceil(allCourses.length / l),
         }),
       );
     } else {
@@ -81,10 +84,9 @@ const GetCourse = async (req: Request, res: Response) => {
       }
       res.json(
         new HttpResponseData(RESPONSE_CONFIG.MESSAGE.COURSE.FOUND_SUCCESS, 200, {
-          allCourses,
-          total,
+          list: allCourses,
           page: 1,
-          limit: 10,
+          total: countDoc,
         }),
       );
     }

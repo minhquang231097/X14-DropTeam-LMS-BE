@@ -22,18 +22,42 @@ const GetLesson = async (req: Request, res: Response) => {
   const p = Number(page);
   const l = Number(limit);
   try {
+    const countDoc = await lessonService.CountLesson();
     if (ss_code) {
       const all = await lessonService.GetLessonBySessionCode(ss_code as string, p, l);
       if (all.length === 0) return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.LESSON.NOT_FOUND, 404));
-      res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.LESSON.FOUND_SUCCESS, 200, all));
+      res.json(
+        new HttpResponseData(RESPONSE_CONFIG.MESSAGE.LESSON.FOUND_SUCCESS, 200, {
+          list: all,
+          count: all.length,
+          page: p,
+          total: countDoc,
+          total_page: Math.ceil(all.length / l),
+        }),
+      );
     } else if (page && limit) {
       const all = await lessonService.GetAllLesson(p, l);
       if (all.length === 0) return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.LESSON.NOT_FOUND, 404));
-      res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.LESSON.FOUND_SUCCESS, 200, all));
+      res.json(
+        new HttpResponseData(RESPONSE_CONFIG.MESSAGE.LESSON.FOUND_SUCCESS, 200, {
+          list: all,
+          count: all.length,
+          page: p,
+          total: countDoc,
+          total_page: Math.ceil(all.length / l),
+        }),
+      );
     } else {
       const all = await lessonService.GetAllLesson(1, 10);
       if (all.length === 0) return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.LESSON.NOT_FOUND, 404));
-      res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.LESSON.FOUND_SUCCESS, 200, all));
+      res.json(
+        new HttpResponseData(RESPONSE_CONFIG.MESSAGE.LESSON.FOUND_SUCCESS, 200, {
+          list: all,
+          count: all.length,
+          page: p,
+          total: countDoc,
+        }),
+      );
     }
   } catch (error) {
     return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.LESSON.WRONG, 404));

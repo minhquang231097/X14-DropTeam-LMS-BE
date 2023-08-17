@@ -67,7 +67,7 @@ const DeleteUserByCondition = async (filter: any) => {
 };
 
 const GetTotalUser = async () => {
-  return (await userRepository.FindAll()).length;
+  return await userRepository.Count();
 };
 
 export default {
