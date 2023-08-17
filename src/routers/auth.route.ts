@@ -14,7 +14,7 @@ authRouter.post("/sign-up/admin", verifyAccessJWT, CheckRole.IsMentor, ValidateJ
 authRouter.post("/sign-in", ValidateJoi(Schema.User.sign_in), authController.SignIn,);
 authRouter.post("/sign-out", ValidateJoi(Schema.User.sign_out), authController.SignOutUser,);
 authRouter.post("/refresh", authController.handleRefreshToken);
-authRouter.post("/forgot-password", authController.SendEmailForgotPassword);
-authRouter.post("/verify-user", authController.SendEmailVerifyUser);
+authRouter.post("/forgot-password", ValidateJoi(Schema.User.forgot_password), authController.SendEmailForgotPassword);
+authRouter.post("/verify-user", ValidateJoi(Schema.User.forgot_password), authController.SendEmailVerifyUser);
 
 export default authRouter;

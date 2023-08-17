@@ -8,8 +8,8 @@ import express from "express";
 const userRouter = express.Router();
 
 userRouter.get("/", verifyAccessJWT, CheckRole.IsAdmin, userController.GetUser);
-userRouter.put("/reset-password", userController.ChangePassword);
-userRouter.put("/", verifyAccessJWT, userController.UpdatePassword);
+userRouter.put("/reset-password", ValidateJoi(Schema.User.new_password), userController.ChangePassword);
+userRouter.put("/", verifyAccessJWT, ValidateJoi(Schema.User.change_password), userController.UpdatePassword);
 userRouter.put("/info", verifyAccessJWT, ValidateJoi(Schema.User.update), userController.UpdateUserInfo,);
 userRouter.delete("/", CheckRole.IsAdmin, verifyAccessJWT, userController.DeleteUser,);
 

@@ -18,7 +18,7 @@ classRouter.post(
   // verifyAccessJWT,
   classController.AddStudentToClass,
 );
-classRouter.put("/:id", verifyAccessJWT, classController.UpdateClass);
+classRouter.put("/:id", ValidateJoi(ClassSchema.Class.update_class), verifyAccessJWT, classController.UpdateClass);
 classRouter.get("/", classController.GetClass);
 classRouter.delete("/all", classController.DeleteManyCourse);
 classRouter.delete("/:id", verifyAccessJWT, classController.DeleteOneClass);

@@ -9,13 +9,7 @@ export interface SignOutDto {
 
 export interface UpdateUserDto {
   fullname?: string;
-  email?: string;
   phone_number?: string;
-  username?: string;
-  password?: string;
-  refreshToken?: string;
-  create_at?: Date;
-  role?: string;
   dob?: string;
   gender?: string;
   address?: string;
@@ -35,4 +29,13 @@ export interface FindUserDto {
 
 export interface SendEmailForgotPasswordDto {
   email?: string;
+}
+
+export interface NewPasswordDto {
+  password?: string;
+}
+
+export interface ChangePasswordDto {
+  password?: string;
+  newPassword?: string;
 }

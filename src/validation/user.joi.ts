@@ -1,6 +1,6 @@
 import Joi from "joi";
 import { IUser } from "../models/user.model";
-import { SendEmailForgotPasswordDto, SignInDto, SignOutDto, UpdateUserDto } from "@/types/user";
+import { ChangePasswordDto, NewPasswordDto, SendEmailForgotPasswordDto, SignInDto, SignOutDto, UpdateUserDto } from "@/types/user";
 import { RESPONSE_CONFIG } from "@/configs/response.config";
 
 export const Schema = {
@@ -72,12 +72,6 @@ export const Schema = {
         'string.max': `{{#label}} should have a maximum length of {#limit}`,
         'any.required': `{{#label}} is a required field`
       }),
-      email: Joi.string().min(5).max(100).optional().messages({
-        'string.empty': RESPONSE_CONFIG.MESSAGE.USER.NO_EMAIL,
-        'string.min': `{{#label}} should have a minimum length of {#limit}`,
-        'string.max': `{{#label}} should have a maximum length of {#limit}`,
-        'any.required': `{{#label}} is a required field`
-      }),
       phone_number: Joi.string().regex(/^[0-9]/).min(5).max(100).optional().messages({
         'string.empty': RESPONSE_CONFIG.MESSAGE.USER.NO_PHONE_NUM,
         'string.pattern.base': `{{#label}} have to match the required pattern: 0-9`,
@@ -85,20 +79,6 @@ export const Schema = {
         'string.max': `{{#label}} should have a maximum length of {#limit}`,
         'any.required': `{{#label}} is a required field`
       }),
-      username: Joi.string().min(5).max(100).optional().messages({
-        'string.empty': RESPONSE_CONFIG.MESSAGE.USER.NO_USERNAME,
-        'string.min': `{{#label}} should have a minimum length of {#limit}`,
-        'string.max': `{{#label}} should have a maximum length of {#limit}`,
-        'any.required': `{{#label}} is a required field`
-      }),
-      password: Joi.string().min(5).max(100).optional().messages({
-        'string.empty': RESPONSE_CONFIG.MESSAGE.USER.NO_PASSWORD,
-        'string.min': `{{#label}} should have a minimum length of {#limit}`,
-        'string.max': `{{#label}} should have a maximum length of {#limit}`,
-        'any.required': `{{#label}} is a required field`
-      }),
-      create_at: Joi.string().optional(),
-      role: Joi.string().optional(),
       dob: Joi.string().optional(),
       gender: Joi.string().optional(),
       address: Joi.string().optional(),
@@ -106,6 +86,28 @@ export const Schema = {
     forgot_password: Joi.object<SendEmailForgotPasswordDto>({
       email: Joi.string().min(5).max(100).optional().messages({
         'string.empty': RESPONSE_CONFIG.MESSAGE.USER.NO_EMAIL,
+        'string.min': `{{#label}} should have a minimum length of {#limit}`,
+        'string.max': `{{#label}} should have a maximum length of {#limit}`,
+        'any.required': `{{#label}} is a required field`
+      }),
+    }),
+    new_password: Joi.object<NewPasswordDto>({
+      password: Joi.string().min(5).max(100).required().messages({
+        'string.empty': RESPONSE_CONFIG.MESSAGE.USER.NO_PASSWORD,
+        'string.min': `{{#label}} should have a minimum length of {#limit}`,
+        'string.max': `{{#label}} should have a maximum length of {#limit}`,
+        'any.required': `{{#label}} is a required field`
+      }),
+    }),
+    change_password: Joi.object<ChangePasswordDto>({
+      password: Joi.string().min(5).max(100).required().messages({
+        'string.empty': RESPONSE_CONFIG.MESSAGE.USER.NO_PASSWORD,
+        'string.min': `{{#label}} should have a minimum length of {#limit}`,
+        'string.max': `{{#label}} should have a maximum length of {#limit}`,
+        'any.required': `{{#label}} is a required field`
+      }),
+      newPassword: Joi.string().min(5).max(100).required().messages({
+        'string.empty': RESPONSE_CONFIG.MESSAGE.USER.NO_PASSWORD,
         'string.min': `{{#label}} should have a minimum length of {#limit}`,
         'string.max': `{{#label}} should have a maximum length of {#limit}`,
         'any.required': `{{#label}} is a required field`
