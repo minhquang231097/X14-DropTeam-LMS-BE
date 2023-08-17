@@ -29,7 +29,6 @@ const CreateOneClass = async (email_mentor: string, workplace_code: string, cour
     classRepository.FindClassByCode(class_code),
   ]);
 
-  if (!_class) {
     const id_mentor = _mentor?._id;
     const id_workplace = _workplace?._id;
     const id_course = _course?._id;
@@ -41,7 +40,6 @@ const CreateOneClass = async (email_mentor: string, workplace_code: string, cour
     const startDate = new Date(start_at);
     const date_end = calculateEndDate(startDate, Number(total_session), arrSch);
     return await classRepository.CreateClass(id_mentor, id_workplace, id_course, date_end, payload);
-  }
 };
 
 function calculateEndDate(startDate: Date, totalSessions: number, schedule: number[]) {

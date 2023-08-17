@@ -6,9 +6,11 @@ import classStudentService from "@/services/class.student.service";
 import { Request, Response } from "express";
 
 const CreateNewClass = async (req: Request, res: Response) => {
-  const { mentor, workplace, course } = req.body;
+  const { mentor, workplace, course, class_code } = req.body;
   const payload = req.body;
   try {
+    const exist = await classService.GetClassByCode(class_code)
+    if(exist) return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.CLASS.WRONG, 403))
     const newClass = await classService.CreateOneClass(mentor, workplace, course, payload);
     res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.CLASS.CREATE_SUCCES, 200, newClass));
   } catch (error) {
