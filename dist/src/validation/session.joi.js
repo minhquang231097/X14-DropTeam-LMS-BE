@@ -10,11 +10,11 @@ exports.SessionSchema = {
     Session: {
         create_session: joi_1.default.object({
             course: joi_1.default.string().required().messages({
-                'string.empty': response_config_1.RESPONSE_CONFIG.MESSAGE.SESSION.NO_COURSE,
+                'string.empty': `${response_config_1.RESPONSE_CONFIG.MESSAGE.SESSION.NO_COURSE} (import course code)`,
                 'any.required': `{{#label}} is a required field`
             }),
             class: joi_1.default.string().required().messages({
-                'string.empty': response_config_1.RESPONSE_CONFIG.MESSAGE.SESSION.NO_COURSE,
+                'string.empty': `${response_config_1.RESPONSE_CONFIG.MESSAGE.SESSION.NO_CLASS} (import class code)`,
                 'any.required': `{{#label}} is a required field`
             }),
             session_code: joi_1.default.string().required().messages({
@@ -35,11 +35,11 @@ exports.SessionSchema = {
         }),
         update_session: joi_1.default.object({
             course: joi_1.default.string().required().messages({
-                'string.empty': response_config_1.RESPONSE_CONFIG.MESSAGE.SESSION.NO_COURSE,
+                'string.empty': `${response_config_1.RESPONSE_CONFIG.MESSAGE.SESSION.NO_COURSE} (import course code)`,
                 'any.required': `{{#label}} is a required field`
             }),
             class: joi_1.default.string().required().messages({
-                'string.empty': response_config_1.RESPONSE_CONFIG.MESSAGE.SESSION.NO_COURSE,
+                'string.empty': `${response_config_1.RESPONSE_CONFIG.MESSAGE.SESSION.NO_CLASS} (import class code)`,
                 'any.required': `{{#label}} is a required field`
             }),
             session_code: joi_1.default.string().required().messages({

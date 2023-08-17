@@ -82,6 +82,7 @@ const SignIn = async (req, res) => {
                 id: userExist._id,
                 accessToken,
                 refreshToken: userExist.refreshToken,
+                role: userExist.role,
             });
         }
         else {

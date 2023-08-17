@@ -10,9 +10,9 @@ exports.LessonSchema = {
     Lesson: {
         create_lesson: joi_1.default.object({
             session: joi_1.default.string().required().messages({
-                'string.empty': response_config_1.RESPONSE_CONFIG.MESSAGE.LESSON.NO_SESSION,
+                'string.empty': `${response_config_1.RESPONSE_CONFIG.MESSAGE.LESSON.NO_SESSION} (import session code)`,
                 'string.max': `{{#label}} should have a maximum length of {#limit}`,
-                'any.required': `{{#label}} is a required field`
+                'any.required': `{{#label}} is a required field (import session code)`
             }),
             title: joi_1.default.string().required().messages({
                 'string.empty': response_config_1.RESPONSE_CONFIG.MESSAGE.LESSON.NO_TITLE,
@@ -32,7 +32,7 @@ exports.LessonSchema = {
         }),
         update_lesson: joi_1.default.object({
             session: joi_1.default.string().required().messages({
-                'string.empty': response_config_1.RESPONSE_CONFIG.MESSAGE.LESSON.NO_SESSION,
+                'string.empty': `${response_config_1.RESPONSE_CONFIG.MESSAGE.LESSON.NO_SESSION} (import session code)`,
                 'string.max': `{{#label}} should have a maximum length of {#limit}`,
                 'any.required': `{{#label}} is a required field`
             }),

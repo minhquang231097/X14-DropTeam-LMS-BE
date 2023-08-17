@@ -1,17 +1,17 @@
 import Joi from "joi";
 import { IFeedback } from "@/models/feedback.model";
-import { UpdateFeedbackDto } from "@/types/feedback";
+import { CreateFeedbackDto, UpdateFeedbackDto } from "@/types/feedback";
 import { RESPONSE_CONFIG } from "@/configs/response.config";
 
 export const FeedbackSchema = {
     Feedback: {
-        create_feedback: Joi.object<IFeedback>({
-            course: Joi.string().required().messages({
+        create_feedback: Joi.object<CreateFeedbackDto>({
+            course_code: Joi.string().required().messages({
                 'string.empty': `${RESPONSE_CONFIG.MESSAGE.FEEDBACK.NO_COURSE} (import course code)`,
                 'string.max': `{{#label}} should have a maximum length of {#limit}`,
                 'any.required': `{{#label}} is a required field (import course code)`
             }),
-            student: Joi.string().required().messages({
+            email: Joi.string().required().messages({
                 'string.empty': `${RESPONSE_CONFIG.MESSAGE.FEEDBACK.NO_STUDENT} (import email student)`,
                 'string.max': `{{#label}} should have a maximum length of {#limit}`,
                 'any.required': `{{#label}} is a required field (import email student)`

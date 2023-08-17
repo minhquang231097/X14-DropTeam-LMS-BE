@@ -44,13 +44,13 @@ const GetWorkplace = async (req, res) => {
             const all = await workplace_service_1.default.GetAllWorkplace(p, l);
             if (!all)
                 return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.WORKPLACE.NOT_FOUND, 404));
-            return res.json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.WORKPLACE.FOUND_SUCCESS, 200, { all, page: 1, limit: 10, total }));
+            return res.json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.WORKPLACE.FOUND_SUCCESS, 200, { all, page: p, limit: l, total, total_page: Math.ceil(total / l) }));
         }
         else {
             const all = await workplace_service_1.default.GetAllWorkplace(1, 10);
             if (!all)
                 return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.WORKPLACE.NOT_FOUND, 404));
-            return res.json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.WORKPLACE.FOUND_SUCCESS, 200, { all, page: 1, limit: 10, total }));
+            return res.json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.WORKPLACE.FOUND_SUCCESS, 200, { all, page: 1, limit: 10, total, total_page: Math.ceil(total / 10) }));
         }
     }
     catch (error) {

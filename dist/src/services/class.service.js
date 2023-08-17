@@ -31,18 +31,16 @@ const CreateOneClass = async (email_mentor, workplace_code, course_code, payload
         course_service_1.default.GetCourseByCode(course_code),
         classRepository.FindClassByCode(class_code),
     ]);
-    if (!_class) {
-        const id_mentor = _mentor?._id;
-        const id_workplace = _workplace?._id;
-        const id_course = _course?._id;
-        let arrSch = [];
-        for (let i = 0; i < schedule.length; i++) {
-            arrSch.push(new Date(schedule[i]).getDay());
-        }
-        const startDate = new Date(start_at);
-        const date_end = calculateEndDate(startDate, Number(total_session), arrSch);
-        return await classRepository.CreateClass(id_mentor, id_workplace, id_course, date_end, payload);
+    const id_mentor = _mentor?._id;
+    const id_workplace = _workplace?._id;
+    const id_course = _course?._id;
+    let arrSch = [];
+    for (let i = 0; i < schedule.length; i++) {
+        arrSch.push(new Date(schedule[i]).getDay());
     }
+    const startDate = new Date(start_at);
+    const date_end = calculateEndDate(startDate, Number(total_session), arrSch);
+    return await classRepository.CreateClass(id_mentor, id_workplace, id_course, date_end, payload);
 };
 function calculateEndDate(startDate, totalSessions, schedule) {
     let sessionCount = 0;

@@ -9,9 +9,12 @@ const response_config_1 = require("@/configs/response.config");
 const class_service_1 = __importDefault(require("@/services/class.service"));
 const class_student_service_1 = __importDefault(require("@/services/class.student.service"));
 const CreateNewClass = async (req, res) => {
-    const { mentor, workplace, course } = req.body;
+    const { mentor, workplace, course, class_code } = req.body;
     const payload = req.body;
     try {
+        const exist = await class_service_1.default.GetClassByCode(class_code);
+        if (exist)
+            return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.CLASS.CLASS_EXIST, 403));
         const newClass = await class_service_1.default.CreateOneClass(mentor, workplace, course, payload);
         res.json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.CLASS.CREATE_SUCCES, 200, newClass));
     }
@@ -98,6 +101,7 @@ const GetClass = async (req, res) => {
                 page: p,
                 limit: l,
                 total,
+                total_page: Math.ceil(total / l),
             }));
         }
     }

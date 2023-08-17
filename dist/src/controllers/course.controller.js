@@ -58,8 +58,9 @@ const GetCourse = async (req, res) => {
             }
             res.json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.COURSE.FOUND_SUCCESS, 200, {
                 allCourses,
-                total,
                 page: p,
+                count: l,
+                total,
             }));
         }
         else if (page && limit) {
@@ -69,8 +70,10 @@ const GetCourse = async (req, res) => {
             }
             res.json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.COURSE.FOUND_SUCCESS, 200, {
                 allCourses,
-                total,
                 page: p,
+                count: l,
+                total_page: Math.ceil(total / l),
+                total,
             }));
         }
         else {

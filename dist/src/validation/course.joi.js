@@ -54,15 +54,49 @@ exports.CourseSchema = {
             }),
         }),
         update_course: joi_1.default.object({
-            course_code: joi_1.default.string().max(10).required(),
-            title: joi_1.default.string().max(20).required(),
-            image: joi_1.default.array().max(200),
-            session_per_course: joi_1.default.number().required(),
-            price: joi_1.default.number().max(10).required(),
-            desc: joi_1.default.string().max(500).required(),
-            level: joi_1.default.string().min(0),
-            rate: joi_1.default.number().min(0),
-            discount: joi_1.default.number().integer().min(0),
+            course_code: joi_1.default.string().max(10).required().messages({
+                'string.empty': response_config_1.RESPONSE_CONFIG.MESSAGE.COURSE.NO_CODE,
+                'string.max': `{{#label}} should have a maximum length of {#limit}`,
+                'any.required': `{{#label}} is a required field`
+            }),
+            title: joi_1.default.string().max(20).required().messages({
+                'string.empty': response_config_1.RESPONSE_CONFIG.MESSAGE.COURSE.NO_TITLE,
+                'string.max': `{{#label}} should have a maximum length of {#limit}`,
+                'any.required': `{{#label}} is a required field`
+            }),
+            image: joi_1.default.array().max(200).messages({
+                'string.max': `{{#label}} should have a maximum length of {#limit}`,
+            }),
+            session_per_course: joi_1.default.number().required().messages({
+                'number.base': `{{#label}} must be a number`,
+                'number.min': `{{#label}} must greater than or equal to {{#limit}}`,
+                'number.integer': `{{#label}} must be an integer `,
+                'any.required': `{{#label}} is a required field`
+            }),
+            price: joi_1.default.number().max(10).required().messages({
+                'number.base': `{{#label}} must be a number`,
+                'number.min': `{{#label}} must greater than or equal to {{#limit}}`,
+                'any.required': `{{#label}} is a required field`
+            }),
+            desc: joi_1.default.string().max(500).required().messages({
+                'string.empty': response_config_1.RESPONSE_CONFIG.MESSAGE.COURSE.NO_DESCRIPTION,
+                'string.max': `{{#label}} should have a maximum length of {#limit}`,
+                'any.required': `{{#label}} is a required field`
+            }),
+            level: joi_1.default.string().min(0).messages({
+                'number.base': `{{#label}} must be a number`,
+                'number.min': `{{#label}} must greater than or equal to {{#limit}}`,
+                'number.integer': `{{#label}} must be an integer `,
+            }),
+            rate: joi_1.default.number().min(0).messages({
+                'number.base': `{{#label}} must be a number`,
+                'number.min': `{{#label}} must greater than or equal to {{#limit}}`,
+            }),
+            discount: joi_1.default.number().integer().min(0).messages({
+                'number.base': `{{#label}} must be a number`,
+                'number.min': `{{#label}} must greater than or equal to {{#limit}}`,
+                'number.integer': `{{#label}} must be an integer `,
+            }),
         }),
     },
 };

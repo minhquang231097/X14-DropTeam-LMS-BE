@@ -10,12 +10,12 @@ exports.AttendanceSchema = {
     Attendance: {
         create_attendance: joi_1.default.object({
             session: joi_1.default.string().required().messages({
-                'string.empty': response_config_1.RESPONSE_CONFIG.MESSAGE.ATTENDANCE.NO_SESSION,
-                'any.required': `{{#label}} is a required field`
+                'string.empty': `${response_config_1.RESPONSE_CONFIG.MESSAGE.ATTENDANCE.NO_SESSION} (import session_code)`,
+                'any.required': `{{#label}} is a required field `
             }),
             class: joi_1.default.string().required().messages({
-                'string.empty': response_config_1.RESPONSE_CONFIG.MESSAGE.ATTENDANCE.NO_CLASS,
-                'any.required': `{{#label}} is a required field`
+                'string.empty': `${response_config_1.RESPONSE_CONFIG.MESSAGE.ATTENDANCE.NO_CLASS} (import class_code)`,
+                'any.required': `{{#label}} is a required field `
             }),
             day: joi_1.default.number().integer().min(1).required().messages({
                 'number.base': `{{#label}} must be a number`,

@@ -1,5 +1,12 @@
 import { ObjectId } from "mongoose";
 
+export interface CreateFeedbackDto {
+  course_code?: string;
+  email?: string;
+  rating?: string;
+  content?: string;
+}
+
 export interface UpdateFeedbackDto {
   course?: string;
   student?: string;

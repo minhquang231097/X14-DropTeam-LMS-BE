@@ -6,20 +6,14 @@ import { Request, Response } from "express";
 
 const CreateNewSession = async (req: Request, res: Response) => {
   const payload = req.body;
-  const { course_code, class_code } = payload;
+  const { course_code, class_code, session_code } = payload;
   try {
-    const session = await sessionService.CreateSession(
-      course_code as string,
-      class_code as string,
-      payload,
-    );
-    res.json(
-      new HttpResponseData(
-        RESPONSE_CONFIG.MESSAGE.SESSION.CREATE_SUCCES,
-        200,
-        session,
-      ),
-    );
+    const exist = await sessionService.GetSessionByCode(session_code)
+    if (!exist) {
+      const session = await sessionService.CreateSession(course_code as string, class_code as string, payload,);
+      res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.SESSION.CREATE_SUCCES, 200, session,),);
+    }
+    return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.SESSION.CODE_EXIST, 403))
   } catch (error) {
     return res.json(
       new HttpException(RESPONSE_CONFIG.MESSAGE.SESSION.WRONG, 400),
