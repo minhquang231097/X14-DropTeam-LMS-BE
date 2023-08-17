@@ -73,7 +73,7 @@ exports.CourseSchema = {
                 'number.integer': `{{#label}} must be an integer `,
                 'any.required': `{{#label}} is a required field`
             }),
-            price: joi_1.default.number().max(10).required().messages({
+            price: joi_1.default.number().min(1).required().messages({
                 'number.base': `{{#label}} must be a number`,
                 'number.min': `{{#label}} must greater than or equal to {{#limit}}`,
                 'any.required': `{{#label}} is a required field`

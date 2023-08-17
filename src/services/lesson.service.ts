@@ -23,11 +23,7 @@ const GetLessonById = async (id: string) => {
   });
 };
 
-const GetLessonBySessionCode = async (
-  ss_code: string,
-  page: number,
-  limit: number,
-) => {
+const GetLessonBySessionCode = async (ss_code: string, page: number, limit: number) => {
   const result = await sessionService.GetSessionByCode(ss_code);
   return await lessonRepository.FindLessonBySessionId(result?._id, page, limit);
 };
@@ -36,10 +32,7 @@ const UpdateLessonById = async (id: string, payload: UpdateLessonDto) => {
   return await lessonRepository.FindByIdAndUpdate(id, payload);
 };
 
-const UpdateCourseByCondition = async (
-  filter: any,
-  payload: UpdateLessonDto,
-) => {
+const UpdateCourseByCondition = async (filter: any, payload: UpdateLessonDto) => {
   return await lessonRepository.UpdateMany(filter, payload);
 };
 

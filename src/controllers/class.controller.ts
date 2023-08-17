@@ -9,8 +9,8 @@ const CreateNewClass = async (req: Request, res: Response) => {
   const { mentor, workplace, course, class_code } = req.body;
   const payload = req.body;
   try {
-    const exist = await classService.GetClassByCode(class_code)
-    if (exist) return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.CLASS.CLASS_EXIST, 403))
+    const exist = await classService.GetClassByCode(class_code);
+    if (exist) return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.CLASS.CLASS_EXIST, 403));
     const newClass = await classService.CreateOneClass(mentor, workplace, course, payload);
     res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.CLASS.CREATE_SUCCES, 200, newClass));
   } catch (error) {

@@ -35,23 +35,11 @@ const GetUserByCondition = async (filter: any) => {
   return await userRepository.FindByCondition(filter);
 };
 
-const GetUserByAttendance = async (
-  attendanceId: string,
-  page: number,
-  limit: number,
-) => {
-  return await attendanceStudentService.GetAllStudentInAttendance(
-    attendanceId,
-    page,
-    limit,
-  );
+const GetUserByAttendance = async (attendanceId: string, page: number, limit: number) => {
+  return await attendanceStudentService.GetAllStudentInAttendance(attendanceId, page, limit);
 };
 
-const SearchUserByCondition = async (
-  page: number,
-  limit: number,
-  searchTerm?: string,
-) => {
+const SearchUserByCondition = async (page: number, limit: number, searchTerm?: string) => {
   const query = {
     $or: [
       { username: { $regex: searchTerm, $options: "i" } },

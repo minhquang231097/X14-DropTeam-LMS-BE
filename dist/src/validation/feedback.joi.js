@@ -9,12 +9,12 @@ const response_config_1 = require("@/configs/response.config");
 exports.FeedbackSchema = {
     Feedback: {
         create_feedback: joi_1.default.object({
-            course: joi_1.default.string().required().messages({
+            course_code: joi_1.default.string().required().messages({
                 'string.empty': `${response_config_1.RESPONSE_CONFIG.MESSAGE.FEEDBACK.NO_COURSE} (import course code)`,
                 'string.max': `{{#label}} should have a maximum length of {#limit}`,
                 'any.required': `{{#label}} is a required field (import course code)`
             }),
-            student: joi_1.default.string().required().messages({
+            email: joi_1.default.string().required().messages({
                 'string.empty': `${response_config_1.RESPONSE_CONFIG.MESSAGE.FEEDBACK.NO_STUDENT} (import email student)`,
                 'string.max': `{{#label}} should have a maximum length of {#limit}`,
                 'any.required': `{{#label}} is a required field (import email student)`

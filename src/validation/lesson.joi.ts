@@ -44,8 +44,10 @@ export const LessonSchema = {
                 'any.required': `{{#label}} is a required field`
             }),
             no: Joi.number().required().messages({
-                'string.empty': RESPONSE_CONFIG.MESSAGE.LESSON.NO_NO,
-                'string.max': `{{#label}} should have a maximum length of {#limit}`,
+                'number.empty': RESPONSE_CONFIG.MESSAGE.LESSON.NO_NO,
+                'number.base': `{{#label}} must be a number`,
+                'number.min': `{{#label}} must greater than or equal to {{#limit}}`,
+                'number.integer': `{{#label}} must be an integer `,
                 'any.required': `{{#label}} is a required field`
             }),
         }),

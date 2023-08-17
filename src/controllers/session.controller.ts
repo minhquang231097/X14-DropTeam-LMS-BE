@@ -8,16 +8,12 @@ const CreateNewSession = async (req: Request, res: Response) => {
   const payload = req.body;
   const { course_code, class_code, session_code } = payload;
   try {
-    const exist = await sessionService.GetSessionByCode(session_code)
-    if (!exist) {
-      const session = await sessionService.CreateSession(course_code as string, class_code as string, payload,);
-      res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.SESSION.CREATE_SUCCES, 200, session,),);
-    }
-    return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.SESSION.CODE_EXIST, 403))
+    const exist = await sessionService.GetSessionByCode(session_code);
+    if (exist) return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.SESSION.CODE_EXIST, 403));
+    const session = await sessionService.CreateSession(course_code, class_code, payload);
+    res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.SESSION.CREATE_SUCCES, 200, session));
   } catch (error) {
-    return res.json(
-      new HttpException(RESPONSE_CONFIG.MESSAGE.SESSION.WRONG, 400),
-    );
+    return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.SESSION.WRONG, 400));
   }
 };
 
@@ -28,78 +24,27 @@ const GetSession = async (req: Request, res: Response) => {
   try {
     if (id) {
       const found = await sessionService.GetSessionById(id as string);
-      if (found.length === 0)
-        return res.json(
-          new HttpException(RESPONSE_CONFIG.MESSAGE.SESSION.NOT_FOUND, 404),
-        );
-      res.json(
-        new HttpResponseData(
-          RESPONSE_CONFIG.MESSAGE.SESSION.FOUND_SUCCESS,
-          200,
-          found,
-        ),
-      );
+      if (found.length === 0) return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.SESSION.NOT_FOUND, 404));
+      res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.SESSION.FOUND_SUCCESS, 200, found));
     } else if (_course) {
-      const session = await sessionService.GetSessionByCourseCode(
-        _course as string,
-      );
-      if (session.length === 0)
-        return res.json(
-          new HttpException(RESPONSE_CONFIG.MESSAGE.SESSION.NOT_FOUND, 404),
-        );
-      res.json(
-        new HttpResponseData(
-          RESPONSE_CONFIG.MESSAGE.SESSION.FOUND_SUCCESS,
-          200,
-          session,
-        ),
-      );
+      const session = await sessionService.GetSessionByCourseCode(_course as string);
+      if (session.length === 0) return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.SESSION.NOT_FOUND, 404));
+      res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.SESSION.FOUND_SUCCESS, 200, session));
     } else if (_class) {
-      const found: any = await sessionService.GetSessionByClassCode(
-        _class as string,
-      );
-      if (found.length === 0)
-        return res.json(
-          new HttpException(RESPONSE_CONFIG.MESSAGE.SESSION.NOT_FOUND, 404),
-        );
-      res.json(
-        new HttpResponseData(
-          RESPONSE_CONFIG.MESSAGE.SESSION.FOUND_SUCCESS,
-          200,
-          found,
-        ),
-      );
+      const found: any = await sessionService.GetSessionByClassCode(_class as string);
+      if (found.length === 0) return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.SESSION.NOT_FOUND, 404));
+      res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.SESSION.FOUND_SUCCESS, 200, found));
     } else if (page && limit) {
       const all = await sessionService.GetAllSession(p, l);
-      if (!all)
-        return res.json(
-          new HttpException(RESPONSE_CONFIG.MESSAGE.SESSION.NOT_FOUND, 404),
-        );
-      res.json(
-        new HttpResponseData(
-          RESPONSE_CONFIG.MESSAGE.SESSION.FOUND_SUCCESS,
-          200,
-          all,
-        ),
-      );
+      if (!all) return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.SESSION.NOT_FOUND, 404));
+      res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.SESSION.FOUND_SUCCESS, 200, all));
     } else {
       const all = await sessionService.GetAllSession(1, 10);
-      if (!all)
-        return res.json(
-          new HttpException(RESPONSE_CONFIG.MESSAGE.SESSION.NOT_FOUND, 404),
-        );
-      res.json(
-        new HttpResponseData(
-          RESPONSE_CONFIG.MESSAGE.SESSION.FOUND_SUCCESS,
-          200,
-          all,
-        ),
-      );
+      if (!all) return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.SESSION.NOT_FOUND, 404));
+      res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.SESSION.FOUND_SUCCESS, 200, all));
     }
   } catch (error) {
-    return res.json(
-      new HttpException(RESPONSE_CONFIG.MESSAGE.SESSION.WRONG, 400),
-    );
+    return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.SESSION.WRONG, 400));
   }
 };
 
@@ -107,21 +52,11 @@ const UpdateSession = async (req: Request, res: Response) => {
   const { id } = req.params;
   const payload = req.body;
   try {
-    const session = await sessionService.UpdateSessionById(
-      id as string,
-      payload,
-    );
-    if (!session)
-      return res.json(
-        new HttpException(RESPONSE_CONFIG.MESSAGE.SESSION.NOT_FOUND, 404),
-      );
-    res.json(
-      new HttpResponseData(RESPONSE_CONFIG.MESSAGE.SESSION.UPDATE_SUCCESS, 200),
-    );
+    const session = await sessionService.UpdateSessionById(id as string, payload);
+    if (!session) return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.SESSION.NOT_FOUND, 404));
+    res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.SESSION.UPDATE_SUCCESS, 200));
   } catch (error) {
-    return res.json(
-      new HttpException(RESPONSE_CONFIG.MESSAGE.SESSION.WRONG, 400),
-    );
+    return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.SESSION.WRONG, 400));
   }
 };
 
@@ -129,17 +64,10 @@ const DeleteSession = async (req: Request, res: Response) => {
   const { id } = req.params;
   try {
     const session = await sessionService.DeletedCourse(id as string);
-    if (!session)
-      return res.json(
-        new HttpException(RESPONSE_CONFIG.MESSAGE.SESSION.NOT_FOUND, 404),
-      );
-    res.json(
-      new HttpResponseData(RESPONSE_CONFIG.MESSAGE.SESSION.DELETE_SUCCESS, 200),
-    );
+    if (!session) return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.SESSION.NOT_FOUND, 404));
+    res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.SESSION.DELETE_SUCCESS, 200));
   } catch (error) {
-    return res.json(
-      new HttpException(RESPONSE_CONFIG.MESSAGE.SESSION.WRONG, 400),
-    );
+    return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.SESSION.WRONG, 400));
   }
 };
 

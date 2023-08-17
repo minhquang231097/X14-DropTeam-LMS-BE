@@ -6,16 +6,17 @@ import classService from "./class.service";
 import { FindUserDto } from "@/types/user";
 
 const attendanceStudentRepository = new AttendanceStudentRepository(Attendace_Student);
-const AddStudentToAttendance = async (email: string, class_code: string, day: number) => {
-  const _student = await userService.GetUserByEmail(email);
-  const _attendance: any = await attendanceService.GetAttendanceByClassCodeAndDay(class_code, day);
-  if (!_attendance) {
-    return attendanceStudentRepository.Create({
-      student: _student._id,
-      attendance: _attendance._id,
-    });
-  }
-};
+
+// const AddStudentToAttendance = async (email: string, class_code: string, day: number) => {
+//   const _student = await userService.GetUserByEmail(email);
+//   const _attendance: any = await attendanceService.GetAttendanceByClassCodeAndDay(class_code, day);
+//   if (!_attendance) {
+//     return attendanceStudentRepository.Create({
+//       student: _student._id,
+//       attendance: _attendance._id,
+//     });
+//   }
+// };
 
 const GetAllStudentInAttendance = async (id: string, page: number, limit: number) => {
   return await attendanceStudentRepository.FindByConditionAndPagination(page, limit, { attendance: id }, "student");
@@ -51,7 +52,7 @@ const RemoveMany = async (filter: any) => {
 };
 
 export default {
-  AddStudentToAttendance,
+  // AddStudentToAttendance,
   GetAllStudentInAttendance,
   GetAttendanceByStudentId,
   GetAttendanceByEmailStudent,

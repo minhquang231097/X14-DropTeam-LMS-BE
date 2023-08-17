@@ -6,7 +6,11 @@ import express from "express";
 const sessionRouter = express.Router();
 
 sessionRouter.get("/", sessionController.GetSession);
-sessionRouter.post("/", ValidateJoi(SessionSchema.Session.create_session), sessionController.CreateNewSession);
+sessionRouter.post(
+  "/",
+  // ValidateJoi(SessionSchema.Session.create_session),
+  sessionController.CreateNewSession,
+);
 sessionRouter.put("/:id", ValidateJoi(SessionSchema.Session.update_session), sessionController.UpdateSession);
 sessionRouter.delete("/:id", sessionController.DeleteSession);
 

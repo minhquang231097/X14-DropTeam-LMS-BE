@@ -3,8 +3,6 @@ import { AttendanceRepository } from "@/repository/attendance.repo";
 import sessionService from "./session.service";
 import classService from "./class.service";
 import { FindAttendanceDto, UpdateAttendanceDto } from "@/types/attendance";
-import userService from "./user.service";
-import attendanceStudentService from "./attendance.student.service";
 
 const attendanceRepository = new AttendanceRepository(Attendance);
 
@@ -14,9 +12,11 @@ const CreateAttendance = async (session_code: string, class_code: string, payloa
     classService.GetClassByCode(class_code),
   ]);
   const newAttendance = await attendanceRepository.Create({
-    ...payload,
     session: _session?._id,
     class: _class?.id,
+    day: payload.day,
+    class_size: payload.class_size,
+    absence: payload.absence,
   });
   return newAttendance;
 };

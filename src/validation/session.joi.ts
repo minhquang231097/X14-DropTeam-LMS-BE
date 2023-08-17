@@ -18,10 +18,6 @@ export const SessionSchema = {
                 'string.empty': RESPONSE_CONFIG.MESSAGE.SESSION.NO_CODE,
                 'any.required': `{{#label}} is a required field`
             }),
-            session_name: Joi.string().required().messages({
-                'string.empty': RESPONSE_CONFIG.MESSAGE.SESSION.NO_NAME,
-                'any.required': `{{#label}} is a required field`
-            }),
             desc: Joi.string().required().messages({
                 'string.empty': RESPONSE_CONFIG.MESSAGE.SESSION.NO_DES,
                 'any.required': `{{#label}} is a required field`
@@ -33,10 +29,6 @@ export const SessionSchema = {
         update_session: Joi.object<UpdateSessionDto>({
             session_code: Joi.string().required().messages({
                 'string.empty': RESPONSE_CONFIG.MESSAGE.SESSION.NO_CODE,
-                'any.required': `{{#label}} is a required field`
-            }),
-            session_name: Joi.string().required().messages({
-                'string.empty': RESPONSE_CONFIG.MESSAGE.SESSION.NO_NAME,
                 'any.required': `{{#label}} is a required field`
             }),
             desc: Joi.string().required().messages({

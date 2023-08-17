@@ -11,9 +11,9 @@ const course_model_1 = require("@/models/course.model");
 const course_service_2 = __importDefault(require("@/services/course.service"));
 const CreateCourse = async (req, res) => {
     const payload = req.body;
-    const { workplace_code } = payload;
+    const { workplace } = payload;
     try {
-        const newCourse = await course_service_1.default.CreateCourse(workplace_code, payload);
+        const newCourse = await course_service_1.default.CreateCourse(workplace, payload);
         res.json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.COURSE.CREATE_SUCCES, 200, newCourse));
     }
     catch (error) {

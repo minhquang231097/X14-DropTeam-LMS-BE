@@ -1,16 +1,16 @@
 import Joi from "joi";
 import { IAttendance } from "@/models/attendance.model";
-import { UpdateAttendanceDto } from "@/types/attendance";
+import { CreateAttendanceDto, UpdateAttendanceDto } from "@/types/attendance";
 import { RESPONSE_CONFIG } from "@/configs/response.config";
 
 export const AttendanceSchema = {
     Attendance: {
-        create_attendance: Joi.object<IAttendance>({
-            session: Joi.string().required().messages({
+        create_attendance: Joi.object<CreateAttendanceDto>({
+            session_code: Joi.string().required().messages({
                 'string.empty': `${RESPONSE_CONFIG.MESSAGE.ATTENDANCE.NO_SESSION} (import session_code)`,
                 'any.required': `{{#label}} is a required field `
             }),
-            class: Joi.string().required().messages({
+            class_code: Joi.string().required().messages({
                 'string.empty': `${RESPONSE_CONFIG.MESSAGE.ATTENDANCE.NO_CLASS} (import class_code)`,
                 'any.required': `{{#label}} is a required field `
             }),
@@ -20,7 +20,7 @@ export const AttendanceSchema = {
                 'number.integer': `{{#label}} must be an integer `,
                 'any.required': `{{#label}} is a required field`
             }),
-            absence: Joi.number().required(),
+            absence: Joi.number().integer().min(1).required(),
             class_size: Joi.number().integer().min(1).required().messages({
                 'number.base': `{{#label}} must be a number`,
                 'number.min': `{{#label}} must greater than or equal to {{#limit}}`,
@@ -43,7 +43,7 @@ export const AttendanceSchema = {
                 'number.integer': `{{#label}} must be an integer `,
                 'any.required': `{{#label}} is a required field`
             }),
-            absence: Joi.number().required(),
+            absence: Joi.number().integer().min(1).required(),
             class_size: Joi.number().integer().min(1).required().messages({
                 'number.base': `{{#label}} must be a number`,
                 'number.min': `{{#label}} must greater than or equal to {{#limit}}`,

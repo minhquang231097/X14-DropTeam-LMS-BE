@@ -9,11 +9,11 @@ const response_config_1 = require("@/configs/response.config");
 exports.SessionSchema = {
     Session: {
         create_session: joi_1.default.object({
-            course: joi_1.default.string().required().messages({
+            course_code: joi_1.default.string().required().messages({
                 'string.empty': `${response_config_1.RESPONSE_CONFIG.MESSAGE.SESSION.NO_COURSE} (import course code)`,
                 'any.required': `{{#label}} is a required field`
             }),
-            class: joi_1.default.string().required().messages({
+            class_code: joi_1.default.string().required().messages({
                 'string.empty': `${response_config_1.RESPONSE_CONFIG.MESSAGE.SESSION.NO_CLASS} (import class code)`,
                 'any.required': `{{#label}} is a required field`
             }),
@@ -29,19 +29,11 @@ exports.SessionSchema = {
                 'string.empty': response_config_1.RESPONSE_CONFIG.MESSAGE.SESSION.NO_DES,
                 'any.required': `{{#label}} is a required field`
             }),
-            status: joi_1.default.string().valid("COMPLETE", "UPCOMPLETE").required().messages({
-                'any.only': `{{#labe}} must be COMPLETE or UPCOMPLETE`,
+            status: joi_1.default.string().valid("COMPLETED", "UNCOMPLETED").required().messages({
+                'any.only': `{{#label}} must be COMPLETED or UNCOMPLETED`,
             })
         }),
         update_session: joi_1.default.object({
-            course: joi_1.default.string().required().messages({
-                'string.empty': `${response_config_1.RESPONSE_CONFIG.MESSAGE.SESSION.NO_COURSE} (import course code)`,
-                'any.required': `{{#label}} is a required field`
-            }),
-            class: joi_1.default.string().required().messages({
-                'string.empty': `${response_config_1.RESPONSE_CONFIG.MESSAGE.SESSION.NO_CLASS} (import class code)`,
-                'any.required': `{{#label}} is a required field`
-            }),
             session_code: joi_1.default.string().required().messages({
                 'string.empty': response_config_1.RESPONSE_CONFIG.MESSAGE.SESSION.NO_CODE,
                 'any.required': `{{#label}} is a required field`
@@ -54,8 +46,8 @@ exports.SessionSchema = {
                 'string.empty': response_config_1.RESPONSE_CONFIG.MESSAGE.SESSION.NO_DES,
                 'any.required': `{{#label}} is a required field`
             }),
-            status: joi_1.default.string().valid("COMPLETE", "UPCOMPLETE").required().messages({
-                'any.only': `{{#labe}} must be COMPLETE or UPCOMPLETE`,
+            status: joi_1.default.string().valid("COMPLETED", "UPCOMPLETED").required().messages({
+                'any.only': `{{#label}} must be COMPLETED or UPCOMPLETED`,
             })
         }),
     }
