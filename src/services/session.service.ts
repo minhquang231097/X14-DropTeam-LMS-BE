@@ -34,8 +34,9 @@ const GetSessionById = async (id: string) => {
   return await sessionRepository.FindById(id, [[{ path: "course", populate: [{ path: "workplace" }] }], "class"]);
 };
 
-const GetSessionByCode = async (code: string) => {
-  return await sessionRepository.FindSessionByCode(code);
+
+const GetSessionByCourseCode = async (code: string) => {
+  return await sessionRepository.FindByCondition({ course: code }, ["course", "class"]);
 };
 
 const GetSessionByClassCode = async (code: string, page?: any, limit?: any) => {
