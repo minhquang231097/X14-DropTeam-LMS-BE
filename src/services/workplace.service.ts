@@ -40,7 +40,7 @@ const GetTotalWorkplace = async () => {
   return await workplaceRepository.Count();
 };
 
-const SearchWorkplaceByCondition = async (page: number, limit: number, searchTerm?: string) => {
+const SearchWorkplaceByCondition = async (searchTerm?: string, page?: any, limit?: any) => {
   const query = {
     $or: [{ name: { $regex: searchTerm, $options: "i" } }, { workplace_code: { $regex: searchTerm, $options: "i" } }],
   };

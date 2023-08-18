@@ -18,31 +18,26 @@ export class ClassRepository extends BaseRepository<IClass> {
   }
 
   async FindClassByCode(code: string, populate?: any | null) {
-    return await Class.findOne({ class_code: code }).populate([
-      "mentor",
-      "workplace",
-      { path: "course", populate: { path: "workplace" } },
-    ]);
+    return await this.model
+      .findOne({ class_code: code })
+      .populate(["mentor", "workplace", { path: "course", populate: { path: "workplace" } }]);
   }
 
   async FindClassByMentorId(id: string) {
-    return await Class.find({ mentor: `${id}` }).populate([
-      "mentor",
-      "workplace",
-      { path: "course", populate: { path: "workplace" } },
-    ]);
+    return await this.model
+      .find({ mentor: `${id}` })
+      .populate(["mentor", "workplace", { path: "course", populate: { path: "workplace" } }]);
   }
 
   async FindClassByWorkplaceId(id: string) {
-    return await Class.find({ workplace: `${id}` }).populate([
-      "mentor",
-      "workplace",
-      { path: "course", populate: { path: "workplace" } },
-    ]);
+    return await this.model
+      .find({ workplace: `${id}` })
+      .populate(["mentor", "workplace", { path: "course", populate: { path: "workplace" } }]);
   }
 
-  async FindClassByCourseId(id: string, page: number, limit: number) {
-    return await Class.find({ course: `${id}` })
+  async FindClassByCourseId(id: string, page?: any, limit?: any) {
+    return await this.model
+      .find({ course: `${id}` })
       .skip((page - 1) * limit)
       .limit(limit)
       .populate(["mentor", "workplace", { path: "course", populate: { path: "workplace" } }]);

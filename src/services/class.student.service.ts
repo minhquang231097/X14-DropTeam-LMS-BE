@@ -19,7 +19,7 @@ const AddStudentToClass = async (email: string, class_code: string) => {
   }
 };
 
-const GetAllStudentInClass = async (page: number, limit: number, class_code: string) => {
+const GetAllStudentInClass = async (class_code: string, page?: any, limit?: any) => {
   const _class = await classService.GetClassByCode(class_code);
   const id: string = _class?._id;
   return await classStudentRepository.FindByClassId(id, page, limit, [
@@ -28,7 +28,7 @@ const GetAllStudentInClass = async (page: number, limit: number, class_code: str
   ]);
 };
 
-const GetClassByStudentEmail = async (page: number, limit: number, email: string) => {
+const GetClassByStudentEmail = async (email: string, page?: any, limit?: any) => {
   const student = await userService.GetUserByEmail(email);
   return await classStudentRepository.FindByConditionAndPagination(page, limit, { student: student?._id }, [
     "student",

@@ -18,7 +18,7 @@ const attendanceStudentRepository = new AttendanceStudentRepository(Attendace_St
 //   }
 // };
 
-const GetAllStudentInAttendance = async (id: string, page: number, limit: number) => {
+const GetAllStudentInAttendance = async (id: string, page?: any, limit?: any) => {
   return await attendanceStudentRepository.FindByConditionAndPagination(page, limit, { attendance: id }, "student");
 };
 
@@ -29,11 +29,11 @@ const GetAllAttendance = async (page: number, limit: number) => {
   ]);
 };
 
-const GetAttendanceByStudentId = async (id: string, page: number, limit: number) => {
+const GetAttendanceByStudentId = async (id: string, page?: any, limit?: any) => {
   return await attendanceStudentRepository.FindByConditionAndPagination(page, limit, { student: id }, "attendance");
 };
 
-const GetAttendanceByEmailStudent = async (email: string, page: number, limit: number) => {
+const GetAttendanceByEmailStudent = async (email: string, page?: any, limit?: any) => {
   const student: FindUserDto = await userService.GetUserByEmail(email);
   return await attendanceStudentRepository.FindByConditionAndPagination(
     page,

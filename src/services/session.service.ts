@@ -38,14 +38,14 @@ const GetSessionByCode = async (code: string) => {
   return await sessionRepository.FindSessionByCode(code);
 };
 
-const GetSessionByClassCode = async (code: string) => {
+const GetSessionByClassCode = async (code: string, page?: any, limit?: any) => {
   const result = await classService.GetClassByCode(code);
-  return await sessionRepository.FindSessionByClassId(result?._id);
+  return await sessionRepository.FindSessionByClassId(result?._id, page, limit);
 };
 
-const GetSessionByCourseCode = async (code: string) => {
+const GetSessionByCourseCode = async (code: string, page?: any, limit?: any) => {
   const result = await courseService.GetCourseByCode(code);
-  return await sessionRepository.FindSessionByCourseId(result?._id);
+  return await sessionRepository.FindSessionByCourseId(result?._id, page, limit);
 };
 
 const UpdateSessionById = async (id: string, payload: UpdateSessionDto) => {

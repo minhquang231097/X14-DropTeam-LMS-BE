@@ -24,67 +24,54 @@ const GetCourse = async (req: Request, res: Response) => {
   try {
     const countDoc = await CourseService.GetTotalCourse();
     if (id) {
-      const courseExist = await CourseService.GetCourseById(id as string);
-      if (!courseExist) {
+      const result = await CourseService.GetCourseById(id as string);
+      if (!result) {
         return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.COURSE.NOT_FOUND, 404));
       }
-      res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.COURSE.FOUND_SUCCESS, 200, courseExist));
+      res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.COURSE.FOUND_SUCCESS, 200, result));
     } else if (code) {
-      const courseExist = await CourseService.GetCourseByCode(code as string);
-      if (!courseExist) {
+      const result = await CourseService.GetCourseByCode(code as string);
+      if (!result) {
         return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.COURSE.NOT_FOUND, 404));
       }
-      res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.COURSE.FOUND_SUCCESS, 200, courseExist));
+      res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.COURSE.FOUND_SUCCESS, 200, result));
     } else if (search) {
-      const allCourses = await courseService.SearchCourseByCondition(p, l, search as string);
-      if (!allCourses) {
+      const num = await courseService.SearchCourseByCondition(search as string);
+      const result = await courseService.SearchCourseByCondition(search as string, p, l);
+      if (!result) {
         return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.COURSE.NOT_FOUND, 404));
       }
       res.json(
         new HttpResponseData(RESPONSE_CONFIG.MESSAGE.COURSE.FOUND_SUCCESS, 200, {
-          list: allCourses,
+          list: result,
           total: countDoc,
           page: p,
-          count: allCourses.length,
-          total_page: Math.ceil(allCourses.length / l),
-        }),
-      );
-    } else if (search) {
-      const allCourses = await courseService.SearchCourseByCondition(p, l, search as string);
-      if (!allCourses) {
-        return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.COURSE.NOT_FOUND, 404));
-      }
-      res.json(
-        new HttpResponseData(RESPONSE_CONFIG.MESSAGE.COURSE.FOUND_SUCCESS, 200, {
-          list: allCourses,
-          page: p,
-          count: allCourses.length,
-          total: countDoc,
-          total_page: Math.ceil(allCourses.length / l),
+          count: result.length,
+          total_page: Math.ceil(num.length / l),
         }),
       );
     } else if (page && limit) {
-      const allCourses = await CourseService.GetAllCourse(p, l);
-      if (!allCourses) {
+      const result = await CourseService.GetAllCourse(p, l);
+      if (!result) {
         return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.COURSE.NOT_FOUND, 404));
       }
       res.json(
         new HttpResponseData(RESPONSE_CONFIG.MESSAGE.COURSE.FOUND_SUCCESS, 200, {
-          list: allCourses,
+          list: result,
           page: p,
-          count: allCourses.length,
+          count: result.length,
           total: countDoc,
-          total_page: Math.ceil(allCourses.length / l),
+          total_page: Math.ceil(countDoc / l),
         }),
       );
     } else {
-      const allCourses = await CourseService.GetAllCourse(1, 10);
-      if (!allCourses) {
+      const result = await CourseService.GetAllCourse(1, 10);
+      if (!result) {
         return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.COURSE.NOT_FOUND, 404));
       }
       res.json(
         new HttpResponseData(RESPONSE_CONFIG.MESSAGE.COURSE.FOUND_SUCCESS, 200, {
-          list: allCourses,
+          list: result,
           page: 1,
           total: countDoc,
         }),

@@ -31,17 +31,17 @@ const GetAllRegist = async (page: number, limit: number) => {
   return await registCourseRepository.FindAllInfoAndPagination(page, limit);
 };
 
-const GetRegistByCourseCode = async (code: string, page: number, limit: number) => {
+const GetRegistByCourseCode = async (code: string, page?: any, limit?: any) => {
   const _course = await courseService.GetCourseByCode(code);
   return await registCourseRepository.FindRegistbyCourseId(_course?._id, page, limit);
 };
 
-const GetRegistByWorkplaceCode = async (code: string, page: number, limit: number) => {
+const GetRegistByWorkplaceCode = async (code: string, page?: any, limit?: any) => {
   const _workplace = await workplaceService.GetWorkplaceByCode(code);
   return await registCourseRepository.FindRegistbyWorkplaceId(_workplace?._id, page, limit);
 };
 
-const GetRegistByEmailStudent = async (email: string, page: number, limit: number) => {
+const GetRegistByEmailStudent = async (email: string, page?: any, limit?: any) => {
   const _student = await userService.GetUserByEmail(email);
   return await registCourseRepository.FindRegistbyStudentId(_student?._id, page, limit);
 };

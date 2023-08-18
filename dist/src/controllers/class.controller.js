@@ -33,77 +33,80 @@ const AddStudentToClass = async (req, res) => {
     }
 };
 const GetClass = async (req, res) => {
-    const { page, limit, id, email, search, course_code } = req.query;
+    const { page, limit, id, email, search, course } = req.query;
     const p = Number(page);
     const l = Number(limit);
     try {
         const countDoc = await class_service_1.default.GetTotalClass();
         if (id) {
-            const classExist = await class_service_1.default.GetClassById(id);
-            if (!classExist) {
+            const result = await class_service_1.default.GetClassById(id);
+            if (!result) {
                 return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.CLASS.NOT_FOUND, 404));
             }
-            return res.json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.CLASS.FOUND_SUCCESS, 200, classExist));
+            return res.json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.CLASS.FOUND_SUCCESS, 200, result));
         }
-        else if (course_code) {
-            const _class = await class_service_1.default.GetClassByCourseCode(course_code, p, l);
-            if (!_class) {
+        else if (course) {
+            const num = await class_service_1.default.GetClassByCourseCode(course);
+            const result = await class_service_1.default.GetClassByCourseCode(course, p, l);
+            if (!result) {
                 return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.CLASS.NOT_FOUND, 404));
             }
             res.json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.CLASS.FOUND_SUCCESS, 200, {
-                list: _class,
+                list: result,
                 page: p,
                 total: countDoc,
-                count: _class.length,
-                total_page: Math.ceil(_class.length / l),
+                count: result.length,
+                total_page: Math.ceil(num.length / l),
             }));
         }
         else if (search) {
-            const classExist = await class_service_1.default.SearchClassByCondition(p, l, search);
-            if (!classExist) {
+            const num = await class_service_1.default.SearchClassByCondition(search);
+            const result = await class_service_1.default.SearchClassByCondition(search, p, l);
+            if (!result) {
                 return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.CLASS.NOT_FOUND, 404));
             }
             res.json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.CLASS.FOUND_SUCCESS, 200, {
-                list: classExist,
+                list: result,
                 page: p,
-                count: classExist.length,
+                count: result.length,
                 total: countDoc,
-                total_page: Math.ceil(classExist.length / l),
+                total_page: Math.ceil(num.length / l),
             }));
         }
         else if (email) {
-            const classExist = await class_student_service_1.default.GetClassByStudentEmail(p, l, email);
-            if (!classExist) {
+            const num = await class_student_service_1.default.GetClassByStudentEmail(email);
+            const result = await class_student_service_1.default.GetClassByStudentEmail(email, p, l);
+            if (!result) {
                 return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.CLASS.NOT_FOUND, 404));
             }
             res.json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.CLASS.FOUND_SUCCESS, 200, {
-                list: classExist,
+                list: result,
                 page: p,
-                count: classExist.length,
+                count: result.length,
                 total: countDoc,
-                total_page: Math.ceil(classExist.length / l),
+                total_page: Math.ceil(num.length / l),
             }));
         }
         else if (page && limit) {
-            const allClasses = await class_service_1.default.GetAllClass(p, l);
-            if (!allClasses) {
+            const result = await class_service_1.default.GetAllClass(p, l);
+            if (!result) {
                 return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.CLASS.NOT_FOUND, 404));
             }
             res.json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.CLASS.FOUND_SUCCESS, 200, {
-                list: allClasses,
+                list: result,
                 page: p,
-                count: allClasses.length,
-                total_page: Math.ceil(allClasses.length / l),
+                count: result.length,
                 total: countDoc,
+                total_page: Math.ceil(countDoc / l),
             }));
         }
         else {
-            const allClasses = await class_service_1.default.GetAllClass(1, 10);
-            if (!allClasses) {
+            const result = await class_service_1.default.GetAllClass(1, 10);
+            if (!result) {
                 return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.CLASS.NOT_FOUND, 404));
             }
             res.json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.CLASS.FOUND_SUCCESS, 200, {
-                list: allClasses,
+                list: result,
                 page: 1,
                 total: countDoc,
             }));

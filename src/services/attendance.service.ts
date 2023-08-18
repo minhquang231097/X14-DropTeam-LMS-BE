@@ -21,7 +21,7 @@ const CreateAttendance = async (session_code: string, class_code: string, payloa
   return newAttendance;
 };
 
-const GetAttendanceByDay = async (day: number, page: number, limit: number) => {
+const GetAttendanceByDay = async (day: number, page?: any, limit?: any) => {
   return await attendanceRepository.FindByConditionAndPagination(page, limit, { day }, ["session", "class"]);
 };
 
@@ -33,7 +33,7 @@ const GetAttendanceByClassCodeAndDay = async (class_code: string, day: number) =
   });
 };
 
-const GetAttendanceByClassCode = async (code: string, page: number, limit: number) => {
+const GetAttendanceByClassCode = async (code: string, page?: any, limit?: any) => {
   const foundAttendance: any = await classService.GetClassByCode(code);
   return await attendanceRepository.FindAttendanceByClassId(foundAttendance._id, page, limit);
 };

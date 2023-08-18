@@ -8,47 +8,14 @@ import { Request, Response } from "express";
 import classStudentService from "@/services/class.student.service";
 
 const GetUser = async (req: Request, res: Response) => {
-  const { page, limit, email, attendanceId, _class, search } = req.query;
+  const { page, limit, email, attendanceId, class_code, search } = req.query;
   const p = Number(page);
   const l = Number(limit);
   try {
     const countDoc = await userService.GetTotalUser();
-    if (_class) {
-      const allUsers = await classStudentService.GetAllStudentInClass(p, l, _class as string);
-      if (!allUsers) {
-        return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.USER.NOT_FOUND, 404));
-      }
-      res.json(
-        new HttpResponseData(RESPONSE_CONFIG.MESSAGE.USER.FOUND, 200, {
-          list: allUsers,
-          page: p,
-          count: allUsers.length,
-          total: countDoc,
-          total_page: Math.ceil(allUsers.length / l),
-        }),
-      );
-    } else if (email) {
-      const user = await userService.GetUserByEmail(email as string);
-      if (!user) {
-        return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.USER.NOT_FOUND, 404));
-      }
-      res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.USER.FOUND, 200, user));
-    } else if (attendanceId) {
-      const allUsers = await userService.GetUserByAttendance(attendanceId as string, p, l);
-      if (!allUsers) {
-        return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.USER.NOT_FOUND, 404));
-      }
-      res.json(
-        new HttpResponseData(RESPONSE_CONFIG.MESSAGE.USER.FOUND, 200, {
-          list: allUsers,
-          page: p,
-          count: allUsers.length,
-          total: countDoc,
-          total_page: Math.ceil(allUsers.length / l),
-        }),
-      );
-    } else if (search) {
-      const result = await userService.SearchUserByCondition(p, l, search as string);
+    if (class_code) {
+      const num = await classStudentService.GetAllStudentInClass(class_code as string);
+      const result = await classStudentService.GetAllStudentInClass(class_code as string, p, l);
       if (!result) {
         return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.USER.NOT_FOUND, 404));
       }
@@ -58,33 +25,69 @@ const GetUser = async (req: Request, res: Response) => {
           page: p,
           count: result.length,
           total: countDoc,
-          total_page: Math.ceil(result.length / l),
+          total_page: Math.ceil(num.length / l),
+        }),
+      );
+    } else if (email) {
+      const result = await userService.GetUserByEmail(email as string);
+      if (!result) {
+        return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.USER.NOT_FOUND, 404));
+      }
+      res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.USER.FOUND, 200, result));
+    } else if (attendanceId) {
+      const num = await userService.GetUserByAttendance(attendanceId as string);
+      const result = await userService.GetUserByAttendance(attendanceId as string, p, l);
+      if (!result) {
+        return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.USER.NOT_FOUND, 404));
+      }
+      res.json(
+        new HttpResponseData(RESPONSE_CONFIG.MESSAGE.USER.FOUND, 200, {
+          list: result,
+          page: p,
+          count: result.length,
+          total: countDoc,
+          total_page: Math.ceil(num.length / l),
+        }),
+      );
+    } else if (search) {
+      const num = await userService.SearchUserByCondition(search as string);
+      const result = await userService.SearchUserByCondition(search as string, p, l);
+      if (!result) {
+        return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.USER.NOT_FOUND, 404));
+      }
+      res.json(
+        new HttpResponseData(RESPONSE_CONFIG.MESSAGE.USER.FOUND, 200, {
+          list: result,
+          page: p,
+          count: result.length,
+          total: countDoc,
+          total_page: Math.ceil(num.length / l),
         }),
       );
     } else if (page && limit) {
-      const allUsers = await userService.GetAllUser(p, l);
-      if (!allUsers) {
+      const result = await userService.GetAllUser(p, l);
+      if (!result) {
         return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.USER.NOT_FOUND, 404));
       }
       res.json(
         new HttpResponseData(RESPONSE_CONFIG.MESSAGE.USER.FOUND, 200, {
-          list: allUsers,
+          list: result,
           page: p,
-          count: allUsers.length,
+          count: result.length,
           total: countDoc,
-          total_page: Math.ceil(allUsers.length / l),
+          total_page: Math.ceil(countDoc / l),
         }),
       );
     } else {
-      const allUsers = await userService.GetAllUser(1, 10);
-      if (!allUsers) {
+      const result = await userService.GetAllUser(1, 10);
+      if (!result) {
         return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.USER.NOT_FOUND, 404));
       }
       res.json(
         new HttpResponseData(RESPONSE_CONFIG.MESSAGE.USER.FOUND, 200, {
-          list: allUsers,
+          list: result,
           page: 1,
-          count: allUsers.length,
+          count: result.length,
           total: countDoc,
         }),
       );

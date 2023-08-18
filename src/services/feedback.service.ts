@@ -28,12 +28,12 @@ const GetFeedbackById = async (id: string) => {
   return await feedbackRepository.FindById(id, [{ path: "course", populate: { path: "workplace" } }, "student"]);
 };
 
-const GetFeedbackByCourseCode = async (code: string, page: number, limit: number) => {
+const GetFeedbackByCourseCode = async (code: string, page?: any, limit?: any) => {
   const foundCourse: any = await courseService.GetCourseByCode(code);
   return await feedbackRepository.FindFeedbackByCourseId(foundCourse._id, page, limit);
 };
 
-const GetFeedbackByEmailStudent = async (email: string, page: number, limit: number) => {
+const GetFeedbackByEmailStudent = async (email: string, page?: any, limit?: any) => {
   const foundUser: any = await userService.GetUserByEmail(email);
   return await feedbackRepository.FindFeedbackByStudentId(foundUser._id, page, limit);
 };

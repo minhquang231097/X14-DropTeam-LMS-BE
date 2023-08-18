@@ -29,81 +29,84 @@ const AddStudentToClass = async (req: Request, res: Response) => {
 };
 
 const GetClass = async (req: Request, res: Response) => {
-  const { page, limit, id, email, search, course_code } = req.query;
+  const { page, limit, id, email, search, course } = req.query;
   const p = Number(page);
   const l = Number(limit);
   try {
     const countDoc = await classService.GetTotalClass();
     if (id) {
-      const classExist = await classService.GetClassById(id as string);
-      if (!classExist) {
+      const result = await classService.GetClassById(id as string);
+      if (!result) {
         return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.CLASS.NOT_FOUND, 404));
       }
-      return res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.CLASS.FOUND_SUCCESS, 200, classExist));
-    } else if (course_code) {
-      const _class = await classService.GetClassByCourseCode(course_code as string, p, l);
-      if (!_class) {
+      return res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.CLASS.FOUND_SUCCESS, 200, result));
+    } else if (course) {
+      const num = await classService.GetClassByCourseCode(course as string);
+      const result = await classService.GetClassByCourseCode(course as string, p, l);
+      if (!result) {
         return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.CLASS.NOT_FOUND, 404));
       }
       res.json(
         new HttpResponseData(RESPONSE_CONFIG.MESSAGE.CLASS.FOUND_SUCCESS, 200, {
-          list: _class,
+          list: result,
           page: p,
           total: countDoc,
-          count: _class.length,
-          total_page: Math.ceil(_class.length / l),
+          count: result.length,
+          total_page: Math.ceil(num.length / l),
         }),
       );
     } else if (search) {
-      const classExist = await classService.SearchClassByCondition(p, l, search as string);
-      if (!classExist) {
+      const num = await classService.SearchClassByCondition(search as string);
+      const result = await classService.SearchClassByCondition(search as string, p, l);
+      if (!result) {
         return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.CLASS.NOT_FOUND, 404));
       }
       res.json(
         new HttpResponseData(RESPONSE_CONFIG.MESSAGE.CLASS.FOUND_SUCCESS, 200, {
-          list: classExist,
+          list: result,
           page: p,
-          count: classExist.length,
+          count: result.length,
           total: countDoc,
-          total_page: Math.ceil(classExist.length / l),
+          total_page: Math.ceil(num.length / l),
         }),
       );
     } else if (email) {
-      const classExist = await classStudentService.GetClassByStudentEmail(p, l, email as string);
-      if (!classExist) {
+      const num = await classStudentService.GetClassByStudentEmail(email as string);
+      const result = await classStudentService.GetClassByStudentEmail(email as string, p, l);
+      if (!result) {
         return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.CLASS.NOT_FOUND, 404));
       }
       res.json(
         new HttpResponseData(RESPONSE_CONFIG.MESSAGE.CLASS.FOUND_SUCCESS, 200, {
-          list: classExist,
+          list: result,
           page: p,
-          count: classExist.length,
+          count: result.length,
           total: countDoc,
-          total_page: Math.ceil(classExist.length / l),
+          total_page: Math.ceil(num.length / l),
         }),
       );
     } else if (page && limit) {
-      const allClasses = await classService.GetAllClass(p, l);
-      if (!allClasses) {
+      const result = await classService.GetAllClass(p, l);
+      if (!result) {
         return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.CLASS.NOT_FOUND, 404));
       }
       res.json(
         new HttpResponseData(RESPONSE_CONFIG.MESSAGE.CLASS.FOUND_SUCCESS, 200, {
-          list: allClasses,
+          list: result,
           page: p,
-          count: allClasses.length,
-          total_page: Math.ceil(allClasses.length / l),
+          count: result.length,
           total: countDoc,
+          total_page: Math.ceil(countDoc / l),
         }),
       );
     } else {
-      const allClasses = await classService.GetAllClass(1, 10);
-      if (!allClasses) {
+      const result = await classService.GetAllClass(1, 10);
+      if (!result) {
         return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.CLASS.NOT_FOUND, 404));
       }
       res.json(
         new HttpResponseData(RESPONSE_CONFIG.MESSAGE.CLASS.FOUND_SUCCESS, 200, {
-          list: allClasses,
+          list: result,
           page: 1,
           total: countDoc,
         }),

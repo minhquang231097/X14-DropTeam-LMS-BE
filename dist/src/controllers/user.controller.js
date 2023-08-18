@@ -11,46 +11,14 @@ const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const bcryptjs_1 = __importDefault(require("bcryptjs"));
 const class_student_service_1 = __importDefault(require("@/services/class.student.service"));
 const GetUser = async (req, res) => {
-    const { page, limit, email, attendanceId, _class, search } = req.query;
+    const { page, limit, email, attendanceId, class_code, search } = req.query;
     const p = Number(page);
     const l = Number(limit);
     try {
         const countDoc = await user_service_1.default.GetTotalUser();
-        if (_class) {
-            const allUsers = await class_student_service_1.default.GetAllStudentInClass(p, l, _class);
-            if (!allUsers) {
-                return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.USER.NOT_FOUND, 404));
-            }
-            res.json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.USER.FOUND, 200, {
-                list: allUsers,
-                page: p,
-                count: allUsers.length,
-                total: countDoc,
-                total_page: Math.ceil(allUsers.length / l),
-            }));
-        }
-        else if (email) {
-            const user = await user_service_1.default.GetUserByEmail(email);
-            if (!user) {
-                return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.USER.NOT_FOUND, 404));
-            }
-            res.json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.USER.FOUND, 200, user));
-        }
-        else if (attendanceId) {
-            const allUsers = await user_service_1.default.GetUserByAttendance(attendanceId, p, l);
-            if (!allUsers) {
-                return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.USER.NOT_FOUND, 404));
-            }
-            res.json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.USER.FOUND, 200, {
-                list: allUsers,
-                page: p,
-                count: allUsers.length,
-                total: countDoc,
-                total_page: Math.ceil(allUsers.length / l),
-            }));
-        }
-        else if (search) {
-            const result = await user_service_1.default.SearchUserByCondition(p, l, search);
+        if (class_code) {
+            const num = await class_student_service_1.default.GetAllStudentInClass(class_code);
+            const result = await class_student_service_1.default.GetAllStudentInClass(class_code, p, l);
             if (!result) {
                 return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.USER.NOT_FOUND, 404));
             }
@@ -59,31 +27,66 @@ const GetUser = async (req, res) => {
                 page: p,
                 count: result.length,
                 total: countDoc,
-                total_page: Math.ceil(result.length / l),
+                total_page: Math.ceil(num.length / l),
+            }));
+        }
+        else if (email) {
+            const result = await user_service_1.default.GetUserByEmail(email);
+            if (!result) {
+                return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.USER.NOT_FOUND, 404));
+            }
+            res.json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.USER.FOUND, 200, result));
+        }
+        else if (attendanceId) {
+            const num = await user_service_1.default.GetUserByAttendance(attendanceId);
+            const result = await user_service_1.default.GetUserByAttendance(attendanceId, p, l);
+            if (!result) {
+                return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.USER.NOT_FOUND, 404));
+            }
+            res.json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.USER.FOUND, 200, {
+                list: result,
+                page: p,
+                count: result.length,
+                total: countDoc,
+                total_page: Math.ceil(num.length / l),
+            }));
+        }
+        else if (search) {
+            const num = await user_service_1.default.SearchUserByCondition(search);
+            const result = await user_service_1.default.SearchUserByCondition(search, p, l);
+            if (!result) {
+                return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.USER.NOT_FOUND, 404));
+            }
+            res.json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.USER.FOUND, 200, {
+                list: result,
+                page: p,
+                count: result.length,
+                total: countDoc,
+                total_page: Math.ceil(num.length / l),
             }));
         }
         else if (page && limit) {
-            const allUsers = await user_service_1.default.GetAllUser(p, l);
-            if (!allUsers) {
+            const result = await user_service_1.default.GetAllUser(p, l);
+            if (!result) {
                 return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.USER.NOT_FOUND, 404));
             }
             res.json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.USER.FOUND, 200, {
-                list: allUsers,
+                list: result,
                 page: p,
-                count: allUsers.length,
+                count: result.length,
                 total: countDoc,
-                total_page: Math.ceil(allUsers.length / l),
+                total_page: Math.ceil(countDoc / l),
             }));
         }
         else {
-            const allUsers = await user_service_1.default.GetAllUser(1, 10);
-            if (!allUsers) {
+            const result = await user_service_1.default.GetAllUser(1, 10);
+            if (!result) {
                 return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.USER.NOT_FOUND, 404));
             }
             res.json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.USER.FOUND, 200, {
-                list: allUsers,
+                list: result,
                 page: 1,
-                count: allUsers.length,
+                count: result.length,
                 total: countDoc,
             }));
         }

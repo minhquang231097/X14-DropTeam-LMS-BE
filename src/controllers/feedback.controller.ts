@@ -6,9 +6,9 @@ import { Request, Response } from "express";
 
 const CreateNewFeekback = async (req: Request, res: Response) => {
   const payload = req.body;
-  const { course_code, email } = req.body;
+  const { course, email } = req.body;
   try {
-    const session = await feedbackService.CreateFeedback(course_code, email, payload);
+    const session = await feedbackService.CreateFeedback(course, email, payload);
     res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.FEEDBACK.CREATE_SUCCES, 200, session));
   } catch (error) {
     return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.FEEDBACK.WRONG, 400));
@@ -16,54 +16,56 @@ const CreateNewFeekback = async (req: Request, res: Response) => {
 };
 
 const GetFeedback = async (req: Request, res: Response) => {
-  const { page, limit, course_code, email } = req.query;
+  const { page, limit, course, email } = req.query;
   const p = Number(page);
   const l = Number(limit);
   try {
     const countDoc = await feedbackService.GetTotalFeedback();
-    if (course_code) {
-      const feedback = await feedbackService.GetFeedbackByCourseCode(course_code as string, p, l);
-      if (!feedback) return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.FEEDBACK.NOT_FOUND, 404));
+    if (course) {
+      const num = await feedbackService.GetFeedbackByCourseCode(course as string);
+      const result = await feedbackService.GetFeedbackByCourseCode(course as string, p, l);
+      if (!result) return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.FEEDBACK.NOT_FOUND, 404));
       res.json(
         new HttpResponseData(RESPONSE_CONFIG.MESSAGE.FEEDBACK.FOUND_SUCCESS, 200, {
-          list: feedback,
-          count: feedback.length,
+          list: result,
+          count: result.length,
           page: p,
           total: countDoc,
-          total_page: Math.ceil(feedback.length / l),
+          total_page: Math.ceil(num.length / l),
         }),
       );
     } else if (email) {
-      const student = await feedbackService.GetFeedbackByEmailStudent(email as string, p, l);
-      if (!student) return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.FEEDBACK.NOT_FOUND, 404));
+      const num = await feedbackService.GetFeedbackByEmailStudent(email as string);
+      const result = await feedbackService.GetFeedbackByEmailStudent(email as string, p, l);
+      if (!result) return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.FEEDBACK.NOT_FOUND, 404));
       res.json(
         new HttpResponseData(RESPONSE_CONFIG.MESSAGE.FEEDBACK.FOUND_SUCCESS, 200, {
-          list: student,
-          count: student.length,
+          list: result,
+          count: result.length,
           page: p,
           total: countDoc,
-          total_page: Math.ceil(student.length / l),
+          total_page: Math.ceil(num.length / l),
         }),
       );
     } else if (page && limit) {
-      const all = await feedbackService.GetFeedbackByCondition(p, l);
-      if (!all) return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.FEEDBACK.NOT_FOUND, 404));
+      const result = await feedbackService.GetFeedbackByCondition(p, l);
+      if (!result) return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.FEEDBACK.NOT_FOUND, 404));
       res.json(
         new HttpResponseData(RESPONSE_CONFIG.MESSAGE.FEEDBACK.FOUND_SUCCESS, 200, {
-          list: all,
-          count: all.length,
+          list: result,
+          count: result.length,
           page: p,
           total: countDoc,
-          total_page: Math.ceil(all.length / l),
+          total_page: Math.ceil(countDoc / l),
         }),
       );
     } else {
-      const all = await feedbackService.GetFeedbackByCondition(1, 10);
-      if (!all) return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.FEEDBACK.NOT_FOUND, 404));
+      const result = await feedbackService.GetFeedbackByCondition(1, 10);
+      if (!result) return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.FEEDBACK.NOT_FOUND, 404));
       res.json(
         new HttpResponseData(RESPONSE_CONFIG.MESSAGE.FEEDBACK.FOUND_SUCCESS, 200, {
-          list: all,
-          count: all.length,
+          list: result,
+          count: result.length,
           page: 1,
           total: countDoc,
         }),

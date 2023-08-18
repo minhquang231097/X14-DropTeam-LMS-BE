@@ -4,22 +4,23 @@ import { UpdateClassDto } from "@/types/class";
 import courseService from "./course.service";
 import userService from "./user.service";
 import workplaceService from "./workplace.service";
+import axios from "axios";
 
 const classRepository = new ClassRepository(Class);
-const holidays: any = [
-  "2023-01-01",
-  "2023-02-01",
-  "2023-02-02",
-  "2023-02-03",
-  "2023-02-04",
-  "2023-02-05",
-  "2023-02-06",
-  "2023-02-07",
-  "2023-04-15",
-  "2023-04-30",
-  "2023-05-01",
-  "2023-09-02",
-];
+
+const GetHolidays = async () => {
+  try {
+    const year = new Date().getFullYear()
+    const response = await axios.get(`${process.env.URL}?api_key=${process.env.API_KEY}&country=${process.env.COUNTRY}&year=${year}`);
+    const arr = response.data.response.holidays;
+    const holidays = arr.map((el: { date: { iso: any; }; }) => el.date.iso)
+    return holidays;
+  } catch (error) {
+    console.error("Error retrieving holidays:", error);
+    throw error;
+  }
+};
+
 const CreateOneClass = async (email_mentor: string, workplace_code: string, course_code: string, payload: IClass) => {
   const { start_at, schedule, total_session, class_code } = payload;
   const [_mentor, _workplace, _course, _class] = await Promise.all([
@@ -33,33 +34,34 @@ const CreateOneClass = async (email_mentor: string, workplace_code: string, cour
   const id_workplace = _workplace?._id;
   const id_course = _course?._id;
 
-  let arrSch = [];
-  for (let i = 0; i < schedule.length; i++) {
-    arrSch.push(new Date(schedule[i]).getDay());
-  }
-  const startDate = new Date(start_at);
-  const date_end = calculateEndDate(startDate, Number(total_session), arrSch);
-  return await classRepository.CreateClass(id_mentor, id_workplace, id_course, date_end, payload);
+    let arrSch = [];
+    for (let i = 0; i < schedule.length; i++) {
+      arrSch.push(new Date(schedule[i]).getDay());
+    }
+    const startDate = new Date(start_at);
+    const holidays = await GetHolidays()
+    const date_end = calculateEndDate(startDate, Number(total_session), arrSch, holidays);
+    return await classRepository.CreateClass(id_mentor, id_workplace, id_course, date_end, payload);
 };
 
-function calculateEndDate(startDate: Date, totalSessions: number, schedule: number[]) {
+function calculateEndDate(startDate: Date, totalSessions:number, schedule: number[], holidays: string[]) {
   let sessionCount = 0;
-  let currentDay = startDate.getDay();
+  let currentDate = new Date(startDate);
 
-  while (sessionCount < totalSessions && !isHoliday(startDate)) {
-    if (schedule.includes(currentDay)) {
+  while (sessionCount < totalSessions) {
+    const currentDay = currentDate.getDay();
+    if (schedule.includes(currentDay) && !isHoliday(currentDate, holidays)) {
       sessionCount++;
     }
-    startDate.setDate(startDate.getDate() + 1);
-    currentDay = startDate.getDay();
+    currentDate.setDate(currentDate.getDate() + 1);
   }
-  return new Date(
-    startDate.getTime() - 1 + (totalSessions - sessionCount) * 24 * 60 * 60 * 1000 * (schedule.length - 1),
-  );
+  const previousDay = new Date(currentDate);
+  previousDay.setDate(previousDay.getDate() - 1);
+  return previousDay;
 }
 
-function isHoliday(date: Date) {
-  const dateString = date.toISOString().split("T")[0];
+function isHoliday(date: Date, holidays: string[]) {
+  const dateString = date.toISOString().split('T')[0];
   return holidays.includes(dateString);
 }
 
@@ -83,7 +85,7 @@ const GetClassById = async (id: string) => {
   ]);
 };
 
-const GetClassByCourseCode = async (code: string, page: number, limit: number) => {
+const GetClassByCourseCode = async (code: string, page?: any, limit?: any) => {
   const _course = await courseService.GetCourseByCode(code);
   return await classRepository.FindClassByCourseId(_course?._id, page, limit);
 };
@@ -108,14 +110,9 @@ const GetClassByCondition = async (filter: IClass) => {
   ]);
 };
 
-const SearchClassByCondition = async (page: number, limit: number, searchTerm?: string) => {
+const SearchClassByCondition = async (searchTerm?: string, page?: any, limit?: any) => {
   const query = {
-    $or: [
-      { mentor: { $regex: searchTerm, $options: "i" } },
-      { workplace: { $regex: searchTerm, $options: "i" } },
-      { course: { $regex: searchTerm, $options: "i" } },
-      { class_code: { $regex: searchTerm, $options: "i" } },
-    ],
+    $or: [{ class_code: { $regex: searchTerm, $options: "i" } }],
   };
   return await classRepository.SearchByCondition(page, limit, query, [
     "mentor",
@@ -155,4 +152,5 @@ export default {
   DeleteClassByCondition,
   GetClassByCode,
   GetTotalClass,
+  GetHolidays
 };

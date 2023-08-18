@@ -20,45 +20,46 @@ const GetWorkplace = async (req: Request, res: Response) => {
   try {
     const countDoc = await WorkplaceService.GetTotalWorkplace();
     if (id) {
-      const wp = await WorkplaceService.GetWorkplaceById(id as string);
-      if (!wp) return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.WORKPLACE.NOT_FOUND, 404));
-      return res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.WORKPLACE.FOUND_SUCCESS, 200, wp));
+      const result = await WorkplaceService.GetWorkplaceById(id as string);
+      if (!result) return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.WORKPLACE.NOT_FOUND, 404));
+      return res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.WORKPLACE.FOUND_SUCCESS, 200, result));
     } else if (code) {
-      const wp = await WorkplaceService.GetWorkplaceByCode(code as string);
-      if (!wp) return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.WORKPLACE.NOT_FOUND, 404));
-      return res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.WORKPLACE.FOUND_SUCCESS, 200, wp));
+      const result = await WorkplaceService.GetWorkplaceByCode(code as string);
+      if (!result) return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.WORKPLACE.NOT_FOUND, 404));
+      return res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.WORKPLACE.FOUND_SUCCESS, 200, result));
     } else if (search) {
-      const all = await WorkplaceService.SearchWorkplaceByCondition(p, l, search as string);
-      if (!all) return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.WORKPLACE.NOT_FOUND, 404));
+      const num = await WorkplaceService.SearchWorkplaceByCondition(search as string);
+      const result = await WorkplaceService.SearchWorkplaceByCondition(search as string, p, l);
+      if (!result) return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.WORKPLACE.NOT_FOUND, 404));
       return res.json(
         new HttpResponseData(RESPONSE_CONFIG.MESSAGE.WORKPLACE.FOUND_SUCCESS, 200, {
-          list: all,
+          list: result,
           page: p,
-          count: all.length,
+          count: result.length,
           total: countDoc,
-          total_page: Math.ceil(countDoc / l),
+          total_page: Math.ceil(num.length / l),
         }),
       );
     } else if (page && limit) {
-      const all = await WorkplaceService.GetAllWorkplace(p, l);
-      if (!all) return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.WORKPLACE.NOT_FOUND, 404));
+      const result = await WorkplaceService.GetAllWorkplace(p, l);
+      if (!result) return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.WORKPLACE.NOT_FOUND, 404));
       return res.json(
         new HttpResponseData(RESPONSE_CONFIG.MESSAGE.WORKPLACE.FOUND_SUCCESS, 200, {
-          list: all,
+          list: result,
           page: p,
-          count: all.length,
+          count: result.length,
           total: countDoc,
           total_page: Math.ceil(countDoc / l),
         }),
       );
     } else {
-      const all = await WorkplaceService.GetAllWorkplace(1, 10);
-      if (!all) return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.WORKPLACE.NOT_FOUND, 404));
+      const result = await WorkplaceService.GetAllWorkplace(1, 10);
+      if (!result) return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.WORKPLACE.NOT_FOUND, 404));
       return res.json(
         new HttpResponseData(RESPONSE_CONFIG.MESSAGE.WORKPLACE.FOUND_SUCCESS, 200, {
-          list: all,
+          list: result,
           page: 1,
-          count: all.length,
+          count: result.length,
           total: countDoc,
         }),
       );

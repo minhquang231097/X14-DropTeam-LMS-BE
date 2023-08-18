@@ -16,66 +16,69 @@ const RegistedNewCourse = async (req: Request, res: Response) => {
 };
 
 const GetRegist = async (req: Request, res: Response) => {
-  const { _wp, _course, email, page, limit } = req.query;
+  const { wp, course, email, page, limit } = req.query;
   const p = Number(page);
   const l = Number(limit);
   try {
     const countDoc = await registCourseService.GetTotalRegist();
-    if (_course) {
-      const allRegist = await registCourseService.GetRegistByCourseCode(_course as string, p, l);
-      if (allRegist.length === 0) return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.REGIST.NOT_FOUND, 404));
+    if (course) {
+      const num = await registCourseService.GetRegistByCourseCode(course as string);
+      const result = await registCourseService.GetRegistByCourseCode(course as string, p, l);
+      if (result.length === 0) return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.REGIST.NOT_FOUND, 404));
       res.json(
         new HttpResponseData(RESPONSE_CONFIG.MESSAGE.REGIST.FOUND_SUCCESS, 200, {
-          list: allRegist,
-          count: allRegist.length,
+          list: result,
+          count: result.length,
           page: p,
           total: countDoc,
-          total_page: Math.ceil(allRegist.length / l),
+          total_page: Math.ceil(num.length / l),
         }),
       );
-    } else if (_wp) {
-      const allRegist = await registCourseService.GetRegistByWorkplaceCode(_wp as string, p, l);
-      if (allRegist.length === 0) return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.REGIST.NOT_FOUND, 404));
+    } else if (wp) {
+      const num = await registCourseService.GetRegistByWorkplaceCode(wp as string);
+      const result = await registCourseService.GetRegistByWorkplaceCode(wp as string, p, l);
+      if (result.length === 0) return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.REGIST.NOT_FOUND, 404));
       res.json(
         new HttpResponseData(RESPONSE_CONFIG.MESSAGE.REGIST.FOUND_SUCCESS, 200, {
-          list: allRegist,
-          count: allRegist.length,
+          list: result,
+          count: result.length,
           page: p,
           total: countDoc,
-          total_page: Math.ceil(allRegist.length / l),
+          total_page: Math.ceil(num.length / l),
         }),
       );
     } else if (email) {
-      const allRegist = await registCourseService.GetRegistByEmailStudent(email as string, p, l);
-      if (allRegist.length === 0) return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.REGIST.NOT_FOUND, 404));
+      const num = await registCourseService.GetRegistByEmailStudent(email as string);
+      const result = await registCourseService.GetRegistByEmailStudent(email as string, p, l);
+      if (result.length === 0) return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.REGIST.NOT_FOUND, 404));
       res.json(
         new HttpResponseData(RESPONSE_CONFIG.MESSAGE.REGIST.FOUND_SUCCESS, 200, {
-          list: allRegist,
-          count: allRegist.length,
+          list: result,
+          count: result.length,
           page: p,
           total: countDoc,
-          total_page: Math.ceil(allRegist.length / l),
+          total_page: Math.ceil(num.length / l),
         }),
       );
     } else if (page && limit) {
-      const allRegist = await registCourseService.GetAllRegist(p, l);
-      if (allRegist.length === 0) return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.REGIST.NOT_FOUND, 404));
+      const result = await registCourseService.GetAllRegist(p, l);
+      if (result.length === 0) return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.REGIST.NOT_FOUND, 404));
       res.json(
         new HttpResponseData(RESPONSE_CONFIG.MESSAGE.REGIST.FOUND_SUCCESS, 200, {
-          list: allRegist,
-          count: allRegist.length,
+          list: result,
+          count: result.length,
           page: p,
           total: countDoc,
-          total_page: Math.ceil(allRegist.length / l),
+          total_page: Math.ceil(countDoc / l),
         }),
       );
     } else {
-      const allRegist = await registCourseService.GetAllRegist(1, 10);
-      if (allRegist.length === 0) return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.REGIST.NOT_FOUND, 404));
+      const result = await registCourseService.GetAllRegist(1, 10);
+      if (result.length === 0) return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.REGIST.NOT_FOUND, 404));
       res.json(
         new HttpResponseData(RESPONSE_CONFIG.MESSAGE.REGIST.FOUND_SUCCESS, 200, {
-          list: allRegist,
-          count: allRegist.length,
+          list: result,
+          count: result.length,
           page: 1,
           total: countDoc,
         }),

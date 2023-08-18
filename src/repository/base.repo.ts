@@ -17,12 +17,7 @@ export abstract class BaseRepository<T extends Document> {
     return this.model.findOne(filter).populate(populate);
   }
 
-  async FindByConditionAndPagination(
-    page: number,
-    limit: number,
-    filter: any,
-    populate?: any | null,
-  ): Promise<T[] | any> {
+  async FindByConditionAndPagination(page?: any, limit?: any, filter?: any, populate?: any | null): Promise<T[] | any> {
     return this.model
       .find(filter)
       .populate(populate)
@@ -34,7 +29,7 @@ export abstract class BaseRepository<T extends Document> {
     return this.model.find();
   }
 
-  async FindAllInfoAndPagination(page: number, limit: number, populate?: any | null): Promise<T[] | any> {
+  async FindAllInfoAndPagination(page?: any, limit?: any, populate?: any | null): Promise<T[] | any> {
     return await this.model
       .find()
       .skip((page - 1) * limit)
@@ -42,13 +37,7 @@ export abstract class BaseRepository<T extends Document> {
       ?.populate(populate);
   }
 
-  async SearchByCondition(
-    page: number,
-    limit: number,
-    // searchTerm?: string,
-    query?: any | null,
-    populate?: any | null,
-  ): Promise<T[] | any> {
+  async SearchByCondition(page?: any, limit?: any, query?: any | null, populate?: any | null): Promise<T[] | any> {
     return this.model
       .find(query)
       .skip((page - 1) * limit)

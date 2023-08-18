@@ -13,16 +13,20 @@ export class SessionRepository extends BaseRepository<ISession> {
     return session?.toObject();
   }
 
-  async FindSessionByCourseId(id: string) {
+  async FindSessionByCourseId(id: string, page?: any, limit?: any) {
     const session = await this.model
       .find({ course: id })
+      .skip((page - 1) * limit)
+      .limit(limit)
       .populate([{ path: "course", populate: [{ path: "workplace" }] }, "class"]);
     return session;
   }
 
-  async FindSessionByClassId(id: string) {
+  async FindSessionByClassId(id: string, page?: any, limit?: any) {
     const session = await this.model
       .findOne({ class: id })
+      .skip((page - 1) * limit)
+      .limit(limit)
       .populate([{ path: "course", populate: [{ path: "workplace" }] }, "class"]);
     return session;
   }

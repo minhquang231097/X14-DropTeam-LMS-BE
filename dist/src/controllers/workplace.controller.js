@@ -23,49 +23,50 @@ const GetWorkplace = async (req, res) => {
     try {
         const countDoc = await workplace_service_1.default.GetTotalWorkplace();
         if (id) {
-            const wp = await workplace_service_1.default.GetWorkplaceById(id);
-            if (!wp)
+            const result = await workplace_service_1.default.GetWorkplaceById(id);
+            if (!result)
                 return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.WORKPLACE.NOT_FOUND, 404));
-            return res.json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.WORKPLACE.FOUND_SUCCESS, 200, wp));
+            return res.json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.WORKPLACE.FOUND_SUCCESS, 200, result));
         }
         else if (code) {
-            const wp = await workplace_service_1.default.GetWorkplaceByCode(code);
-            if (!wp)
+            const result = await workplace_service_1.default.GetWorkplaceByCode(code);
+            if (!result)
                 return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.WORKPLACE.NOT_FOUND, 404));
-            return res.json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.WORKPLACE.FOUND_SUCCESS, 200, wp));
+            return res.json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.WORKPLACE.FOUND_SUCCESS, 200, result));
         }
         else if (search) {
-            const all = await workplace_service_1.default.SearchWorkplaceByCondition(p, l, search);
-            if (!all)
+            const num = await workplace_service_1.default.SearchWorkplaceByCondition(search);
+            const result = await workplace_service_1.default.SearchWorkplaceByCondition(search, p, l);
+            if (!result)
                 return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.WORKPLACE.NOT_FOUND, 404));
             return res.json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.WORKPLACE.FOUND_SUCCESS, 200, {
-                list: all,
+                list: result,
                 page: p,
-                count: all.length,
+                count: result.length,
                 total: countDoc,
-                total_page: Math.ceil(countDoc / l),
+                total_page: Math.ceil(num.length / l),
             }));
         }
         else if (page && limit) {
-            const all = await workplace_service_1.default.GetAllWorkplace(p, l);
-            if (!all)
+            const result = await workplace_service_1.default.GetAllWorkplace(p, l);
+            if (!result)
                 return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.WORKPLACE.NOT_FOUND, 404));
             return res.json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.WORKPLACE.FOUND_SUCCESS, 200, {
-                list: all,
+                list: result,
                 page: p,
-                count: all.length,
+                count: result.length,
                 total: countDoc,
                 total_page: Math.ceil(countDoc / l),
             }));
         }
         else {
-            const all = await workplace_service_1.default.GetAllWorkplace(1, 10);
-            if (!all)
+            const result = await workplace_service_1.default.GetAllWorkplace(1, 10);
+            if (!result)
                 return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.WORKPLACE.NOT_FOUND, 404));
             return res.json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.WORKPLACE.FOUND_SUCCESS, 200, {
-                list: all,
+                list: result,
                 page: 1,
-                count: all.length,
+                count: result.length,
                 total: countDoc,
             }));
         }

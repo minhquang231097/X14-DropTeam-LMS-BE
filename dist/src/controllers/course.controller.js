@@ -27,65 +27,53 @@ const GetCourse = async (req, res) => {
     try {
         const countDoc = await course_service_1.default.GetTotalCourse();
         if (id) {
-            const courseExist = await course_service_1.default.GetCourseById(id);
-            if (!courseExist) {
+            const result = await course_service_1.default.GetCourseById(id);
+            if (!result) {
                 return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.COURSE.NOT_FOUND, 404));
             }
-            res.json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.COURSE.FOUND_SUCCESS, 200, courseExist));
+            res.json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.COURSE.FOUND_SUCCESS, 200, result));
         }
         else if (code) {
-            const courseExist = await course_service_1.default.GetCourseByCode(code);
-            if (!courseExist) {
+            const result = await course_service_1.default.GetCourseByCode(code);
+            if (!result) {
                 return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.COURSE.NOT_FOUND, 404));
             }
-            res.json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.COURSE.FOUND_SUCCESS, 200, courseExist));
+            res.json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.COURSE.FOUND_SUCCESS, 200, result));
         }
         else if (search) {
-            const allCourses = await course_service_2.default.SearchCourseByCondition(p, l, search);
-            if (!allCourses) {
+            const num = await course_service_2.default.SearchCourseByCondition(search);
+            const result = await course_service_2.default.SearchCourseByCondition(search, p, l);
+            if (!result) {
                 return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.COURSE.NOT_FOUND, 404));
             }
             res.json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.COURSE.FOUND_SUCCESS, 200, {
-                list: allCourses,
+                list: result,
                 total: countDoc,
                 page: p,
-                count: allCourses.length,
-                total_page: Math.ceil(allCourses.length / l),
-            }));
-        }
-        else if (search) {
-            const allCourses = await course_service_2.default.SearchCourseByCondition(p, l, search);
-            if (!allCourses) {
-                return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.COURSE.NOT_FOUND, 404));
-            }
-            res.json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.COURSE.FOUND_SUCCESS, 200, {
-                list: allCourses,
-                page: p,
-                count: allCourses.length,
-                total: countDoc,
-                total_page: Math.ceil(allCourses.length / l),
+                count: result.length,
+                total_page: Math.ceil(num.length / l),
             }));
         }
         else if (page && limit) {
-            const allCourses = await course_service_1.default.GetAllCourse(p, l);
-            if (!allCourses) {
+            const result = await course_service_1.default.GetAllCourse(p, l);
+            if (!result) {
                 return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.COURSE.NOT_FOUND, 404));
             }
             res.json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.COURSE.FOUND_SUCCESS, 200, {
-                list: allCourses,
+                list: result,
                 page: p,
-                count: allCourses.length,
+                count: result.length,
                 total: countDoc,
-                total_page: Math.ceil(allCourses.length / l),
+                total_page: Math.ceil(countDoc / l),
             }));
         }
         else {
-            const allCourses = await course_service_1.default.GetAllCourse(1, 10);
-            if (!allCourses) {
+            const result = await course_service_1.default.GetAllCourse(1, 10);
+            if (!result) {
                 return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.COURSE.NOT_FOUND, 404));
             }
             res.json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.COURSE.FOUND_SUCCESS, 200, {
-                list: allCourses,
+                list: result,
                 page: 1,
                 total: countDoc,
             }));

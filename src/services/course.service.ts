@@ -29,7 +29,7 @@ const GetTotalCourse = async () => {
   return await courseRepository.Count();
 };
 
-const SearchCourseByCondition = async (page: number, limit: number, searchTerm?: string) => {
+const SearchCourseByCondition = async (searchTerm?: string, page?: any, limit?: any) => {
   const query = {
     $or: [{ title: { $regex: searchTerm, $options: "i" } }, { course_code: { $regex: searchTerm, $options: "i" } }],
   };

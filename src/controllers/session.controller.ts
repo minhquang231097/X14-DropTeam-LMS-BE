@@ -18,58 +18,60 @@ const CreateNewSession = async (req: Request, res: Response) => {
 };
 
 const GetSession = async (req: Request, res: Response) => {
-  const { page, limit, _course, _class, id } = req.query;
+  const { page, limit, course, class_code, id } = req.query;
   const p = Number(page);
   const l = Number(limit);
   try {
     const countDoc = await sessionService.CountSession();
     if (id) {
-      const found = await sessionService.GetSessionById(id as string);
-      if (found.length === 0) return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.SESSION.NOT_FOUND, 404));
-      res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.SESSION.FOUND_SUCCESS, 200, found));
-    } else if (_course) {
-      const session = await sessionService.GetSessionByCourseCode(_course as string);
-      if (session.length === 0) return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.SESSION.NOT_FOUND, 404));
+      const result = await sessionService.GetSessionById(id as string);
+      if (result.length === 0) return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.SESSION.NOT_FOUND, 404));
+      res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.SESSION.FOUND_SUCCESS, 200, result));
+    } else if (course) {
+      const num = await sessionService.GetSessionByCourseCode(course as string);
+      const result = await sessionService.GetSessionByCourseCode(course as string, p, l);
+      if (result.length === 0) return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.SESSION.NOT_FOUND, 404));
       res.json(
         new HttpResponseData(RESPONSE_CONFIG.MESSAGE.SESSION.FOUND_SUCCESS, 200, {
-          list: session,
-          count: session.length,
+          list: result,
+          count: result.length,
           page: p,
           total: countDoc,
-          total_page: Math.ceil(session.length / l),
+          total_page: Math.ceil(num.length / l),
         }),
       );
-    } else if (_class) {
-      const found: any = await sessionService.GetSessionByClassCode(_class as string);
-      if (found.length === 0) return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.SESSION.NOT_FOUND, 404));
+    } else if (class_code) {
+      const num: any = await sessionService.GetSessionByClassCode(class_code as string);
+      const result: any = await sessionService.GetSessionByClassCode(class_code as string, p, l);
+      if (result.length === 0) return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.SESSION.NOT_FOUND, 404));
       res.json(
         new HttpResponseData(RESPONSE_CONFIG.MESSAGE.SESSION.FOUND_SUCCESS, 200, {
-          list: found,
-          count: found.length,
+          list: result,
+          count: result.length,
           page: p,
           total: countDoc,
-          total_page: Math.ceil(found.length / l),
+          total_page: Math.ceil(num.length / l),
         }),
       );
     } else if (page && limit) {
-      const all = await sessionService.GetAllSession(p, l);
-      if (!all) return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.SESSION.NOT_FOUND, 404));
+      const result = await sessionService.GetAllSession(p, l);
+      if (!result) return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.SESSION.NOT_FOUND, 404));
       res.json(
         new HttpResponseData(RESPONSE_CONFIG.MESSAGE.SESSION.FOUND_SUCCESS, 200, {
-          list: all,
-          count: all.length,
+          list: result,
+          count: result.length,
           page: p,
           total: countDoc,
-          total_page: Math.ceil(all.length / l),
+          total_page: Math.ceil(countDoc / l),
         }),
       );
     } else {
-      const all = await sessionService.GetAllSession(1, 10);
-      if (!all) return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.SESSION.NOT_FOUND, 404));
+      const result = await sessionService.GetAllSession(1, 10);
+      if (!result) return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.SESSION.NOT_FOUND, 404));
       res.json(
         new HttpResponseData(RESPONSE_CONFIG.MESSAGE.SESSION.FOUND_SUCCESS, 200, {
-          list: all,
-          count: all.length,
+          list: result,
+          count: result.length,
           page: p,
           total: countDoc,
         }),

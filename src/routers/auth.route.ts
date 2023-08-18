@@ -15,14 +15,12 @@ authRouter.post(
 authRouter.post(
   "/sign-up/admin",
   verifyAccessJWT,
-  CheckRole.IsAdmin,
   ValidateJoi(Schema.User.sign_up),
   authController.SignUp,
 );
 authRouter.post(
   "/sign-up/admin",
   verifyAccessJWT,
-  CheckRole.IsMentor,
   ValidateJoi(Schema.User.sign_up),
   authController.SignUp,
 );

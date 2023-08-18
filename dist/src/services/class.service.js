@@ -8,21 +8,21 @@ const class_repo_1 = require("@/repository/class.repo");
 const course_service_1 = __importDefault(require("./course.service"));
 const user_service_1 = __importDefault(require("./user.service"));
 const workplace_service_1 = __importDefault(require("./workplace.service"));
+const axios_1 = __importDefault(require("axios"));
 const classRepository = new class_repo_1.ClassRepository(class_model_1.Class);
-const holidays = [
-    "2023-01-01",
-    "2023-02-01",
-    "2023-02-02",
-    "2023-02-03",
-    "2023-02-04",
-    "2023-02-05",
-    "2023-02-06",
-    "2023-02-07",
-    "2023-04-15",
-    "2023-04-30",
-    "2023-05-01",
-    "2023-09-02",
-];
+const GetHolidays = async () => {
+    try {
+        const year = new Date().getFullYear();
+        const response = await axios_1.default.get(`${process.env.URL}?api_key=${process.env.API_KEY}&country=${process.env.COUNTRY}&year=${year}`);
+        const arr = response.data.response.holidays;
+        const holidays = arr.map((el) => el.date.iso);
+        return holidays;
+    }
+    catch (error) {
+        console.error("Error retrieving holidays:", error);
+        throw error;
+    }
+};
 const CreateOneClass = async (email_mentor, workplace_code, course_code, payload) => {
     const { start_at, schedule, total_session, class_code } = payload;
     const [_mentor, _workplace, _course, _class] = await Promise.all([
@@ -39,23 +39,26 @@ const CreateOneClass = async (email_mentor, workplace_code, course_code, payload
         arrSch.push(new Date(schedule[i]).getDay());
     }
     const startDate = new Date(start_at);
-    const date_end = calculateEndDate(startDate, Number(total_session), arrSch);
+    const holidays = await GetHolidays();
+    const date_end = calculateEndDate(startDate, Number(total_session), arrSch, holidays);
     return await classRepository.CreateClass(id_mentor, id_workplace, id_course, date_end, payload);
 };
-function calculateEndDate(startDate, totalSessions, schedule) {
+function calculateEndDate(startDate, totalSessions, schedule, holidays) {
     let sessionCount = 0;
-    let currentDay = startDate.getDay();
-    while (sessionCount < totalSessions && !isHoliday(startDate)) {
-        if (schedule.includes(currentDay)) {
+    let currentDate = new Date(startDate);
+    while (sessionCount < totalSessions) {
+        const currentDay = currentDate.getDay();
+        if (schedule.includes(currentDay) && !isHoliday(currentDate, holidays)) {
             sessionCount++;
         }
-        startDate.setDate(startDate.getDate() + 1);
-        currentDay = startDate.getDay();
+        currentDate.setDate(currentDate.getDate() + 1);
     }
-    return new Date(startDate.getTime() - 1 + (totalSessions - sessionCount) * 24 * 60 * 60 * 1000 * (schedule.length - 1));
+    const previousDay = new Date(currentDate);
+    previousDay.setDate(previousDay.getDate() - 1);
+    return previousDay;
 }
-function isHoliday(date) {
-    const dateString = date.toISOString().split("T")[0];
+function isHoliday(date, holidays) {
+    const dateString = date.toISOString().split('T')[0];
     return holidays.includes(dateString);
 }
 const GetAllClass = async (page, limit) => {
@@ -95,14 +98,9 @@ const GetClassByCondition = async (filter) => {
         { path: "course", populate: { path: "workplace" } },
     ]);
 };
-const SearchClassByCondition = async (page, limit, searchTerm) => {
+const SearchClassByCondition = async (searchTerm, page, limit) => {
     const query = {
-        $or: [
-            { mentor: { $regex: searchTerm, $options: "i" } },
-            { workplace: { $regex: searchTerm, $options: "i" } },
-            { course: { $regex: searchTerm, $options: "i" } },
-            { class_code: { $regex: searchTerm, $options: "i" } },
-        ],
+        $or: [{ class_code: { $regex: searchTerm, $options: "i" } }],
     };
     return await classRepository.SearchByCondition(page, limit, query, [
         "mentor",
@@ -137,5 +135,6 @@ exports.default = {
     DeleteClassByCondition,
     GetClassByCode,
     GetTotalClass,
+    GetHolidays
 };
 //# sourceMappingURL=class.service.js.map

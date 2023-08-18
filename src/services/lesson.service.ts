@@ -27,7 +27,7 @@ const GetLessonById = async (id: string) => {
   });
 };
 
-const GetLessonBySessionCode = async (ss_code: string, page: number, limit: number) => {
+const GetLessonBySessionCode = async (ss_code: string, page?: any, limit?: any) => {
   const result = await sessionService.GetSessionByCode(ss_code);
   return await lessonRepository.FindLessonBySessionId(result?._id, page, limit);
 };
