@@ -23,7 +23,7 @@ export interface ISession extends Document {
   session_code: string;
   desc: string;
   status: StatusSS;
-  create_at?: string;
+  create_at: string;
 }
 
 export const Session = model<ISession>("sessions", sessionSchema);
