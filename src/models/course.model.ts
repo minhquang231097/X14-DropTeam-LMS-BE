@@ -11,7 +11,6 @@ const courseSchema = new Schema({
   level: { type: String, enum: ["BEGINNER", "INTERMEDIATE", "ADVANCED"] },
   rate: Number,
   discount: { type: Number, default: 0 },
-  workplace: { type: Schema.Types.ObjectId, ref: "workplaces" },
   create_at: {
     type: Date,
     default: Date.now(),
@@ -28,7 +27,6 @@ export interface ICourse extends Document {
   level: string;
   rate: number;
   discount: number;
-  workplace: string;
   create_at: string;
 }
 

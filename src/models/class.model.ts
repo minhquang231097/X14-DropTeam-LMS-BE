@@ -10,8 +10,7 @@ const classSchema = new Schema({
   end_at: Date,
   total_hours: Number,
   total_session: Number,
-  hour_per_session: Number,
-  schedule: [Date],
+  schedule: [Number],
   class_size: Number,
   status: { type: String, enum: ["ON", "OFF", "UPCOMING"] },
   create_at: {
@@ -36,8 +35,7 @@ export interface IClass extends Document {
   status: StatusC;
   total_hours: number;
   total_session: number;
-  hour_per_session: number;
-  schedule: [Date];
+  schedule: [number];
   class_size: number;
 }
 

@@ -1,13 +1,17 @@
-import { ILesson, Lesson } from "@/models/lesson.model";
+import { Lesson } from "@/models/lesson.model";
 import { LessonRepository } from "@/repository/lesson.repo";
-import sessionService from "./session.service";
-import { UpdateLessonDto } from "@/types/lesson";
+import { CreateLessonDto, UpdateLessonDto } from "@/types/lesson";
 
 const lessonRepository = new LessonRepository(Lesson);
 
-const CreateLesson = async (session_code: string, payload: ILesson) => {
-  const session = await sessionService.GetSessionByCode(session_code);
-  return await lessonRepository.CreateLesson(session?._id, payload);
+const CreateLesson = async (payload: CreateLessonDto) => {
+  return await lessonRepository.Create({
+    session: payload.session_id,
+    course: payload.course_id,
+    title: payload.title,
+    content: payload.content,
+    no: payload.no,
+  });
 };
 
 const CountLesson = async () => {
@@ -15,9 +19,7 @@ const CountLesson = async () => {
 };
 
 const GetAllLesson = async (page: number, limit: number) => {
-  return await lessonRepository.FindAllInfoAndPagination(page, limit, [
-    { path: "session", populate: [{ path: "class" }] },
-  ]);
+  return await lessonRepository.FindAllInfoAndPagination(page, limit, [{ path: "session", populate: [{ path: "class" }] }]);
 };
 
 const GetLessonById = async (id: string) => {
@@ -27,9 +29,12 @@ const GetLessonById = async (id: string) => {
   });
 };
 
-const GetLessonBySessionCode = async (ss_code: string, page?: any, limit?: any) => {
-  const result = await sessionService.GetSessionByCode(ss_code);
-  return await lessonRepository.FindLessonBySessionId(result?._id, page, limit);
+const GetLessonBySessionId = async (ss_id: string, page?: any, limit?: any) => {
+  return await lessonRepository.FindLessonBySessionId(ss_id, page, limit);
+};
+
+const GetLessonByCourseId = async (course_id: string, page?: any, limit?: any) => {
+  return await lessonRepository.FindLessonByCourseId(course_id, page, limit);
 };
 
 const UpdateLessonById = async (id: string, payload: UpdateLessonDto) => {
@@ -48,7 +53,8 @@ export default {
   CreateLesson,
   GetAllLesson,
   GetLessonById,
-  GetLessonBySessionCode,
+  GetLessonBySessionId,
+  GetLessonByCourseId,
   UpdateLessonById,
   UpdateCourseByCondition,
   DeletedLessonById,

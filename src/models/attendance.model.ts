@@ -3,9 +3,6 @@ import { Document, Schema, model } from "mongoose";
 const attendanceSchema = new Schema({
   session: { type: Schema.Types.ObjectId, ref: "sessions" },
   class: { type: Schema.Types.ObjectId, ref: "classes" },
-  day: Number,
-  class_size: Number,
-  absence: Number,
   create_at: {
     type: Date,
     default: Date.now(),
@@ -15,9 +12,6 @@ const attendanceSchema = new Schema({
 export interface IAttendance extends Document {
   session: string;
   class: string;
-  day: number;
-  absence: number;
-  class_size: number;
   create_at: string;
 }
 

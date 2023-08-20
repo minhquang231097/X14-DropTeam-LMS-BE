@@ -9,51 +9,62 @@ const response_config_1 = require("@/configs/response.config");
 exports.FeedbackSchema = {
     Feedback: {
         create_feedback: joi_1.default.object({
-            course_code: joi_1.default.string().required().messages({
-                'string.empty': `${response_config_1.RESPONSE_CONFIG.MESSAGE.FEEDBACK.NO_COURSE} (import course code)`,
-                'string.max': `{{#label}} should have a maximum length of {#limit}`,
-                'any.required': `{{#label}} is a required field (import course code)`
+            course_id: joi_1.default.string()
+                .required()
+                .messages({
+                "string.empty": `${response_config_1.RESPONSE_CONFIG.MESSAGE.FEEDBACK.NO_COURSE} (import course code)`,
+                "string.max": `{{#label}} should have a maximum length of {#limit}`,
+                "any.required": `{{#label}} is a required field (import course code)`,
             }),
-            email: joi_1.default.string().required().messages({
-                'string.empty': `${response_config_1.RESPONSE_CONFIG.MESSAGE.FEEDBACK.NO_STUDENT} (import email student)`,
-                'string.max': `{{#label}} should have a maximum length of {#limit}`,
-                'any.required': `{{#label}} is a required field (import email student)`
+            student_id: joi_1.default.string()
+                .required()
+                .messages({
+                "string.empty": `${response_config_1.RESPONSE_CONFIG.MESSAGE.FEEDBACK.NO_STUDENT} (import email student)`,
+                "string.max": `{{#label}} should have a maximum length of {#limit}`,
+                "any.required": `{{#label}} is a required field (import email student)`,
             }),
-            rating: joi_1.default.string().regex(/^[0-5]/).required().messages({
-                'string.empty': response_config_1.RESPONSE_CONFIG.MESSAGE.FEEDBACK.NO_RATE,
-                'string.pattern.base': `{{#label}} have to match the required pattern: 0-5`,
-                'string.max': `{{#label}} should have a maximum length of {#limit}`,
-                'any.required': `{{#label}} is a required field`
+            rating: joi_1.default.string()
+                .regex(/^[0-5]/)
+                .required()
+                .messages({
+                "string.empty": response_config_1.RESPONSE_CONFIG.MESSAGE.FEEDBACK.NO_RATE,
+                "string.pattern.base": `{{#label}} have to match the required pattern: 0-5`,
+                "string.max": `{{#label}} should have a maximum length of {#limit}`,
+                "any.required": `{{#label}} is a required field`,
             }),
             content: joi_1.default.string().required().messages({
-                'string.empty': response_config_1.RESPONSE_CONFIG.MESSAGE.FEEDBACK.NO_CONTENT,
-                'string.max': `{{#label}} should have a maximum length of {#limit}`,
-                'any.required': `{{#label}} is a required field`
+                "string.empty": response_config_1.RESPONSE_CONFIG.MESSAGE.FEEDBACK.NO_CONTENT,
+                "string.max": `{{#label}} should have a maximum length of {#limit}`,
+                "any.required": `{{#label}} is a required field`,
             }),
         }),
         update_feedback: joi_1.default.object({
-            course: joi_1.default.string().required().messages({
-                'string.empty': `${response_config_1.RESPONSE_CONFIG.MESSAGE.FEEDBACK.NO_COURSE} (import course code)`,
-                'string.max': `{{#label}} should have a maximum length of {#limit}`,
-                'any.required': `{{#label}} is a required field`
+            course: joi_1.default.string()
+                .required()
+                .messages({
+                "string.empty": `${response_config_1.RESPONSE_CONFIG.MESSAGE.FEEDBACK.NO_COURSE} (import course code)`,
+                "string.max": `{{#label}} should have a maximum length of {#limit}`,
+                "any.required": `{{#label}} is a required field`,
             }),
-            student: joi_1.default.string().required().messages({
-                'string.empty': `${response_config_1.RESPONSE_CONFIG.MESSAGE.FEEDBACK.NO_STUDENT} (import email student)`,
-                'string.max': `{{#label}} should have a maximum length of {#limit}`,
-                'any.required': `{{#label}} is a required field`
+            student: joi_1.default.string()
+                .required()
+                .messages({
+                "string.empty": `${response_config_1.RESPONSE_CONFIG.MESSAGE.FEEDBACK.NO_STUDENT} (import email student)`,
+                "string.max": `{{#label}} should have a maximum length of {#limit}`,
+                "any.required": `{{#label}} is a required field`,
             }),
             rating: joi_1.default.string().required().messages({
-                'string.empty': response_config_1.RESPONSE_CONFIG.MESSAGE.FEEDBACK.NO_RATE,
-                'string.pattern.base': `{{#label}} have to match the required pattern: 0-5`,
-                'string.max': `{{#label}} should have a maximum length of {#limit}`,
-                'any.required': `{{#label}} is a required field`
+                "string.empty": response_config_1.RESPONSE_CONFIG.MESSAGE.FEEDBACK.NO_RATE,
+                "string.pattern.base": `{{#label}} have to match the required pattern: 0-5`,
+                "string.max": `{{#label}} should have a maximum length of {#limit}`,
+                "any.required": `{{#label}} is a required field`,
             }),
             content: joi_1.default.string().required().messages({
-                'string.empty': response_config_1.RESPONSE_CONFIG.MESSAGE.FEEDBACK.NO_CONTENT,
-                'string.max': `{{#label}} should have a maximum length of {#limit}`,
-                'any.required': `{{#label}} is a required field`
+                "string.empty": response_config_1.RESPONSE_CONFIG.MESSAGE.FEEDBACK.NO_CONTENT,
+                "string.max": `{{#label}} should have a maximum length of {#limit}`,
+                "any.required": `{{#label}} is a required field`,
             }),
         }),
-    }
+    },
 };
 //# sourceMappingURL=feedback.joi.js.map

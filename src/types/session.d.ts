@@ -13,8 +13,8 @@ export interface UpdateSessionDto {
 }
 
 export interface CreateSessionDto {
-  course_code: string;
-  class_code: string;
+  course_id: string;
+  class_id: string;
   session_code: string;
   desc: string;
   status: StatusSS;

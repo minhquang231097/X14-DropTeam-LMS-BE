@@ -2,18 +2,14 @@ import { FeedBack } from "@/models/feedback.model";
 import { FeedbackRepository } from "@/repository/feedback.repo";
 import courseService from "./course.service";
 import userService from "./user.service";
-import { FindFeedbackDto, UpdateFeedbackDto } from "@/types/feedback";
+import { CreateFeedbackDto, FindFeedbackDto, UpdateFeedbackDto } from "@/types/feedback";
 
 const feedbackRepository = new FeedbackRepository(FeedBack);
 
-const CreateFeedback = async (course_code: string, email_student: string, payload: any) => {
-  const [_course, _student] = await Promise.all([
-    courseService.GetCourseByCode(course_code),
-    userService.GetUserByEmail(email_student),
-  ]);
+const CreateFeedback = async (payload: CreateFeedbackDto) => {
   const newFeedback = await feedbackRepository.Create({
-    course: _course?._id,
-    student: _student._id,
+    course: payload.course_id,
+    student: payload.student_id,
     rating: payload.rating,
     content: payload.content,
   });
@@ -28,21 +24,16 @@ const GetFeedbackById = async (id: string) => {
   return await feedbackRepository.FindById(id, [{ path: "course", populate: { path: "workplace" } }, "student"]);
 };
 
-const GetFeedbackByCourseCode = async (code: string, page?: any, limit?: any) => {
-  const foundCourse: any = await courseService.GetCourseByCode(code);
-  return await feedbackRepository.FindFeedbackByCourseId(foundCourse._id, page, limit);
+const GetFeedbackByCourseId = async (course_id: string, page?: any, limit?: any) => {
+  return await feedbackRepository.FindFeedbackByCourseId(course_id, page, limit);
 };
 
-const GetFeedbackByEmailStudent = async (email: string, page?: any, limit?: any) => {
-  const foundUser: any = await userService.GetUserByEmail(email);
-  return await feedbackRepository.FindFeedbackByStudentId(foundUser._id, page, limit);
+const GetFeedbackByStudentId = async (student_id: string, page?: any, limit?: any) => {
+  return await feedbackRepository.FindFeedbackByStudentId(student_id, page, limit);
 };
 
 const GetFeedbackByCondition = async (page: number, limit: number) => {
-  return await feedbackRepository.FindAllInfoAndPagination(page, limit, [
-    { path: "course", populate: { path: "workplace" } },
-    "student",
-  ]);
+  return await feedbackRepository.FindAllInfoAndPagination(page, limit, [{ path: "course", populate: { path: "workplace" } }, "student"]);
 };
 
 const UpdateFeedback = async (id: string, payload: UpdateFeedbackDto) => {
@@ -63,7 +54,7 @@ export default {
   DeleteFeedbackById,
   UpdateFeedback,
   GetFeedbackByCondition,
-  GetFeedbackByCourseCode,
-  GetFeedbackByEmailStudent,
+  GetFeedbackByCourseId,
+  GetFeedbackByStudentId,
   GetTotalFeedback,
 };

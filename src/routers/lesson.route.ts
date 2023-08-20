@@ -7,6 +7,7 @@ import express from "express";
 const lessonRouter = express.Router();
 
 lessonRouter.get("/", lessonController.GetLesson);
+lessonRouter.get("/:id", lessonController.GetLessonInfo);
 lessonRouter.post("/", ValidateJoi(LessonSchema.Lesson.create_lesson), lessonController.CreateNewLesson);
 lessonRouter.put("/:id", ValidateJoi(LessonSchema.Lesson.update_lesson), lessonController.UpdateLesson);
 lessonRouter.delete("/:id", lessonController.DeleteLesson);

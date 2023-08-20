@@ -5,10 +5,23 @@ export interface UpdateClassDto {
   class_code?: string;
   start_at?: string;
   end_at?: string;
-  expected_time_start?: string;
-  hour_per_class?: string;
-  schedule?: string;
+  schedule?: [number];
   class_size?: number;
+  total_session?: number;
+  total_hours?: number;
+}
+
+export interface CreateClassDto {
+  mentor_id: string;
+  workplace_id: string;
+  course_id: string;
+  class_code: string;
+  start_at: string;
+  end_at?: string;
+  schedule: [number];
+  class_size: number;
+  total_hours?: number;
+  total_session: number;
 }
 
 export interface ClassResponseDto {
@@ -19,14 +32,20 @@ export interface ClassResponseDto {
   class_code?: string;
   start_at?: string;
   end_at?: string;
-  expected_time_start?: string;
-  hour_per_class?: string;
-  schedule?: string;
+  schedule?: [number];
   class_size?: number;
-  formated_date?: string;
+  total_hours?: number;
+  total_session?: number;
 }
 
 export interface AddStudentToClassDto {
-  email?: string;
-  class_code?: string;
+  student_id: string;
+  class_id: string;
+  status?: string;
+}
+
+export interface UpdateStatusStudentInClassDto {
+  student_id: string;
+  class_id: string;
+  status?: string;
 }

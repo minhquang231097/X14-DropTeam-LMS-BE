@@ -1,16 +1,11 @@
 import { Course, ICourse } from "@/models/course.model";
 import { CourseRepository } from "@/repository/course.repo";
-import workplaceService from "./workplace.service";
-import { FindWorkplaceDto } from "@/types/workplace";
+import { CreateCourseDto } from "@/types/course";
 
 const courseRepository = new CourseRepository(Course);
 
-const CreateCourse = async (workplace_code: string, payload: ICourse) => {
-  const _workplace: any = await workplaceService.GetWorkplaceByCode(workplace_code);
-  return await courseRepository.Create({
-    ...payload,
-    workplace: _workplace?._id,
-  });
+const CreateCourse = async (payload: CreateCourseDto) => {
+  return await courseRepository.Create(payload);
 };
 
 const GetAllCourse = async (page: number, limit: number) => {

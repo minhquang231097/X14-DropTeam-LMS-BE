@@ -7,9 +7,11 @@ export class AttendanceRepository extends BaseRepository<IAttendance> {
     super(model);
   }
 
-  async FindAttendanceBySessionId(id: string) {
+  async FindAttendanceBySessionId(id: string, page: number, limit: number) {
     return await this.model
       .find({ session: id })
+      .skip((page - 1) * limit)
+      .limit(limit)
       .populate(["session", "class"]);
   }
 

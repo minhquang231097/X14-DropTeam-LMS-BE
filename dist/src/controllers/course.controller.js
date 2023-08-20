@@ -7,80 +7,76 @@ const course_service_1 = __importDefault(require("@/services/course.service"));
 const response_config_1 = require("@/configs/response.config");
 const httpResponseData_1 = __importDefault(require("@/common/httpResponseData"));
 const httpException_1 = __importDefault(require("@/common/httpException"));
-const course_model_1 = require("@/models/course.model");
 const course_service_2 = __importDefault(require("@/services/course.service"));
 const CreateCourse = async (req, res) => {
     const payload = req.body;
-    const { workplace } = payload;
+    const { course_code } = payload;
     try {
-        const newCourse = await course_service_1.default.CreateCourse(workplace, payload);
-        res.json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.COURSE.CREATE_SUCCES, 200, newCourse));
+        const _course = await course_service_1.default.GetCourseByCode(course_code);
+        if (_course)
+            return res.status(403).send(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.COURSE.CODE_EXIST, 403));
+        const newCourse = await course_service_1.default.CreateCourse(payload);
+        res.status(200).json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.COURSE.CREATE_SUCCES, 200, newCourse));
     }
     catch (error) {
-        return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.COURSE.WRONG, 400, error.message));
+        return res.status(400).send(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.COURSE.WRONG, 400, error.message));
     }
 };
 const GetCourse = async (req, res) => {
-    const { code, id, page, limit, search } = req.query;
+    const { course_code, page, limit, search } = req.query;
     const p = Number(page);
     const l = Number(limit);
     try {
         const countDoc = await course_service_1.default.GetTotalCourse();
-        if (id) {
-            const result = await course_service_1.default.GetCourseById(id);
+        if (course_code) {
+            const result = await course_service_1.default.GetCourseByCode(course_code);
             if (!result) {
-                return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.COURSE.NOT_FOUND, 404));
+                return res.status(404).send(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.COURSE.NOT_FOUND, 404));
             }
-            res.json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.COURSE.FOUND_SUCCESS, 200, result));
-        }
-        else if (code) {
-            const result = await course_service_1.default.GetCourseByCode(code);
-            if (!result) {
-                return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.COURSE.NOT_FOUND, 404));
-            }
-            res.json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.COURSE.FOUND_SUCCESS, 200, result));
+            res.status(200).json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.COURSE.FOUND_SUCCESS, 200, result));
         }
         else if (search) {
             const num = await course_service_2.default.SearchCourseByCondition(search);
             const result = await course_service_2.default.SearchCourseByCondition(search, p, l);
             if (!result) {
-                return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.COURSE.NOT_FOUND, 404));
+                return res.status(404).send(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.COURSE.NOT_FOUND, 404));
             }
-            res.json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.COURSE.FOUND_SUCCESS, 200, {
-                list: result,
-                total: countDoc,
-                page: p,
-                count: result.length,
-                total_page: Math.ceil(num.length / l),
-            }));
+            res
+                .status(200)
+                .json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.ATTENDANCE.FOUND_SUCCESS, 200, result, result.length, countDoc, p, Math.ceil(num.length / l)));
         }
         else if (page && limit) {
             const result = await course_service_1.default.GetAllCourse(p, l);
             if (!result) {
-                return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.COURSE.NOT_FOUND, 404));
+                return res.status(404).send(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.COURSE.NOT_FOUND, 404));
             }
-            res.json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.COURSE.FOUND_SUCCESS, 200, {
-                list: result,
-                page: p,
-                count: result.length,
-                total: countDoc,
-                total_page: Math.ceil(countDoc / l),
-            }));
+            res
+                .status(200)
+                .json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.ATTENDANCE.FOUND_SUCCESS, 200, result, result.length, countDoc, p, Math.ceil(countDoc / l)));
         }
         else {
             const result = await course_service_1.default.GetAllCourse(1, 10);
             if (!result) {
-                return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.COURSE.NOT_FOUND, 404));
+                return res.status(404).send(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.COURSE.NOT_FOUND, 404));
             }
-            res.json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.COURSE.FOUND_SUCCESS, 200, {
-                list: result,
-                page: 1,
-                total: countDoc,
-            }));
+            res.status(200).json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.COURSE.FOUND_SUCCESS, 200, result));
         }
     }
     catch (error) {
-        return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.COURSE.WRONG, 400));
+        return res.status(404).send(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.COURSE.WRONG, 404));
+    }
+};
+const GetCourseInfo = async (req, res) => {
+    const { id } = req.params;
+    try {
+        const course = await course_service_1.default.GetCourseById(id);
+        if (!course) {
+            return res.status(404).send(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.COURSE.NOT_FOUND, 404));
+        }
+        res.status(200).json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.COURSE.FOUND_SUCCESS, 200, course));
+    }
+    catch (error) {
+        return res.status(404).send(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.COURSE.WRONG, 404));
     }
 };
 const UpdateCourse = async (req, res) => {
@@ -91,8 +87,8 @@ const UpdateCourse = async (req, res) => {
         if (!courseExist) {
             return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.COURSE.NOT_FOUND, 400));
         }
-        const updateCourse = await course_service_1.default.UpdateCourse(id, update);
-        res.json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.COURSE.UPDATE_SUCCESS, 200, updateCourse));
+        await course_service_1.default.UpdateCourse(id, update);
+        res.json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.COURSE.UPDATE_SUCCESS, 200));
     }
     catch (error) {
         return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.COURSE.WRONG, 400, error.message));
@@ -103,32 +99,20 @@ const DeletedCourse = async (req, res) => {
     try {
         const courseExist = await course_service_1.default.GetCourseById(id);
         if (!courseExist) {
-            return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.COURSE.NOT_FOUND, 400));
+            return res.status(404).send(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.COURSE.NOT_FOUND, 400));
         }
-        const deleteCourse = await course_service_1.default.DeletedCourse(id);
-        res.json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.COURSE.DELETE_SUCCESS, 200, deleteCourse));
+        await course_service_1.default.DeletedCourse(id);
+        res.status(200).json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.COURSE.DELETE_SUCCESS, 200));
     }
     catch (error) {
-        return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.COURSE.WRONG, 400, error.message));
-    }
-};
-const DeletedAllCourse = async (req, res) => {
-    try {
-        const courseDeleted = await course_model_1.Course.deleteMany();
-        if (!courseDeleted) {
-            return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.COURSE.NOT_FOUND, 400));
-        }
-        res.sendStatus(200);
-    }
-    catch (error) {
-        return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.COURSE.WRONG, 400, error.message));
+        return res.status(400).json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.COURSE.WRONG, 400));
     }
 };
 exports.default = {
     CreateCourse,
     UpdateCourse,
     DeletedCourse,
-    DeletedAllCourse,
     GetCourse,
+    GetCourseInfo,
 };
 //# sourceMappingURL=course.controller.js.map

@@ -1,39 +1,41 @@
 import { ClassStudentRepository } from "@/repository/class.student.repo";
-import classService from "./class.service";
 import { Class_Student } from "@/models/class.student.model";
-import userService from "./user.service";
+import { AddStudentToClassDto, UpdateStatusStudentInClassDto } from "@/types/class";
 
 const classStudentRepository = new ClassStudentRepository(Class_Student);
 
-const AddStudentToClass = async (email: string, class_code: string) => {
-  const [_student, _class] = await Promise.all([
-    userService.GetUserByEmail(email),
-    classService.GetClassByCode(class_code),
-  ]);
-  const exist = await classStudentRepository.FindByCondition({ student: _student?._id } || { class: _class?._id });
-  if (!exist) {
-    return await classStudentRepository.Create({
-      class: _class?._id,
-      student: _student?._id,
-    });
-  }
+const AddStudentToClass = async (list: AddStudentToClassDto[]) => {
+  return await Promise.all(
+    list.map((el) => {
+      classStudentRepository.Create({
+        student: el.student_id,
+        class: el.class_id,
+      });
+    }),
+  );
 };
 
-const GetAllStudentInClass = async (class_code: string, page?: any, limit?: any) => {
-  const _class = await classService.GetClassByCode(class_code);
-  const id: string = _class?._id;
-  return await classStudentRepository.FindByClassId(id, page, limit, [
+const GetAllStudentInClass = async (class_id: string, page?: any, limit?: any) => {
+  return await classStudentRepository.FindByClassId(class_id, page, limit, ["student", { path: "course", populate: { path: "workplace" } }]);
+};
+
+const GetClassByStudentId = async (id: string, page?: any, limit?: any) => {
+  return await classStudentRepository.FindByConditionAndPagination({ student: id }, page, limit, [
     "student",
     { path: "course", populate: { path: "workplace" } },
   ]);
 };
 
-const GetClassByStudentEmail = async (email: string, page?: any, limit?: any) => {
-  const student = await userService.GetUserByEmail(email);
-  return await classStudentRepository.FindByConditionAndPagination(page, limit, { student: student?._id }, [
-    "student",
-    { path: "course", populate: { path: "workplace" } },
-  ]);
+const UpdateStatusStudentInClass = async (payload: UpdateStatusStudentInClassDto) => {
+  return await classStudentRepository.FindByConditionAndUpdate(
+    {
+      student: payload.student_id,
+      class: payload.class_id,
+    },
+    {
+      status: payload.status,
+    },
+  );
 };
 
 const RemoveStudentOutOfClass = async (id: string) => {
@@ -44,5 +46,6 @@ export default {
   AddStudentToClass,
   RemoveStudentOutOfClass,
   GetAllStudentInClass,
-  GetClassByStudentEmail,
+  GetClassByStudentId,
+  UpdateStatusStudentInClass,
 };

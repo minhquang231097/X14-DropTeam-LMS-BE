@@ -20,10 +20,10 @@ const SignUp = async (req, res) => {
         const updatedUser = await user_service_1.default.UpdateUserById(user._id, {
             refreshToken,
         });
-        res.json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.USER.SIGNUP_SUCCESS, 200, updatedUser));
+        res.status(200).json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.USER.SIGNUP_SUCCESS, 200, updatedUser));
     }
     catch (error) {
-        return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.USER.WRONG, 400, error.message));
+        return res.status(400).send(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.USER.WRONG, 400));
     }
 };
 const handleRefreshToken = async (req, res) => {
@@ -42,7 +42,7 @@ const handleRefreshToken = async (req, res) => {
                     username: payload.username,
                     role: foundUser.role,
                 }, process.env.ACCESSTOKEN_KEY, { expiresIn: process.env.ACCESSTOKEN_TIME });
-                res.json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.USER.SUCCESS, 200, {
+                res.status(200).json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.USER.SUCCESS, 200, {
                     roles: foundUser.role,
                     accessToken,
                 }));
@@ -50,7 +50,7 @@ const handleRefreshToken = async (req, res) => {
         }
     }
     catch (error) {
-        return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.USER.WRONG, 401, error.message));
+        return res.status(401).json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.USER.WRONG, 401));
     }
 };
 const SignIn = async (req, res) => {
@@ -58,7 +58,7 @@ const SignIn = async (req, res) => {
     try {
         const userExist = await user_service_1.default.GetUserByUsername(username);
         if (!userExist) {
-            return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.USER.NOT_CORRECT, 404));
+            return res.status(404).send(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.USER.NOT_CORRECT, 404));
         }
         const checkPassword = bcryptjs_1.default.compareSync(password, userExist.password);
         if (checkPassword) {
@@ -86,21 +86,21 @@ const SignIn = async (req, res) => {
             });
         }
         else {
-            res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.USER.NOT_CORRECT, 400));
+            res.status(400).send(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.USER.NOT_CORRECT, 400));
         }
     }
     catch (error) {
-        return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.USER.WRONG, 400, error.message));
+        return res.status(400).send(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.USER.WRONG, 400, error.message));
     }
 };
 const SignOutUser = async (req, res) => {
     const { id } = req.body;
     try {
         const user = await user_service_1.default.UpdateUserById(id, { accessToken: "" });
-        res.json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.USER.SUCCESS, 200, user));
+        res.status(200).json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.USER.SUCCESS, 200, user));
     }
     catch (error) {
-        return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.USER.WRONG, 400));
+        return res.status(400).json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.USER.WRONG, 400));
     }
 };
 const SendEmailVerifyUser = async (req, res) => {
@@ -123,24 +123,24 @@ const SendEmailVerifyUser = async (req, res) => {
             };
             sendMail_service_1.SendMailService.sendMail(mailOption, (err, payload) => {
                 if (err)
-                    return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.USER.WRONG, 400));
-                return res.json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.USER.SUCCESS, 200, payload));
+                    return res.status(400).send(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.USER.WRONG, 400));
+                return res.status(200).json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.USER.SUCCESS, 200, payload));
             });
         }
     }
     catch (error) {
-        return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.USER.EMAIL_INCORRECT, 400));
+        return res.status(400).send(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.USER.EMAIL_INCORRECT, 400));
     }
 };
 const SendEmailForgotPassword = async (req, res) => {
     const { email } = req.body;
     if (!email) {
-        return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.USER.NO_EMAIL, 400));
+        return res.status(400).send(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.USER.NO_EMAIL, 400));
     }
     try {
         const user = await user_service_1.default.GetUserByEmail(email);
         if (!user) {
-            return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.USER.NOT_FOUND, 404));
+            return res.status(404).send(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.USER.NOT_FOUND, 404));
         }
         const token = jsonwebtoken_1.default.sign({ _id: user._id }, process.env.ACCESSTOKEN_KEY, { expiresIn: "2m" });
         const updatedUser = await user_service_1.default.UpdateUserById(user._id, {
@@ -155,13 +155,13 @@ const SendEmailForgotPassword = async (req, res) => {
             };
             sendMail_service_1.SendMailService.sendMail(mailOption, (err, payload) => {
                 if (err)
-                    return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.USER.WRONG, 400));
-                return res.json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.USER.SUCCESS, 200));
+                    return res.status(400).send(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.USER.WRONG, 400));
+                return res.status(200).json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.USER.SUCCESS, 200));
             });
         }
     }
     catch (error) {
-        return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.USER.EMAIL_INCORRECT, 400));
+        return res.status(400).send(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.USER.EMAIL_INCORRECT, 400));
     }
 };
 exports.default = {

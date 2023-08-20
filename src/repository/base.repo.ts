@@ -17,7 +17,7 @@ export abstract class BaseRepository<T extends Document> {
     return this.model.findOne(filter).populate(populate);
   }
 
-  async FindByConditionAndPagination(page?: any, limit?: any, filter?: any, populate?: any | null): Promise<T[] | any> {
+  async FindByConditionAndPagination(filter?: any, page?: any, limit?: any, populate?: any | null): Promise<T[] | any> {
     return this.model
       .find(filter)
       .populate(populate)

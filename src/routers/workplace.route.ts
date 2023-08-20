@@ -6,6 +6,8 @@ import { verifyAccessJWT } from "@/middlewares/verifyAccessToken";
 
 const workplaceRouter = express.Router();
 
+workplaceRouter.get("/", verifyAccessJWT, workplaceController.GetWorkplace);
+workplaceRouter.get("/:id", verifyAccessJWT, workplaceController.GetWorkplaceInfo);
 workplaceRouter.post(
   "/",
   //   verifyAccessJWT,
@@ -13,14 +15,13 @@ workplaceRouter.post(
   workplaceController.CreateWorkplace,
 );
 workplaceRouter.put(
-  "/",
+  "/:id",
   //   verifyAccessJWT,
   //   ValidateJoi(WorkplaceSchema.Workplace.update_workplace),
   workplaceController.UpdateWorkplace,
 );
-workplaceRouter.get("/", verifyAccessJWT, workplaceController.GetWorkplace);
 workplaceRouter.delete(
-  "/",
+  "/:id",
   //   verifyAccessJWT,
   workplaceController.DeletedWorkplace,
 );

@@ -1,7 +1,7 @@
 import { Document, Schema, model } from "mongoose";
 
 enum statusStudent {
-  A = "ABSENT",
+  P = "PRESENT",
   AP = "ABSENT WITH PERMISSION",
   AOP = "ABSENT WITHOUT PERMISSION",
   R = "RESERVE",

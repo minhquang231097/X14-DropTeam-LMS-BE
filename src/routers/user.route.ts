@@ -7,10 +7,11 @@ import express from "express";
 
 const userRouter = express.Router();
 
-userRouter.get("/",verifyAccessJWT, CheckRole(["ADMIN"]),userController.GetUser);
+userRouter.get("/", verifyAccessJWT, userController.GetUser);
+userRouter.get("/:id", verifyAccessJWT, userController.GetUserInfo);
 userRouter.put("/reset-password", ValidateJoi(Schema.User.new_password), userController.ChangePassword);
-userRouter.put("/", verifyAccessJWT, ValidateJoi(Schema.User.change_password), userController.UpdatePassword);
-userRouter.put("/info", verifyAccessJWT, ValidateJoi(Schema.User.update), userController.UpdateUserInfo,);
-userRouter.delete("/", verifyAccessJWT, userController.DeleteUser,);
+userRouter.put("/:id", verifyAccessJWT, ValidateJoi(Schema.User.update), userController.UpdateUserInfo);
+userRouter.put("/change-password", verifyAccessJWT, ValidateJoi(Schema.User.change_password), userController.UpdatePassword);
+userRouter.delete("/:id", verifyAccessJWT, userController.DeleteUser);
 
 export default userRouter;

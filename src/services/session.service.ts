@@ -1,21 +1,15 @@
 import { Session } from "@/models/session.model";
 import { SessionRepository } from "@/repository/session.repo";
 import courseService from "./course.service";
-import { UpdateSessionDto } from "@/types/session";
+import { CreateSessionDto, UpdateSessionDto } from "@/types/session";
 import classService from "./class.service";
 
 const sessionRepository = new SessionRepository(Session);
 
-const CreateSession = async (course_code: string, class_code: string, payload: any) => {
-  const [_course, _class] = await Promise.all([
-    courseService.GetCourseByCode(course_code),
-    classService.GetClassByCode(class_code),
-  ]);
-  const course_id = _course?._id;
-  const class_id = _class?._id;
+const CreateSession = async (payload: CreateSessionDto) => {
   return await sessionRepository.Create({
-    course: course_id,
-    class: class_id,
+    course: payload.course_id,
+    class: payload.class_id,
     session_code: payload.session_code,
     desc: payload.desc,
     status: payload.status,
@@ -34,18 +28,17 @@ const GetSessionById = async (id: string) => {
   return await sessionRepository.FindById(id, [[{ path: "course", populate: [{ path: "workplace" }] }], "class"]);
 };
 
-
 const GetSessionByCode = async (code: string) => {
   return await sessionRepository.FindByCondition({ course: code }, ["course", "class"]);
 };
 
-const GetSessionByClassCode = async (code: string, page?: any, limit?: any) => {
-  const result = await classService.GetClassByCode(code);
+const GetSessionByClassId = async (class_id: string, page?: any, limit?: any) => {
+  const result = await classService.GetClassById(class_id);
   return await sessionRepository.FindSessionByClassId(result?._id, page, limit);
 };
 
-const GetSessionByCourseCode = async (code: string, page?: any, limit?: any) => {
-  const result = await courseService.GetCourseByCode(code);
+const GetSessionByCourseId = async (course_id: string, page?: any, limit?: any) => {
+  const result = await courseService.GetCourseById(course_id);
   return await sessionRepository.FindSessionByCourseId(result?._id, page, limit);
 };
 
@@ -65,11 +58,11 @@ export default {
   CreateSession,
   GetAllSession,
   GetSessionById,
-  GetSessionByCourseCode,
+  GetSessionByCourseId,
   UpdateSessionById,
   UpdateCourseByCondition,
   DeletedCourse,
-  GetSessionByClassCode,
+  GetSessionByClassId,
   GetSessionByCode,
   CountSession,
 };

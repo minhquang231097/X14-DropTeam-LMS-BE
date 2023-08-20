@@ -1,24 +1,24 @@
 export interface CreateAttendanceDto {
-  session_code?: string;
-  class_code?: string;
-  day: number;
-  absence: number;
-  class_size: number;
+  session_id?: string;
+  class_id?: string;
+}
+
+export interface CreateAttendanceStudentDto {
+  attendance_id: string;
+  student_id: string;
+  score?: string;
+  status?: statusStudent;
+  comment?: string;
+  create_at?: string;
 }
 
 export interface UpdateAttendanceDto {
   session?: string;
   class?: string;
-  day: number;
-  absence: number;
-  class_size: number;
 }
 
 export interface FindAttendanceDto {
   _id?: string;
   session?: string;
   class?: string;
-  day: string;
-  absence: string;
-  class_size: number;
 }
