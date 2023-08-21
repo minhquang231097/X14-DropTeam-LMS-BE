@@ -11,7 +11,7 @@ const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const bcryptjs_1 = __importDefault(require("bcryptjs"));
 const class_student_service_1 = __importDefault(require("@/services/class.student.service"));
 const GetUser = async (req, res) => {
-    const { page, limit, attendance_id, class_id, search } = req.query;
+    const { page, limit, attendance_id, class_id, search, role } = req.query;
     const p = Number(page);
     const l = Number(limit);
     try {
@@ -19,17 +19,27 @@ const GetUser = async (req, res) => {
         if (class_id) {
             const num = await class_student_service_1.default.GetAllStudentInClass(class_id);
             const result = await class_student_service_1.default.GetAllStudentInClass(class_id, p, l);
-            if (!result) {
+            if (result.length === 0) {
                 return res.status(404).send(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.USER.NOT_FOUND, 404));
             }
             res
                 .status(200)
                 .json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.ATTENDANCE.FOUND_SUCCESS, 200, result, result.length, num.length, p, Math.ceil(num.length / l)));
         }
+        else if (role) {
+            const num = await user_service_1.default.GetUserByRole(role);
+            const result = await user_service_1.default.GetUserByRole(role, p, l);
+            if (result.length === 0) {
+                return res.status(404).send(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.CLASS.NOT_FOUND, 404));
+            }
+            res
+                .status(200)
+                .json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.CLASS.FOUND_SUCCESS, 200, result, result.length, num.length, p, Math.ceil(num.length / l)));
+        }
         else if (attendance_id) {
             const num = await user_service_1.default.GetUserByAttendance(attendance_id);
             const result = await user_service_1.default.GetUserByAttendance(attendance_id, p, l);
-            if (!result) {
+            if (result.length === 0) {
                 return res.status(404).send(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.USER.NOT_FOUND, 404));
             }
             res
@@ -39,7 +49,7 @@ const GetUser = async (req, res) => {
         else if (search) {
             const num = await user_service_1.default.SearchUserByCondition(search);
             const result = await user_service_1.default.SearchUserByCondition(search, p, l);
-            if (!result) {
+            if (result.length === 0) {
                 return res.status(404).send(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.USER.NOT_FOUND, 404));
             }
             res
@@ -48,7 +58,7 @@ const GetUser = async (req, res) => {
         }
         else if (page && limit) {
             const result = await user_service_1.default.GetAllUser(p, l);
-            if (!result) {
+            if (result.length === 0) {
                 return res.status(404).send(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.USER.NOT_FOUND, 404));
             }
             res
@@ -57,10 +67,11 @@ const GetUser = async (req, res) => {
         }
         else {
             const result = await user_service_1.default.GetAllUser(1, 10);
-            if (!result) {
+            const sortedResult = result.sort((a, b) => b.create_at - a.create_at);
+            if (result.length === 0) {
                 return res.status(404).send(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.USER.NOT_FOUND, 404));
             }
-            res.status(200).json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.USER.FOUND, 200, result));
+            res.status(200).json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.USER.FOUND, 200, sortedResult));
         }
     }
     catch (error) {

@@ -1,6 +1,8 @@
 import { Lesson } from "@/models/lesson.model";
 import { LessonRepository } from "@/repository/lesson.repo";
 import { CreateLessonDto, UpdateLessonDto } from "@/types/lesson";
+import sessionService from "./session.service";
+import courseService from "./course.service";
 
 const lessonRepository = new LessonRepository(Lesson);
 
@@ -30,10 +32,14 @@ const GetLessonById = async (id: string) => {
 };
 
 const GetLessonBySessionId = async (ss_id: string, page?: any, limit?: any) => {
+  const exist = await sessionService.GetSessionById(ss_id);
+  if (!exist) return [];
   return await lessonRepository.FindLessonBySessionId(ss_id, page, limit);
 };
 
 const GetLessonByCourseId = async (course_id: string, page?: any, limit?: any) => {
+  const exist = await courseService.GetCourseById(course_id);
+  if (!exist) return [];
   return await lessonRepository.FindLessonByCourseId(course_id, page, limit);
 };
 

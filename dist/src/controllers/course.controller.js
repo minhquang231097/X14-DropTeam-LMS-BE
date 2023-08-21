@@ -38,25 +38,25 @@ const GetCourse = async (req, res) => {
         else if (search) {
             const num = await course_service_2.default.SearchCourseByCondition(search);
             const result = await course_service_2.default.SearchCourseByCondition(search, p, l);
-            if (!result) {
+            if (result.length === 0) {
                 return res.status(404).send(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.COURSE.NOT_FOUND, 404));
             }
             res
                 .status(200)
-                .json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.ATTENDANCE.FOUND_SUCCESS, 200, result, result.length, countDoc, p, Math.ceil(num.length / l)));
+                .json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.WORKPLACE.FOUND_SUCCESS, 200, result, result.length, countDoc, p, Math.ceil(num.length / l)));
         }
         else if (page && limit) {
             const result = await course_service_1.default.GetAllCourse(p, l);
-            if (!result) {
+            if (result.length === 0) {
                 return res.status(404).send(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.COURSE.NOT_FOUND, 404));
             }
             res
                 .status(200)
-                .json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.ATTENDANCE.FOUND_SUCCESS, 200, result, result.length, countDoc, p, Math.ceil(countDoc / l)));
+                .json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.WORKPLACE.FOUND_SUCCESS, 200, result, result.length, countDoc, p, Math.ceil(countDoc / l)));
         }
         else {
             const result = await course_service_1.default.GetAllCourse(1, 10);
-            if (!result) {
+            if (result.length === 0) {
                 return res.status(404).send(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.COURSE.NOT_FOUND, 404));
             }
             res.status(200).json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.COURSE.FOUND_SUCCESS, 200, result));

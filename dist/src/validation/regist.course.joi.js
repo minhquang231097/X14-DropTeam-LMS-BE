@@ -21,6 +21,12 @@ exports.RegistSchema = {
                 "string.empty": `${response_config_1.RESPONSE_CONFIG.MESSAGE.REGIST.NO_COURSE} (import workplace code)`,
                 "any.required": `{{#label}} is a required field`,
             }),
+            student_id: joi_1.default.string()
+                .required()
+                .messages({
+                "string.empty": `${response_config_1.RESPONSE_CONFIG.MESSAGE.REGIST.NO_COURSE} (import workplace code)`,
+                "any.required": `{{#label}} is a required field`,
+            }),
             note: joi_1.default.string(),
         }),
         update_course: joi_1.default.object({

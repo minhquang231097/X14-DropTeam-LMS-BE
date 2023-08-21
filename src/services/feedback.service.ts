@@ -25,10 +25,18 @@ const GetFeedbackById = async (id: string) => {
 };
 
 const GetFeedbackByCourseId = async (course_id: string, page?: any, limit?: any) => {
+  const exist = await courseService.GetCourseById(course_id);
+  if (!exist) {
+    return [];
+  }
   return await feedbackRepository.FindFeedbackByCourseId(course_id, page, limit);
 };
 
 const GetFeedbackByStudentId = async (student_id: string, page?: any, limit?: any) => {
+  const exist = await userService.GetUserById(student_id);
+  if (!exist) {
+    return [];
+  }
   return await feedbackRepository.FindFeedbackByStudentId(student_id, page, limit);
 };
 

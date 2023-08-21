@@ -1,6 +1,8 @@
 import { AttendanceStudentRepository } from "@/repository/attendance.student.repo";
 import { Attendace_Student } from "@/models/attendance.student.model";
 import { CreateAttendanceStudentDto } from "@/types/attendance";
+import attendanceService from "./attendance.service";
+import userService from "./user.service";
 
 const attendanceStudentRepository = new AttendanceStudentRepository(Attendace_Student);
 
@@ -19,6 +21,10 @@ const CreateListAttendance = async (list: CreateAttendanceStudentDto[]) => {
 };
 
 const GetAllStudentInAttendance = async (id: string, page?: any, limit?: any) => {
+  const exist = await attendanceService.GetAttendanceById(id);
+  if (!exist) {
+    return [];
+  }
   return await attendanceStudentRepository.FindByConditionAndPagination({ attendance: id }, page, limit, "student");
 };
 
@@ -27,6 +33,10 @@ const GetAllAttendance = async (page: number, limit: number) => {
 };
 
 const GetAttendanceByStudentId = async (id: string, page?: any, limit?: any) => {
+  const exist = await userService.GetUserById(id);
+  if (!exist) {
+    return [];
+  }
   return await attendanceStudentRepository.FindByConditionAndPagination({ student: id }, page, limit, "attendance");
 };
 

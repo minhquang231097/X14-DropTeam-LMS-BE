@@ -21,7 +21,7 @@ const CreateWorkplace = async (req, res) => {
     }
 };
 const GetWorkplace = async (req, res) => {
-    const { page, limit, workplace_code, search } = req.query;
+    const { page, limit, workplace_code, search, status } = req.query;
     const p = Number(page);
     const l = Number(limit);
     try {
@@ -32,10 +32,20 @@ const GetWorkplace = async (req, res) => {
                 return res.status(404).send(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.WORKPLACE.NOT_FOUND, 404));
             return res.status(200).json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.WORKPLACE.FOUND_SUCCESS, 200, result));
         }
+        else if (status) {
+            const num = await workplace_service_1.default.GetWorkplaceByStatus(status);
+            const result = await workplace_service_1.default.GetWorkplaceByStatus(status, p, l);
+            if (result.length === 0) {
+                return res.status(404).send(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.CLASS.NOT_FOUND, 404));
+            }
+            res
+                .status(200)
+                .json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.CLASS.FOUND_SUCCESS, 200, result, result.length, num.length, p, Math.ceil(num.length / l)));
+        }
         else if (search) {
             const num = await workplace_service_1.default.SearchWorkplaceByCondition(search);
             const result = await workplace_service_1.default.SearchWorkplaceByCondition(search, p, l);
-            if (!result)
+            if (result.length === 0)
                 return res.status(404).send(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.WORKPLACE.NOT_FOUND, 404));
             res
                 .status(200)
@@ -43,7 +53,7 @@ const GetWorkplace = async (req, res) => {
         }
         else if (page && limit) {
             const result = await workplace_service_1.default.GetAllWorkplace(p, l);
-            if (!result)
+            if (result.length === 0)
                 return res.status(404).send(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.WORKPLACE.NOT_FOUND, 404));
             res
                 .status(200)
@@ -51,7 +61,7 @@ const GetWorkplace = async (req, res) => {
         }
         else {
             const result = await workplace_service_1.default.GetAllWorkplace(1, 10);
-            if (!result)
+            if (result.length === 0)
                 return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.WORKPLACE.NOT_FOUND, 404));
             res.status(200).json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.WORKPLACE.FOUND_SUCCESS, 200, result));
         }

@@ -7,7 +7,27 @@ import userService from "@/services/user.service";
 import workplaceService from "@/services/workplace.service";
 import { Request, Response } from "express";
 
-const RegistedNewCourse = async (req: Request, res: Response) => {
+const RegistedNewCourseInStudent = async (req: Request, res: Response) => {
+  const { course_id, workplace_id } = req.body;
+  const payload = req.body;
+  const { _id } = req.user;
+  try {
+    const [_course, _workplace, _student] = await Promise.all([
+      courseService.GetCourseById(course_id),
+      workplaceService.GetWorkplaceById(workplace_id),
+      userService.GetUserById(_id),
+    ]);
+    if (!_course || !_workplace || !_student) return res.status(404).send(new HttpException(RESPONSE_CONFIG.MESSAGE.REGIST.INVALID, 404));
+    const found = await registCourseService.GetRegistByCourseIdAndStudentId(course_id as string, _id as string);
+    if (found) return res.status(403).send(new HttpException(RESPONSE_CONFIG.MESSAGE.REGIST.CAN_NOT_REGIST, 403));
+    const newRegist = await registCourseService.CreateRegistCourse(payload);
+    res.status(200).json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.REGIST.CREATE_SUCCES, 200, newRegist));
+  } catch (error) {
+    return res.status(400).send(new HttpException(RESPONSE_CONFIG.MESSAGE.REGIST.WRONG, 400));
+  }
+};
+
+const RegistedNewCourseInAdmin = async (req: Request, res: Response) => {
   const { course_id, workplace_id, student_id } = req.body;
   const payload = req.body;
   try {
@@ -111,4 +131,4 @@ const DeleteRegist = async (req: Request, res: Response) => {
   }
 };
 
-export default { RegistedNewCourse, GetRegist, UpdateRegist, DeleteRegist, GetRegistInfo };
+export default { RegistedNewCourseInStudent, GetRegist, UpdateRegist, DeleteRegist, GetRegistInfo, RegistedNewCourseInAdmin };

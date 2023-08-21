@@ -29,7 +29,7 @@ const GetWorkplace = async (req: Request, res: Response) => {
     } else if (status) {
       const num = await WorkplaceService.GetWorkplaceByStatus(status as string);
       const result = await WorkplaceService.GetWorkplaceByStatus(status as string, p, l);
-      if (!result) {
+      if (result.length === 0) {
         return res.status(404).send(new HttpException(RESPONSE_CONFIG.MESSAGE.CLASS.NOT_FOUND, 404));
       }
       res
@@ -38,19 +38,19 @@ const GetWorkplace = async (req: Request, res: Response) => {
     } else if (search) {
       const num = await WorkplaceService.SearchWorkplaceByCondition(search as string);
       const result = await WorkplaceService.SearchWorkplaceByCondition(search as string, p, l);
-      if (!result) return res.status(404).send(new HttpException(RESPONSE_CONFIG.MESSAGE.WORKPLACE.NOT_FOUND, 404));
+      if (result.length === 0) return res.status(404).send(new HttpException(RESPONSE_CONFIG.MESSAGE.WORKPLACE.NOT_FOUND, 404));
       res
         .status(200)
         .json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.ATTENDANCE.FOUND_SUCCESS, 200, result, result.length, countDoc, p, Math.ceil(num.length / l)));
     } else if (page && limit) {
       const result = await WorkplaceService.GetAllWorkplace(p, l);
-      if (!result) return res.status(404).send(new HttpException(RESPONSE_CONFIG.MESSAGE.WORKPLACE.NOT_FOUND, 404));
+      if (result.length === 0) return res.status(404).send(new HttpException(RESPONSE_CONFIG.MESSAGE.WORKPLACE.NOT_FOUND, 404));
       res
         .status(200)
         .json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.ATTENDANCE.FOUND_SUCCESS, 200, result, result.length, countDoc, p, Math.ceil(countDoc / l)));
     } else {
       const result = await WorkplaceService.GetAllWorkplace(1, 10);
-      if (!result) return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.WORKPLACE.NOT_FOUND, 404));
+      if (result.length === 0) return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.WORKPLACE.NOT_FOUND, 404));
       res.status(200).json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.WORKPLACE.FOUND_SUCCESS, 200, result));
     }
   } catch (error) {

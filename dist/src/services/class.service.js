@@ -45,13 +45,13 @@ const CreateOneClass = async (payload) => {
     return await classRepository.CreateClass(date_end, payload);
 };
 const GetAllClass = async (page, limit) => {
-    return await classRepository.FindAllInfoAndPagination(page, limit, ["mentor", "workplace", { path: "course", populate: { path: "workplace" } }]);
+    return await classRepository.FindAllInfoAndPagination(page, limit, ["mentor", "workplace", { path: "course" }]);
 };
 const GetTotalClass = async () => {
     return await classRepository.Count();
 };
 const GetClassById = async (id) => {
-    return await classRepository.FindById(id, ["mentor", "workplace", { path: "course", populate: { path: "workplace" } }]);
+    return await classRepository.FindById(id, ["mentor", "workplace", { path: "course" }]);
 };
 const GetClassByCourseId = async (id, page, limit) => {
     return await classRepository.FindClassByCourseId(id, page, limit);
@@ -66,13 +66,13 @@ const GetClassByWorkplaceId = async (id) => {
     return await classRepository.FindClassByWorkplaceId(id);
 };
 const GetClassByCondition = async (filter) => {
-    return await classRepository.FindByCondition(filter, ["mentor", "workplace", { path: "course", populate: { path: "workplace" } }]);
+    return await classRepository.FindByCondition(filter, ["mentor", "workplace", { path: "course" }]);
 };
 const SearchClassByCondition = async (searchTerm, page, limit) => {
     const query = {
         $or: [{ class_code: { $regex: searchTerm, $options: "i" } }],
     };
-    return await classRepository.SearchByCondition(page, limit, query, ["mentor", "workplace", { path: "course", populate: { path: "workplace" } }]);
+    return await classRepository.SearchByCondition(page, limit, query, ["mentor", "workplace", { path: "course" }]);
 };
 const UpdateOneClass = async (id, payload) => {
     return await classRepository.FindByIdAndUpdate(id, payload);
@@ -85,6 +85,9 @@ const DeleteClassById = async (id) => {
 };
 const DeleteClassByCondition = async (filter) => {
     return await classRepository.DeleteByCondition(filter);
+};
+const GetClassByStatus = async (status, page, limit) => {
+    return await classRepository.FindByConditionAndPagination({ status }, page, limit);
 };
 exports.default = {
     CreateOneClass,
@@ -102,5 +105,6 @@ exports.default = {
     GetClassByCode,
     GetTotalClass,
     GetHolidays,
+    GetClassByStatus,
 };
 //# sourceMappingURL=class.service.js.map

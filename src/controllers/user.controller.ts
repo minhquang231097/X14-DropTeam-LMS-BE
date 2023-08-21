@@ -6,6 +6,7 @@ import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
 import { Request, Response } from "express";
 import classStudentService from "@/services/class.student.service";
+import classService from "@/services/class.service";
 
 const GetUser = async (req: Request, res: Response) => {
   const { page, limit, attendance_id, class_id, search, role } = req.query;
@@ -16,7 +17,7 @@ const GetUser = async (req: Request, res: Response) => {
     if (class_id) {
       const num = await classStudentService.GetAllStudentInClass(class_id as string);
       const result = await classStudentService.GetAllStudentInClass(class_id as string, p, l);
-      if (!result) {
+      if (result.length === 0) {
         return res.status(404).send(new HttpException(RESPONSE_CONFIG.MESSAGE.USER.NOT_FOUND, 404));
       }
       res
@@ -25,7 +26,7 @@ const GetUser = async (req: Request, res: Response) => {
     } else if (role) {
       const num = await userService.GetUserByRole(role as string);
       const result = await userService.GetUserByRole(role as string, p, l);
-      if (!result) {
+      if (result.length === 0) {
         return res.status(404).send(new HttpException(RESPONSE_CONFIG.MESSAGE.CLASS.NOT_FOUND, 404));
       }
       res
@@ -34,7 +35,7 @@ const GetUser = async (req: Request, res: Response) => {
     } else if (attendance_id) {
       const num = await userService.GetUserByAttendance(attendance_id as string);
       const result = await userService.GetUserByAttendance(attendance_id as string, p, l);
-      if (!result) {
+      if (result.length === 0) {
         return res.status(404).send(new HttpException(RESPONSE_CONFIG.MESSAGE.USER.NOT_FOUND, 404));
       }
       res
@@ -43,15 +44,15 @@ const GetUser = async (req: Request, res: Response) => {
     } else if (search) {
       const num = await userService.SearchUserByCondition(search as string);
       const result = await userService.SearchUserByCondition(search as string, p, l);
-      if (!result) {
+      if (result.length === 0) {
         return res.status(404).send(new HttpException(RESPONSE_CONFIG.MESSAGE.USER.NOT_FOUND, 404));
       }
       res
         .status(200)
         .json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.ATTENDANCE.FOUND_SUCCESS, 200, result, result.length, countDoc, p, Math.ceil(num.length / l)));
     } else if (page && limit) {
-      const result = await userService.GetAllUser(p, l)
-      if (!result) {
+      const result = await userService.GetAllUser(p, l);
+      if (result.length === 0) {
         return res.status(404).send(new HttpException(RESPONSE_CONFIG.MESSAGE.USER.NOT_FOUND, 404));
       }
       res
@@ -59,14 +60,14 @@ const GetUser = async (req: Request, res: Response) => {
         .json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.ATTENDANCE.FOUND_SUCCESS, 200, result, result.length, countDoc, p, Math.ceil(countDoc / l)));
     } else {
       const result = await userService.GetAllUser(1, 10);
-      const sortedResult = result.sort((a: any, b: any) => b.create_at - a.create_at);;
-      if (!result) {
+      const sortedResult = result.sort((a: any, b: any) => b.create_at - a.create_at);
+      if (result.length === 0) {
         return res.status(404).send(new HttpException(RESPONSE_CONFIG.MESSAGE.USER.NOT_FOUND, 404));
       }
       res.status(200).json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.USER.FOUND, 200, sortedResult));
     }
   } catch (error) {
-    return res.status(404).send(new HttpException(RESPONSE_CONFIG.MESSAGE.USER.WRONG, 404));
+    return res.status(404).send(new HttpException(RESPONSE_CONFIG.MESSAGE.USER.NOT_FOUND, 404));
   }
 };
 

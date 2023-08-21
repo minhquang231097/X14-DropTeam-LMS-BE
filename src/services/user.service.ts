@@ -2,6 +2,7 @@ import { User } from "@/models/user.model";
 import { UserRepository } from "@/repository/user.repo";
 import bcrypt from "bcryptjs";
 import attendanceStudentService from "./attendance.student.service";
+import attendanceService from "./attendance.service";
 
 const userRepository = new UserRepository(User);
 
@@ -36,6 +37,8 @@ const GetUserByCondition = async (filter: any) => {
 };
 
 const GetUserByAttendance = async (attendance_id: string, page?: any, limit?: any) => {
+  const exist = await attendanceService.GetAttendanceById(attendance_id);
+  if (!exist) return [];
   return await attendanceStudentService.GetAllStudentInAttendance(attendance_id, page, limit);
 };
 
@@ -78,8 +81,8 @@ const GetUserByRole = async (role: string, page?: number, limit?: number) => {
 };
 
 const SortUser = async () => {
-  return await userRepository.Sort()
-}
+  return await userRepository.Sort();
+};
 
 export default {
   CreateUser,

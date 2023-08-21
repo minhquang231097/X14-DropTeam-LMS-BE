@@ -68,6 +68,12 @@ exports.Schema = {
             }),
         }),
         update: joi_1.default.object({
+            email: joi_1.default.string().min(5).max(100).required().messages({
+                'string.empty': response_config_1.RESPONSE_CONFIG.MESSAGE.USER.NO_EMAIL,
+                'string.min': `{{#label}} should have a minimum length of {#limit}`,
+                'string.max': `{{#label}} should have a maximum length of {#limit}`,
+                'any.required': `{{#label}} is a required field`
+            }),
             fullname: joi_1.default.string().min(5).max(100).optional().messages({
                 'string.base': `{{#label}} should be type of text`,
                 'string.empty': response_config_1.RESPONSE_CONFIG.MESSAGE.USER.NO_FULLNAME,

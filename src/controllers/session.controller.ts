@@ -47,13 +47,13 @@ const GetSession = async (req: Request, res: Response) => {
         .json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.ATTENDANCE.FOUND_SUCCESS, 200, result, result.length, num.length, p, Math.ceil(num.length / l)));
     } else if (page && limit) {
       const result = await sessionService.GetAllSession(p, l);
-      if (!result) return res.status(404).send(new HttpException(RESPONSE_CONFIG.MESSAGE.SESSION.NOT_FOUND, 404));
+      if (result.length === 0) return res.status(404).send(new HttpException(RESPONSE_CONFIG.MESSAGE.SESSION.NOT_FOUND, 404));
       res
         .status(200)
         .json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.ATTENDANCE.FOUND_SUCCESS, 200, result, result.length, countDoc, p, Math.ceil(countDoc / l)));
     } else {
       const result = await sessionService.GetAllSession(1, 10);
-      if (!result) return res.status(404).send(new HttpException(RESPONSE_CONFIG.MESSAGE.SESSION.NOT_FOUND, 404));
+      if (result.length === 0) return res.status(404).send(new HttpException(RESPONSE_CONFIG.MESSAGE.SESSION.NOT_FOUND, 404));
       res.status(200).json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.SESSION.FOUND_SUCCESS, 200, result));
     }
   } catch (error) {

@@ -46,7 +46,7 @@ const GetClass = async (req: Request, res: Response) => {
     if (course_id) {
       const num = await classService.GetClassByCourseId(course_id as string);
       const result = await classService.GetClassByCourseId(course_id as string, p, l);
-      if (!result) {
+      if (result.length === 0) {
         return res.status(404).json(new HttpException(RESPONSE_CONFIG.MESSAGE.CLASS.NOT_FOUND, 404));
       }
       res
@@ -55,7 +55,7 @@ const GetClass = async (req: Request, res: Response) => {
     } else if (status) {
       const num = await classService.GetClassByStatus(status as string);
       const result = await classService.GetClassByStatus(status as string, p, l);
-      if (!result) {
+      if (result.length === 0) {
         return res.status(404).send(new HttpException(RESPONSE_CONFIG.MESSAGE.CLASS.NOT_FOUND, 404));
       }
       res
@@ -64,7 +64,7 @@ const GetClass = async (req: Request, res: Response) => {
     } else if (search) {
       const num = await classService.SearchClassByCondition(search as string);
       const result = await classService.SearchClassByCondition(search as string, p, l);
-      if (!result) {
+      if (result.length === 0) {
         return res.status(404).send(new HttpException(RESPONSE_CONFIG.MESSAGE.CLASS.NOT_FOUND, 404));
       }
       res
@@ -73,7 +73,7 @@ const GetClass = async (req: Request, res: Response) => {
     } else if (student_id) {
       const num = await classStudentService.GetClassByStudentId(student_id as string);
       const result = await classStudentService.GetClassByStudentId(student_id as string, p, l);
-      if (!result) {
+      if (result.length === 0) {
         return res.status(404).send(new HttpException(RESPONSE_CONFIG.MESSAGE.CLASS.NOT_FOUND, 404));
       }
       res
@@ -81,7 +81,7 @@ const GetClass = async (req: Request, res: Response) => {
         .json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.ATTENDANCE.FOUND_SUCCESS, 200, result, result.length, num.length, p, Math.ceil(num.length / l)));
     } else if (page && limit) {
       const result = await classService.GetAllClass(p, l);
-      if (!result) {
+      if (result.length === 0) {
         return res.status(404).json(new HttpException(RESPONSE_CONFIG.MESSAGE.CLASS.NOT_FOUND, 404));
       }
       res
@@ -89,7 +89,7 @@ const GetClass = async (req: Request, res: Response) => {
         .json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.ATTENDANCE.FOUND_SUCCESS, 200, result, result.length, countDoc, p, Math.ceil(countDoc / l)));
     } else {
       const result = await classService.GetAllClass(1, 10);
-      if (!result) {
+      if (result.length === 0) {
         return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.CLASS.NOT_FOUND, 404));
       }
       res.status(200).json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.CLASS.FOUND_SUCCESS, 200, result));

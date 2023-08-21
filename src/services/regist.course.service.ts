@@ -31,16 +31,19 @@ const GetAllRegist = async (page: number, limit: number) => {
 
 const GetRegistByCourseId = async (course_id: string, page?: any, limit?: any) => {
   const _course = await courseService.GetCourseById(course_id);
+  if (!_course) return [];
   return await registCourseRepository.FindRegistbyCourseId(_course?._id, page, limit);
 };
 
 const GetRegistByWorkplaceId = async (wp_id: string, page?: any, limit?: any) => {
   const _workplace = await workplaceService.GetWorkplaceById(wp_id);
+  if (!_workplace) return [];
   return await registCourseRepository.FindRegistbyWorkplaceId(_workplace?._id, page, limit);
 };
 
 const GetRegistByStudentId = async (student_id: string, page?: any, limit?: any) => {
   const _student = await userService.GetUserById(student_id);
+  if (!_student) return [];
   return await registCourseRepository.FindRegistbyStudentId(_student?._id, page, limit);
 };
 

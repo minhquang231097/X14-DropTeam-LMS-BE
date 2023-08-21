@@ -22,7 +22,7 @@ const CreateNewClass = async (req, res) => {
             class_service_1.default.GetClassByCode(class_code),
         ]);
         if (!_course || !_workplace || !_mentor || _class)
-            return res.status(404).send(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.CLASS.WRONG, 404));
+            return res.status(404).send(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.CLASS.NOT_EXIST, 404));
         const newClass = await class_service_1.default.CreateOneClass(payload);
         res.status(200).json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.CLASS.CREATE_SUCCES, 200, newClass));
     }
@@ -34,7 +34,7 @@ const AddStudentToClass = async (req, res) => {
     const { list } = req.body;
     try {
         if (list.length === 0)
-            return res.status(400).send(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.CLASS.WRONG, 400));
+            return res.status(400).send(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.CLASS.CLASS_EXIST, 400));
         const result = await class_student_service_1.default.AddStudentToClass(list);
         res.status(200).json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.CLASS.ADD_STU_SUCCESS, 200, result));
     }
@@ -43,7 +43,7 @@ const AddStudentToClass = async (req, res) => {
     }
 };
 const GetClass = async (req, res) => {
-    const { page, limit, student_id, search, course_id } = req.query;
+    const { page, limit, student_id, search, course_id, status } = req.query;
     const p = Number(page);
     const l = Number(limit);
     try {
@@ -51,17 +51,27 @@ const GetClass = async (req, res) => {
         if (course_id) {
             const num = await class_service_1.default.GetClassByCourseId(course_id);
             const result = await class_service_1.default.GetClassByCourseId(course_id, p, l);
-            if (!result) {
+            if (result.length === 0) {
                 return res.status(404).json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.CLASS.NOT_FOUND, 404));
             }
             res
                 .status(200)
-                .json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.ATTENDANCE.FOUND_SUCCESS, 200, result, result.length, num.length, p, Math.ceil(num.length / l)));
+                .json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.CLASS.FOUND_SUCCESS, 200, result, result.length, num.length, p, Math.ceil(num.length / l)));
+        }
+        else if (status) {
+            const num = await class_service_1.default.GetClassByStatus(status);
+            const result = await class_service_1.default.GetClassByStatus(status, p, l);
+            if (result.length === 0) {
+                return res.status(404).send(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.CLASS.NOT_FOUND, 404));
+            }
+            res
+                .status(200)
+                .json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.CLASS.FOUND_SUCCESS, 200, result, result.length, num.length, p, Math.ceil(num.length / l)));
         }
         else if (search) {
             const num = await class_service_1.default.SearchClassByCondition(search);
             const result = await class_service_1.default.SearchClassByCondition(search, p, l);
-            if (!result) {
+            if (result.length === 0) {
                 return res.status(404).send(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.CLASS.NOT_FOUND, 404));
             }
             res
@@ -71,7 +81,7 @@ const GetClass = async (req, res) => {
         else if (student_id) {
             const num = await class_student_service_1.default.GetClassByStudentId(student_id);
             const result = await class_student_service_1.default.GetClassByStudentId(student_id, p, l);
-            if (!result) {
+            if (result.length === 0) {
                 return res.status(404).send(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.CLASS.NOT_FOUND, 404));
             }
             res
@@ -80,7 +90,7 @@ const GetClass = async (req, res) => {
         }
         else if (page && limit) {
             const result = await class_service_1.default.GetAllClass(p, l);
-            if (!result) {
+            if (result.length === 0) {
                 return res.status(404).json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.CLASS.NOT_FOUND, 404));
             }
             res
@@ -89,7 +99,7 @@ const GetClass = async (req, res) => {
         }
         else {
             const result = await class_service_1.default.GetAllClass(1, 10);
-            if (!result) {
+            if (result.length === 0) {
                 return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.CLASS.NOT_FOUND, 404));
             }
             res.status(200).json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.CLASS.FOUND_SUCCESS, 200, result));

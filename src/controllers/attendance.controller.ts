@@ -27,7 +27,7 @@ const GetAttendance = async (req: Request, res: Response) => {
     if (class_id) {
       const num = await attendanceService.GetAttendanceByClassId(class_id as string);
       const result = await attendanceService.GetAttendanceByClassId(class_id as string, p, l);
-      if (!result) {
+      if (result.length === 0) {
         res.status(404).send(new HttpException(RESPONSE_CONFIG.MESSAGE.ATTENDANCE.NOT_FOUND, 404));
       }
       res
@@ -35,14 +35,14 @@ const GetAttendance = async (req: Request, res: Response) => {
         .json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.ATTENDANCE.FOUND_SUCCESS, 200, result, result.length, num.length, p, Math.ceil(num.length / l)));
     } else if (session_id) {
       const result = await attendanceService.GetAttendanceBySessionId(session_id as string, p, l);
-      if (!result) {
+      if (result.length === 0) {
         res.status(404).send(new HttpException(RESPONSE_CONFIG.MESSAGE.ATTENDANCE.NOT_FOUND, 404));
       }
       res.status(200).json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.ATTENDANCE.FOUND_SUCCESS, 200, result));
     } else if (student_id) {
       const num = await attendanceStudentService.GetAttendanceByStudentId(student_id as string);
       const result = await attendanceStudentService.GetAttendanceByStudentId(student_id as string, p, l);
-      if (!result) {
+      if (result.length === 0) {
         res.status(404).send(new HttpException(RESPONSE_CONFIG.MESSAGE.ATTENDANCE.NOT_FOUND, 404));
       }
       res
@@ -50,7 +50,7 @@ const GetAttendance = async (req: Request, res: Response) => {
         .json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.ATTENDANCE.FOUND_SUCCESS, 200, result, result.length, num.length, p, Math.ceil(num.length / l)));
     } else if (page && limit) {
       const result = await attendanceService.GetAllAttendance(p, l);
-      if (!result) {
+      if (result.length === 0) {
         return res.status(404).json(new HttpException(RESPONSE_CONFIG.MESSAGE.CLASS.NOT_FOUND, 404));
       }
       res
@@ -58,7 +58,7 @@ const GetAttendance = async (req: Request, res: Response) => {
         .json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.ATTENDANCE.FOUND_SUCCESS, 200, result, result.length, countDoc, p, Math.ceil(countDoc / l)));
     } else {
       const result = await attendanceService.GetAllAttendance(1, 10);
-      if (!result) {
+      if (result.length === 0) {
         res.status(404).send(new HttpException(RESPONSE_CONFIG.MESSAGE.ATTENDANCE.NOT_FOUND, 404));
       }
       res.status(200).json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.ATTENDANCE.FOUND_SUCCESS, 200, result));
