@@ -24,11 +24,11 @@ export const ClassSchema = {
           "string.empty": `${RESPONSE_CONFIG.MESSAGE.CLASS.NO_COURSE} (import course)`,
           "any.required": `{{#label}} is a required field`,
         }),
-      class_code: Joi.string().max(10).required().messages({
-        "string.empty": RESPONSE_CONFIG.MESSAGE.CLASS.NO_CODE,
-        "string.max": `{{#label}} should have a maximum length of {#limit}`,
-        "any.required": `{{#label}} is a required field`,
-      }),
+      // class_code: Joi.string().max(10).required().messages({
+      //   "string.empty": RESPONSE_CONFIG.MESSAGE.CLASS.NO_CODE,
+      //   "string.max": `{{#label}} should have a maximum length of {#limit}`,
+      //   "any.required": `{{#label}} is a required field`,
+      // }),
       start_at: Joi.date().required().messages({
         "string.empty": RESPONSE_CONFIG.MESSAGE.CLASS.NO_START_DATE,
         "any.required": `{{#label}} is a required field`,

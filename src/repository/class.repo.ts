@@ -13,7 +13,6 @@ export class ClassRepository extends BaseRepository<IClass> {
       mentor: payload.mentor_id,
       workplace: payload.workplace_id,
       course: payload.course_id,
-      class_code: payload.class_code,
       start_at: payload.start_at,
       end_at,
       total_session: payload.total_session,

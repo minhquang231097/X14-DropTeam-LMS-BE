@@ -1,4 +1,5 @@
 import { RESPONSE_CONFIG } from "@/configs/response.config";
+import { NextFunction } from "express";
 import { Document, Schema, model } from "mongoose";
 
 const classSchema = new Schema({
@@ -17,6 +18,15 @@ const classSchema = new Schema({
     type: Date,
     default: Date.now(),
   },
+});
+
+classSchema.pre<IClass>('save', function(this: IClass, next: Function) {
+  if (!this.class_code) {
+    const currentYear = new Date().getFullYear().toString().substr(-2);
+    const randomCode = Math.floor(1000 + Math.random() * 9000);
+    this.class_code = 'CLS' + currentYear + randomCode;
+  }
+  next();
 });
 
 enum StatusC {

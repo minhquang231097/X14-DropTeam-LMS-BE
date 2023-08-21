@@ -9,11 +9,11 @@ const CreateCourse = async (payload: CreateCourseDto) => {
 };
 
 const GetAllCourse = async (page: number, limit: number) => {
-  return await courseRepository.FindAllInfoAndPagination(page, limit, "workplace");
+  return await courseRepository.FindAllInfoAndPagination(page, limit,);
 };
 
 const GetCourseById = async (id: string) => {
-  return await courseRepository.FindById(id, "workplace");
+  return await courseRepository.FindById(id);
 };
 
 const GetCourseByCode = async (code: string) => {
