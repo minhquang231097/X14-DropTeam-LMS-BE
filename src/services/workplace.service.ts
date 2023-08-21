@@ -47,6 +47,10 @@ const SearchWorkplaceByCondition = async (searchTerm?: string, page?: any, limit
   return await workplaceRepository.SearchByCondition(page, limit, query);
 };
 
+const GetWorkplaceByStatus = async (status: string, page?: number, limit?: number) => {
+  return await workplaceRepository.FindByConditionAndPagination({ status }, page, limit)
+}
+
 export default {
   CreateWorkplace,
   GetWorkplaceByCodition,
@@ -58,4 +62,5 @@ export default {
   GetWorkplaceByCode,
   GetTotalWorkplace,
   SearchWorkplaceByCondition,
+  GetWorkplaceByStatus,
 };

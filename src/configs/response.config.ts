@@ -75,6 +75,7 @@ export const RESPONSE_CONFIG = {
       FOUND_SUCCESS: "Found class",
       UPDATE_SUCCESS: "Update class success",
       DELETE_SUCCESS: "Delete class success",
+      NOT_EXIST: "Mentor or course or workplace not exist",
       WRONG: "Something wrong...",
       ADD_STU_SUCCESS: "Add student success",
     },

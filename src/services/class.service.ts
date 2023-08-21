@@ -51,7 +51,7 @@ const CreateOneClass = async (payload: CreateClassDto) => {
 };
 
 const GetAllClass = async (page?: number, limit?: number) => {
-  return await classRepository.FindAllInfoAndPagination(page, limit, ["mentor", "workplace", { path: "course", populate: { path: "workplace" } }]);
+  return await classRepository.FindAllInfoAndPagination(page, limit, ["mentor", "workplace", { path: "course" }]);
 };
 
 const GetTotalClass = async () => {
@@ -59,7 +59,7 @@ const GetTotalClass = async () => {
 };
 
 const GetClassById = async (id: string) => {
-  return await classRepository.FindById(id, ["mentor", "workplace", { path: "course", populate: { path: "workplace" } }]);
+  return await classRepository.FindById(id, ["mentor", "workplace", { path: "course" }]);
 };
 
 const GetClassByCourseId = async (id: string, page?: any, limit?: any) => {
@@ -79,14 +79,14 @@ const GetClassByWorkplaceId = async (id: string) => {
 };
 
 const GetClassByCondition = async (filter: IClass) => {
-  return await classRepository.FindByCondition(filter, ["mentor", "workplace", { path: "course", populate: { path: "workplace" } }]);
+  return await classRepository.FindByCondition(filter, ["mentor", "workplace", { path: "course" }]);
 };
 
 const SearchClassByCondition = async (searchTerm?: string, page?: any, limit?: any) => {
   const query = {
     $or: [{ class_code: { $regex: searchTerm, $options: "i" } }],
   };
-  return await classRepository.SearchByCondition(page, limit, query, ["mentor", "workplace", { path: "course", populate: { path: "workplace" } }]);
+  return await classRepository.SearchByCondition(page, limit, query, ["mentor", "workplace", { path: "course" }]);
 };
 
 const UpdateOneClass = async (id: string, payload: UpdateClassDto) => {
@@ -105,6 +105,10 @@ const DeleteClassByCondition = async (filter: UpdateClassDto) => {
   return await classRepository.DeleteByCondition(filter);
 };
 
+const GetClassByStatus = async (status: string, page?: number, limit?: number) => {
+  return await classRepository.FindByConditionAndPagination({ status }, page, limit)
+}
+
 export default {
   CreateOneClass,
   GetAllClass,
@@ -121,4 +125,5 @@ export default {
   GetClassByCode,
   GetTotalClass,
   GetHolidays,
+  GetClassByStatus,
 };

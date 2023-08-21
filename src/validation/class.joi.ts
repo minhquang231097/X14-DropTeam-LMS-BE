@@ -51,22 +51,20 @@ export const ClassSchema = {
         "number.integer": `{{#label}} must be an integer `,
       }),
     }),
-    add_student: Joi.object<AddStudentToClassDto>({
-      student_id: Joi.string()
-        .required()
-        .messages({
-          "string.empty": `${RESPONSE_CONFIG.MESSAGE.USER.NO_EMAIL} (import student)`,
-          "string.min": `{{#label}} should have a minimum length of {#limit}`,
-          "string.max": `{{#label}} should have a maximum length of {#limit}`,
-          "any.required": `{{#label}} is a required field`,
-        }),
-      class_id: Joi.string()
-        .required()
-        .messages({
-          "string.empty": `${RESPONSE_CONFIG.MESSAGE.CLASS.NO_CODE} (import class)`,
-          "string.max": `{{#label}} should have a maximum length of {#limit}`,
-          "any.required": `{{#label}} is a required field`,
-        }),
+
+    add_student: Joi.object({
+      list: Joi.array().items(
+        Joi.object<AddStudentToClassDto>({
+          student_id: Joi.string().required().messages({
+            'string.empty': 'student_id is required',
+            'any.required': 'student_id is a required field',
+          }),
+          class_id: Joi.string().required().messages({
+            'string.empty': 'class_id is required',
+            'any.required': 'class_id is a required field',
+          }),
+        })
+      ),
     }),
     update_class: Joi.object<UpdateClassDto>({
       mentor: Joi.string()
@@ -87,11 +85,11 @@ export const ClassSchema = {
           "string.empty": `${RESPONSE_CONFIG.MESSAGE.CLASS.NO_COURSE} (import course)`,
           "any.required": `{{#label}} is a required field`,
         }),
-      class_code: Joi.string().max(10).required().messages({
-        "string.empty": RESPONSE_CONFIG.MESSAGE.CLASS.NO_CODE,
-        "string.max": `{{#label}} should have a maximum length of {#limit}`,
-        "any.required": `{{#label}} is a required field`,
-      }),
+      // class_code: Joi.string().max(10).required().messages({
+      //   "string.empty": RESPONSE_CONFIG.MESSAGE.CLASS.NO_CODE,
+      //   "string.max": `{{#label}} should have a maximum length of {#limit}`,
+      //   "any.required": `{{#label}} is a required field`,
+      // }),
       start_at: Joi.string().required().messages({
         "string.empty": RESPONSE_CONFIG.MESSAGE.CLASS.NO_START_DATE,
         "any.required": `{{#label}} is a required field`,

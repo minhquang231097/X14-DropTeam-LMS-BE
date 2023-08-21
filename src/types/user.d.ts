@@ -8,6 +8,7 @@ export interface SignOutDto {
 }
 
 export interface UpdateUserDto {
+  email?: string;
   fullname?: string;
   phone_number?: string;
   dob?: string;

@@ -17,7 +17,7 @@ const CreateWorkplace = async (req: Request, res: Response) => {
 };
 
 const GetWorkplace = async (req: Request, res: Response) => {
-  const { page, limit, workplace_code, search } = req.query;
+  const { page, limit, workplace_code, search, status } = req.query;
   const p = Number(page);
   const l = Number(limit);
   try {
@@ -26,6 +26,15 @@ const GetWorkplace = async (req: Request, res: Response) => {
       const result = await WorkplaceService.GetWorkplaceByCode(workplace_code as string);
       if (!result) return res.status(404).send(new HttpException(RESPONSE_CONFIG.MESSAGE.WORKPLACE.NOT_FOUND, 404));
       return res.status(200).json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.WORKPLACE.FOUND_SUCCESS, 200, result));
+    } else if (status) {
+      const num = await WorkplaceService.GetWorkplaceByStatus(status as string);
+      const result = await WorkplaceService.GetWorkplaceByStatus(status as string, p, l);
+      if (!result) {
+        return res.status(404).send(new HttpException(RESPONSE_CONFIG.MESSAGE.CLASS.NOT_FOUND, 404));
+      }
+      res
+        .status(200)
+        .json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.CLASS.FOUND_SUCCESS, 200, result, result.length, num.length, p, Math.ceil(num.length / l)));
     } else if (search) {
       const num = await WorkplaceService.SearchWorkplaceByCondition(search as string);
       const result = await WorkplaceService.SearchWorkplaceByCondition(search as string, p, l);

@@ -39,7 +39,7 @@ const GetCourse = async (req: Request, res: Response) => {
       }
       res
         .status(200)
-        .json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.ATTENDANCE.FOUND_SUCCESS, 200, result, result.length, countDoc, p, Math.ceil(num.length / l)));
+        .json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.WORKPLACE.FOUND_SUCCESS, 200, result, result.length, countDoc, p, Math.ceil(num.length / l)));
     } else if (page && limit) {
       const result = await CourseService.GetAllCourse(p, l);
       if (!result) {
@@ -47,7 +47,7 @@ const GetCourse = async (req: Request, res: Response) => {
       }
       res
         .status(200)
-        .json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.ATTENDANCE.FOUND_SUCCESS, 200, result, result.length, countDoc, p, Math.ceil(countDoc / l)));
+        .json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.WORKPLACE.FOUND_SUCCESS, 200, result, result.length, countDoc, p, Math.ceil(countDoc / l)));
     } else {
       const result = await CourseService.GetAllCourse(1, 10);
       if (!result) {

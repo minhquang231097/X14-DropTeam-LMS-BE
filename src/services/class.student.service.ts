@@ -7,7 +7,7 @@ const classStudentRepository = new ClassStudentRepository(Class_Student);
 const AddStudentToClass = async (list: AddStudentToClassDto[]) => {
   return await Promise.all(
     list.map((el) => {
-      classStudentRepository.Create({
+      return classStudentRepository.Create({
         student: el.student_id,
         class: el.class_id,
       });
@@ -16,7 +16,7 @@ const AddStudentToClass = async (list: AddStudentToClassDto[]) => {
 };
 
 const GetAllStudentInClass = async (class_id: string, page?: any, limit?: any) => {
-  return await classStudentRepository.FindByClassId(class_id, page, limit, ["student", { path: "course", populate: { path: "workplace" } }]);
+  return await classStudentRepository.FindByClassId(class_id, page, limit, ["student"]);
 };
 
 const GetClassByStudentId = async (id: string, page?: any, limit?: any) => {

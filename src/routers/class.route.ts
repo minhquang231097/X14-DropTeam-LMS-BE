@@ -14,13 +14,8 @@ classRouter.post(
   ValidateJoi(ClassSchema.Class.create_class),
   classController.CreateNewClass,
 );
-classRouter.post("/add-student", verifyAccessJWT, classController.AddStudentToClass);
-classRouter.post(
-  "/add-student",
-  // verifyAccessJWT,
-  ValidateJoi(ClassSchema.Class.add_student),
-  classController.AddStudentToClass,
-);
+// classRouter.post("/add-student", verifyAccessJWT, classController.AddStudentToClass);
+classRouter.post("/add-student", verifyAccessJWT, ValidateJoi(ClassSchema.Class.add_student), classController.AddStudentToClass,);
 classRouter.put("/:id", ValidateJoi(ClassSchema.Class.update_class), verifyAccessJWT, classController.UpdateClass);
 classRouter.put("/student-status", verifyAccessJWT, classController.UpdateStatusStudentInClass);
 classRouter.delete("/:id", verifyAccessJWT, classController.DeleteOneClass);

@@ -1,11 +1,11 @@
 import Joi from "joi";
 import { ICourse } from "@/models/course.model";
-import { UpdateCourseDto } from "@/types/course";
+import { CreateCourseDto, UpdateCourseDto } from "@/types/course";
 import { RESPONSE_CONFIG } from "@/configs/response.config";
 
 export const CourseSchema = {
   Course: {
-    create_course: Joi.object<ICourse>({
+    create_course: Joi.object<CreateCourseDto>({
       course_code: Joi.string().max(10).required().messages({
         'string.empty': RESPONSE_CONFIG.MESSAGE.COURSE.NO_CODE,
         'string.max': `{{#label}} should have a maximum length of {#limit}`,

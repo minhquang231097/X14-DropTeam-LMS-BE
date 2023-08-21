@@ -18,7 +18,7 @@ const CreateNewClass = async (req: Request, res: Response) => {
       userService.GetUserById(mentor_id),
       classService.GetClassByCode(class_code),
     ]);
-    if (!_course || !_workplace || !_mentor || _class) return res.status(404).send(new HttpException(RESPONSE_CONFIG.MESSAGE.CLASS.WRONG, 404));
+    if (!_course || !_workplace || !_mentor || _class) return res.status(404).send(new HttpException(RESPONSE_CONFIG.MESSAGE.CLASS.NOT_EXIST, 404));
     const newClass = await classService.CreateOneClass(payload);
     res.status(200).json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.CLASS.CREATE_SUCCES, 200, newClass));
   } catch (error) {
@@ -29,7 +29,7 @@ const CreateNewClass = async (req: Request, res: Response) => {
 const AddStudentToClass = async (req: Request, res: Response) => {
   const { list } = req.body;
   try {
-    if (list.length === 0) return res.status(400).send(new HttpException(RESPONSE_CONFIG.MESSAGE.CLASS.WRONG, 400));
+    if (list.length === 0) return res.status(400).send(new HttpException(RESPONSE_CONFIG.MESSAGE.CLASS.CLASS_EXIST, 400));
     const result = await classStudentService.AddStudentToClass(list);
     res.status(200).json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.CLASS.ADD_STU_SUCCESS, 200, result));
   } catch (error) {
@@ -38,7 +38,7 @@ const AddStudentToClass = async (req: Request, res: Response) => {
 };
 
 const GetClass = async (req: Request, res: Response) => {
-  const { page, limit, student_id, search, course_id } = req.query;
+  const { page, limit, student_id, search, course_id, status } = req.query;
   const p = Number(page);
   const l = Number(limit);
   try {
@@ -51,7 +51,16 @@ const GetClass = async (req: Request, res: Response) => {
       }
       res
         .status(200)
-        .json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.ATTENDANCE.FOUND_SUCCESS, 200, result, result.length, num.length, p, Math.ceil(num.length / l)));
+        .json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.CLASS.FOUND_SUCCESS, 200, result, result.length, num.length, p, Math.ceil(num.length / l)));
+    } else if (status) {
+      const num = await classService.GetClassByStatus(status as string);
+      const result = await classService.GetClassByStatus(status as string, p, l);
+      if (!result) {
+        return res.status(404).send(new HttpException(RESPONSE_CONFIG.MESSAGE.CLASS.NOT_FOUND, 404));
+      }
+      res
+        .status(200)
+        .json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.CLASS.FOUND_SUCCESS, 200, result, result.length, num.length, p, Math.ceil(num.length / l)));
     } else if (search) {
       const num = await classService.SearchClassByCondition(search as string);
       const result = await classService.SearchClassByCondition(search as string, p, l);

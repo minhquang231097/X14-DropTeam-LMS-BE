@@ -33,5 +33,4 @@ export interface CreateCourseDto {
   level: string;
   rate: number;
   discount: number;
-  create_at: string;
 }

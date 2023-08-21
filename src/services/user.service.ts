@@ -70,6 +70,17 @@ const GetTotalUser = async () => {
   return await userRepository.Count();
 };
 
+const GetUserByRole = async (role: string, page?: number, limit?: number) => {
+  const query = {
+    role: { $regex: new RegExp(role, "i") },
+  };
+  return await userRepository.FindByConditionAndPagination(query, page, limit);
+};
+
+const SortUser = async () => {
+  return await userRepository.Sort()
+}
+
 export default {
   CreateUser,
   SearchUserByCondition,
@@ -84,4 +95,6 @@ export default {
   GetUserByCondition,
   GetUserByAttendance,
   GetTotalUser,
+  GetUserByRole,
+  SortUser,
 };

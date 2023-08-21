@@ -18,6 +18,12 @@ export const RegistSchema = {
           "string.empty": `${RESPONSE_CONFIG.MESSAGE.REGIST.NO_COURSE} (import workplace code)`,
           "any.required": `{{#label}} is a required field`,
         }),
+      student_id: Joi.string()
+        .required()
+        .messages({
+          "string.empty": `${RESPONSE_CONFIG.MESSAGE.REGIST.NO_COURSE} (import workplace code)`,
+          "any.required": `{{#label}} is a required field`,
+        }),
       note: Joi.string(),
     }),
     update_course: Joi.object<RegistCourseDto>({

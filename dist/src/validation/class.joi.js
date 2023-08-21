@@ -27,11 +27,6 @@ exports.ClassSchema = {
                 "string.empty": `${response_config_1.RESPONSE_CONFIG.MESSAGE.CLASS.NO_COURSE} (import course)`,
                 "any.required": `{{#label}} is a required field`,
             }),
-            class_code: joi_1.default.string().max(10).required().messages({
-                "string.empty": response_config_1.RESPONSE_CONFIG.MESSAGE.CLASS.NO_CODE,
-                "string.max": `{{#label}} should have a maximum length of {#limit}`,
-                "any.required": `{{#label}} is a required field`,
-            }),
             start_at: joi_1.default.date().required().messages({
                 "string.empty": response_config_1.RESPONSE_CONFIG.MESSAGE.CLASS.NO_START_DATE,
                 "any.required": `{{#label}} is a required field`,

@@ -80,4 +80,7 @@ export abstract class BaseRepository<T extends Document> {
   async FindByIdAndUpdate(id: string | ObjectId, update: any) {
     return this.model.findByIdAndUpdate(id, update);
   }
+  async Sort(): Promise<T[] | any> {
+    return this.model.find().sort({ create_at: -1 });
+  }
 }
