@@ -17,16 +17,12 @@ const CreateWorkplace = async (req: Request, res: Response) => {
 };
 
 const GetWorkplace = async (req: Request, res: Response) => {
-  const { page, limit, workplace_code, search, status } = req.query;
+  const { page, limit, search, status } = req.query;
   const p = Number(page);
   const l = Number(limit);
   try {
     const countDoc = await WorkplaceService.GetTotalWorkplace();
-    if (workplace_code) {
-      const result = await WorkplaceService.GetWorkplaceByCode(workplace_code as string);
-      if (result.length === 0) return res.status(404).send(new HttpException(RESPONSE_CONFIG.MESSAGE.WORKPLACE.NOT_FOUND, 404));
-      return res.status(200).json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.WORKPLACE.FOUND_SUCCESS, 200, result));
-    } else if (status) {
+    if (status) {
       const num = await WorkplaceService.GetWorkplaceByStatus(status as string);
       const result = await WorkplaceService.GetWorkplaceByStatus(status as string, p, l);
       if (result.length === 0) {

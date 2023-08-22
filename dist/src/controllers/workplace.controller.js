@@ -28,7 +28,7 @@ const GetWorkplace = async (req, res) => {
         const countDoc = await workplace_service_1.default.GetTotalWorkplace();
         if (workplace_code) {
             const result = await workplace_service_1.default.GetWorkplaceByCode(workplace_code);
-            if (!result)
+            if (result.length === 0)
                 return res.status(404).send(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.WORKPLACE.NOT_FOUND, 404));
             return res.status(200).json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.WORKPLACE.FOUND_SUCCESS, 200, result));
         }
@@ -63,7 +63,9 @@ const GetWorkplace = async (req, res) => {
             const result = await workplace_service_1.default.GetAllWorkplace(1, 10);
             if (result.length === 0)
                 return res.status(200).send(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.WORKPLACE.FOUND_NO_DATA, 200));
-            res.status(200).json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.WORKPLACE.FOUND_SUCCESS, 200, result, result.length, countDoc, 1, Math.ceil(countDoc / 10)));
+            res
+                .status(200)
+                .json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.WORKPLACE.FOUND_SUCCESS, 200, result, result.length, countDoc, 1, Math.ceil(countDoc / 10)));
         }
     }
     catch (error) {

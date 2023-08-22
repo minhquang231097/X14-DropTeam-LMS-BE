@@ -26,16 +26,12 @@ const CreateSessionWithAttendance = async (req: Request, res: Response) => {
 };
 
 const GetSession = async (req: Request, res: Response) => {
-  const { page, limit, course_id, class_id, search, code } = req.query;
+  const { page, limit, course_id, class_id, search } = req.query;
   const p = Number(page);
   const l = Number(limit);
   try {
     const countDoc = await sessionService.CountSession();
-    if (code) {
-      const result = await sessionService.GetSessionByCode(code as string);
-      if (!result) return res.status(200).send(new HttpException(RESPONSE_CONFIG.MESSAGE.SESSION.FOUND_NO_DATA, 200));
-      res.status(200).json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.SESSION.FOUND_SUCCESS, 200, result));
-    } else if (course_id) {
+    if (course_id) {
       const num = await sessionService.GetSessionByCourseId(course_id as string);
       const result = await sessionService.GetSessionByCourseId(course_id as string, p, l);
       if (result.length === 0) return res.status(200).send(new HttpException(RESPONSE_CONFIG.MESSAGE.SESSION.FOUND_NO_DATA, 200));

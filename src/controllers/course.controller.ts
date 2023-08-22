@@ -20,18 +20,12 @@ const CreateCourse = async (req: Request, res: Response) => {
 };
 
 const GetCourse = async (req: Request, res: Response) => {
-  const { course_code, page, limit, search } = req.query;
+  const { page, limit, search } = req.query;
   const p = Number(page);
   const l = Number(limit);
   try {
     const countDoc = await CourseService.GetTotalCourse();
-    if (course_code) {
-      const result = await CourseService.GetCourseByCode(course_code as string);
-      if (!result) {
-        return res.status(404).send(new HttpException(RESPONSE_CONFIG.MESSAGE.COURSE.NOT_FOUND, 404));
-      }
-      res.status(200).json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.COURSE.FOUND_SUCCESS, 200, result));
-    } else if (search) {
+    if (search) {
       const num = await courseService.SearchCourseByCondition(search as string);
       const result = await courseService.SearchCourseByCondition(search as string, p, l);
       if (result.length === 0) {
