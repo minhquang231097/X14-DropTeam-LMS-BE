@@ -6,12 +6,12 @@ import { RESPONSE_CONFIG } from "@/configs/response.config";
 export const SessionSchema = {
     Session: {
         create_session: Joi.object<CreateSessionDto>({
-            course_code: Joi.string().required().messages({
-                'string.empty': `${RESPONSE_CONFIG.MESSAGE.SESSION.NO_COURSE} (import course code)`,
+            course_id: Joi.string().required().messages({
+                'string.empty': `${RESPONSE_CONFIG.MESSAGE.SESSION.NO_COURSE} (import course id)`,
                 'any.required': `{{#label}} is a required field`
             }),
-            class_code: Joi.string().required().messages({
-                'string.empty': `${RESPONSE_CONFIG.MESSAGE.SESSION.NO_CLASS} (import class code)`,
+            class_id: Joi.string().required().messages({
+                'string.empty': `${RESPONSE_CONFIG.MESSAGE.SESSION.NO_CLASS} (import class id)`,
                 'any.required': `{{#label}} is a required field`
             }),
             session_code: Joi.string().required().messages({

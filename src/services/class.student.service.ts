@@ -21,7 +21,6 @@ const GetAllStudentInClass = async (class_id: string, page?: any, limit?: any) =
 const GetClassByStudentId = async (id: string, page?: any, limit?: any) => {
   return await classStudentRepository.FindByConditionAndPagination({ student: id }, page, limit, [
     "student",
-    { path: "course", populate: { path: "workplace" } },
   ]);
 };
 

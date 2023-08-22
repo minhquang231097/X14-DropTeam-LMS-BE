@@ -26,7 +26,6 @@ export const FeedbackSchema = {
         .messages({
           "string.empty": RESPONSE_CONFIG.MESSAGE.FEEDBACK.NO_RATE,
           "string.pattern.base": `{{#label}} have to match the required pattern: 0-5`,
-          "string.max": `{{#label}} should have a maximum length of {#limit}`,
           "any.required": `{{#label}} is a required field`,
         }),
       content: Joi.string().required().messages({
@@ -50,10 +49,9 @@ export const FeedbackSchema = {
           "string.max": `{{#label}} should have a maximum length of {#limit}`,
           "any.required": `{{#label}} is a required field`,
         }),
-      rating: Joi.string().required().messages({
+      rating: Joi.string().regex(/^[0-5]/).required().messages({
         "string.empty": RESPONSE_CONFIG.MESSAGE.FEEDBACK.NO_RATE,
         "string.pattern.base": `{{#label}} have to match the required pattern: 0-5`,
-        "string.max": `{{#label}} should have a maximum length of {#limit}`,
         "any.required": `{{#label}} is a required field`,
       }),
       content: Joi.string().required().messages({

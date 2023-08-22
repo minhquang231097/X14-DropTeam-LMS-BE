@@ -5,8 +5,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const class_model_1 = require("@/models/class.model");
 const class_repo_1 = require("@/repository/class.repo");
-const course_service_1 = __importDefault(require("./course.service"));
-const user_service_1 = __importDefault(require("./user.service"));
 const axios_1 = __importDefault(require("axios"));
 const classRepository = new class_repo_1.ClassRepository(class_model_1.Class);
 const GetHolidays = async () => {
@@ -56,24 +54,15 @@ const GetClassById = async (id) => {
     return await classRepository.FindById(id, ["mentor", "workplace", { path: "course" }]);
 };
 const GetClassByCourseId = async (id, page, limit) => {
-    const exist = await course_service_1.default.GetCourseById(id);
-    if (!exist)
-        return [];
     return await classRepository.FindClassByCourseId(id, page, limit);
 };
 const GetClassByCode = async (code) => {
     return await classRepository.FindClassByCode(code);
 };
 const GetClassByMentorId = async (id) => {
-    const exist = await user_service_1.default.GetUserById(id);
-    if (!exist)
-        return [];
     return await classRepository.FindClassByMentorId(id);
 };
 const GetClassByWorkplaceId = async (id) => {
-    const exist = await user_service_1.default.GetUserById(id);
-    if (!exist)
-        return [];
     return await classRepository.FindClassByWorkplaceId(id);
 };
 const GetClassByCondition = async (filter) => {

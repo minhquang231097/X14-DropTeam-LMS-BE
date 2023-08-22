@@ -34,27 +34,27 @@ const GetSession = async (req: Request, res: Response) => {
     if (course_id) {
       const num = await sessionService.GetSessionByCourseId(course_id as string);
       const result = await sessionService.GetSessionByCourseId(course_id as string, p, l);
-      if (result.length === 0) return res.status(404).send(new HttpException(RESPONSE_CONFIG.MESSAGE.SESSION.NOT_FOUND, 404));
+      if (result.length === 0) return res.status(200).send(new HttpException(RESPONSE_CONFIG.MESSAGE.SESSION.FOUND_NO_DATA, 200));
       res
         .status(200)
-        .json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.ATTENDANCE.FOUND_SUCCESS, 200, result, result.length, num.length, p, Math.ceil(num.length / l)));
+        .json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.SESSION.FOUND_SUCCESS, 200, result, result.length, num.length, p, Math.ceil(num.length / l)));
     } else if (class_id) {
       const num: any = await sessionService.GetSessionByClassId(class_id as string);
       const result: any = await sessionService.GetSessionByClassId(class_id as string, p, l);
-      if (result.length === 0) return res.status(404).send(new HttpException(RESPONSE_CONFIG.MESSAGE.SESSION.NOT_FOUND, 404));
+      if (result.length === 0) return res.status(200).send(new HttpException(RESPONSE_CONFIG.MESSAGE.SESSION.FOUND_NO_DATA, 200));
       res
         .status(200)
-        .json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.ATTENDANCE.FOUND_SUCCESS, 200, result, result.length, num.length, p, Math.ceil(num.length / l)));
+        .json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.SESSION.FOUND_SUCCESS, 200, result, result.length, num.length, p, Math.ceil(num.length / l)));
     } else if (page && limit) {
       const result = await sessionService.GetAllSession(p, l);
-      if (result.length === 0) return res.status(404).send(new HttpException(RESPONSE_CONFIG.MESSAGE.SESSION.NOT_FOUND, 404));
+      if (result.length === 0) return res.status(200).send(new HttpException(RESPONSE_CONFIG.MESSAGE.SESSION.FOUND_NO_DATA, 200));
       res
         .status(200)
-        .json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.ATTENDANCE.FOUND_SUCCESS, 200, result, result.length, countDoc, p, Math.ceil(countDoc / l)));
+        .json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.SESSION.FOUND_SUCCESS, 200, result, result.length, countDoc, p, Math.ceil(countDoc / l)));
     } else {
       const result = await sessionService.GetAllSession(1, 10);
-      if (result.length === 0) return res.status(404).send(new HttpException(RESPONSE_CONFIG.MESSAGE.SESSION.NOT_FOUND, 404));
-      res.status(200).json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.SESSION.FOUND_SUCCESS, 200, result));
+      if (result.length === 0) return res.status(200).send(new HttpException(RESPONSE_CONFIG.MESSAGE.SESSION.FOUND_NO_DATA, 200));
+      res.status(200).json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.SESSION.FOUND_SUCCESS, 200, result, result.length, countDoc, 1, Math.ceil(countDoc / 10)));
     }
   } catch (error) {
     return res.status(404).send(new HttpException(RESPONSE_CONFIG.MESSAGE.SESSION.WRONG, 404));
@@ -79,7 +79,8 @@ const UpdateSession = async (req: Request, res: Response) => {
     const exist = await sessionService.GetSessionById(id as string);
     if (!exist) return res.status(404).send(new HttpException(RESPONSE_CONFIG.MESSAGE.SESSION.NOT_FOUND, 404));
     await sessionService.UpdateSessionById(id as string, payload);
-    res.status(200).json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.SESSION.UPDATE_SUCCESS, 200));
+    const newSession = await sessionService.GetSessionById(id as string)
+    res.status(200).json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.SESSION.UPDATE_SUCCESS, 200, newSession));
   } catch (error) {
     return res.status(400).send(new HttpException(RESPONSE_CONFIG.MESSAGE.SESSION.WRONG, 400));
   }

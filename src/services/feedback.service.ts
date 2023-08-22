@@ -21,7 +21,7 @@ const GetTotalFeedback = async () => {
 };
 
 const GetFeedbackById = async (id: string) => {
-  return await feedbackRepository.FindById(id, [{ path: "course", populate: { path: "workplace" } }, "student"]);
+  return await feedbackRepository.FindById(id, [{ path: "course" }, "student"]);
 };
 
 const GetFeedbackByCourseId = async (course_id: string, page?: any, limit?: any) => {
@@ -33,7 +33,7 @@ const GetFeedbackByStudentId = async (student_id: string, page?: any, limit?: an
 };
 
 const GetFeedbackByCondition = async (page: number, limit: number) => {
-  return await feedbackRepository.FindAllInfoAndPagination(page, limit, [{ path: "course", populate: { path: "workplace" } }, "student"]);
+  return await feedbackRepository.FindAllInfoAndPagination(page, limit, [{ path: "course" }, "student"]);
 };
 
 const UpdateFeedback = async (id: string, payload: UpdateFeedbackDto) => {

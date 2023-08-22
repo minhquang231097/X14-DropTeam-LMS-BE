@@ -29,24 +29,28 @@ export const ClassSchema = {
       //   "string.max": `{{#label}} should have a maximum length of {#limit}`,
       //   "any.required": `{{#label}} is a required field`,
       // }),
-      start_at: Joi.date().required().messages({
+      start_at: Joi.date().min(new Date().toISOString().split('T')[0]).required().messages({
+        "date.min": `{{#label}} must greater than or equal to now`,
         "string.empty": RESPONSE_CONFIG.MESSAGE.CLASS.NO_START_DATE,
         "any.required": `{{#label}} is a required field`,
       }),
       end_at: Joi.string().optional(),
-      schedule: Joi.array().required().messages({
+      schedule: Joi.array().items(Joi.number().integer().min(0).max(6)).unique().required().messages({
         "array.empty": RESPONSE_CONFIG.MESSAGE.CLASS.NO_SCHEDULE,
         "any.required": `{{#label}} is a required field`,
+        "array.unique": "Schedule item must be unique",
       }),
-      total_session: Joi.number().integer().required().messages({
+      total_session: Joi.number().integer().min(1).required().messages({
         "number.empty": RESPONSE_CONFIG.MESSAGE.CLASS.NO_TOTAL_SESSION,
         "any.required": `{{#label}} is a required field`,
+        "number.min": `{{#label}} must greater than or equal to {{#limit}}`,
         "number.base": `{{#label}} must be a number`,
         "number.integer": `{{#label}} must be an integer `,
       }),
-      class_size: Joi.number().integer().required().messages({
+      class_size: Joi.number().integer().min(1).required().messages({
         "number.empty": RESPONSE_CONFIG.MESSAGE.CLASS.NO_SIZE,
         "any.required": `{{#label}} is a required field`,
+        "number.min": `{{#label}} must greater than or equal to {{#limit}}`,
         "number.base": `{{#label}} must be a number`,
         "number.integer": `{{#label}} must be an integer `,
       }),
@@ -67,22 +71,22 @@ export const ClassSchema = {
       ),
     }),
     update_class: Joi.object<UpdateClassDto>({
-      mentor: Joi.string()
+      mentor_id: Joi.string()
         .required()
         .messages({
-          "string.empty": `${RESPONSE_CONFIG.MESSAGE.CLASS.NO_MENTOR} (import mentor)`,
+          "string.empty": `${RESPONSE_CONFIG.MESSAGE.CLASS.NO_MENTOR} (import mentor_id)`,
           "any.required": `{{#label}} is a required field `,
         }),
-      workplace: Joi.string()
+      workplace_id: Joi.string()
         .required()
         .messages({
-          "string.empty": `${RESPONSE_CONFIG.MESSAGE.CLASS.NO_WORKPLACE} (import workplace)`,
+          "string.empty": `${RESPONSE_CONFIG.MESSAGE.CLASS.NO_WORKPLACE} (import workplace_id)`,
           "any.required": `{{#label}} is a required field `,
         }),
-      course: Joi.string()
+      course_id: Joi.string()
         .required()
         .messages({
-          "string.empty": `${RESPONSE_CONFIG.MESSAGE.CLASS.NO_COURSE} (import course)`,
+          "string.empty": `${RESPONSE_CONFIG.MESSAGE.CLASS.NO_COURSE} (import course_id)`,
           "any.required": `{{#label}} is a required field`,
         }),
       // class_code: Joi.string().max(10).required().messages({
@@ -90,21 +94,25 @@ export const ClassSchema = {
       //   "string.max": `{{#label}} should have a maximum length of {#limit}`,
       //   "any.required": `{{#label}} is a required field`,
       // }),
-      start_at: Joi.string().required().messages({
+      start_at: Joi.date().min(new Date().toISOString().split('T')[0]).required().messages({
+        "date.min": `{{#label}} must greater than or equal to now`,
         "string.empty": RESPONSE_CONFIG.MESSAGE.CLASS.NO_START_DATE,
         "any.required": `{{#label}} is a required field`,
       }),
-      end_at: Joi.string().required().messages({
-        "string.empty": RESPONSE_CONFIG.MESSAGE.CLASS.NO_START_DATE,
+      end_at: Joi.date().min(Joi.ref('start_at')).required().messages({
+        "date.min": `{{#label}} must greater than or equal to start_at`,
+        "string.empty": RESPONSE_CONFIG.MESSAGE.CLASS.NO_END_DATE,
         "any.required": `{{#label}} is a required field`,
       }),
-      schedule: Joi.array().required().messages({
+      schedule: Joi.array().items(Joi.number().integer().min(0).max(6)).unique().required().messages({
         "array.empty": RESPONSE_CONFIG.MESSAGE.CLASS.NO_SCHEDULE,
         "any.required": `{{#label}} is a required field`,
+        "array.unique": "Schedule item must be unique",
       }),
-      class_size: Joi.number().integer().required().messages({
+      class_size: Joi.number().integer().min(1).required().messages({
         "number.empty": RESPONSE_CONFIG.MESSAGE.CLASS.NO_SIZE,
         "any.required": `{{#label}} is a required field`,
+        "number.min": `{{#label}} must greater than or equal to {{#limit}}`,
         "number.base": `{{#label}} must be a number`,
         "number.integer": `{{#label}} must be an integer `,
       }),

@@ -35,7 +35,7 @@ const GetCourse = async (req: Request, res: Response) => {
       const num = await courseService.SearchCourseByCondition(search as string);
       const result = await courseService.SearchCourseByCondition(search as string, p, l);
       if (result.length === 0) {
-        return res.status(404).send(new HttpException(RESPONSE_CONFIG.MESSAGE.COURSE.NOT_FOUND, 404));
+        return res.status(200).send(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.COURSE.FOUND_NO_DATA, 200));
       }
       res
         .status(200)
@@ -43,7 +43,7 @@ const GetCourse = async (req: Request, res: Response) => {
     } else if (page && limit) {
       const result = await CourseService.GetAllCourse(p, l);
       if (result.length === 0) {
-        return res.status(404).send(new HttpException(RESPONSE_CONFIG.MESSAGE.COURSE.NOT_FOUND, 404));
+        return res.status(200).send(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.COURSE.FOUND_NO_DATA, 200));
       }
       res
         .status(200)
@@ -51,9 +51,9 @@ const GetCourse = async (req: Request, res: Response) => {
     } else {
       const result = await CourseService.GetAllCourse(1, 10);
       if (result.length === 0) {
-        return res.status(404).send(new HttpException(RESPONSE_CONFIG.MESSAGE.COURSE.NOT_FOUND, 404));
+        return res.status(200).send(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.COURSE.FOUND_NO_DATA, 200));
       }
-      res.status(200).json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.COURSE.FOUND_SUCCESS, 200, result));
+      res.status(200).json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.COURSE.FOUND_SUCCESS, 200, result, result.length, countDoc, 1, Math.ceil(countDoc / 10)));
     }
   } catch (error) {
     return res.status(404).send(new HttpException(RESPONSE_CONFIG.MESSAGE.COURSE.WRONG, 404));
@@ -82,7 +82,8 @@ const UpdateCourse = async (req: Request, res: Response) => {
       return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.COURSE.NOT_FOUND, 400));
     }
     await CourseService.UpdateCourse(id as string, update);
-    res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.COURSE.UPDATE_SUCCESS, 200));
+    const newCourse = await CourseService.GetCourseById(id as string)
+    res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.COURSE.UPDATE_SUCCESS, 200, newCourse));
   } catch (error: any) {
     return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.COURSE.WRONG, 400, error.message));
   }

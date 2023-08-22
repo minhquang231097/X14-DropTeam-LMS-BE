@@ -8,3 +8,18 @@ export interface RegistCourseDto {
   student_id: string;
   create_at: string;
 }
+export interface AdminRegistCourseDto {
+  course_id?: string;
+  workplace_id?: string;
+  note?: string;
+  student_id?: string;
+  create_at?: string;
+}
+
+export interface StudentRegistCourseDto {
+  course_id: string;
+  workplace_id: string;
+  note?: string;
+  create_at: string;
+}
+

@@ -1,7 +1,7 @@
 export interface UpdateClassDto {
-  mentor?: string;
-  workplace?: string;
-  course?: string;
+  mentor_id?: string;
+  workplace_id?: string;
+  course_id?: string;
   class_code?: string;
   start_at?: string;
   end_at?: string;

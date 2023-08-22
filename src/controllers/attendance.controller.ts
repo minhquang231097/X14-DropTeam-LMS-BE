@@ -10,7 +10,7 @@ const CreateListAttendance = async (req: Request, res: Response) => {
   const payload = req.body;
   const { list } = payload;
   try {
-    if (list.length === 0) return res.status(400).send(new HttpException(RESPONSE_CONFIG.MESSAGE.ATTENDANCE.WRONG, 400));
+    if (list.length === 0) return res.status(400).send(new HttpException(RESPONSE_CONFIG.MESSAGE.ATTENDANCE.CREATE_SUCCES, 400));
     await attendanceStudentService.CreateListAttendance(list);
     res.status(200).json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.ATTENDANCE.CREATE_SUCCES, 200));
   } catch (error) {
@@ -28,7 +28,7 @@ const GetAttendance = async (req: Request, res: Response) => {
       const num = await attendanceService.GetAttendanceByClassId(class_id as string);
       const result = await attendanceService.GetAttendanceByClassId(class_id as string, p, l);
       if (result.length === 0) {
-        res.status(404).send(new HttpException(RESPONSE_CONFIG.MESSAGE.ATTENDANCE.NOT_FOUND, 404));
+        res.status(200).send(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.ATTENDANCE.FOUND_NO_DATA, 200));
       }
       res
         .status(200)
@@ -51,7 +51,7 @@ const GetAttendance = async (req: Request, res: Response) => {
     } else if (page && limit) {
       const result = await attendanceService.GetAllAttendance(p, l);
       if (result.length === 0) {
-        return res.status(404).json(new HttpException(RESPONSE_CONFIG.MESSAGE.CLASS.NOT_FOUND, 404));
+        return res.status(200).send(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.ATTENDANCE.FOUND_NO_DATA, 200));
       }
       res
         .status(200)
@@ -59,9 +59,9 @@ const GetAttendance = async (req: Request, res: Response) => {
     } else {
       const result = await attendanceService.GetAllAttendance(1, 10);
       if (result.length === 0) {
-        res.status(404).send(new HttpException(RESPONSE_CONFIG.MESSAGE.ATTENDANCE.NOT_FOUND, 404));
+        res.status(200).send(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.ATTENDANCE.FOUND_NO_DATA, 200));
       }
-      res.status(200).json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.ATTENDANCE.FOUND_SUCCESS, 200, result));
+      res.status(200).json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.ATTENDANCE.FOUND_SUCCESS, 200, result, result.length, countDoc, 1, Math.ceil(countDoc / 10)));
     }
   } catch (error) {
     res.status(400).send(new HttpException(RESPONSE_CONFIG.MESSAGE.ATTENDANCE.WRONG, 400));
