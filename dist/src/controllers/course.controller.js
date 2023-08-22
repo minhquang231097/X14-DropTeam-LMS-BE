@@ -39,7 +39,7 @@ const GetCourse = async (req, res) => {
             const num = await course_service_2.default.SearchCourseByCondition(search);
             const result = await course_service_2.default.SearchCourseByCondition(search, p, l);
             if (result.length === 0) {
-                return res.status(404).send(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.COURSE.NOT_FOUND, 404));
+                return res.status(200).send(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.COURSE.FOUND_NO_DATA, 200));
             }
             res
                 .status(200)
@@ -48,7 +48,7 @@ const GetCourse = async (req, res) => {
         else if (page && limit) {
             const result = await course_service_1.default.GetAllCourse(p, l);
             if (result.length === 0) {
-                return res.status(404).send(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.COURSE.NOT_FOUND, 404));
+                return res.status(200).send(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.COURSE.FOUND_NO_DATA, 200));
             }
             res
                 .status(200)
@@ -57,9 +57,9 @@ const GetCourse = async (req, res) => {
         else {
             const result = await course_service_1.default.GetAllCourse(1, 10);
             if (result.length === 0) {
-                return res.status(404).send(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.COURSE.NOT_FOUND, 404));
+                return res.status(200).send(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.COURSE.FOUND_NO_DATA, 200));
             }
-            res.status(200).json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.COURSE.FOUND_SUCCESS, 200, result));
+            res.status(200).json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.COURSE.FOUND_SUCCESS, 200, result, result.length, countDoc, 1, Math.ceil(countDoc / 10)));
         }
     }
     catch (error) {
@@ -88,7 +88,8 @@ const UpdateCourse = async (req, res) => {
             return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.COURSE.NOT_FOUND, 400));
         }
         await course_service_1.default.UpdateCourse(id, update);
-        res.json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.COURSE.UPDATE_SUCCESS, 200));
+        const newCourse = await course_service_1.default.GetCourseById(id);
+        res.json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.COURSE.UPDATE_SUCCESS, 200, newCourse));
     }
     catch (error) {
         return res.json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.COURSE.WRONG, 400, error.message));

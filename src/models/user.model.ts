@@ -12,6 +12,7 @@ const userSchema = new Schema({
   dob: String,
   gender: String,
   address: String,
+  avatar: String,
   create_at: { type: Date, default: Date.now() },
 });
 
@@ -26,6 +27,7 @@ export interface IUser extends Document {
   role: string;
   dob: string;
   gender: string;
+  avatar: string;
   address: string;
 }
 

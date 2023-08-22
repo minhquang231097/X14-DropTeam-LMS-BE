@@ -122,7 +122,9 @@ const UpdateUserInfo = async (req, res) => {
             return res.status(404).send(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.USER.NOT_FOUND, 404));
         }
         await user_service_1.default.UpdateUserById(id, payload);
-        res.status(200).send(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.USER.SUCCESS, 200));
+        const newUser = await user_service_1.default.GetUserById(id);
+        const { email, fullname, phone_number, dob, gender, address } = newUser;
+        res.status(200).send(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.USER.SUCCESS, 200, { email, fullname, phone_number, dob, gender, address }));
     }
     catch (error) {
         return res.status(400).send(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.USER.WRONG, 400));

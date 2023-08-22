@@ -42,6 +42,7 @@ exports.RESPONSE_CONFIG = {
             UPDATE_SUCCESS: "Update workplace success",
             DELETE_SUCCESS: "Delete workplace success",
             WRONG: "Something wrong...",
+            FOUND_NO_DATA: "Found but there is no workplace",
         },
         COURSE: {
             NO_CODE: "Require course Code",
@@ -61,6 +62,7 @@ exports.RESPONSE_CONFIG = {
             DELETE_SUCCESS: "Delete course success",
             WRONG: "Something wrong...",
             UPLOAD_IMG_SUCCESS: "Updaload image success",
+            FOUND_NO_DATA: "Found but there is no course",
         },
         CLASS: {
             NO_MENTOR: "Require mentor",
@@ -68,6 +70,7 @@ exports.RESPONSE_CONFIG = {
             NO_COURSE: "Require course",
             NO_CODE: "Require class code",
             NO_START_DATE: "Require start date",
+            NO_END_DATE: "Require end date",
             NO_SCHEDULE: "Require schedule",
             NO_TOTAL_SESSION: "Require total session",
             NO_SIZE: "Require class size",
@@ -81,6 +84,7 @@ exports.RESPONSE_CONFIG = {
             NOT_EXIST: "Mentor or course or workplace not exist",
             WRONG: "Something wrong...",
             ADD_STU_SUCCESS: "Add student success",
+            FOUND_NO_DATA: "Found but there is no class",
         },
         SESSION: {
             NO_COURSE: "Require course",
@@ -96,6 +100,7 @@ exports.RESPONSE_CONFIG = {
             UPDATE_SUCCESS: "Update session success",
             DELETE_SUCCESS: "Delete session success",
             WRONG: "Something wrong...",
+            FOUND_NO_DATA: "Found but there is no session",
         },
         ATTENDANCE: {
             NO_SESSION: "Require session",
@@ -107,6 +112,7 @@ exports.RESPONSE_CONFIG = {
             UPDATE_SUCCESS: "Update attendance success",
             DELETE_SUCCESS: "Delete attendance success",
             WRONG: "Something wrong...",
+            FOUND_NO_DATA: "Found but there is no attendance",
         },
         FEEDBACK: {
             NO_STUDENT: "Require student",
@@ -119,6 +125,7 @@ exports.RESPONSE_CONFIG = {
             UPDATE_SUCCESS: "Update feedback success",
             DELETE_SUCCESS: "Delete feedback success",
             WRONG: "Something wrong...",
+            FOUND_NO_DATA: "Found but there is no feedback",
         },
         LESSON: {
             NO_SESSION: "Require session",
@@ -131,6 +138,7 @@ exports.RESPONSE_CONFIG = {
             UPDATE_SUCCESS: "Update lesson success",
             DELETE_SUCCESS: "Delete lesson success",
             WRONG: "Something wrong...",
+            FOUND_NO_DATA: "Found but there is no lesson",
         },
         REGIST: {
             NO_COURSE: "Require course",
@@ -144,6 +152,7 @@ exports.RESPONSE_CONFIG = {
             UPDATE_SUCCESS: "Update regist success",
             DELETE_SUCCESS: "Delete regist success",
             WRONG: "Something wrong...",
+            FOUND_NO_DATA: "Found but there is no regist",
         },
         IMAGE: {
             UPLOAD_SUCCESS: "Upload success",

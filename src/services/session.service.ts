@@ -1,8 +1,6 @@
 import { Session } from "@/models/session.model";
 import { SessionRepository } from "@/repository/session.repo";
-import courseService from "./course.service";
 import { CreateSessionDto, UpdateSessionDto } from "@/types/session";
-import classService from "./class.service";
 
 const sessionRepository = new SessionRepository(Session);
 
@@ -40,6 +38,13 @@ const GetSessionByCourseId = async (course_id: string, page?: any, limit?: any) 
   return await sessionRepository.FindSessionByCourseId(course_id, page, limit);
 };
 
+const SearchSessionByCondition = async (searchTerm?: string, page?: any, limit?: any) => {
+  const query = {
+    $or: [{ session_code: { $regex: searchTerm, $options: "i" } }, { desc: { $regex: searchTerm, $options: "i" } }],
+  };
+  return await sessionRepository.SearchByCondition(page, limit, query);
+};
+
 const UpdateSessionById = async (id: string, payload: UpdateSessionDto) => {
   return await sessionRepository.FindByIdAndUpdate(id, payload);
 };
@@ -63,4 +68,5 @@ export default {
   GetSessionByClassId,
   GetSessionByCode,
   CountSession,
+  SearchSessionByCondition,
 };

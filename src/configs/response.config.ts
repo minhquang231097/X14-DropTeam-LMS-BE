@@ -81,7 +81,7 @@ export const RESPONSE_CONFIG = {
       NOT_EXIST: "Mentor or course or workplace not exist",
       WRONG: "Something wrong...",
       ADD_STU_SUCCESS: "Add student success",
-      FOUND_NO_DATA: "Found but there is no class",
+      FOUND_NO_DATA: "Not found any class",
     },
     SESSION: {
       NO_COURSE: "Require course",

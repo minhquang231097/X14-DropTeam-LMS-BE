@@ -47,7 +47,7 @@ const RegistedNewCourseInAdmin = async (req: Request, res: Response) => {
 };
 
 const GetRegist = async (req: Request, res: Response) => {
-  const { workplace_id, course_id, email, page, limit } = req.query;
+  const { workplace_id, course_id, search, email, page, limit } = req.query;
   const p = Number(page);
   const l = Number(limit);
   try {
@@ -59,6 +59,13 @@ const GetRegist = async (req: Request, res: Response) => {
       res
         .status(200)
         .json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.REGIST.FOUND_SUCCESS, 200, result, result.length, num.length, p, Math.ceil(num.length / l)));
+    } else if (search) {
+      const num = await registCourseService.SearchRegistByCondition(workplace_id as string);
+      const result = await registCourseService.SearchRegistByCondition(workplace_id as string, p, l);
+      if (result.length === 0) return res.status(200).send(new HttpException(RESPONSE_CONFIG.MESSAGE.REGIST.FOUND_NO_DATA, 200));
+      res
+        .status(200)
+        .json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.REGIST.FOUND_SUCCESS, 200, result, result.length, countDoc, p, Math.ceil(num.length / l)));
     } else if (workplace_id) {
       const num = await registCourseService.GetRegistByWorkplaceId(workplace_id as string);
       const result = await registCourseService.GetRegistByWorkplaceId(workplace_id as string, p, l);
@@ -82,7 +89,9 @@ const GetRegist = async (req: Request, res: Response) => {
     } else {
       const result = await registCourseService.GetAllRegist(1, 10);
       if (result.length === 0) return res.status(200).send(new HttpException(RESPONSE_CONFIG.MESSAGE.REGIST.FOUND_NO_DATA, 200));
-      res.status(200).json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.REGIST.FOUND_SUCCESS, 200, result, result.length, countDoc, 1, Math.ceil(countDoc / 10)));
+      res
+        .status(200)
+        .json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.REGIST.FOUND_SUCCESS, 200, result, result.length, countDoc, 1, Math.ceil(countDoc / 10)));
     }
   } catch (error) {
     return res.status(404).send(new HttpException(RESPONSE_CONFIG.MESSAGE.REGIST.WRONG, 404));

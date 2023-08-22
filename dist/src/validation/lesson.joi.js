@@ -9,7 +9,12 @@ const response_config_1 = require("@/configs/response.config");
 exports.LessonSchema = {
     Lesson: {
         create_lesson: joi_1.default.object({
-            session: joi_1.default.string().required().messages({
+            session_id: joi_1.default.string().required().messages({
+                'string.empty': `${response_config_1.RESPONSE_CONFIG.MESSAGE.LESSON.NO_SESSION} (import session code)`,
+                'string.max': `{{#label}} should have a maximum length of {#limit}`,
+                'any.required': `{{#label}} is a required field (import session code)`
+            }),
+            course_id: joi_1.default.string().required().messages({
                 'string.empty': `${response_config_1.RESPONSE_CONFIG.MESSAGE.LESSON.NO_SESSION} (import session code)`,
                 'string.max': `{{#label}} should have a maximum length of {#limit}`,
                 'any.required': `{{#label}} is a required field (import session code)`
@@ -31,7 +36,7 @@ exports.LessonSchema = {
             }),
         }),
         update_lesson: joi_1.default.object({
-            session: joi_1.default.string().required().messages({
+            session_id: joi_1.default.string().required().messages({
                 'string.empty': `${response_config_1.RESPONSE_CONFIG.MESSAGE.LESSON.NO_SESSION} (import session code)`,
                 'string.max': `{{#label}} should have a maximum length of {#limit}`,
                 'any.required': `{{#label}} is a required field`

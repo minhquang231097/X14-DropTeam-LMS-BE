@@ -39,6 +39,13 @@ const GetLessonByCourseId = async (course_id: string, page?: any, limit?: any) =
   return await lessonRepository.FindLessonByCourseId(course_id, page, limit);
 };
 
+const SearchLessonByCondition = async (searchTerm?: string, page?: any, limit?: any) => {
+  const query = {
+    $or: [{ title: { $regex: searchTerm, $options: "i" } }],
+  };
+  return await lessonRepository.SearchByCondition(page, limit, query);
+};
+
 const UpdateLessonById = async (id: string, payload: UpdateLessonDto) => {
   return await lessonRepository.FindByIdAndUpdate(id, payload);
 };
@@ -61,4 +68,5 @@ export default {
   UpdateCourseByCondition,
   DeletedLessonById,
   CountLesson,
+  SearchLessonByCondition,
 };

@@ -8,41 +8,53 @@ const joi_1 = __importDefault(require("joi"));
 const response_config_1 = require("@/configs/response.config");
 exports.RegistSchema = {
     Regist: {
-        regist_course: joi_1.default.object({
+        admin_regist_course: joi_1.default.object({
             course_id: joi_1.default.string()
                 .required()
                 .messages({
-                "string.empty": `${response_config_1.RESPONSE_CONFIG.MESSAGE.REGIST.NO_COURSE} (import course code)`,
+                "string.empty": `${response_config_1.RESPONSE_CONFIG.MESSAGE.REGIST.NO_COURSE} (import course id)`,
+            }),
+            workplace_id: joi_1.default.string()
+                .required()
+                .messages({
+                "string.empty": `${response_config_1.RESPONSE_CONFIG.MESSAGE.REGIST.NO_COURSE} (import workplace id)`,
+            }),
+            student_id: joi_1.default.string()
+                .required()
+                .messages({
+                "string.empty": `${response_config_1.RESPONSE_CONFIG.MESSAGE.REGIST.NO_COURSE} (import workplace id)`,
+            }),
+            note: joi_1.default.string().min(0),
+        }),
+        student_regist_course: joi_1.default.object({
+            course_id: joi_1.default.string()
+                .required()
+                .messages({
+                "string.empty": `${response_config_1.RESPONSE_CONFIG.MESSAGE.REGIST.NO_COURSE} (import course id)`,
                 "any.required": `{{#label}} is a required field`,
             }),
             workplace_id: joi_1.default.string()
                 .required()
                 .messages({
-                "string.empty": `${response_config_1.RESPONSE_CONFIG.MESSAGE.REGIST.NO_COURSE} (import workplace code)`,
+                "string.empty": `${response_config_1.RESPONSE_CONFIG.MESSAGE.REGIST.NO_COURSE} (import workplace id)`,
                 "any.required": `{{#label}} is a required field`,
             }),
-            student_id: joi_1.default.string()
-                .required()
-                .messages({
-                "string.empty": `${response_config_1.RESPONSE_CONFIG.MESSAGE.REGIST.NO_COURSE} (import workplace code)`,
-                "any.required": `{{#label}} is a required field`,
-            }),
-            note: joi_1.default.string(),
+            note: joi_1.default.string().min(0),
         }),
         update_course: joi_1.default.object({
             course_id: joi_1.default.string()
                 .required()
                 .messages({
-                "string.empty": `${response_config_1.RESPONSE_CONFIG.MESSAGE.REGIST.NO_COURSE} (import course code)`,
+                "string.empty": `${response_config_1.RESPONSE_CONFIG.MESSAGE.REGIST.NO_COURSE} (import course id)`,
                 "any.required": `{{#label}} is a required field`,
             }),
             workplace_id: joi_1.default.string()
                 .required()
                 .messages({
-                "string.empty": `${response_config_1.RESPONSE_CONFIG.MESSAGE.REGIST.NO_COURSE} (import workplace code)`,
+                "string.empty": `${response_config_1.RESPONSE_CONFIG.MESSAGE.REGIST.NO_COURSE} (import workplace id)`,
                 "any.required": `{{#label}} is a required field`,
             }),
-            note: joi_1.default.string(),
+            note: joi_1.default.string().min(0),
         }),
     },
 };

@@ -73,7 +73,7 @@ const UpdateFeedback = async (req: Request, res: Response) => {
     const exist = await feedbackService.GetFeedbackById(id as string);
     if (!exist) return res.status(404).send(new HttpException(RESPONSE_CONFIG.MESSAGE.FEEDBACK.NOT_FOUND, 404));
     await feedbackService.UpdateFeedback(id as string, payload);
-    const newFeedback = await feedbackService.GetFeedbackById(id as string)
+    const newFeedback = await feedbackService.GetFeedbackById(id as string);
     res.status(200).json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.FEEDBACK.UPDATE_SUCCESS, 200, newFeedback));
   } catch (error) {
     return res.status(400).send(new HttpException(RESPONSE_CONFIG.MESSAGE.FEEDBACK.WRONG, 400));

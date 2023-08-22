@@ -9,7 +9,7 @@ const CreateCourse = async (payload: CreateCourseDto) => {
 };
 
 const GetAllCourse = async (page: number, limit: number) => {
-  return await courseRepository.FindAllInfoAndPagination(page, limit,);
+  return await courseRepository.FindAllInfoAndPagination(page, limit);
 };
 
 const GetCourseById = async (id: string) => {
@@ -28,7 +28,7 @@ const SearchCourseByCondition = async (searchTerm?: string, page?: any, limit?: 
   const query = {
     $or: [{ title: { $regex: searchTerm, $options: "i" } }, { course_code: { $regex: searchTerm, $options: "i" } }],
   };
-  return await courseRepository.SearchByCondition(page, limit, query, "workplace");
+  return await courseRepository.SearchByCondition(page, limit, query);
 };
 
 const UpdateCourse = async (id: string, payload: ICourse) => {

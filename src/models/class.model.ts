@@ -20,11 +20,11 @@ const classSchema = new Schema({
   },
 });
 
-classSchema.pre<IClass>('save', function(this: IClass, next: Function) {
+classSchema.pre<IClass>("save", function (this: IClass, next: Function) {
   if (!this.class_code) {
     const currentYear = new Date().getFullYear().toString().substr(-2);
     const randomCode = Math.floor(1000 + Math.random() * 9000);
-    this.class_code = 'CLS' + currentYear + randomCode;
+    this.class_code = "CLS" + currentYear + randomCode;
   }
   next();
 });

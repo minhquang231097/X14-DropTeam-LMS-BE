@@ -14,14 +14,16 @@ const AddStudentToClass = async (list: AddStudentToClassDto[]) => {
   );
 };
 
+const GetStudentInClassByStudentId = async (student_id: string) => {
+  return await classStudentRepository.FindByCondition({ student: student_id }, ["student"]);
+};
+
 const GetAllStudentInClass = async (class_id: string, page?: any, limit?: any) => {
   return await classStudentRepository.FindByClassId(class_id, page, limit, ["student"]);
 };
 
 const GetClassByStudentId = async (id: string, page?: any, limit?: any) => {
-  return await classStudentRepository.FindByConditionAndPagination({ student: id }, page, limit, [
-    "student",
-  ]);
+  return await classStudentRepository.FindByConditionAndPagination({ student: id }, page, limit, ["student"]);
 };
 
 const UpdateStatusStudentInClass = async (payload: UpdateStatusStudentInClassDto) => {
@@ -46,4 +48,5 @@ export default {
   GetAllStudentInClass,
   GetClassByStudentId,
   UpdateStatusStudentInClass,
+  GetStudentInClassByStudentId,
 };

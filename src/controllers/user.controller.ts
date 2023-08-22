@@ -6,7 +6,6 @@ import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
 import { Request, Response } from "express";
 import classStudentService from "@/services/class.student.service";
-import classService from "@/services/class.service";
 
 const GetUser = async (req: Request, res: Response) => {
   const { page, limit, attendance_id, class_id, search, role } = req.query;
@@ -116,7 +115,7 @@ const UpdateUserInfo = async (req: Request, res: Response) => {
     }
     await userService.UpdateUserById(id, payload);
     const newUser = await userService.GetUserById(id);
-    const { email, fullname, phone_number, dob, gender, address } = newUser
+    const { email, fullname, phone_number, dob, gender, address } = newUser;
     res.status(200).send(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.USER.SUCCESS, 200, { email, fullname, phone_number, dob, gender, address }));
   } catch (error) {
     return res.status(400).send(new HttpException(RESPONSE_CONFIG.MESSAGE.USER.WRONG, 400));

@@ -49,6 +49,17 @@ const GetRegistByCourseIdAndStudentId = async (course_id: string, student_id: st
   return await registCourseRepository.FindByCondition({ course: course_id, student: student_id });
 };
 
+const SearchRegistByCondition = async (searchTerm?: string, page?: any, limit?: any) => {
+  const query = {
+    $or: [
+      { fullname: { $regex: searchTerm, $options: "i" } },
+      { email: { $regex: searchTerm, $options: "i" } },
+      { phone_number: { $regex: searchTerm, $options: "i" } },
+    ],
+  };
+  return await registCourseRepository.SearchByCondition(page, limit, query);
+};
+
 const UpdateRegist = async (id: string, payload: any) => {
   return await registCourseRepository.FindByIdAndUpdate(id, payload);
 };
@@ -68,4 +79,5 @@ export default {
   GetRegistById,
   GetTotalRegist,
   GetRegistByCourseIdAndStudentId,
+  SearchRegistByCondition,
 };

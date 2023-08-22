@@ -24,7 +24,7 @@ const GetWorkplace = async (req: Request, res: Response) => {
     const countDoc = await WorkplaceService.GetTotalWorkplace();
     if (workplace_code) {
       const result = await WorkplaceService.GetWorkplaceByCode(workplace_code as string);
-      if (!result) return res.status(404).send(new HttpException(RESPONSE_CONFIG.MESSAGE.WORKPLACE.NOT_FOUND, 404));
+      if (result.length === 0) return res.status(404).send(new HttpException(RESPONSE_CONFIG.MESSAGE.WORKPLACE.NOT_FOUND, 404));
       return res.status(200).json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.WORKPLACE.FOUND_SUCCESS, 200, result));
     } else if (status) {
       const num = await WorkplaceService.GetWorkplaceByStatus(status as string);
@@ -51,7 +51,9 @@ const GetWorkplace = async (req: Request, res: Response) => {
     } else {
       const result = await WorkplaceService.GetAllWorkplace(1, 10);
       if (result.length === 0) return res.status(200).send(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.WORKPLACE.FOUND_NO_DATA, 200));
-      res.status(200).json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.WORKPLACE.FOUND_SUCCESS, 200, result, result.length, countDoc, 1, Math.ceil(countDoc / 10)));
+      res
+        .status(200)
+        .json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.WORKPLACE.FOUND_SUCCESS, 200, result, result.length, countDoc, 1, Math.ceil(countDoc / 10)));
     }
   } catch (error) {
     return res.status(404).send(new HttpException(RESPONSE_CONFIG.MESSAGE.WORKPLACE.WRONG, 404));
@@ -78,7 +80,7 @@ const UpdateWorkplace = async (req: Request, res: Response) => {
       return res.status(404).send(new HttpException(RESPONSE_CONFIG.MESSAGE.WORKPLACE.NOT_FOUND, 404));
     }
     await WorkplaceService.UpdateWorkplace(id as string, update);
-    const newWorkplace = await WorkplaceService.GetWorkplaceById(id as string)
+    const newWorkplace = await WorkplaceService.GetWorkplaceById(id as string);
     res.status(200).json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.WORKPLACE.UPDATE_SUCCESS, 200, newWorkplace));
   } catch (error: any) {
     return res.status(400).send(new HttpException(RESPONSE_CONFIG.MESSAGE.WORKPLACE.WRONG, 400));
