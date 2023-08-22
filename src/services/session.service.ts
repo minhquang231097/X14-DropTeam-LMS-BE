@@ -33,15 +33,11 @@ const GetSessionByCode = async (code: string) => {
 };
 
 const GetSessionByClassId = async (class_id: string, page?: any, limit?: any) => {
-  const result = await classService.GetClassById(class_id);
-  if (!result) return [];
-  return await sessionRepository.FindSessionByClassId(result?._id, page, limit);
+  return await sessionRepository.FindSessionByClassId(class_id, page, limit);
 };
 
 const GetSessionByCourseId = async (course_id: string, page?: any, limit?: any) => {
-  const result = await courseService.GetCourseById(course_id);
-  if (!result) return [];
-  return await sessionRepository.FindSessionByCourseId(result?._id, page, limit);
+  return await sessionRepository.FindSessionByCourseId(course_id, page, limit);
 };
 
 const UpdateSessionById = async (id: string, payload: UpdateSessionDto) => {

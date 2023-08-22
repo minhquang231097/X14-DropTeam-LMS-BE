@@ -21,10 +21,6 @@ const CreateListAttendance = async (list: CreateAttendanceStudentDto[]) => {
 };
 
 const GetAllStudentInAttendance = async (id: string, page?: any, limit?: any) => {
-  const exist = await attendanceService.GetAttendanceById(id);
-  if (!exist) {
-    return [];
-  }
   return await attendanceStudentRepository.FindByConditionAndPagination({ attendance: id }, page, limit, "student");
 };
 
@@ -33,10 +29,6 @@ const GetAllAttendance = async (page: number, limit: number) => {
 };
 
 const GetAttendanceByStudentId = async (id: string, page?: any, limit?: any) => {
-  const exist = await userService.GetUserById(id);
-  if (!exist) {
-    return [];
-  }
   return await attendanceStudentRepository.FindByConditionAndPagination({ student: id }, page, limit, "attendance");
 };
 

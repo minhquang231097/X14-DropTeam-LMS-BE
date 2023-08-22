@@ -37,8 +37,6 @@ const GetUserByCondition = async (filter: any) => {
 };
 
 const GetUserByAttendance = async (attendance_id: string, page?: any, limit?: any) => {
-  const exist = await attendanceService.GetAttendanceById(attendance_id);
-  if (!exist) return [];
   return await attendanceStudentService.GetAllStudentInAttendance(attendance_id, page, limit);
 };
 

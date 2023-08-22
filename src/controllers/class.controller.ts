@@ -104,11 +104,11 @@ const GetClassInfo = async (req: Request, res: Response) => {
   try {
     const result = await classService.GetClassById(id as string);
     if (!result) {
-      return res.status(404).send(new HttpException(RESPONSE_CONFIG.MESSAGE.CLASS.NOT_FOUND, 404));
+      return res.status(404).send(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.CLASS.NOT_FOUND, 404));
     }
     res.status(200).json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.CLASS.FOUND_SUCCESS, 200, result));
   } catch (error) {
-    return res.status(404).send(new HttpException(RESPONSE_CONFIG.MESSAGE.CLASS.WRONG, 404));
+    return res.status(404).send(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.CLASS.WRONG, 404));
   }
 };
 

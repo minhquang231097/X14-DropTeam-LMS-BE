@@ -19,18 +19,10 @@ const GetAttendanceById = async (id: string) => {
 };
 
 const GetAttendanceByClassId = async (class_id: string, page?: any, limit?: any) => {
-  const exist = await classService.GetClassById(class_id);
-  if (!exist) {
-    return [];
-  }
   return await attendanceRepository.FindAttendanceByClassId(class_id, page, limit);
 };
 
 const GetAttendanceBySessionId = async (session_id: string, page?: any, limit?: any) => {
-  const exist = await sessionService.GetSessionById(session_id);
-  if (!exist) {
-    return [];
-  }
   return await attendanceRepository.FindAttendanceBySessionId(session_id, page, limit);
 };
 

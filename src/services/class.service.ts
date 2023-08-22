@@ -63,8 +63,6 @@ const GetClassById = async (id: string) => {
 };
 
 const GetClassByCourseId = async (id: string, page?: any, limit?: any) => {
-  const exist = await courseService.GetCourseById(id);
-  if (!exist) return [];
   return await classRepository.FindClassByCourseId(id, page, limit);
 };
 
@@ -73,14 +71,10 @@ const GetClassByCode = async (code: string) => {
 };
 
 const GetClassByMentorId = async (id: string) => {
-  const exist = await userService.GetUserById(id);
-  if (!exist) return [];
   return await classRepository.FindClassByMentorId(id);
 };
 
 const GetClassByWorkplaceId = async (id: string) => {
-  const exist = await userService.GetUserById(id);
-  if (!exist) return [];
   return await classRepository.FindClassByWorkplaceId(id);
 };
 

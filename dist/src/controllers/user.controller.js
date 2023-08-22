@@ -75,7 +75,7 @@ const GetUser = async (req, res) => {
         }
     }
     catch (error) {
-        return res.status(404).send(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.USER.WRONG, 404));
+        return res.status(404).send(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.USER.NOT_FOUND, 404));
     }
 };
 const ChangePassword = async (req, res) => {
