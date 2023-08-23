@@ -1,6 +1,7 @@
 import { ClassStudentRepository } from "@/repository/class.student.repo";
 import { Class_Student } from "@/models/class.student.model";
 import { AddStudentToClassDto, UpdateStatusStudentInClassDto } from "@/types/class";
+import registCourseService from "@/services/regist.course.service";
 const classStudentRepository = new ClassStudentRepository(Class_Student);
 
 const AddStudentToClass = async (list: AddStudentToClassDto[]) => {
@@ -13,6 +14,28 @@ const AddStudentToClass = async (list: AddStudentToClassDto[]) => {
     }),
   );
 };
+
+const CheckStudentLengthAndInRegistCourse = async (list: AddStudentToClassDto[]) => {
+  const duplicateStudentIds: string[] = []
+  await Promise.all(
+    list.map(async (el) => {
+      if (el.student_id.length == 24 && el.class_id.length == 24) {
+        const regist = await registCourseService.GetRegistByStudentId(el.student_id);
+        if (regist.length > 0) {
+          duplicateStudentIds.push(el.student_id);
+        }
+      }
+      else {
+        duplicateStudentIds.length = 0
+      }
+    })
+  )
+  if (duplicateStudentIds.length != list.length) {
+    return [];
+  } else {
+    return duplicateStudentIds;
+  }
+}
 
 const GetStudentInClassByStudentId = async (student_id: string) => {
   return await classStudentRepository.FindByCondition({ student: student_id }, ["student"]);
@@ -49,4 +72,5 @@ export default {
   GetClassByStudentId,
   UpdateStatusStudentInClass,
   GetStudentInClassByStudentId,
+  CheckStudentLengthAndInRegistCourse,
 };

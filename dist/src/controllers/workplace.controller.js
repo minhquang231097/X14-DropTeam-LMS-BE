@@ -7,6 +7,7 @@ const workplace_service_1 = __importDefault(require("@/services/workplace.servic
 const response_config_1 = require("@/configs/response.config");
 const httpResponseData_1 = __importDefault(require("@/common/httpResponseData"));
 const httpException_1 = __importDefault(require("@/common/httpException"));
+const LIMIT_PAGE_WORKPLACE = 10;
 const CreateWorkplace = async (req, res) => {
     const { workplace_code } = req.body;
     try {
@@ -21,18 +22,12 @@ const CreateWorkplace = async (req, res) => {
     }
 };
 const GetWorkplace = async (req, res) => {
-    const { page, limit, workplace_code, search, status } = req.query;
+    const { page, limit, search, status } = req.query;
     const p = Number(page);
     const l = Number(limit);
     try {
         const countDoc = await workplace_service_1.default.GetTotalWorkplace();
-        if (workplace_code) {
-            const result = await workplace_service_1.default.GetWorkplaceByCode(workplace_code);
-            if (result.length === 0)
-                return res.status(404).send(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.WORKPLACE.NOT_FOUND, 404));
-            return res.status(200).json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.WORKPLACE.FOUND_SUCCESS, 200, result));
-        }
-        else if (status) {
+        if (status) {
             const num = await workplace_service_1.default.GetWorkplaceByStatus(status);
             const result = await workplace_service_1.default.GetWorkplaceByStatus(status, p, l);
             if (result.length === 0) {
@@ -60,12 +55,12 @@ const GetWorkplace = async (req, res) => {
                 .json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.WORKPLACE.FOUND_SUCCESS, 200, result, result.length, countDoc, p, Math.ceil(countDoc / l)));
         }
         else {
-            const result = await workplace_service_1.default.GetAllWorkplace(1, 10);
+            const result = await workplace_service_1.default.GetAllWorkplace(countDoc / LIMIT_PAGE_WORKPLACE, LIMIT_PAGE_WORKPLACE);
             if (result.length === 0)
                 return res.status(200).send(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.WORKPLACE.FOUND_NO_DATA, 200));
             res
                 .status(200)
-                .json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.WORKPLACE.FOUND_SUCCESS, 200, result, result.length, countDoc, 1, Math.ceil(countDoc / 10)));
+                .json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.WORKPLACE.FOUND_SUCCESS, 200, result, result.length, countDoc, countDoc / LIMIT_PAGE_WORKPLACE, Math.ceil(countDoc / LIMIT_PAGE_WORKPLACE)));
         }
     }
     catch (error) {
@@ -74,6 +69,9 @@ const GetWorkplace = async (req, res) => {
 };
 const GetWorkplaceInfo = async (req, res) => {
     const { id } = req.params;
+    if (id.length != 24) {
+        return res.status(404).send(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.WORKPLACE.NOT_FOUND, 404));
+    }
     try {
         const result = await workplace_service_1.default.GetWorkplaceById(id);
         if (!result)
@@ -87,6 +85,9 @@ const GetWorkplaceInfo = async (req, res) => {
 const UpdateWorkplace = async (req, res) => {
     const { id } = req.params;
     const update = req.body;
+    if (id.length != 24) {
+        return res.status(404).send(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.WORKPLACE.NOT_FOUND, 404));
+    }
     try {
         const exist = await workplace_service_1.default.GetWorkplaceById(id);
         if (!exist) {
@@ -102,6 +103,9 @@ const UpdateWorkplace = async (req, res) => {
 };
 const DeletedWorkplace = async (req, res) => {
     const { id } = req.params;
+    if (id.length != 24) {
+        return res.status(404).send(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.WORKPLACE.NOT_FOUND, 404));
+    }
     try {
         const exist = await workplace_service_1.default.GetWorkplaceById(id);
         if (!exist) {

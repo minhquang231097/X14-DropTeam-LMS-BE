@@ -4,6 +4,8 @@ import { RESPONSE_CONFIG } from "@/configs/response.config";
 import HttpResponseData from "@/common/httpResponseData";
 import HttpException from "@/common/httpException";
 
+const LIMIT_PAGE_WORKPLACE = 10
+
 const CreateWorkplace = async (req: Request, res: Response) => {
   const { workplace_code } = req.body;
   try {
@@ -33,11 +35,17 @@ const GetWorkplace = async (req: Request, res: Response) => {
         .json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.WORKPLACE.FOUND_SUCCESS, 200, result, result.length, num.length, p, Math.ceil(num.length / l)));
     } else if (search) {
       const num = await WorkplaceService.SearchWorkplaceByCondition(search as string);
-      const result = await WorkplaceService.SearchWorkplaceByCondition(search as string, p, l);
+      // const result = await WorkplaceService.SearchWorkplaceByCondition(search as string, p, l);
+      let result;
+      if (p !== undefined && l !== undefined) {
+        result = await WorkplaceService.SearchWorkplaceByCondition(search as string, p, l);
+      } else {
+        result = await WorkplaceService.SearchWorkplaceByCondition(search as string, 1, 10);
+      }
       if (result.length === 0) return res.status(200).send(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.WORKPLACE.FOUND_NO_DATA, 200));
       res
         .status(200)
-        .json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.WORKPLACE.FOUND_SUCCESS, 200, result, result.length, countDoc, p, Math.ceil(num.length / l)));
+        .json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.WORKPLACE.FOUND_SUCCESS, 200, result, result.length, num.length, p, Math.ceil(num.length / l)));
     } else if (page && limit) {
       const result = await WorkplaceService.GetAllWorkplace(p, l);
       if (result.length === 0) return res.status(200).send(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.WORKPLACE.FOUND_NO_DATA, 200));
@@ -45,11 +53,11 @@ const GetWorkplace = async (req: Request, res: Response) => {
         .status(200)
         .json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.WORKPLACE.FOUND_SUCCESS, 200, result, result.length, countDoc, p, Math.ceil(countDoc / l)));
     } else {
-      const result = await WorkplaceService.GetAllWorkplace(1, 10);
+      const result = await WorkplaceService.GetAllWorkplace(1, LIMIT_PAGE_WORKPLACE);
       if (result.length === 0) return res.status(200).send(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.WORKPLACE.FOUND_NO_DATA, 200));
       res
         .status(200)
-        .json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.WORKPLACE.FOUND_SUCCESS, 200, result, result.length, countDoc, 1, Math.ceil(countDoc / 10)));
+        .json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.WORKPLACE.FOUND_SUCCESS, 200, result, result.length, countDoc, 1, Math.ceil(countDoc / LIMIT_PAGE_WORKPLACE)));
     }
   } catch (error) {
     return res.status(404).send(new HttpException(RESPONSE_CONFIG.MESSAGE.WORKPLACE.WRONG, 404));
@@ -58,6 +66,9 @@ const GetWorkplace = async (req: Request, res: Response) => {
 
 const GetWorkplaceInfo = async (req: Request, res: Response) => {
   const { id } = req.params;
+  if (id.length != 24) {
+    return res.status(404).send(new HttpException(RESPONSE_CONFIG.MESSAGE.WORKPLACE.NOT_FOUND, 404));
+  }
   try {
     const result = await WorkplaceService.GetWorkplaceById(id as string);
     if (!result) return res.status(404).send(new HttpException(RESPONSE_CONFIG.MESSAGE.WORKPLACE.NOT_FOUND, 404));
@@ -70,6 +81,9 @@ const GetWorkplaceInfo = async (req: Request, res: Response) => {
 const UpdateWorkplace = async (req: Request, res: Response) => {
   const { id } = req.params;
   const update = req.body;
+  if (id.length != 24) {
+    return res.status(404).send(new HttpException(RESPONSE_CONFIG.MESSAGE.WORKPLACE.NOT_FOUND, 404));
+  }
   try {
     const exist = await WorkplaceService.GetWorkplaceById(id as string);
     if (!exist) {
@@ -85,6 +99,9 @@ const UpdateWorkplace = async (req: Request, res: Response) => {
 
 const DeletedWorkplace = async (req: Request, res: Response) => {
   const { id } = req.params;
+  if (id.length != 24) {
+    return res.status(404).send(new HttpException(RESPONSE_CONFIG.MESSAGE.WORKPLACE.NOT_FOUND, 404));
+  }
   try {
     const exist = await WorkplaceService.GetWorkplaceById(id as string);
     if (!exist) {

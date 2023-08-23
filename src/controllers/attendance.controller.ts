@@ -6,6 +6,8 @@ import attendanceStudentService from "@/services/attendance.student.service";
 import classService from "@/services/class.service";
 import { Request, Response } from "express";
 
+const LIMIT_PAGE_ATTENDANCE = 10
+
 const CreateListAttendance = async (req: Request, res: Response) => {
   const payload = req.body;
   const { list } = payload;
@@ -23,47 +25,52 @@ const GetAttendance = async (req: Request, res: Response) => {
   const p = Number(page);
   const l = Number(limit);
   try {
-    const countDoc = await attendanceService.CountAttendance();
-    if (class_id) {
-      const num = await attendanceService.GetAttendanceByClassId(class_id as string);
-      const result = await attendanceService.GetAttendanceByClassId(class_id as string, p, l);
-      if (result.length === 0) {
-        res.status(200).send(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.ATTENDANCE.FOUND_NO_DATA, 200));
+    if (session_id?.length == 24 || student_id?.length == 24 || session_id == undefined || student_id == undefined) {
+      const countDoc = await attendanceService.CountAttendance();
+      if (class_id) {
+        const num = await attendanceService.GetAttendanceByClassId(class_id as string);
+        const result = await attendanceService.GetAttendanceByClassId(class_id as string, p, l);
+        if (result.length === 0) {
+          res.status(404).send(new HttpException(RESPONSE_CONFIG.MESSAGE.ATTENDANCE.NOT_FOUND, 404));
+        }
+        res
+          .status(200)
+          .json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.ATTENDANCE.FOUND_SUCCESS, 200, result, result.length, num.length, p, Math.ceil(num.length / l)));
+      } else if (session_id) {
+        const result = await attendanceService.GetAttendanceBySessionId(session_id as string, p, l);
+        if (result.length === 0) {
+          res.status(404).send(new HttpException(RESPONSE_CONFIG.MESSAGE.ATTENDANCE.NOT_FOUND, 404));
+        }
+        res.status(200).json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.ATTENDANCE.FOUND_SUCCESS, 200, result));
+      } else if (student_id) {
+        const num = await attendanceStudentService.GetAttendanceByStudentId(student_id as string);
+        const result = await attendanceStudentService.GetAttendanceByStudentId(student_id as string, p, l);
+        if (result.length === 0) {
+          res.status(404).send(new HttpException(RESPONSE_CONFIG.MESSAGE.ATTENDANCE.NOT_FOUND, 404));
+        }
+        res
+          .status(200)
+          .json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.ATTENDANCE.FOUND_SUCCESS, 200, result, result.length, num.length, p, Math.ceil(num.length / l)));
+      } else if (page && limit) {
+        const result = await attendanceService.GetAllAttendance(p, l);
+        if (result.length === 0) {
+          return res.status(200).send(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.ATTENDANCE.FOUND_NO_DATA, 200));
+        }
+        res
+          .status(200)
+          .json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.ATTENDANCE.FOUND_SUCCESS, 200, result, result.length, countDoc, p, Math.ceil(countDoc / l)));
+      } else {
+        const result = await attendanceService.GetAllAttendance(1, LIMIT_PAGE_ATTENDANCE);
+        if (result.length === 0) {
+          res.status(200).send(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.ATTENDANCE.FOUND_NO_DATA, 200));
+        }
+        res
+          .status(200)
+          .json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.ATTENDANCE.FOUND_SUCCESS, 200, result, result.length, countDoc, 1, Math.ceil(countDoc / LIMIT_PAGE_ATTENDANCE)));
       }
-      res
-        .status(200)
-        .json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.ATTENDANCE.FOUND_SUCCESS, 200, result, result.length, num.length, p, Math.ceil(num.length / l)));
-    } else if (session_id) {
-      const result = await attendanceService.GetAttendanceBySessionId(session_id as string, p, l);
-      if (result.length === 0) {
-        res.status(404).send(new HttpException(RESPONSE_CONFIG.MESSAGE.ATTENDANCE.NOT_FOUND, 404));
-      }
-      res.status(200).json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.ATTENDANCE.FOUND_SUCCESS, 200, result));
-    } else if (student_id) {
-      const num = await attendanceStudentService.GetAttendanceByStudentId(student_id as string);
-      const result = await attendanceStudentService.GetAttendanceByStudentId(student_id as string, p, l);
-      if (result.length === 0) {
-        res.status(404).send(new HttpException(RESPONSE_CONFIG.MESSAGE.ATTENDANCE.NOT_FOUND, 404));
-      }
-      res
-        .status(200)
-        .json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.ATTENDANCE.FOUND_SUCCESS, 200, result, result.length, num.length, p, Math.ceil(num.length / l)));
-    } else if (page && limit) {
-      const result = await attendanceService.GetAllAttendance(p, l);
-      if (result.length === 0) {
-        return res.status(200).send(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.ATTENDANCE.FOUND_NO_DATA, 200));
-      }
-      res
-        .status(200)
-        .json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.ATTENDANCE.FOUND_SUCCESS, 200, result, result.length, countDoc, p, Math.ceil(countDoc / l)));
-    } else {
-      const result = await attendanceService.GetAllAttendance(1, 10);
-      if (result.length === 0) {
-        res.status(200).send(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.ATTENDANCE.FOUND_NO_DATA, 200));
-      }
-      res
-        .status(200)
-        .json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.ATTENDANCE.FOUND_SUCCESS, 200, result, result.length, countDoc, 1, Math.ceil(countDoc / 10)));
+    }
+    else {
+      return res.status(404).send(new HttpException(RESPONSE_CONFIG.MESSAGE.COURSE.NOT_FOUND, 404));
     }
   } catch (error) {
     res.status(400).send(new HttpException(RESPONSE_CONFIG.MESSAGE.ATTENDANCE.WRONG, 400));

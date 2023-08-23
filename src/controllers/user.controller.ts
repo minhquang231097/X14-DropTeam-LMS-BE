@@ -7,63 +7,76 @@ import bcrypt from "bcryptjs";
 import { Request, Response } from "express";
 import classStudentService from "@/services/class.student.service";
 
+const LIMIT_PAGE_USER = 20
+
 const GetUser = async (req: Request, res: Response) => {
   const { page, limit, attendance_id, class_id, search, role } = req.query;
   const p = Number(page);
   const l = Number(limit);
   try {
-    const countDoc = await userService.GetTotalUser();
-    if (class_id) {
-      const num = await classStudentService.GetAllStudentInClass(class_id as string);
-      const result = await classStudentService.GetAllStudentInClass(class_id as string, p, l);
-      if (result.length === 0) {
-        return res.status(404).send(new HttpException(RESPONSE_CONFIG.MESSAGE.USER.NOT_FOUND, 404));
+    if (attendance_id?.length == 24 || class_id?.length == 24 || attendance_id == undefined || class_id == undefined) {
+      const countDoc = await userService.GetTotalUser();
+      if (class_id) {
+        const num = await classStudentService.GetAllStudentInClass(class_id as string);
+        const result = await classStudentService.GetAllStudentInClass(class_id as string, p, l);
+        if (result.length === 0) {
+          return res.status(404).send(new HttpException(RESPONSE_CONFIG.MESSAGE.USER.NOT_FOUND, 404));
+        }
+        res
+          .status(200)
+          .json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.ATTENDANCE.FOUND_SUCCESS, 200, result, result.length, num.length, p, Math.ceil(num.length / l)));
+      } else if (role) {
+        const num = await userService.GetUserByRole(role as string);
+        const result = await userService.GetUserByRole(role as string, p, l);
+        if (result.length === 0) {
+          return res.status(404).send(new HttpException(RESPONSE_CONFIG.MESSAGE.CLASS.NOT_FOUND, 404));
+        }
+        res
+          .status(200)
+          .json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.CLASS.FOUND_SUCCESS, 200, result, result.length, num.length, p, Math.ceil(num.length / l)));
+      } else if (attendance_id) {
+        const num = await userService.GetUserByAttendance(attendance_id as string);
+        const result = await userService.GetUserByAttendance(attendance_id as string, p, l);
+        if (result.length === 0) {
+          return res.status(404).send(new HttpException(RESPONSE_CONFIG.MESSAGE.USER.NOT_FOUND, 404));
+        }
+        res
+          .status(200)
+          .json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.ATTENDANCE.FOUND_SUCCESS, 200, result, result.length, num.length, p, Math.ceil(num.length / l)));
+      } else if (search) {
+        const num = await userService.SearchUserByCondition(search as string);
+        // const result = await userService.SearchUserByCondition(search as string, p, l);
+        let result;
+        if (p !== undefined && l !== undefined) {
+          result = await userService.SearchUserByCondition(search as string, p, l);
+        } else {
+          result = await userService.SearchUserByCondition(search as string, 1, 10);
+        }
+        if (result.length === 0) {
+          return res.status(404).send(new HttpException(RESPONSE_CONFIG.MESSAGE.USER.NOT_FOUND, 404));
+        }
+        res
+          .status(200)
+          .json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.ATTENDANCE.FOUND_SUCCESS, 200, result, result.length, num.length, p, Math.ceil(num.length / LIMIT_PAGE_USER)));
+      } else if (page && limit) {
+        const result = await userService.GetAllUser(p, l);
+        if (result.length === 0) {
+          return res.status(404).send(new HttpException(RESPONSE_CONFIG.MESSAGE.USER.NOT_FOUND, 404));
+        }
+        res
+          .status(200)
+          .json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.ATTENDANCE.FOUND_SUCCESS, 200, result, result.length, countDoc, p, Math.ceil(countDoc / l)));
+      } else {
+        const result = await userService.GetAllUser(1, LIMIT_PAGE_USER);
+        const sortedResult = result.sort((a: any, b: any) => b.create_at - a.create_at);
+        if (result.length === 0) {
+          return res.status(404).send(new HttpException(RESPONSE_CONFIG.MESSAGE.USER.NOT_FOUND, 404));
+        }
+        res.status(200).json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.USER.FOUND, 200, sortedResult, sortedResult.length, countDoc, 1, Math.ceil(countDoc / LIMIT_PAGE_USER)));
       }
-      res
-        .status(200)
-        .json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.ATTENDANCE.FOUND_SUCCESS, 200, result, result.length, num.length, p, Math.ceil(num.length / l)));
-    } else if (role) {
-      const num = await userService.GetUserByRole(role as string);
-      const result = await userService.GetUserByRole(role as string, p, l);
-      if (result.length === 0) {
-        return res.status(404).send(new HttpException(RESPONSE_CONFIG.MESSAGE.CLASS.NOT_FOUND, 404));
-      }
-      res
-        .status(200)
-        .json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.CLASS.FOUND_SUCCESS, 200, result, result.length, num.length, p, Math.ceil(num.length / l)));
-    } else if (attendance_id) {
-      const num = await userService.GetUserByAttendance(attendance_id as string);
-      const result = await userService.GetUserByAttendance(attendance_id as string, p, l);
-      if (result.length === 0) {
-        return res.status(404).send(new HttpException(RESPONSE_CONFIG.MESSAGE.USER.NOT_FOUND, 404));
-      }
-      res
-        .status(200)
-        .json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.ATTENDANCE.FOUND_SUCCESS, 200, result, result.length, num.length, p, Math.ceil(num.length / l)));
-    } else if (search) {
-      const num = await userService.SearchUserByCondition(search as string);
-      const result = await userService.SearchUserByCondition(search as string, p, l);
-      if (result.length === 0) {
-        return res.status(404).send(new HttpException(RESPONSE_CONFIG.MESSAGE.USER.NOT_FOUND, 404));
-      }
-      res
-        .status(200)
-        .json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.ATTENDANCE.FOUND_SUCCESS, 200, result, result.length, countDoc, p, Math.ceil(num.length / l)));
-    } else if (page && limit) {
-      const result = await userService.GetAllUser(p, l);
-      if (result.length === 0) {
-        return res.status(404).send(new HttpException(RESPONSE_CONFIG.MESSAGE.USER.NOT_FOUND, 404));
-      }
-      res
-        .status(200)
-        .json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.ATTENDANCE.FOUND_SUCCESS, 200, result, result.length, countDoc, p, Math.ceil(countDoc / l)));
-    } else {
-      const result = await userService.GetAllUser(1, 10);
-      const sortedResult = result.sort((a: any, b: any) => b.create_at - a.create_at);
-      if (result.length === 0) {
-        return res.status(404).send(new HttpException(RESPONSE_CONFIG.MESSAGE.USER.NOT_FOUND, 404));
-      }
-      res.status(200).json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.USER.FOUND, 200, sortedResult));
+    }
+    else {
+      return res.status(404).send(new HttpException(RESPONSE_CONFIG.MESSAGE.SESSION.NOT_FOUND, 404));
     }
   } catch (error) {
     return res.status(404).send(new HttpException(RESPONSE_CONFIG.MESSAGE.USER.NOT_FOUND, 404));
@@ -94,6 +107,9 @@ const ChangePassword = async (req: Request, res: Response) => {
 
 const GetUserInfo = async (req: Request, res: Response) => {
   const { id } = req.params;
+  if (id.length != 24) {
+    return res.status(404).send(new HttpException(RESPONSE_CONFIG.MESSAGE.USER.NOT_FOUND, 404));
+  }
   try {
     const user = await userService.GetUserById(id);
     if (!user) {
@@ -108,6 +124,9 @@ const GetUserInfo = async (req: Request, res: Response) => {
 const UpdateUserInfo = async (req: Request, res: Response) => {
   const { id } = req.params;
   const payload = req.body;
+  if (id.length != 24) {
+    return res.status(404).send(new HttpException(RESPONSE_CONFIG.MESSAGE.USER.NOT_FOUND, 404));
+  }
   try {
     const exist = await userService.GetUserById(id);
     if (!exist) {
@@ -145,6 +164,9 @@ const UpdatePassword = async (req: Request, res: Response) => {
 
 const DeleteUser = async (req: Request, res: Response) => {
   const { id } = req.params;
+  if (id.length != 24) {
+    return res.status(404).send(new HttpException(RESPONSE_CONFIG.MESSAGE.USER.NOT_FOUND, 404));
+  }
   try {
     const exist = await userService.DeleteUserById(id as string);
     if (!exist) {

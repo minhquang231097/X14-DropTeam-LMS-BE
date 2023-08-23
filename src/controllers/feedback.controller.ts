@@ -6,6 +6,8 @@ import feedbackService from "@/services/feedback.service";
 import userService from "@/services/user.service";
 import { Request, Response } from "express";
 
+const LIMIT_PAGE_FEEDBACK = 10
+
 const CreateNewFeekback = async (req: Request, res: Response) => {
   const payload = req.body;
   const { course_id, student_id } = req.body;
@@ -24,31 +26,36 @@ const GetFeedback = async (req: Request, res: Response) => {
   const p = Number(page);
   const l = Number(limit);
   try {
-    const countDoc = await feedbackService.GetTotalFeedback();
-    if (course_id) {
-      const num = await feedbackService.GetFeedbackByCourseId(course_id as string);
-      const result = await feedbackService.GetFeedbackByCourseId(course_id as string, p, l);
-      if (result.length === 0) return res.status(200).send(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.FEEDBACK.FOUND_NO_DATA, 200));
-      res
-        .status(200)
-        .json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.FEEDBACK.FOUND_SUCCESS, 200, result, result.length, num.length, p, Math.ceil(num.length / l)));
-    } else if (student_id) {
-      const num = await feedbackService.GetFeedbackByStudentId(student_id as string);
-      const result = await feedbackService.GetFeedbackByStudentId(student_id as string, p, l);
-      if (result.length === 0) return res.status(200).send(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.FEEDBACK.FOUND_NO_DATA, 200));
-      res
-        .status(200)
-        .json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.FEEDBACK.FOUND_SUCCESS, 200, result, result.length, num.length, p, Math.ceil(num.length / l)));
-    } else if (page && limit) {
-      const result = await feedbackService.GetFeedbackByCondition(p, l);
-      if (result.length === 0) return res.status(200).send(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.FEEDBACK.FOUND_NO_DATA, 200));
-      res
-        .status(200)
-        .json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.FEEDBACK.FOUND_SUCCESS, 200, result, result.length, countDoc, p, Math.ceil(countDoc / l)));
-    } else {
-      const result = await feedbackService.GetFeedbackByCondition(1, 10);
-      if (result.length === 0) return res.status(200).send(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.FEEDBACK.FOUND_NO_DATA, 200));
-      res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.FEEDBACK.FOUND_SUCCESS, 200, result, result.length, countDoc, 1, Math.ceil(countDoc / 10)));
+    if (course_id?.length == 24 || student_id?.length == 24 || course_id == undefined || student_id == undefined) {
+      const countDoc = await feedbackService.GetTotalFeedback();
+      if (course_id) {
+        const num = await feedbackService.GetFeedbackByCourseId(course_id as string);
+        const result = await feedbackService.GetFeedbackByCourseId(course_id as string, p, l);
+        if (result.length === 0) return res.status(404).send(new HttpException(RESPONSE_CONFIG.MESSAGE.FEEDBACK.NOT_FOUND, 404));
+        res
+          .status(200)
+          .json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.FEEDBACK.FOUND_SUCCESS, 200, result, result.length, num.length, p, Math.ceil(num.length / l)));
+      } else if (student_id) {
+        const num = await feedbackService.GetFeedbackByStudentId(student_id as string);
+        const result = await feedbackService.GetFeedbackByStudentId(student_id as string, p, l);
+        if (result.length === 0) return res.status(404).send(new HttpException(RESPONSE_CONFIG.MESSAGE.FEEDBACK.NOT_FOUND, 404));
+        res
+          .status(200)
+          .json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.FEEDBACK.FOUND_SUCCESS, 200, result, result.length, num.length, p, Math.ceil(num.length / l)));
+      } else if (page && limit) {
+        const result = await feedbackService.GetFeedbackByCondition(p, l);
+        if (result.length === 0) return res.status(200).send(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.FEEDBACK.FOUND_NO_DATA, 200));
+        res
+          .status(200)
+          .json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.FEEDBACK.FOUND_SUCCESS, 200, result, result.length, countDoc, p, Math.ceil(countDoc / l)));
+      } else {
+        const result = await feedbackService.GetFeedbackByCondition(1, LIMIT_PAGE_FEEDBACK);
+        if (result.length === 0) return res.status(200).send(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.FEEDBACK.FOUND_NO_DATA, 200));
+        res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.FEEDBACK.FOUND_SUCCESS, 200, result, result.length, countDoc, 1, Math.ceil(countDoc / LIMIT_PAGE_FEEDBACK)));
+      }
+    }
+    else {
+      return res.status(404).send(new HttpException(RESPONSE_CONFIG.MESSAGE.LESSON.NOT_FOUND, 404));
     }
   } catch (error: any) {
     return res.status(404).send(new HttpException(RESPONSE_CONFIG.MESSAGE.FEEDBACK.NOT_FOUND, 404));
@@ -57,6 +64,9 @@ const GetFeedback = async (req: Request, res: Response) => {
 
 const GetFeedbackInfo = async (req: Request, res: Response) => {
   const { id } = req.params;
+  if (id.length != 24) {
+    return res.status(404).send(new HttpException(RESPONSE_CONFIG.MESSAGE.FEEDBACK.NOT_FOUND, 404));
+  }
   try {
     const feedback = await feedbackService.GetFeedbackById(id as string);
     if (!feedback) return res.status(404).send(new HttpException(RESPONSE_CONFIG.MESSAGE.FEEDBACK.NOT_FOUND, 404));
@@ -69,6 +79,9 @@ const GetFeedbackInfo = async (req: Request, res: Response) => {
 const UpdateFeedback = async (req: Request, res: Response) => {
   const { id } = req.params;
   const payload = req.body;
+  if (id.length != 24) {
+    return res.status(404).send(new HttpException(RESPONSE_CONFIG.MESSAGE.FEEDBACK.NOT_FOUND, 404));
+  }
   try {
     const exist = await feedbackService.GetFeedbackById(id as string);
     if (!exist) return res.status(404).send(new HttpException(RESPONSE_CONFIG.MESSAGE.FEEDBACK.NOT_FOUND, 404));
@@ -82,6 +95,9 @@ const UpdateFeedback = async (req: Request, res: Response) => {
 
 const DeleteFeedback = async (req: Request, res: Response) => {
   const { id } = req.params;
+  if (id.length != 24) {
+    return res.status(404).send(new HttpException(RESPONSE_CONFIG.MESSAGE.FEEDBACK.NOT_FOUND, 404));
+  }
   try {
     const exist = await feedbackService.GetFeedbackById(id as string);
     if (!exist) return res.status(404).send(new HttpException(RESPONSE_CONFIG.MESSAGE.FEEDBACK.NOT_FOUND, 404));
