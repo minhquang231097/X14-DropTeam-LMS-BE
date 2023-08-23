@@ -7,9 +7,7 @@ export class SessionRepository extends BaseRepository<ISession> {
     super(model);
   }
   async FindSessionByCode(session_code: string) {
-    const session = await this.model
-      .findOne({ session_code })
-      .populate([{ path: "course", populate: [{ path: "workplace" }] }, "class"]);
+    const session = await this.model.findOne({ session_code }).populate([{ path: "course", populate: [{ path: "workplace" }] }, "class"]);
     return session?.toObject();
   }
 
@@ -24,7 +22,7 @@ export class SessionRepository extends BaseRepository<ISession> {
 
   async FindSessionByClassId(id: string, page?: any, limit?: any) {
     const session = await this.model
-      .findOne({ class: id })
+      .find({ class: id })
       .skip((page - 1) * limit)
       .limit(limit)
       .populate([{ path: "course" }, "class"]);

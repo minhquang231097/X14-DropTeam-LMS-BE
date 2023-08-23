@@ -27,7 +27,7 @@ export interface FindUserDto {
   gender?: string;
   address?: string;
   avatar?: string;
-  refreshToken?: string;  
+  refreshToken?: string;
 }
 
 export interface SendEmailForgotPasswordDto {

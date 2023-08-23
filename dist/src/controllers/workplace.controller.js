@@ -3,10 +3,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const workplace_service_1 = __importDefault(require("@/services/workplace.service"));
 const response_config_1 = require("@/configs/response.config");
 const httpResponseData_1 = __importDefault(require("@/common/httpResponseData"));
 const httpException_1 = __importDefault(require("@/common/httpException"));
+const workplace_service_1 = __importDefault(require("@/services/workplace.service"));
 const LIMIT_PAGE_WORKPLACE = 10;
 const CreateWorkplace = async (req, res) => {
     const { workplace_code } = req.body;
@@ -29,7 +29,13 @@ const GetWorkplace = async (req, res) => {
         const countDoc = await workplace_service_1.default.GetTotalWorkplace();
         if (status) {
             const num = await workplace_service_1.default.GetWorkplaceByStatus(status);
-            const result = await workplace_service_1.default.GetWorkplaceByStatus(status, p, l);
+            let result;
+            if (p === undefined && l === undefined) {
+                result = await workplace_service_1.default.GetWorkplaceByStatus(status, 1, LIMIT_PAGE_WORKPLACE);
+            }
+            else {
+                result = await workplace_service_1.default.GetWorkplaceByStatus(status, p, l);
+            }
             if (result.length === 0) {
                 return res.status(200).send(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.WORKPLACE.FOUND_NO_DATA, 200));
             }
@@ -39,12 +45,18 @@ const GetWorkplace = async (req, res) => {
         }
         else if (search) {
             const num = await workplace_service_1.default.SearchWorkplaceByCondition(search);
-            const result = await workplace_service_1.default.SearchWorkplaceByCondition(search, p, l);
+            let result;
+            if (p === undefined && l === undefined) {
+                result = await workplace_service_1.default.SearchWorkplaceByCondition(search, 1, LIMIT_PAGE_WORKPLACE);
+            }
+            else {
+                result = await workplace_service_1.default.SearchWorkplaceByCondition(search, p, l);
+            }
             if (result.length === 0)
                 return res.status(200).send(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.WORKPLACE.FOUND_NO_DATA, 200));
             res
                 .status(200)
-                .json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.WORKPLACE.FOUND_SUCCESS, 200, result, result.length, countDoc, p, Math.ceil(num.length / l)));
+                .json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.WORKPLACE.FOUND_SUCCESS, 200, result, result.length, num.length, p, Math.ceil(num.length / l)));
         }
         else if (page && limit) {
             const result = await workplace_service_1.default.GetAllWorkplace(p, l);
@@ -55,12 +67,12 @@ const GetWorkplace = async (req, res) => {
                 .json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.WORKPLACE.FOUND_SUCCESS, 200, result, result.length, countDoc, p, Math.ceil(countDoc / l)));
         }
         else {
-            const result = await workplace_service_1.default.GetAllWorkplace(countDoc / LIMIT_PAGE_WORKPLACE, LIMIT_PAGE_WORKPLACE);
+            const result = await workplace_service_1.default.GetAllWorkplace(1, LIMIT_PAGE_WORKPLACE);
             if (result.length === 0)
                 return res.status(200).send(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.WORKPLACE.FOUND_NO_DATA, 200));
             res
                 .status(200)
-                .json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.WORKPLACE.FOUND_SUCCESS, 200, result, result.length, countDoc, countDoc / LIMIT_PAGE_WORKPLACE, Math.ceil(countDoc / LIMIT_PAGE_WORKPLACE)));
+                .json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.WORKPLACE.FOUND_SUCCESS, 200, result, result.length, countDoc, 1, Math.ceil(countDoc / LIMIT_PAGE_WORKPLACE)));
         }
     }
     catch (error) {

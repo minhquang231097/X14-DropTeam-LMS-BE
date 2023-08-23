@@ -36,6 +36,13 @@ const GetFeedbackByCondition = async (page: number, limit: number) => {
   return await feedbackRepository.FindAllInfoAndPagination(page, limit, [{ path: "course" }, "student"]);
 };
 
+const SearchFeedbackByCondition = async (searchTerm?: string, page?: any, limit?: any) => {
+  const query = {
+    $or: [{ rating: { $regex: searchTerm, $options: "i" } }, { content: { $regex: searchTerm, $options: "i" } }],
+  };
+  return await feedbackRepository.SearchByCondition(page, limit, query);
+};
+
 const UpdateFeedback = async (id: string, payload: UpdateFeedbackDto) => {
   return await feedbackRepository.FindByIdAndUpdate(id, payload);
 };
@@ -57,4 +64,5 @@ export default {
   GetFeedbackByCourseId,
   GetFeedbackByStudentId,
   GetTotalFeedback,
+  SearchFeedbackByCondition,
 };

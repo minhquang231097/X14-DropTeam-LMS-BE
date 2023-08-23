@@ -29,32 +29,25 @@ const GetCourse = async (req: Request, res: Response) => {
     const countDoc = await CourseService.GetTotalCourse();
     if (search) {
       const num = await courseService.SearchCourseByCondition(search as string);
-      // const result = await courseService.SearchCourseByCondition(search as string, p, l);
       let result;
-      if (p !== undefined && l !== undefined) {
-        result = await courseService.SearchCourseByCondition(search as string, p, l);
+      if (p === undefined && l === undefined) {
+        result = await courseService.SearchCourseByCondition(search as string, 1, LIMIT_PAGE_COURSE);
       } else {
-        result = await courseService.SearchCourseByCondition(search as string, 1, 10);
+        result = await courseService.SearchCourseByCondition(search as string, p, l);
       }
-      if (result.length === 0) {
-        return res.status(200).send(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.COURSE.FOUND_NO_DATA, 200));
-      }
+      if (result.length === 0) return res.status(200).send(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.COURSE.FOUND_NO_DATA, 200));
       res
         .status(200)
         .json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.WORKPLACE.FOUND_SUCCESS, 200, result, result.length, num.length, p, Math.ceil(num.length / l)));
     } else if (page && limit) {
       const result = await CourseService.GetAllCourse(p, l);
-      if (result.length === 0) {
-        return res.status(200).send(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.COURSE.FOUND_NO_DATA, 200));
-      }
+      if (result.length === 0) return res.status(200).send(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.COURSE.FOUND_NO_DATA, 200));
       res
         .status(200)
         .json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.WORKPLACE.FOUND_SUCCESS, 200, result, result.length, countDoc, p, Math.ceil(countDoc / l)));
     } else {
       const result = await CourseService.GetAllCourse(1, LIMIT_PAGE_COURSE);
-      if (result.length === 0) {
-        return res.status(200).send(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.COURSE.FOUND_NO_DATA, 200));
-      }
+      if (result.length === 0) return res.status(200).send(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.COURSE.FOUND_NO_DATA, 200));
       res
         .status(200)
         .json(
@@ -69,11 +62,9 @@ const GetCourse = async (req: Request, res: Response) => {
 const GetCourseInfo = async (req: Request, res: Response) => {
   const { id } = req.params;
   try {
-    const course = await CourseService.GetCourseById(id as string);
-    if (!course || course._id !== id) {
-      return res.status(404).send(new HttpException(RESPONSE_CONFIG.MESSAGE.COURSE.NOT_FOUND, 404));
-    }
-    res.status(200).json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.COURSE.FOUND_SUCCESS, 200, course));
+    const exist = await CourseService.GetCourseById(id as string);
+    if (!exist) return res.status(404).send(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.COURSE.NOT_FOUND, 404));
+    res.status(200).json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.COURSE.FOUND_SUCCESS, 200, exist));
   } catch (error) {
     return res.status(404).send(new HttpException(RESPONSE_CONFIG.MESSAGE.COURSE.WRONG, 404));
   }
@@ -82,14 +73,9 @@ const GetCourseInfo = async (req: Request, res: Response) => {
 const UpdateCourse = async (req: Request, res: Response) => {
   const { id } = req.params;
   const update = req.body;
-  if (id.length != 24) {
-    return res.status(404).send(new HttpException(RESPONSE_CONFIG.MESSAGE.COURSE.NOT_FOUND, 404));
-  }
   try {
     const exist = await CourseService.GetCourseById(id as string);
-    if (!exist) {
-      return res.status(404).json(new HttpException(RESPONSE_CONFIG.MESSAGE.COURSE.NOT_FOUND, 404));
-    }
+    if (!exist) return res.status(404).json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.COURSE.NOT_FOUND, 404));
     await CourseService.UpdateCourse(id as string, update);
     const newCourse = await CourseService.GetCourseById(id as string);
     res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.COURSE.UPDATE_SUCCESS, 200, newCourse));
@@ -100,14 +86,9 @@ const UpdateCourse = async (req: Request, res: Response) => {
 
 const DeletedCourse = async (req: Request, res: Response) => {
   const { id } = req.params;
-  if (id.length != 24) {
-    return res.status(404).send(new HttpException(RESPONSE_CONFIG.MESSAGE.COURSE.NOT_FOUND, 404));
-  }
   try {
     const exist = await CourseService.GetCourseById(id as string);
-    if (!exist) {
-      return res.status(404).send(new HttpException(RESPONSE_CONFIG.MESSAGE.COURSE.NOT_FOUND, 400));
-    }
+    if (!exist) return res.status(404).send(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.COURSE.NOT_FOUND, 400));
     await CourseService.DeletedCourse(id as string);
     res.status(200).json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.COURSE.DELETE_SUCCESS, 200));
   } catch (error: any) {

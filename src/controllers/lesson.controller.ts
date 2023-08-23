@@ -5,8 +5,9 @@ import courseService from "@/services/course.service";
 import lessonService from "@/services/lesson.service";
 import sessionService from "@/services/session.service";
 import { Request, Response } from "express";
+import mongoose from "mongoose";
 
-const LIMIT_PAGE_LESSON = 10
+const LIMIT_PAGE_LESSON = 10;
 
 const CreateNewLesson = async (req: Request, res: Response) => {
   const payload = req.body;
@@ -26,32 +27,41 @@ const GetLesson = async (req: Request, res: Response) => {
   const p = Number(page);
   const l = Number(limit);
   try {
-    if (course_id?.length == 24 || session_id?.length == 24 || course_id == undefined || session_id == undefined) {
+    if ((!session_id || mongoose.isValidObjectId(session_id)) && (!course_id || mongoose.isValidObjectId(course_id))) {
       const countDoc = await lessonService.CountLesson();
       if (session_id) {
         const num = await lessonService.GetLessonBySessionId(session_id as string);
-        const result = await lessonService.GetLessonBySessionId(session_id as string, p, l);
-        if (result.length === 0) return res.status(404).send(new HttpException(RESPONSE_CONFIG.MESSAGE.LESSON.NOT_FOUND, 404));
-        res
-          .status(200)
-          .json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.LESSON.FOUND_SUCCESS, 200, result, result.length, num.length, p, Math.ceil(num.length / l)));
-      } else if (search) {
-        const num = await lessonService.SearchLessonByCondition(search as string);
-        // const result = await lessonService.SearchLessonByCondition(search as string, p, l);
         let result;
-        if (p !== undefined && l !== undefined) {
-          result = await lessonService.GetLessonByCourseId(search as string, p, l);
+        if (p === undefined && l === undefined) {
+          result = await lessonService.GetLessonBySessionId(session_id as string, 1, LIMIT_PAGE_LESSON);
         } else {
-          result = await lessonService.GetLessonByCourseId(search as string, 1, 10);
+          result = await lessonService.GetLessonBySessionId(session_id as string, p, l);
         }
-        if (result.length === 0) return res.status(200).send(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.LESSON.FOUND_NO_DATA, 200));
+        if (result.length === 0) return res.status(404).send(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.LESSON.NOT_FOUND, 404));
         res
           .status(200)
           .json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.LESSON.FOUND_SUCCESS, 200, result, result.length, num.length, p, Math.ceil(num.length / l)));
       } else if (course_id) {
         const num = await lessonService.GetLessonByCourseId(course_id as string);
-        const result = await lessonService.GetLessonByCourseId(course_id as string, p, l);
-        if (result.length === 0) return res.status(404).send(new HttpException(RESPONSE_CONFIG.MESSAGE.LESSON.NOT_FOUND, 404));
+        let result;
+        if (p === undefined && l === undefined) {
+          result = await lessonService.GetLessonByCourseId(course_id as string, 1, LIMIT_PAGE_LESSON);
+        } else {
+          result = await lessonService.GetLessonByCourseId(course_id as string, p, l);
+        }
+        if (result.length === 0) return res.status(404).send(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.LESSON.NOT_FOUND, 404));
+        res
+          .status(200)
+          .json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.LESSON.FOUND_SUCCESS, 200, result, result.length, num.length, p, Math.ceil(num.length / l)));
+      } else if (search) {
+        const num = await lessonService.SearchLessonByCondition(search as string);
+        let result;
+        if (p === undefined && l === undefined) {
+          result = await lessonService.GetLessonByCourseId(search as string, 1, LIMIT_PAGE_LESSON);
+        } else {
+          result = await lessonService.GetLessonByCourseId(search as string, p, l);
+        }
+        if (result.length === 0) return res.status(200).send(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.LESSON.FOUND_NO_DATA, 200));
         res
           .status(200)
           .json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.LESSON.FOUND_SUCCESS, 200, result, result.length, num.length, p, Math.ceil(num.length / l)));
@@ -68,8 +78,7 @@ const GetLesson = async (req: Request, res: Response) => {
           .status(200)
           .json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.LESSON.FOUND_SUCCESS, 200, result, result.length, countDoc, 1, Math.ceil(countDoc / 10)));
       }
-    }
-    else {
+    } else {
       return res.status(404).send(new HttpException(RESPONSE_CONFIG.MESSAGE.LESSON.NOT_FOUND, 404));
     }
   } catch (error) {
@@ -79,12 +88,9 @@ const GetLesson = async (req: Request, res: Response) => {
 
 const GetLessonInfo = async (req: Request, res: Response) => {
   const { id } = req.params;
-  if (id.length != 24) {
-    return res.status(404).send(new HttpException(RESPONSE_CONFIG.MESSAGE.LESSON.NOT_FOUND, 404));
-  }
   try {
     const found = await lessonService.GetLessonById(id as string);
-    if (!found) return res.status(404).send(new HttpException(RESPONSE_CONFIG.MESSAGE.LESSON.NOT_FOUND, 404));
+    if (!found) return res.status(404).send(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.LESSON.NOT_FOUND, 404));
     res.status(200).json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.LESSON.FOUND_SUCCESS, 200, found));
   } catch (error) {
     return res.status(404).send(new HttpException(RESPONSE_CONFIG.MESSAGE.LESSON.WRONG, 400));
@@ -94,14 +100,9 @@ const GetLessonInfo = async (req: Request, res: Response) => {
 const UpdateLesson = async (req: Request, res: Response) => {
   const { id } = req.params;
   const { payload } = req.body;
-  if (id.length != 24) {
-    return res.status(404).send(new HttpException(RESPONSE_CONFIG.MESSAGE.LESSON.NOT_FOUND, 404));
-  }
   try {
     const exist = await lessonService.GetLessonById(id as string);
-    if (!exist) {
-      return res.status(404).send(new HttpException(RESPONSE_CONFIG.MESSAGE.LESSON.NOT_FOUND, 404));
-    }
+    if (!exist) return res.status(404).send(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.LESSON.NOT_FOUND, 404));
     await lessonService.UpdateLessonById(id as string, payload);
     const newLesson = await lessonService.GetLessonById(id as string);
     res.status(200).json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.LESSON.FOUND_SUCCESS, 200, newLesson));
@@ -112,12 +113,9 @@ const UpdateLesson = async (req: Request, res: Response) => {
 
 const DeleteLesson = async (req: Request, res: Response) => {
   const { id } = req.params;
-  if (id.length != 24) {
-    return res.status(404).send(new HttpException(RESPONSE_CONFIG.MESSAGE.LESSON.NOT_FOUND, 404));
-  }
   try {
     const exist = await lessonService.GetLessonById(id as string);
-    if (!exist) return res.status(404).send(new HttpException(RESPONSE_CONFIG.MESSAGE.LESSON.NOT_FOUND, 404));
+    if (!exist) return res.status(404).send(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.LESSON.NOT_FOUND, 404));
     await lessonService.DeletedLessonById(id as string);
     res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.LESSON.DELETE_SUCCESS, 200));
   } catch (error) {
