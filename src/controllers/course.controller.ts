@@ -59,11 +59,11 @@ const GetCourse = async (req: Request, res: Response) => {
 const GetCourseInfo = async (req: Request, res: Response) => {
   const { id } = req.params;
   try {
-    const course = await CourseService.GetCourseById(id as string);
-    if (!course || course._id !== id) {
+    const exist = await CourseService.GetCourseById(id as string);
+    if (!exist) {
       return res.status(404).send(new HttpException(RESPONSE_CONFIG.MESSAGE.COURSE.NOT_FOUND, 404));
     }
-    res.status(200).json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.COURSE.FOUND_SUCCESS, 200, course));
+    res.status(200).json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.COURSE.FOUND_SUCCESS, 200, exist));
   } catch (error) {
     return res.status(404).send(new HttpException(RESPONSE_CONFIG.MESSAGE.COURSE.WRONG, 404));
   }

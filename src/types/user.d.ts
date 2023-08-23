@@ -14,6 +14,7 @@ export interface UpdateUserDto {
   dob?: string;
   gender?: string;
   address?: string;
+  avatar?: string;
 }
 
 export interface FindUserDto {
@@ -25,7 +26,8 @@ export interface FindUserDto {
   role?: string;
   gender?: string;
   address?: string;
-  refreshToken?: string;
+  avatar?: string;
+  refreshToken?: string;  
 }
 
 export interface SendEmailForgotPasswordDto {
