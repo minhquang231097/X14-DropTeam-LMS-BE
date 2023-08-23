@@ -7,6 +7,8 @@ import userService from "@/services/user.service";
 import workplaceService from "@/services/workplace.service";
 import { Request, Response } from "express";
 
+const LIMIT_PAGE_REGIST = 10
+
 const RegistedNewCourseInStudent = async (req: Request, res: Response) => {
   const { course_id, workplace_id } = req.body;
   const payload = req.body;
@@ -47,51 +49,62 @@ const RegistedNewCourseInAdmin = async (req: Request, res: Response) => {
 };
 
 const GetRegist = async (req: Request, res: Response) => {
-  const { workplace_id, course_id, search, email, page, limit } = req.query;
+  const { workplace_id, course_id, search, student_id, page, limit } = req.query;
   const p = Number(page);
   const l = Number(limit);
   try {
-    const countDoc = await registCourseService.GetTotalRegist();
-    if (course_id) {
-      const num = await registCourseService.GetRegistByCourseId(course_id as string);
-      const result = await registCourseService.GetRegistByCourseId(course_id as string, p, l);
-      if (result.length === 0) return res.status(200).send(new HttpException(RESPONSE_CONFIG.MESSAGE.REGIST.FOUND_NO_DATA, 200));
-      res
-        .status(200)
-        .json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.REGIST.FOUND_SUCCESS, 200, result, result.length, num.length, p, Math.ceil(num.length / l)));
-    } else if (search) {
-      const num = await registCourseService.SearchRegistByCondition(workplace_id as string);
-      const result = await registCourseService.SearchRegistByCondition(workplace_id as string, p, l);
-      if (result.length === 0) return res.status(200).send(new HttpException(RESPONSE_CONFIG.MESSAGE.REGIST.FOUND_NO_DATA, 200));
-      res
-        .status(200)
-        .json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.REGIST.FOUND_SUCCESS, 200, result, result.length, countDoc, p, Math.ceil(num.length / l)));
-    } else if (workplace_id) {
-      const num = await registCourseService.GetRegistByWorkplaceId(workplace_id as string);
-      const result = await registCourseService.GetRegistByWorkplaceId(workplace_id as string, p, l);
-      if (result.length === 0) return res.status(200).send(new HttpException(RESPONSE_CONFIG.MESSAGE.REGIST.FOUND_NO_DATA, 200));
-      res
-        .status(200)
-        .json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.REGIST.FOUND_SUCCESS, 200, result, result.length, num.length, p, Math.ceil(num.length / l)));
-    } else if (email) {
-      const num = await registCourseService.GetRegistByStudentId(email as string);
-      const result = await registCourseService.GetRegistByStudentId(email as string, p, l);
-      if (result.length === 0) return res.status(200).send(new HttpException(RESPONSE_CONFIG.MESSAGE.REGIST.FOUND_NO_DATA, 200));
-      res
-        .status(200)
-        .json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.REGIST.FOUND_SUCCESS, 200, result, result.length, num.length, p, Math.ceil(num.length / l)));
-    } else if (page && limit) {
-      const result = await registCourseService.GetAllRegist(p, l);
-      if (result.length === 0) return res.status(200).send(new HttpException(RESPONSE_CONFIG.MESSAGE.REGIST.FOUND_NO_DATA, 200));
-      res
-        .status(200)
-        .json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.REGIST.FOUND_SUCCESS, 200, result, result.length, countDoc, p, Math.ceil(countDoc / l)));
-    } else {
-      const result = await registCourseService.GetAllRegist(1, 10);
-      if (result.length === 0) return res.status(200).send(new HttpException(RESPONSE_CONFIG.MESSAGE.REGIST.FOUND_NO_DATA, 200));
-      res
-        .status(200)
-        .json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.REGIST.FOUND_SUCCESS, 200, result, result.length, countDoc, 1, Math.ceil(countDoc / 10)));
+    if (course_id?.length == 24 || workplace_id?.length == 24 || student_id?.length == 24 || course_id == undefined || workplace_id == undefined || student_id == undefined) {
+      const countDoc = await registCourseService.GetTotalRegist();
+      if (course_id) {
+        const num = await registCourseService.GetRegistByCourseId(course_id as string);
+        const result = await registCourseService.GetRegistByCourseId(course_id as string, p, l);
+        if (result.length === 0) return res.status(404).send(new HttpException(RESPONSE_CONFIG.MESSAGE.REGIST.NOT_FOUND, 404));
+        res
+          .status(200)
+          .json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.REGIST.FOUND_SUCCESS, 200, result, result.length, num.length, p, Math.ceil(num.length / l)));
+      } else if (search) {
+        const num = await registCourseService.SearchRegistByCondition(workplace_id as string);
+        // const result = await registCourseService.SearchRegistByCondition(workplace_id as string, p, l);
+        let result;
+        if (p !== undefined && l !== undefined) {
+          result = await registCourseService.SearchRegistByCondition(search as string, p, l);
+        } else {
+          result = await registCourseService.SearchRegistByCondition(search as string, 1, 10);
+        }
+        if (result.length === 0) return res.status(200).send(new HttpException(RESPONSE_CONFIG.MESSAGE.REGIST.FOUND_NO_DATA, 200));
+        res
+          .status(200)
+          .json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.REGIST.FOUND_SUCCESS, 200, result, result.length, num.length, p, Math.ceil(num.length / l)));
+      } else if (workplace_id) {
+        const num = await registCourseService.GetRegistByWorkplaceId(workplace_id as string);
+        const result = await registCourseService.GetRegistByWorkplaceId(workplace_id as string, p, l);
+        if (result.length === 0) return res.status(404).send(new HttpException(RESPONSE_CONFIG.MESSAGE.REGIST.NOT_FOUND, 404));
+        res
+          .status(200)
+          .json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.REGIST.FOUND_SUCCESS, 200, result, result.length, num.length, p, Math.ceil(num.length / l)));
+      } else if (student_id) {
+        const num = await registCourseService.GetRegistByStudentId(student_id as string);
+        const result = await registCourseService.GetRegistByStudentId(student_id as string, p, l);
+        if (result.length === 0) return res.status(404).send(new HttpException(RESPONSE_CONFIG.MESSAGE.REGIST.FOUND_NO_DATA, 404));
+        res
+          .status(200)
+          .json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.REGIST.FOUND_SUCCESS, 200, result, result.length, num.length, p, Math.ceil(num.length / l)));
+      } else if (page && limit) {
+        const result = await registCourseService.GetAllRegist(p, l);
+        if (result.length === 0) return res.status(200).send(new HttpException(RESPONSE_CONFIG.MESSAGE.REGIST.FOUND_NO_DATA, 200));
+        res
+          .status(200)
+          .json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.REGIST.FOUND_SUCCESS, 200, result, result.length, countDoc, p, Math.ceil(countDoc / l)));
+      } else {
+        const result = await registCourseService.GetAllRegist(1, LIMIT_PAGE_REGIST);
+        if (result.length === 0) return res.status(200).send(new HttpException(RESPONSE_CONFIG.MESSAGE.REGIST.FOUND_NO_DATA, 200));
+        res
+          .status(200)
+          .json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.REGIST.FOUND_SUCCESS, 200, result, result.length, countDoc, 1, Math.ceil(countDoc / LIMIT_PAGE_REGIST)));
+      }
+    }
+    else {
+      return res.status(404).send(new HttpException(RESPONSE_CONFIG.MESSAGE.REGIST.NOT_FOUND, 404));
     }
   } catch (error) {
     return res.status(404).send(new HttpException(RESPONSE_CONFIG.MESSAGE.REGIST.WRONG, 404));
@@ -100,6 +113,9 @@ const GetRegist = async (req: Request, res: Response) => {
 
 const GetRegistInfo = async (req: Request, res: Response) => {
   const { id } = req.params;
+  if (id.length != 24) {
+    return res.status(404).send(new HttpException(RESPONSE_CONFIG.MESSAGE.REGIST.NOT_FOUND, 404));
+  }
   try {
     const exist = await registCourseService.GetRegistById(id as string);
     if (!exist) {
@@ -114,6 +130,9 @@ const GetRegistInfo = async (req: Request, res: Response) => {
 const UpdateRegist = async (req: Request, res: Response) => {
   const { id } = req.params;
   const { payload } = req.body;
+  if (id.length != 24) {
+    return res.status(404).send(new HttpException(RESPONSE_CONFIG.MESSAGE.REGIST.NOT_FOUND, 404));
+  }
   try {
     const exist = await registCourseService.GetRegistById(id as string);
     if (!exist) {
@@ -129,6 +148,9 @@ const UpdateRegist = async (req: Request, res: Response) => {
 
 const DeleteRegist = async (req: Request, res: Response) => {
   const { id } = req.params;
+  if (id.length != 24) {
+    return res.status(404).send(new HttpException(RESPONSE_CONFIG.MESSAGE.REGIST.NOT_FOUND, 404));
+  }
   try {
     const exist = await registCourseService.GetRegistById(id as string);
     if (!exist) {

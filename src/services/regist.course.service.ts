@@ -4,6 +4,7 @@ import userService from "./user.service";
 import { RegistedCourse } from "@/models/registe.course.model";
 import { RegistedCourseRepository } from "@/repository/regist.course.repo";
 import { RegistCourseDto } from "@/types/regist.course";
+import { AddStudentToClassDto } from "@/types/class";
 
 const registCourseRepository = new RegistedCourseRepository(RegistedCourse);
 
@@ -68,6 +69,12 @@ const DeleteRegist = async (id: string) => {
   return await registCourseRepository.DeleteOne(id);
 };
 
+const DeleteRegistAfterAdd = async (list: AddStudentToClassDto[]) => {
+  list.map(async (el) => {
+    return await registCourseRepository.DeleteByCondition({ student: el.student_id })
+  })
+}
+
 export default {
   DeleteRegist,
   UpdateRegist,
@@ -80,4 +87,5 @@ export default {
   GetTotalRegist,
   GetRegistByCourseIdAndStudentId,
   SearchRegistByCondition,
+  DeleteRegistAfterAdd,
 };
