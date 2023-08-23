@@ -107,10 +107,21 @@ const ChangePassword = async (req: Request, res: Response) => {
   }
 };
 
-const GetUserInfo = async (req: Request, res: Response) => {
+const GetUserInfoById = async (req: Request, res: Response) => {
   const { id } = req.params;
   try {
     const user = await userService.GetUserById(id);
+    if (!user) return res.status(404).send(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.USER.NOT_FOUND, 404));
+    res.status(200).json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.USER.SUCCESS, 200, user));
+  } catch (error) {
+    return res.status(400).send(new HttpException(RESPONSE_CONFIG.MESSAGE.USER.WRONG, 400));
+  }
+};
+
+const GetUserInfo = async (req: Request, res: Response) => {
+  const { _id } = req.user;
+  try {
+    const user = await userService.GetUserById(_id);
     if (!user) return res.status(404).send(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.USER.NOT_FOUND, 404));
     res.status(200).json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.USER.SUCCESS, 200, user));
   } catch (error) {
@@ -163,6 +174,7 @@ const DeleteUser = async (req: Request, res: Response) => {
 
 export default {
   GetUser,
+  GetUserInfoById,
   ChangePassword,
   UpdateUserInfo,
   UpdatePassword,

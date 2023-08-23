@@ -100,9 +100,8 @@ const ChangePassword = async (req, res) => {
     const { password } = req.body;
     try {
         const user = user_service_1.default.GetUserById(id);
-        if (!user) {
+        if (!user)
             return res.status(404).send(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.USER.NOT_CORRECT, 404));
-        }
         const verifyToken = jsonwebtoken_1.default.verify(token, process.env.ACCESSTOKEN_KEY);
         if (user && verifyToken._id) {
             const salt = await bcryptjs_1.default.genSalt(10);
@@ -117,16 +116,24 @@ const ChangePassword = async (req, res) => {
         return res.status(400).send(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.USER.WRONG, 400));
     }
 };
-const GetUserInfo = async (req, res) => {
+const GetUserInfoById = async (req, res) => {
     const { id } = req.params;
-    if (id.length != 24) {
-        return res.status(404).send(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.USER.NOT_FOUND, 404));
-    }
     try {
         const user = await user_service_1.default.GetUserById(id);
-        if (!user) {
-            return res.status(404).send(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.USER.NOT_FOUND, 404));
-        }
+        if (!user)
+            return res.status(404).send(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.USER.NOT_FOUND, 404));
+        res.status(200).json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.USER.SUCCESS, 200, user));
+    }
+    catch (error) {
+        return res.status(400).send(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.USER.WRONG, 400));
+    }
+};
+const GetUserInfo = async (req, res) => {
+    const { _id } = req.user;
+    try {
+        const user = await user_service_1.default.GetUserById(_id);
+        if (!user)
+            return res.status(404).send(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.USER.NOT_FOUND, 404));
         res.status(200).json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.USER.SUCCESS, 200, user));
     }
     catch (error) {
@@ -136,14 +143,10 @@ const GetUserInfo = async (req, res) => {
 const UpdateUserInfo = async (req, res) => {
     const { id } = req.params;
     const payload = req.body;
-    if (id.length != 24) {
-        return res.status(404).send(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.USER.NOT_FOUND, 404));
-    }
     try {
         const exist = await user_service_1.default.GetUserById(id);
-        if (!exist) {
-            return res.status(404).send(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.USER.NOT_FOUND, 404));
-        }
+        if (!exist)
+            return res.status(404).send(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.USER.NOT_FOUND, 404));
         await user_service_1.default.UpdateUserById(id, payload);
         const newUser = await user_service_1.default.GetUserById(id);
         const { email, fullname, phone_number, dob, gender, address } = newUser;
@@ -158,13 +161,11 @@ const UpdatePassword = async (req, res) => {
     const { _id } = req.user;
     try {
         const exist = await user_service_1.default.GetUserById(_id);
-        if (!exist) {
+        if (!exist)
             return res.status(404).send(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.USER.NOT_FOUND, 404));
-        }
         const checkPassword = bcryptjs_1.default.compareSync(password, exist.password);
-        if (!checkPassword) {
+        if (!checkPassword)
             return res.status(404).send(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.USER.PASS_NOT_CORRECT, 404));
-        }
         const salt = await bcryptjs_1.default.genSalt(10);
         const hashedPassword = await bcryptjs_1.default.hash(newPassword, salt);
         await user_service_1.default.UpdateUserById(_id, { password: hashedPassword });
@@ -176,14 +177,10 @@ const UpdatePassword = async (req, res) => {
 };
 const DeleteUser = async (req, res) => {
     const { id } = req.params;
-    if (id.length != 24) {
-        return res.status(404).send(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.USER.NOT_FOUND, 404));
-    }
     try {
         const exist = await user_service_1.default.DeleteUserById(id);
-        if (!exist) {
-            return res.status(404).send(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.USER.NOT_FOUND, 404));
-        }
+        if (!exist)
+            return res.status(404).send(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.USER.NOT_FOUND, 404));
         res.status(200).json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.USER.SUCCESS, 200));
     }
     catch (error) {
@@ -192,6 +189,7 @@ const DeleteUser = async (req, res) => {
 };
 exports.default = {
     GetUser,
+    GetUserInfoById,
     ChangePassword,
     UpdateUserInfo,
     UpdatePassword,

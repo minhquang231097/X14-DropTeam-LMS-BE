@@ -69,9 +69,8 @@ const GetCourseInfo = async (req, res) => {
     const { id } = req.params;
     try {
         const exist = await course_service_1.default.GetCourseById(id);
-        if (!exist) {
-            return res.status(404).send(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.COURSE.NOT_FOUND, 404));
-        }
+        if (!exist)
+            return res.status(404).send(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.COURSE.NOT_FOUND, 404));
         res.status(200).json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.COURSE.FOUND_SUCCESS, 200, exist));
     }
     catch (error) {
@@ -81,14 +80,10 @@ const GetCourseInfo = async (req, res) => {
 const UpdateCourse = async (req, res) => {
     const { id } = req.params;
     const update = req.body;
-    if (id.length != 24) {
-        return res.status(404).send(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.COURSE.NOT_FOUND, 404));
-    }
     try {
         const exist = await course_service_1.default.GetCourseById(id);
-        if (!exist) {
-            return res.status(404).json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.COURSE.NOT_FOUND, 404));
-        }
+        if (!exist)
+            return res.status(404).json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.COURSE.NOT_FOUND, 404));
         await course_service_1.default.UpdateCourse(id, update);
         const newCourse = await course_service_1.default.GetCourseById(id);
         res.json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.COURSE.UPDATE_SUCCESS, 200, newCourse));
@@ -99,14 +94,10 @@ const UpdateCourse = async (req, res) => {
 };
 const DeletedCourse = async (req, res) => {
     const { id } = req.params;
-    if (id.length != 24) {
-        return res.status(404).send(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.COURSE.NOT_FOUND, 404));
-    }
     try {
         const exist = await course_service_1.default.GetCourseById(id);
-        if (!exist) {
-            return res.status(404).send(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.COURSE.NOT_FOUND, 400));
-        }
+        if (!exist)
+            return res.status(404).send(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.COURSE.NOT_FOUND, 400));
         await course_service_1.default.DeletedCourse(id);
         res.status(200).json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.COURSE.DELETE_SUCCESS, 200));
     }
