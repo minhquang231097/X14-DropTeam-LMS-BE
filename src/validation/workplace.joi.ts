@@ -3,15 +3,20 @@ import { IWorkplace } from "@/models/workplace.model";
 import { UpdateWorkplaceDto } from "@/types/workplace";
 import { RESPONSE_CONFIG } from "@/configs/response.config";
 
+const removeWhitespace = (value: string) => {
+  console.log(value.trim())
+  return value.trim();
+}
+
 export const WorkplaceSchema = {
   Workplace: {
     create_workplace: Joi.object<IWorkplace>({
-      name: Joi.string().max(100).required().messages({
+      name: Joi.string().max(100).trim().required().messages({
         'string.empty': RESPONSE_CONFIG.MESSAGE.WORKPLACE.NO_WORKPLACE,
         'string.max': `{{#label}} should have a maximum length of {#limit}`,
         'any.required': `{{#label}} is a required field`
       }),
-      address: Joi.string().max(200).required().messages({
+      address: Joi.string().max(200).trim().required().messages({
         'string.empty': RESPONSE_CONFIG.MESSAGE.WORKPLACE.NO_ADDRESS,
         'string.max': `{{#label}} should have a maximum length of {#limit}`,
         'any.required': `{{#label}} is a required field`
@@ -19,7 +24,7 @@ export const WorkplaceSchema = {
       status: Joi.string().valid("ON", "OFF", "UPCOMING").required().messages({
         'any.only': `{{#labe}} must be ON, OFF or UPCOMING`,
       }),
-      workplace_code: Joi.string().max(5).required().messages({
+      workplace_code: Joi.string().max(5).trim().required().messages({
         'string.empty': RESPONSE_CONFIG.MESSAGE.WORKPLACE.NO_CODENAME,
         'string.max': `{{#label}} should have a maximum length of {#limit}`,
         'any.required': `{{#label}} is a required field`
@@ -29,9 +34,9 @@ export const WorkplaceSchema = {
       name: Joi.string().max(100).required().messages({
         'string.empty': RESPONSE_CONFIG.MESSAGE.WORKPLACE.NO_WORKPLACE,
         'string.max': `{{#label}} should have a maximum length of {#limit}`,
-        'any.required': `{{#label}} is a required field`
+        'any.required': `{{#label}} is a required field`,
       }),
-      address: Joi.string().max(200).required().messages({
+      address: Joi.string().trim().max(200).required().messages({
         'string.empty': RESPONSE_CONFIG.MESSAGE.WORKPLACE.NO_ADDRESS,
         'string.max': `{{#label}} should have a maximum length of {#limit}`,
         'any.required': `{{#label}} is a required field`
@@ -40,10 +45,10 @@ export const WorkplaceSchema = {
         'any.only': `{{#labe}} must be ON, OFF or UPCOMING`,
         'any.required': `{{#label}} is a required field`
       }),
-      workplace_code: Joi.string().max(5).required().messages({
+      workplace_code: Joi.string().trim().max(5).required().messages({
         'string.empty': RESPONSE_CONFIG.MESSAGE.WORKPLACE.NO_CODENAME,
         'string.max': `{{#label}} should have a maximum length of {#limit}`,
-        'any.required': `{{#label}} is a required field`
+        'any.required': `{{#label}} is a required field`,
       }),
     }),
   },

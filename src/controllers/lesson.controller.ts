@@ -57,9 +57,9 @@ const GetLesson = async (req: Request, res: Response) => {
         const num = await lessonService.SearchLessonByCondition(search as string);
         let result;
         if (p === undefined && l === undefined) {
-          result = await lessonService.GetLessonByCourseId(search as string, 1, LIMIT_PAGE_LESSON);
+          result = await lessonService.SearchLessonByCondition(search as string, 1, LIMIT_PAGE_LESSON);
         } else {
-          result = await lessonService.GetLessonByCourseId(search as string, p, l);
+          result = await lessonService.SearchLessonByCondition(search as string, p, l);
         }
         if (result.length === 0) return res.status(200).send(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.LESSON.FOUND_NO_DATA, 200));
         res

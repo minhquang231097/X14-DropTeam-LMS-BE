@@ -10,8 +10,8 @@ courseRouter.get("/", courseController.GetCourse);
 courseRouter.get("/:id", courseController.GetCourseInfo);
 courseRouter.post(
   "/",
-  // verifyAccessJWT,
-  // ValidateJoi(CourseSchema.Course.create_course),
+  verifyAccessJWT,
+  ValidateJoi(CourseSchema.Course.create_course),
   courseController.CreateCourse,
 );
 courseRouter.put("/:id", verifyAccessJWT, ValidateJoi(CourseSchema.Course.update_course), courseController.UpdateCourse);

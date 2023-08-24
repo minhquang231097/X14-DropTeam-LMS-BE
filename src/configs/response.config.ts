@@ -82,6 +82,7 @@ export const RESPONSE_CONFIG = {
       WRONG: "Something wrong...",
       ADD_STU_SUCCESS: "Add student success",
       FOUND_NO_DATA: "Not found any class",
+      NO_STUDENT_IN_REGIST: "There is at least one student not in regist course",
     },
     SESSION: {
       NO_COURSE: "Require course",

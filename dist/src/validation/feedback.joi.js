@@ -16,13 +16,6 @@ exports.FeedbackSchema = {
                 "string.max": `{{#label}} should have a maximum length of {#limit}`,
                 "any.required": `{{#label}} is a required field (import course code)`,
             }),
-            student_id: joi_1.default.string()
-                .required()
-                .messages({
-                "string.empty": `${response_config_1.RESPONSE_CONFIG.MESSAGE.FEEDBACK.NO_STUDENT} (import email student)`,
-                "string.max": `{{#label}} should have a maximum length of {#limit}`,
-                "any.required": `{{#label}} is a required field (import email student)`,
-            }),
             rating: joi_1.default.string()
                 .regex(/^[0-5]/)
                 .required()
@@ -38,17 +31,10 @@ exports.FeedbackSchema = {
             }),
         }),
         update_feedback: joi_1.default.object({
-            course: joi_1.default.string()
+            course_id: joi_1.default.string()
                 .required()
                 .messages({
                 "string.empty": `${response_config_1.RESPONSE_CONFIG.MESSAGE.FEEDBACK.NO_COURSE} (import course code)`,
-                "string.max": `{{#label}} should have a maximum length of {#limit}`,
-                "any.required": `{{#label}} is a required field`,
-            }),
-            student: joi_1.default.string()
-                .required()
-                .messages({
-                "string.empty": `${response_config_1.RESPONSE_CONFIG.MESSAGE.FEEDBACK.NO_STUDENT} (import email student)`,
                 "string.max": `{{#label}} should have a maximum length of {#limit}`,
                 "any.required": `{{#label}} is a required field`,
             }),

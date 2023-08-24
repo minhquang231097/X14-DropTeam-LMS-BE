@@ -10,14 +10,14 @@ workplaceRouter.get("/", verifyAccessJWT, workplaceController.GetWorkplace);
 workplaceRouter.get("/:id", verifyAccessJWT, workplaceController.GetWorkplaceInfo);
 workplaceRouter.post(
   "/",
-  //   verifyAccessJWT,
-  //   ValidateJoi(WorkplaceSchema.Workplace.create_workplace),
+  verifyAccessJWT,
+  ValidateJoi(WorkplaceSchema.Workplace.create_workplace),
   workplaceController.CreateWorkplace,
 );
 workplaceRouter.put(
   "/:id",
-  //   verifyAccessJWT,
-  //   ValidateJoi(WorkplaceSchema.Workplace.update_workplace),
+  verifyAccessJWT,
+  ValidateJoi(WorkplaceSchema.Workplace.update_workplace),
   workplaceController.UpdateWorkplace,
 );
 workplaceRouter.delete(

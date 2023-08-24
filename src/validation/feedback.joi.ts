@@ -13,13 +13,6 @@ export const FeedbackSchema = {
           "string.max": `{{#label}} should have a maximum length of {#limit}`,
           "any.required": `{{#label}} is a required field (import course code)`,
         }),
-      student_id: Joi.string()
-        .required()
-        .messages({
-          "string.empty": `${RESPONSE_CONFIG.MESSAGE.FEEDBACK.NO_STUDENT} (import email student)`,
-          "string.max": `{{#label}} should have a maximum length of {#limit}`,
-          "any.required": `{{#label}} is a required field (import email student)`,
-        }),
       rating: Joi.string()
         .regex(/^[0-5]/)
         .required()
@@ -35,17 +28,10 @@ export const FeedbackSchema = {
       }),
     }),
     update_feedback: Joi.object<UpdateFeedbackDto>({
-      course: Joi.string()
+      course_id: Joi.string()
         .required()
         .messages({
           "string.empty": `${RESPONSE_CONFIG.MESSAGE.FEEDBACK.NO_COURSE} (import course code)`,
-          "string.max": `{{#label}} should have a maximum length of {#limit}`,
-          "any.required": `{{#label}} is a required field`,
-        }),
-      student: Joi.string()
-        .required()
-        .messages({
-          "string.empty": `${RESPONSE_CONFIG.MESSAGE.FEEDBACK.NO_STUDENT} (import email student)`,
           "string.max": `{{#label}} should have a maximum length of {#limit}`,
           "any.required": `{{#label}} is a required field`,
         }),

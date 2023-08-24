@@ -35,9 +35,9 @@ const AddStudentToClass = async (req: Request, res: Response) => {
   const check = await classStudentService.CheckStudentLengthAndInRegistCourse(list);
   try {
     if (list.length === 0) {
-      return res.status(400).send(new HttpException(RESPONSE_CONFIG.MESSAGE.CLASS.CLASS_EXIST, 400));
+      return res.status(400).send(new HttpException(RESPONSE_CONFIG.MESSAGE.CLASS.NOT_FOUND, 400));
     } else if (check.length == 0) {
-      return res.status(400).send(new HttpException("(lỗi id)", 400));
+      return res.status(404).send(new HttpException(RESPONSE_CONFIG.MESSAGE.CLASS.NO_STUDENT_IN_REGIST, 404));
     } else {
       const result = await classStudentService.AddStudentToClass(list);
       await registCourseService.DeleteRegistAfterAdd(list);

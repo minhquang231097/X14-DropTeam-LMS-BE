@@ -24,11 +24,6 @@ export const ClassSchema = {
           "string.empty": `${RESPONSE_CONFIG.MESSAGE.CLASS.NO_COURSE} (import course)`,
           "any.required": `{{#label}} is a required field`,
         }),
-      // class_code: Joi.string().max(10).required().messages({
-      //   "string.empty": RESPONSE_CONFIG.MESSAGE.CLASS.NO_CODE,
-      //   "string.max": `{{#label}} should have a maximum length of {#limit}`,
-      //   "any.required": `{{#label}} is a required field`,
-      // }),
       start_at: Joi.date().min(new Date().toISOString().split('T')[0]).required().messages({
         "date.min": `{{#label}} must greater than or equal to now`,
         "string.empty": RESPONSE_CONFIG.MESSAGE.CLASS.NO_START_DATE,
@@ -89,11 +84,6 @@ export const ClassSchema = {
           "string.empty": `${RESPONSE_CONFIG.MESSAGE.CLASS.NO_COURSE} (import course_id)`,
           "any.required": `{{#label}} is a required field`,
         }),
-      // class_code: Joi.string().max(10).required().messages({
-      //   "string.empty": RESPONSE_CONFIG.MESSAGE.CLASS.NO_CODE,
-      //   "string.max": `{{#label}} should have a maximum length of {#limit}`,
-      //   "any.required": `{{#label}} is a required field`,
-      // }),
       start_at: Joi.date().min(new Date().toISOString().split('T')[0]).required().messages({
         "date.min": `{{#label}} must greater than or equal to now`,
         "string.empty": RESPONSE_CONFIG.MESSAGE.CLASS.NO_START_DATE,

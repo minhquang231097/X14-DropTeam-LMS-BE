@@ -5,7 +5,7 @@ export interface UpdateCourseDto {
   session_per_course?: number;
   price?: number;
   desc?: string;
-  level?: number;
+  level?: string;
   rate?: number;
   discount?: number;
 }
@@ -18,7 +18,7 @@ export interface FindCourseDto {
   session_per_course?: number;
   price?: number;
   desc?: string;
-  level?: number;
+  level?: string;
   rate?: number;
   discount?: number;
 }

@@ -38,10 +38,10 @@ const AddStudentToClass = async (req, res) => {
     const check = await class_student_service_1.default.CheckStudentLengthAndInRegistCourse(list);
     try {
         if (list.length === 0) {
-            return res.status(400).send(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.CLASS.CLASS_EXIST, 400));
+            return res.status(400).send(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.CLASS.NOT_FOUND, 400));
         }
         else if (check.length == 0) {
-            return res.status(400).send(new httpException_1.default("Có thằng học sinh đíu có trong danh sách regist(lỗi id)", 400));
+            return res.status(404).send(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.CLASS.NO_STUDENT_IN_REGIST, 404));
         }
         else {
             const result = await class_student_service_1.default.AddStudentToClass(list);
@@ -79,10 +79,10 @@ const GetClass = async (req, res) => {
                 const num = await class_service_1.default.GetClassByStatus(status);
                 let result;
                 if (p === undefined && l === undefined) {
-                    result = await class_service_1.default.GetClassByStatus(course_id, 1, LIMIT_PAGE_CLASS);
+                    result = await class_service_1.default.GetClassByStatus(status, 1, LIMIT_PAGE_CLASS);
                 }
                 else {
-                    result = await class_service_1.default.GetClassByStatus(course_id, p, l);
+                    result = await class_service_1.default.GetClassByStatus(status, p, l);
                 }
                 if (result.length === 0)
                     return res.status(200).json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.CLASS.FOUND_NO_DATA, 200));
@@ -109,13 +109,13 @@ const GetClass = async (req, res) => {
                 const num = await class_student_service_1.default.GetClassByStudentId(student_id);
                 let result;
                 if (p === undefined && l === undefined) {
-                    result = await class_student_service_1.default.GetClassByStudentId(search, 1, 10);
+                    result = await class_student_service_1.default.GetClassByStudentId(student_id, 1, 10);
                 }
                 else {
-                    result = await class_student_service_1.default.GetClassByStudentId(search, p, l);
+                    result = await class_student_service_1.default.GetClassByStudentId(student_id, p, l);
                 }
                 if (result.length === 0)
-                    return res.status(404).json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.CLASS.NOT_FOUND, 404));
+                    return res.status(404).json(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.CLASS.NOT_FOUND, 404));
                 res
                     .status(200)
                     .json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.CLASS.FOUND_SUCCESS, 200, result, result.length, num.length, p, Math.ceil(num.length / l)));

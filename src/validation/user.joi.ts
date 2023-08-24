@@ -22,7 +22,7 @@ export const Schema = {
       phone_number: Joi.string()
         .regex(/^[0-9]/)
         .min(5)
-        .max(100)
+        .max(12)
         .required()
         .messages({
           "string.empty": RESPONSE_CONFIG.MESSAGE.USER.NO_PHONE_NUM,

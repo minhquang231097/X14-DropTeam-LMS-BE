@@ -137,8 +137,8 @@ const UpdateUserInfo = async (req: Request, res: Response) => {
     if (!exist) return res.status(404).send(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.USER.NOT_FOUND, 404));
     await userService.UpdateUserById(id, payload);
     const newUser = await userService.GetUserById(id);
-    const { email, fullname, phone_number, dob, gender, address } = newUser;
-    res.status(200).send(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.USER.SUCCESS, 200, { email, fullname, phone_number, dob, gender, address }));
+    const { email, fullname, phone_number, dob, gender, address, avatar } = newUser;
+    res.status(200).send(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.USER.SUCCESS, 200, { email, fullname, phone_number, dob, gender, address, avatar }));
   } catch (error) {
     return res.status(400).send(new HttpException(RESPONSE_CONFIG.MESSAGE.USER.WRONG, 400));
   }
