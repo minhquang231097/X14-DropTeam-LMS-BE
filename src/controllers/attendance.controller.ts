@@ -46,12 +46,12 @@ const GetAttendance = async (req: Request, res: Response) => {
           .status(200)
           .json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.ATTENDANCE.FOUND_SUCCESS, 200, result, result.length, num.length, p, Math.ceil(num.length / l)));
       } else if (session_id) {
-        const num = await attendanceService.GetAttendanceBySessionId(class_id as string);
+        const num = await attendanceService.GetAttendanceBySessionId(session_id as string);
         let result;
         if (p === undefined && l === undefined) {
-          result = await attendanceService.GetAttendanceBySessionId(class_id as string, 1, LIMIT_PAGE_ATTENDANCE);
+          result = await attendanceService.GetAttendanceBySessionId(session_id as string, 1, LIMIT_PAGE_ATTENDANCE);
         } else {
-          result = await attendanceService.GetAttendanceBySessionId(class_id as string, p, l);
+          result = await attendanceService.GetAttendanceBySessionId(session_id as string, p, l);
         }
         if (result.length === 0) return res.status(404).send(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.ATTENDANCE.NOT_FOUND, 404));
         res

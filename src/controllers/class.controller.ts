@@ -37,7 +37,7 @@ const AddStudentToClass = async (req: Request, res: Response) => {
     if (list.length === 0) {
       return res.status(400).send(new HttpException(RESPONSE_CONFIG.MESSAGE.CLASS.CLASS_EXIST, 400));
     } else if (check.length == 0) {
-      return res.status(400).send(new HttpException("Có thằng học sinh đíu có trong danh sách regist(lỗi id)", 400));
+      return res.status(400).send(new HttpException("(lỗi id)", 400));
     } else {
       const result = await classStudentService.AddStudentToClass(list);
       await registCourseService.DeleteRegistAfterAdd(list);
@@ -71,9 +71,9 @@ const GetClass = async (req: Request, res: Response) => {
         const num = await classService.GetClassByStatus(status as string);
         let result;
         if (p === undefined && l === undefined) {
-          result = await classService.GetClassByStatus(course_id as string, 1, LIMIT_PAGE_CLASS);
+          result = await classService.GetClassByStatus(status as string, 1, LIMIT_PAGE_CLASS);
         } else {
-          result = await classService.GetClassByStatus(course_id as string, p, l);
+          result = await classService.GetClassByStatus(status as string, p, l);
         }
         if (result.length === 0) return res.status(200).json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.CLASS.FOUND_NO_DATA, 200));
         res
@@ -95,11 +95,11 @@ const GetClass = async (req: Request, res: Response) => {
         const num = await classStudentService.GetClassByStudentId(student_id as string);
         let result;
         if (p === undefined && l === undefined) {
-          result = await classStudentService.GetClassByStudentId(search as string, 1, 10);
+          result = await classStudentService.GetClassByStudentId(student_id as string, 1, 10);
         } else {
-          result = await classStudentService.GetClassByStudentId(search as string, p, l);
+          result = await classStudentService.GetClassByStudentId(student_id as string, p, l);
         }
-        if (result.length === 0) return res.status(404).json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.CLASS.NOT_FOUND, 404));
+        if (result.length === 0) return res.status(404).json(new HttpException(RESPONSE_CONFIG.MESSAGE.CLASS.NOT_FOUND, 404));
         res
           .status(200)
           .json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.CLASS.FOUND_SUCCESS, 200, result, result.length, num.length, p, Math.ceil(num.length / l)));

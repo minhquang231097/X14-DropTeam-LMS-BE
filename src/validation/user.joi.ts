@@ -45,10 +45,10 @@ export const Schema = {
       }),
       avatar: Joi.string().optional(),
       create_at: Joi.string().optional(),
-      role: Joi.string().required(),
-      dob: Joi.string().optional(),
-      gender: Joi.string().optional(),
-      address: Joi.string().optional(),
+      role: Joi.string(),
+      dob: Joi.string().required(),
+      gender: Joi.string().required(),
+      address: Joi.string().required(),
     }),
     sign_in: Joi.object<SignInDto>({
       username: Joi.string().min(5).max(100).required().messages({
@@ -71,7 +71,7 @@ export const Schema = {
       }),
     }),
     update: Joi.object<UpdateUserDto>({
-      email: Joi.string().min(5).max(100).required().messages({
+      email: Joi.string().min(5).max(100).optional().messages({
         "string.empty": RESPONSE_CONFIG.MESSAGE.USER.NO_EMAIL,
         "string.min": `{{#label}} should have a minimum length of {#limit}`,
         "string.max": `{{#label}} should have a maximum length of {#limit}`,

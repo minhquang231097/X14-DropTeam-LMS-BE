@@ -73,7 +73,7 @@ const GetRegist = async (req: Request, res: Response) => {
           .status(200)
           .json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.REGIST.FOUND_SUCCESS, 200, result, result.length, num.length, p, Math.ceil(num.length / l)));
       } else if (search) {
-        const num = await registCourseService.SearchRegistByCondition(workplace_id as string);
+        const num = await registCourseService.SearchRegistByCondition(search as string);
         let result;
         if (p === undefined && l === undefined) {
           result = await registCourseService.SearchRegistByCondition(search as string, 1, LIMIT_PAGE_REGIST);
