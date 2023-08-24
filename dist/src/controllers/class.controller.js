@@ -43,19 +43,12 @@ const AddStudentToClass = async (req, res) => {
     }
 };
 const GetClass = async (req, res) => {
-    const { page, limit, student_id, search, course_id, status, code } = req.query;
+    const { page, limit, student_id, search, course_id, status } = req.query;
     const p = Number(page);
     const l = Number(limit);
     try {
         const countDoc = await class_service_1.default.GetTotalClass();
-        if (code) {
-            const result = await class_service_1.default.GetClassByCode(code);
-            if (!result) {
-                return res.status(200).json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.CLASS.FOUND_NO_DATA, 200));
-            }
-            res.status(200).json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.CLASS.FOUND_SUCCESS, 200, result));
-        }
-        else if (course_id) {
+        if (course_id) {
             const num = await class_service_1.default.GetClassByCourseId(course_id);
             const result = await class_service_1.default.GetClassByCourseId(course_id, p, l);
             if (result.length === 0) {
