@@ -9,8 +9,11 @@ const response_config_1 = require("@/configs/response.config");
 const class_service_1 = __importDefault(require("@/services/class.service"));
 const class_student_service_1 = __importDefault(require("@/services/class.student.service"));
 const course_service_1 = __importDefault(require("@/services/course.service"));
+const regist_course_service_1 = __importDefault(require("@/services/regist.course.service"));
 const user_service_1 = __importDefault(require("@/services/user.service"));
 const workplace_service_1 = __importDefault(require("@/services/workplace.service"));
+const mongoose_1 = __importDefault(require("mongoose"));
+const LIMIT_PAGE_CLASS = 10;
 const CreateNewClass = async (req, res) => {
     const { class_code, course_id, workplace_id, mentor_id } = req.body;
     const payload = req.body;
@@ -32,11 +35,19 @@ const CreateNewClass = async (req, res) => {
 };
 const AddStudentToClass = async (req, res) => {
     const { list } = req.body;
+    const check = await class_student_service_1.default.CheckStudentLengthAndInRegistCourse(list);
     try {
-        if (list.length === 0)
+        if (list.length === 0) {
             return res.status(400).send(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.CLASS.CLASS_EXIST, 400));
-        const result = await class_student_service_1.default.AddStudentToClass(list);
-        res.status(200).json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.CLASS.ADD_STU_SUCCESS, 200, result));
+        }
+        else if (check.length == 0) {
+            return res.status(400).send(new httpException_1.default("Có thằng học sinh đíu có trong danh sách regist(lỗi id)", 400));
+        }
+        else {
+            const result = await class_student_service_1.default.AddStudentToClass(list);
+            await regist_course_service_1.default.DeleteRegistAfterAdd(list);
+            res.status(200).json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.CLASS.ADD_STU_SUCCESS, 200, result));
+        }
     }
     catch (error) {
         return res.status(400).send(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.CLASS.WRONG, 400));
@@ -47,76 +58,101 @@ const GetClass = async (req, res) => {
     const p = Number(page);
     const l = Number(limit);
     try {
-        const countDoc = await class_service_1.default.GetTotalClass();
-        if (course_id) {
-            const num = await class_service_1.default.GetClassByCourseId(course_id);
-            const result = await class_service_1.default.GetClassByCourseId(course_id, p, l);
-            if (result.length === 0) {
-                return res.status(200).json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.CLASS.FOUND_NO_DATA, 200));
+        if ((!student_id || mongoose_1.default.isValidObjectId(student_id)) && (!course_id || mongoose_1.default.isValidObjectId(course_id))) {
+            const countDoc = await class_service_1.default.GetTotalClass();
+            if (course_id) {
+                const num = await class_service_1.default.GetClassByCourseId(course_id);
+                let result;
+                if (p === undefined && l === undefined) {
+                    result = await class_service_1.default.GetClassByCourseId(course_id, 1, LIMIT_PAGE_CLASS);
+                }
+                else {
+                    result = await class_service_1.default.GetClassByCourseId(course_id, p, l);
+                }
+                if (result.length === 0)
+                    return res.status(404).json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.CLASS.NOT_FOUND, 404));
+                res
+                    .status(200)
+                    .json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.CLASS.FOUND_SUCCESS, 200, result, result.length, num.length, p, Math.ceil(num.length / l)));
             }
-            res
-                .status(200)
-                .json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.CLASS.FOUND_SUCCESS, 200, result, result.length, num.length, p, Math.ceil(num.length / l)));
-        }
-        else if (status) {
-            const num = await class_service_1.default.GetClassByStatus(status);
-            const result = await class_service_1.default.GetClassByStatus(status, p, l);
-            if (result.length === 0) {
-                return res.status(200).json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.CLASS.FOUND_NO_DATA, 200));
+            else if (status) {
+                const num = await class_service_1.default.GetClassByStatus(status);
+                let result;
+                if (p === undefined && l === undefined) {
+                    result = await class_service_1.default.GetClassByStatus(course_id, 1, LIMIT_PAGE_CLASS);
+                }
+                else {
+                    result = await class_service_1.default.GetClassByStatus(course_id, p, l);
+                }
+                if (result.length === 0)
+                    return res.status(200).json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.CLASS.FOUND_NO_DATA, 200));
+                res
+                    .status(200)
+                    .json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.CLASS.FOUND_SUCCESS, 200, result, result.length, num.length, p, Math.ceil(num.length / l)));
             }
-            res
-                .status(200)
-                .json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.CLASS.FOUND_SUCCESS, 200, result, result.length, num.length, p, Math.ceil(num.length / l)));
-        }
-        else if (search) {
-            const num = await class_service_1.default.SearchClassByCondition(search);
-            const result = await class_service_1.default.SearchClassByCondition(search, p, l);
-            if (result.length === 0) {
-                return res.status(200).json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.CLASS.FOUND_NO_DATA, 200));
+            else if (search) {
+                const num = await class_service_1.default.SearchClassByCondition(search);
+                let result;
+                if (p === undefined && l === undefined) {
+                    result = await class_service_1.default.SearchClassByCondition(search, 1, 10);
+                }
+                else {
+                    result = await class_service_1.default.SearchClassByCondition(search, p, l);
+                }
+                if (result.length === 0)
+                    return res.status(200).json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.CLASS.FOUND_NO_DATA, 200));
+                res
+                    .status(200)
+                    .json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.CLASS.FOUND_SUCCESS, 200, result, result.length, num.length, p, Math.ceil(num.length / l)));
             }
-            res
-                .status(200)
-                .json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.CLASS.FOUND_SUCCESS, 200, result, result.length, countDoc, p, Math.ceil(num.length / l)));
-        }
-        else if (student_id) {
-            const num = await class_student_service_1.default.GetClassByStudentId(student_id);
-            const result = await class_student_service_1.default.GetClassByStudentId(student_id, p, l);
-            if (result.length === 0) {
-                return res.status(200).json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.CLASS.FOUND_NO_DATA, 200));
+            else if (student_id) {
+                const num = await class_student_service_1.default.GetClassByStudentId(student_id);
+                let result;
+                if (p === undefined && l === undefined) {
+                    result = await class_student_service_1.default.GetClassByStudentId(search, 1, 10);
+                }
+                else {
+                    result = await class_student_service_1.default.GetClassByStudentId(search, p, l);
+                }
+                if (result.length === 0)
+                    return res.status(404).json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.CLASS.NOT_FOUND, 404));
+                res
+                    .status(200)
+                    .json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.CLASS.FOUND_SUCCESS, 200, result, result.length, num.length, p, Math.ceil(num.length / l)));
             }
-            res
-                .status(200)
-                .json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.CLASS.FOUND_SUCCESS, 200, result, result.length, num.length, p, Math.ceil(num.length / l)));
-        }
-        else if (page && limit) {
-            const result = await class_service_1.default.GetAllClass(p, l);
-            if (result.length === 0) {
-                return res.status(200).json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.CLASS.FOUND_NO_DATA, 200));
+            else if (page && limit) {
+                const result = await class_service_1.default.GetAllClass(p, l);
+                if (result.length === 0) {
+                    return res.status(200).json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.CLASS.FOUND_NO_DATA, 200));
+                }
+                res
+                    .status(200)
+                    .json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.CLASS.FOUND_SUCCESS, 200, result, result.length, countDoc, p, Math.ceil(countDoc / l)));
             }
-            res.status(200).json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.CLASS.FOUND_SUCCESS, 200, result, result.length, countDoc, p, Math.ceil(countDoc / l)));
+            else {
+                const result = await class_service_1.default.GetAllClass(1, LIMIT_PAGE_CLASS);
+                if (result.length === 0)
+                    return res.status(200).json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.CLASS.FOUND_NO_DATA, 200));
+                res
+                    .status(200)
+                    .json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.CLASS.FOUND_SUCCESS, 200, result, result.length, countDoc, 1, Math.ceil(countDoc / LIMIT_PAGE_CLASS)));
+            }
         }
         else {
-            const result = await class_service_1.default.GetAllClass(1, 10);
-            if (result.length === 0) {
-                return res.status(200).json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.CLASS.FOUND_NO_DATA, 200));
-            }
-            res
-                .status(200)
-                .json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.CLASS.FOUND_SUCCESS, 200, result, result.length, countDoc, 1, Math.ceil(countDoc / 10)));
+            return res.status(404).send(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.CLASS.NOT_FOUND, 404));
         }
     }
     catch (error) {
-        res.status(404).send(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.CLASS.WRONG, 404, error.message));
+        res.status(400).send(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.CLASS.WRONG, 400, error.message));
     }
 };
 const GetClassInfo = async (req, res) => {
     const { id } = req.params;
     try {
-        const result = await class_service_1.default.GetClassById(id);
-        if (!result) {
+        const exist = await class_service_1.default.GetClassById(id);
+        if (!exist)
             return res.status(404).send(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.CLASS.NOT_FOUND, 404));
-        }
-        res.status(200).json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.CLASS.FOUND_SUCCESS, 200, result));
+        res.status(200).json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.CLASS.FOUND_SUCCESS, 200, exist));
     }
     catch (error) {
         return res.status(404).send(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.CLASS.WRONG, 404));
@@ -127,9 +163,8 @@ const UpdateClass = async (req, res) => {
     const update = req.body;
     try {
         const exist = await class_service_1.default.GetClassById(id);
-        if (!exist || exist._id !== id) {
-            return res.status(404).send(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.CLASS.NOT_FOUND, 404));
-        }
+        if (!exist)
+            return res.status(404).send(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.CLASS.NOT_FOUND, 404));
         const newClass = await class_service_1.default.UpdateOneClass(id, update);
         res.status(200).json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.CLASS.UPDATE_SUCCESS, 200, newClass));
     }
@@ -143,7 +178,7 @@ const UpdateStatusStudentInClass = async (req, res) => {
     try {
         const [_student, _class] = await Promise.all([user_service_1.default.GetUserById(student_id), class_service_1.default.GetClassById(class_id)]);
         if (!_class || !_student)
-            return res.status(404).send(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.CLASS.WRONG, 404));
+            return res.status(404).send(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.CLASS.NOT_FOUND, 404));
         await class_student_service_1.default.GetClassByStudentId(student_id);
         const newUpdate = await class_student_service_1.default.GetStudentInClassByStudentId(student_id);
         res.status(200).json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.CLASS.UPDATE_SUCCESS, 200, newUpdate));
@@ -156,9 +191,8 @@ const DeleteOneClass = async (req, res) => {
     const { id } = req.params;
     try {
         const exist = await class_service_1.default.GetClassById(id);
-        if (!exist) {
-            return res.status(404).send(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.CLASS.NOT_FOUND, 404));
-        }
+        if (!exist)
+            return res.status(404).send(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.CLASS.NOT_FOUND, 404));
         await class_service_1.default.DeleteClassById(id);
         res.status(200).json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.CLASS.DELETE_SUCCESS, 200));
     }

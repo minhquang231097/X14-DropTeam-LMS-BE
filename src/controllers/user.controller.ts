@@ -6,64 +6,81 @@ import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
 import { Request, Response } from "express";
 import classStudentService from "@/services/class.student.service";
+import mongoose from "mongoose";
+
+const LIMIT_PAGE_USER = 20;
 
 const GetUser = async (req: Request, res: Response) => {
   const { page, limit, attendance_id, class_id, search, role } = req.query;
   const p = Number(page);
   const l = Number(limit);
   try {
-    const countDoc = await userService.GetTotalUser();
-    if (class_id) {
-      const num = await classStudentService.GetAllStudentInClass(class_id as string);
-      const result = await classStudentService.GetAllStudentInClass(class_id as string, p, l);
-      if (result.length === 0) {
-        return res.status(404).send(new HttpException(RESPONSE_CONFIG.MESSAGE.USER.NOT_FOUND, 404));
+    if ((!attendance_id || mongoose.isValidObjectId(attendance_id)) && (!class_id || mongoose.isValidObjectId(class_id))) {
+      const countDoc = await userService.GetTotalUser();
+      if (class_id) {
+        const num = await classStudentService.GetAllStudentInClass(class_id as string);
+        let result;
+        if (p === undefined && l === undefined) {
+          result = await classStudentService.GetAllStudentInClass(class_id as string, 1, LIMIT_PAGE_USER);
+        } else {
+          result = await classStudentService.GetAllStudentInClass(class_id as string, p, l);
+        }
+        if (result.length === 0) return res.status(404).send(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.USER.NOT_FOUND, 404));
+        res.status(200).json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.USER.FOUND, 200, result, result.length, num.length, p, Math.ceil(num.length / l)));
+      } else if (role) {
+        const num = await userService.GetUserByRole(role as string);
+        let result;
+        if (p === undefined && l === undefined) {
+          result = await userService.GetUserByRole(role as string, 1, LIMIT_PAGE_USER);
+        } else {
+          result = await userService.GetUserByRole(role as string, p, l);
+        }
+        if (result.length === 0) return res.status(404).send(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.CLASS.NOT_FOUND, 404));
+        res.status(200).json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.USER.FOUND, 200, result, result.length, num.length, p, Math.ceil(num.length / l)));
+      } else if (attendance_id) {
+        const num = await userService.GetUserByAttendance(attendance_id as string);
+        let result;
+        if (p === undefined && l === undefined) {
+          result = await userService.GetUserByAttendance(attendance_id as string, 1, LIMIT_PAGE_USER);
+        } else {
+          result = await userService.GetUserByAttendance(attendance_id as string, p, l);
+        }
+        if (result.length === 0) return res.status(404).send(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.USER.NOT_FOUND, 404));
+        res.status(200).json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.USER.FOUND, 200, result, result.length, num.length, p, Math.ceil(num.length / l)));
+      } else if (search) {
+        const num = await userService.SearchUserByCondition(search as string);
+        let result;
+        if (p === undefined && l === undefined) {
+          result = await userService.SearchUserByCondition(search as string, 1, LIMIT_PAGE_USER);
+        } else {
+          result = await userService.SearchUserByCondition(search as string, p, l);
+        }
+        if (result.length === 0) return res.status(404).send(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.USER.NOT_FOUND, 404));
+        res.status(200).json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.USER.FOUND, 200, result, result.length, num.length, p, Math.ceil(num.length / l)));
+      } else if (page && limit) {
+        const result = await userService.GetAllUser(p, l);
+        if (result.length === 0) return res.status(404).send(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.USER.NOT_FOUND, 404));
+        res.status(200).json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.USER.FOUND, 200, result, result.length, countDoc, p, Math.ceil(countDoc / l)));
+      } else {
+        const result = await userService.GetAllUser(1, LIMIT_PAGE_USER);
+        const sortedResult = result.sort((a: any, b: any) => b.create_at - a.create_at);
+        if (result.length === 0) return res.status(404).send(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.USER.NOT_FOUND, 404));
+        res
+          .status(200)
+          .json(
+            new HttpResponseData(
+              RESPONSE_CONFIG.MESSAGE.USER.FOUND,
+              200,
+              sortedResult,
+              sortedResult.length,
+              countDoc,
+              1,
+              Math.ceil(countDoc / LIMIT_PAGE_USER),
+            ),
+          );
       }
-      res
-        .status(200)
-        .json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.ATTENDANCE.FOUND_SUCCESS, 200, result, result.length, num.length, p, Math.ceil(num.length / l)));
-    } else if (role) {
-      const num = await userService.GetUserByRole(role as string);
-      const result = await userService.GetUserByRole(role as string, p, l);
-      if (result.length === 0) {
-        return res.status(404).send(new HttpException(RESPONSE_CONFIG.MESSAGE.CLASS.NOT_FOUND, 404));
-      }
-      res
-        .status(200)
-        .json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.CLASS.FOUND_SUCCESS, 200, result, result.length, num.length, p, Math.ceil(num.length / l)));
-    } else if (attendance_id) {
-      const num = await userService.GetUserByAttendance(attendance_id as string);
-      const result = await userService.GetUserByAttendance(attendance_id as string, p, l);
-      if (result.length === 0) {
-        return res.status(404).send(new HttpException(RESPONSE_CONFIG.MESSAGE.USER.NOT_FOUND, 404));
-      }
-      res
-        .status(200)
-        .json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.ATTENDANCE.FOUND_SUCCESS, 200, result, result.length, num.length, p, Math.ceil(num.length / l)));
-    } else if (search) {
-      const num = await userService.SearchUserByCondition(search as string);
-      const result = await userService.SearchUserByCondition(search as string, p, l);
-      if (result.length === 0) {
-        return res.status(404).send(new HttpException(RESPONSE_CONFIG.MESSAGE.USER.NOT_FOUND, 404));
-      }
-      res
-        .status(200)
-        .json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.ATTENDANCE.FOUND_SUCCESS, 200, result, result.length, countDoc, p, Math.ceil(num.length / l)));
-    } else if (page && limit) {
-      const result = await userService.GetAllUser(p, l);
-      if (result.length === 0) {
-        return res.status(404).send(new HttpException(RESPONSE_CONFIG.MESSAGE.USER.NOT_FOUND, 404));
-      }
-      res
-        .status(200)
-        .json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.ATTENDANCE.FOUND_SUCCESS, 200, result, result.length, countDoc, p, Math.ceil(countDoc / l)));
     } else {
-      const result = await userService.GetAllUser(1, 10);
-      const sortedResult = result.sort((a: any, b: any) => b.create_at - a.create_at);
-      if (result.length === 0) {
-        return res.status(404).send(new HttpException(RESPONSE_CONFIG.MESSAGE.USER.NOT_FOUND, 404));
-      }
-      res.status(200).json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.USER.FOUND, 200, sortedResult));
+      return res.status(404).send(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.SESSION.NOT_FOUND, 404));
     }
   } catch (error) {
     return res.status(404).send(new HttpException(RESPONSE_CONFIG.MESSAGE.USER.NOT_FOUND, 404));
@@ -75,9 +92,7 @@ const ChangePassword = async (req: Request, res: Response) => {
   const { password } = req.body;
   try {
     const user: any = userService.GetUserById(id as string);
-    if (!user) {
-      return res.status(404).send(new HttpException(RESPONSE_CONFIG.MESSAGE.USER.NOT_CORRECT, 404));
-    }
+    if (!user) return res.status(404).send(new HttpException(RESPONSE_CONFIG.MESSAGE.USER.NOT_CORRECT, 404));
     const verifyToken: any = jwt.verify(token as string, process.env.ACCESSTOKEN_KEY as string);
     if (user && verifyToken._id) {
       const salt = await bcrypt.genSalt(10);
@@ -92,13 +107,22 @@ const ChangePassword = async (req: Request, res: Response) => {
   }
 };
 
-const GetUserInfo = async (req: Request, res: Response) => {
+const GetUserInfoById = async (req: Request, res: Response) => {
   const { id } = req.params;
   try {
     const user = await userService.GetUserById(id);
-    if (!user) {
-      return res.status(404).send(new HttpException(RESPONSE_CONFIG.MESSAGE.USER.NOT_FOUND, 404));
-    }
+    if (!user) return res.status(404).send(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.USER.NOT_FOUND, 404));
+    res.status(200).json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.USER.SUCCESS, 200, user));
+  } catch (error) {
+    return res.status(400).send(new HttpException(RESPONSE_CONFIG.MESSAGE.USER.WRONG, 400));
+  }
+};
+
+const GetUserInfo = async (req: Request, res: Response) => {
+  const { _id } = req.user;
+  try {
+    const user = await userService.GetUserById(_id);
+    if (!user) return res.status(404).send(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.USER.NOT_FOUND, 404));
     res.status(200).json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.USER.SUCCESS, 200, user));
   } catch (error) {
     return res.status(400).send(new HttpException(RESPONSE_CONFIG.MESSAGE.USER.WRONG, 400));
@@ -110,9 +134,7 @@ const UpdateUserInfo = async (req: Request, res: Response) => {
   const payload = req.body;
   try {
     const exist = await userService.GetUserById(id);
-    if (!exist) {
-      return res.status(404).send(new HttpException(RESPONSE_CONFIG.MESSAGE.USER.NOT_FOUND, 404));
-    }
+    if (!exist) return res.status(404).send(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.USER.NOT_FOUND, 404));
     await userService.UpdateUserById(id, payload);
     const newUser = await userService.GetUserById(id);
     const { email, fullname, phone_number, dob, gender, address } = newUser;
@@ -127,13 +149,9 @@ const UpdatePassword = async (req: Request, res: Response) => {
   const { _id } = req.user;
   try {
     const exist = await userService.GetUserById(_id);
-    if (!exist) {
-      return res.status(404).send(new HttpException(RESPONSE_CONFIG.MESSAGE.USER.NOT_FOUND, 404));
-    }
+    if (!exist) return res.status(404).send(new HttpException(RESPONSE_CONFIG.MESSAGE.USER.NOT_FOUND, 404));
     const checkPassword = bcrypt.compareSync(password, exist.password);
-    if (!checkPassword) {
-      return res.status(404).send(new HttpException(RESPONSE_CONFIG.MESSAGE.USER.PASS_NOT_CORRECT, 404));
-    }
+    if (!checkPassword) return res.status(404).send(new HttpException(RESPONSE_CONFIG.MESSAGE.USER.PASS_NOT_CORRECT, 404));
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(newPassword, salt);
     await userService.UpdateUserById(_id, { password: hashedPassword });
@@ -147,9 +165,7 @@ const DeleteUser = async (req: Request, res: Response) => {
   const { id } = req.params;
   try {
     const exist = await userService.DeleteUserById(id as string);
-    if (!exist) {
-      return res.status(404).send(new HttpException(RESPONSE_CONFIG.MESSAGE.USER.NOT_FOUND, 404));
-    }
+    if (!exist) return res.status(404).send(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.USER.NOT_FOUND, 404));
     res.status(200).json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.USER.SUCCESS, 200));
   } catch (error) {
     return res.status(400).send(new HttpException(RESPONSE_CONFIG.MESSAGE.USER.WRONG, 400));
@@ -158,6 +174,7 @@ const DeleteUser = async (req: Request, res: Response) => {
 
 export default {
   GetUser,
+  GetUserInfoById,
   ChangePassword,
   UpdateUserInfo,
   UpdatePassword,

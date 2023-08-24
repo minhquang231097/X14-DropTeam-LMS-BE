@@ -39,6 +39,6 @@ export class ClassRepository extends BaseRepository<IClass> {
       .find({ course: `${id}` })
       .skip((page - 1) * limit)
       .limit(limit)
-      .populate(["mentor", "workplace", { path: "course", populate: { path: "workplace" } }]);
+      .populate(["mentor", "workplace", { path: "course" }]);
   }
 }
