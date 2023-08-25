@@ -48,10 +48,10 @@ exports.Schema = {
             }),
             avatar: joi_1.default.string().optional(),
             create_at: joi_1.default.string().optional(),
-            role: joi_1.default.string().required(),
-            dob: joi_1.default.string().optional(),
-            gender: joi_1.default.string().optional(),
-            address: joi_1.default.string().optional(),
+            role: joi_1.default.string(),
+            dob: joi_1.default.string().required(),
+            gender: joi_1.default.string().required(),
+            address: joi_1.default.string().required(),
         }),
         sign_in: joi_1.default.object({
             username: joi_1.default.string().min(5).max(100).required().messages({
@@ -74,7 +74,7 @@ exports.Schema = {
             }),
         }),
         update: joi_1.default.object({
-            email: joi_1.default.string().min(5).max(100).required().messages({
+            email: joi_1.default.string().min(5).max(100).optional().messages({
                 "string.empty": response_config_1.RESPONSE_CONFIG.MESSAGE.USER.NO_EMAIL,
                 "string.min": `{{#label}} should have a minimum length of {#limit}`,
                 "string.max": `{{#label}} should have a maximum length of {#limit}`,
