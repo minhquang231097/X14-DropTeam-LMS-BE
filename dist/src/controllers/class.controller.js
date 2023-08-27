@@ -35,8 +35,8 @@ const CreateNewClass = async (req, res) => {
 };
 const AddStudentToClass = async (req, res) => {
     const { list } = req.body;
-    const check = await class_student_service_1.default.CheckStudentLengthAndInRegistCourse(list);
     try {
+        const check = await class_student_service_1.default.CheckStudentLengthAndInRegistCourse(list);
         if (list.length === 0) {
             return res.status(400).send(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.CLASS.NOT_FOUND, 400));
         }
