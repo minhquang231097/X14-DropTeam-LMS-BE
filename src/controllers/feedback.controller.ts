@@ -70,23 +70,15 @@ const GetFeedback = async (req: Request, res: Response) => {
       } else if (page && limit) {
         const result = await feedbackService.GetFeedbackByCondition(p, l);
         if (result.length === 0) return res.status(404).send(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.FEEDBACK.FOUND_NO_DATA, 404));
+        const sortedResult = result.sort((a: any, b: any) => b.create_at - a.create_at);
         res
           .status(200)
-          .json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.FEEDBACK.FOUND_SUCCESS, 200, result, result.length, countDoc, p, Math.ceil(countDoc / l)));
+          .json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.FEEDBACK.FOUND_SUCCESS, 200, sortedResult, result.length, countDoc, p, Math.ceil(countDoc / l)));
       } else {
         const result = await feedbackService.GetFeedbackByCondition(1, LIMIT_PAGE_FEEDBACK);
         if (result.length === 0) return res.status(404).send(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.FEEDBACK.FOUND_NO_DATA, 404));
-        res.json(
-          new HttpResponseData(
-            RESPONSE_CONFIG.MESSAGE.FEEDBACK.FOUND_SUCCESS,
-            200,
-            result,
-            result.length,
-            countDoc,
-            1,
-            Math.ceil(countDoc / LIMIT_PAGE_FEEDBACK),
-          ),
-        );
+        const sortedResult = result.sort((a: any, b: any) => b.create_at - a.create_at);
+        res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.FEEDBACK.FOUND_SUCCESS, 200, sortedResult, result.length, countDoc, 1, Math.ceil(countDoc / LIMIT_PAGE_FEEDBACK),),);
       }
     } else {
       return res.status(404).send(new HttpException(RESPONSE_CONFIG.MESSAGE.FEEDBACK.NOT_FOUND, 404));

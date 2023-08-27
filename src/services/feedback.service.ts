@@ -38,7 +38,7 @@ const GetFeedbackByCondition = async (page: number, limit: number) => {
 
 const SearchFeedbackByCondition = async (searchTerm?: string, page?: any, limit?: any) => {
   const query = {
-    $or: [{ rating: { $regex: searchTerm, $options: "i" } }, { content: { $regex: searchTerm, $options: "i" } }],
+    $or: [{ "student.username": { $regex: searchTerm, $options: "i" } }],
   };
   return await feedbackRepository.SearchByCondition(page, limit, query);
 };

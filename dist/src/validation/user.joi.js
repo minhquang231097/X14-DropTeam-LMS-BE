@@ -16,11 +16,12 @@ exports.Schema = {
                 "string.max": `{{#label}} should have a maximum length of {#limit}`,
                 "any.required": `{{#label}} is a required field`,
             }),
-            email: joi_1.default.string().min(5).max(100).required().messages({
+            email: joi_1.default.string().email().min(5).max(100).required().messages({
                 "string.empty": response_config_1.RESPONSE_CONFIG.MESSAGE.USER.NO_EMAIL,
                 "string.min": `{{#label}} should have a minimum length of {#limit}`,
                 "string.max": `{{#label}} should have a maximum length of {#limit}`,
                 "any.required": `{{#label}} is a required field`,
+                "string.email": `{{#label} is not an email`
             }),
             phone_number: joi_1.default.string()
                 .regex(/^[0-9]/)
@@ -34,13 +35,13 @@ exports.Schema = {
                 "string.max": `{{#label}} should have a maximum length of {#limit}`,
                 "any.required": `{{#label}} is a required field`,
             }),
-            username: joi_1.default.string().min(5).max(100).required().messages({
+            username: joi_1.default.string().regex(/^[^\W_]+$/).min(5).max(100).required().messages({
                 "string.empty": response_config_1.RESPONSE_CONFIG.MESSAGE.USER.NO_USERNAME,
                 "string.min": `{{#label}} should have a minimum length of {#limit}`,
                 "string.max": `{{#label}} should have a maximum length of {#limit}`,
                 "any.required": `{{#label}} is a required field`,
             }),
-            password: joi_1.default.string().min(5).max(100).required().messages({
+            password: joi_1.default.string().regex(/^(?!.* )[A-Za-zd$@$!%*?&.]/).min(5).max(100).required().messages({
                 "string.empty": response_config_1.RESPONSE_CONFIG.MESSAGE.USER.NO_PASSWORD,
                 "string.min": `{{#label}} should have a minimum length of {#limit}`,
                 "string.max": `{{#label}} should have a maximum length of {#limit}`,
@@ -60,7 +61,7 @@ exports.Schema = {
                 "string.max": `{{#label}} should have a maximum length of {#limit}`,
                 "any.required": `{{#label}} is a required field`,
             }),
-            password: joi_1.default.string().min(5).max(100).required().messages({
+            password: joi_1.default.string().min(5).max(20).required().messages({
                 "string.empty": response_config_1.RESPONSE_CONFIG.MESSAGE.USER.NO_PASSWORD,
                 "string.min": `{{#label}} should have a minimum length of {#limit}`,
                 "string.max": `{{#label}} should have a maximum length of {#limit}`,

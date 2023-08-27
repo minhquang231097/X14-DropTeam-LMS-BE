@@ -2,8 +2,8 @@ import { RESPONSE_CONFIG } from "@/configs/response.config";
 import { Document, Schema, model } from "mongoose";
 
 const courseSchema = new Schema({
-  course_code: { type: String, unique: [true, RESPONSE_CONFIG.MESSAGE.COURSE.CODE_EXIST] },
-  title: String,
+  course_code: { type: String, unique: true, trim: true },
+  title: { type: String, trim: true },
   image: [String],
   desc: String,
   session_per_course: Number,
@@ -15,6 +15,11 @@ const courseSchema = new Schema({
     type: Date,
     default: Date.now(),
   },
+});
+
+courseSchema.pre("save", function (next) {
+  this.course_code = this.course_code?.toUpperCase();
+  next();
 });
 
 export interface ICourse extends Document {

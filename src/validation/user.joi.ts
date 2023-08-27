@@ -13,11 +13,12 @@ export const Schema = {
         "string.max": `{{#label}} should have a maximum length of {#limit}`,
         "any.required": `{{#label}} is a required field`,
       }),
-      email: Joi.string().min(5).max(100).required().messages({
+      email: Joi.string().email().min(5).max(100).required().messages({
         "string.empty": RESPONSE_CONFIG.MESSAGE.USER.NO_EMAIL,
         "string.min": `{{#label}} should have a minimum length of {#limit}`,
         "string.max": `{{#label}} should have a maximum length of {#limit}`,
         "any.required": `{{#label}} is a required field`,
+        "string.email": `{{#label} is not an email`
       }),
       phone_number: Joi.string()
         .regex(/^[0-9]/)
@@ -31,13 +32,13 @@ export const Schema = {
           "string.max": `{{#label}} should have a maximum length of {#limit}`,
           "any.required": `{{#label}} is a required field`,
         }),
-      username: Joi.string().min(5).max(100).required().messages({
+      username: Joi.string().regex(/^[^\W_]+$/).min(5).max(100).required().messages({
         "string.empty": RESPONSE_CONFIG.MESSAGE.USER.NO_USERNAME,
         "string.min": `{{#label}} should have a minimum length of {#limit}`,
         "string.max": `{{#label}} should have a maximum length of {#limit}`,
         "any.required": `{{#label}} is a required field`,
       }),
-      password: Joi.string().min(5).max(100).required().messages({
+      password: Joi.string().regex(/^(?!.* )[A-Za-zd$@$!%*?&.]/).min(5).max(100).required().messages({
         "string.empty": RESPONSE_CONFIG.MESSAGE.USER.NO_PASSWORD,
         "string.min": `{{#label}} should have a minimum length of {#limit}`,
         "string.max": `{{#label}} should have a maximum length of {#limit}`,
@@ -57,7 +58,7 @@ export const Schema = {
         "string.max": `{{#label}} should have a maximum length of {#limit}`,
         "any.required": `{{#label}} is a required field`,
       }),
-      password: Joi.string().min(5).max(100).required().messages({
+      password: Joi.string().min(5).max(20).required().messages({
         "string.empty": RESPONSE_CONFIG.MESSAGE.USER.NO_PASSWORD,
         "string.min": `{{#label}} should have a minimum length of {#limit}`,
         "string.max": `{{#label}} should have a maximum length of {#limit}`,

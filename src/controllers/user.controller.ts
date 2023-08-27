@@ -77,19 +77,7 @@ const GetUser = async (req: Request, res: Response) => {
         const result = await userService.GetAllUser(1, LIMIT_PAGE_USER);
         const sortedResult = result.sort((a: any, b: any) => b.create_at - a.create_at);
         if (result.length === 0) return res.status(404).send(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.USER.NOT_FOUND, 404));
-        res
-          .status(200)
-          .json(
-            new HttpResponseData(
-              RESPONSE_CONFIG.MESSAGE.USER.FOUND,
-              200,
-              sortedResult,
-              sortedResult.length,
-              countDoc,
-              1,
-              Math.ceil(countDoc / LIMIT_PAGE_USER),
-            ),
-          );
+        res.status(200).json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.USER.FOUND, 200, sortedResult, sortedResult.length, countDoc, 1, Math.ceil(countDoc / LIMIT_PAGE_USER),),);
       }
     } else {
       return res.status(404).send(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.SESSION.NOT_FOUND, 404));
