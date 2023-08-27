@@ -27,7 +27,7 @@ const GetUser = async (req: Request, res: Response) => {
         }
         if (result.length === 0) return res.status(404).send(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.USER.NOT_FOUND, 404));
         res.status(200).json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.USER.FOUND, 200, result, result.length, num.length, p, Math.ceil(num.length / l)));
-      } else if (role) {
+      } else if (role && !search) {
         const num = await userService.GetUserByRole(role as string);
         let result;
         if (p === undefined && l === undefined) {
@@ -48,15 +48,27 @@ const GetUser = async (req: Request, res: Response) => {
         if (result.length === 0) return res.status(404).send(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.USER.NOT_FOUND, 404));
         res.status(200).json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.USER.FOUND, 200, result, result.length, num.length, p, Math.ceil(num.length / l)));
       } else if (search) {
-        const num = await userService.SearchUserByCondition(search as string);
-        let result;
-        if (p === undefined && l === undefined) {
-          result = await userService.SearchUserByCondition(search as string, 1, LIMIT_PAGE_USER);
+        if (!role) {
+          const num = await userService.SearchUserByCondition(search as string);
+          let result;
+          if (p === undefined && l === undefined) {
+            result = await userService.SearchUserByCondition(search as string, 1, LIMIT_PAGE_USER);
+          } else {
+            result = await userService.SearchUserByCondition(search as string, p, l);
+          }
+          if (result.length === 0) return res.status(404).send(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.USER.NOT_FOUND, 404));
+          res.status(200).json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.USER.FOUND, 200, result, result.length, num.length, p, Math.ceil(num.length / l)));
         } else {
-          result = await userService.SearchUserByCondition(search as string, p, l);
+          const num = await userService.SearchUserByConditionAndRole(search as string, role as string);
+          let result;
+          if (p === undefined && l === undefined) {
+            result = await userService.SearchUserByConditionAndRole(search as string, role as string, 1, LIMIT_PAGE_USER);
+          } else {
+            result = await userService.SearchUserByConditionAndRole(search as string, role as string, p, l);
+          }
+          if (result.length === 0) return res.status(404).send(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.USER.NOT_FOUND, 404));
+          res.status(200).json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.USER.FOUND, 200, result, result.length, num.length, p, Math.ceil(num.length / l)));
         }
-        if (result.length === 0) return res.status(404).send(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.USER.NOT_FOUND, 404));
-        res.status(200).json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.USER.FOUND, 200, result, result.length, num.length, p, Math.ceil(num.length / l)));
       } else if (page && limit) {
         const result = await userService.GetAllUser(p, l);
         if (result.length === 0) return res.status(404).send(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.USER.NOT_FOUND, 404));
@@ -137,8 +149,8 @@ const UpdateUserInfo = async (req: Request, res: Response) => {
     if (!exist) return res.status(404).send(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.USER.NOT_FOUND, 404));
     await userService.UpdateUserById(id, payload);
     const newUser = await userService.GetUserById(id);
-    const { email, fullname, phone_number, dob, gender, address } = newUser;
-    res.status(200).send(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.USER.SUCCESS, 200, { email, fullname, phone_number, dob, gender, address }));
+    const { email, fullname, phone_number, dob, gender, address, avatar } = newUser;
+    res.status(200).send(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.USER.SUCCESS, 200, { email, fullname, phone_number, dob, gender, address, avatar }));
   } catch (error) {
     return res.status(400).send(new HttpException(RESPONSE_CONFIG.MESSAGE.USER.WRONG, 400));
   }

@@ -84,7 +84,7 @@ const GetWorkplaceInfo = async (req, res) => {
     try {
         const result = await workplace_service_1.default.GetWorkplaceById(id);
         if (!result)
-            return res.status(404).send(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.WORKPLACE.NOT_FOUND, 404));
+            return res.status(404).send(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.WORKPLACE.NOT_FOUND, 404));
         res.status(200).json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.WORKPLACE.FOUND_SUCCESS, 200, result));
     }
     catch (error) {

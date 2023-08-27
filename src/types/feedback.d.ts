@@ -8,8 +8,8 @@ export interface CreateFeedbackDto {
 }
 
 export interface UpdateFeedbackDto {
-  course?: string;
-  student?: string;
+  course_id?: string;
+  student_id?: string;
   rating?: string;
   content?: string;
   create_at?: string;

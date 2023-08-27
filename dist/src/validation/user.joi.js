@@ -25,7 +25,7 @@ exports.Schema = {
             phone_number: joi_1.default.string()
                 .regex(/^[0-9]/)
                 .min(5)
-                .max(100)
+                .max(12)
                 .required()
                 .messages({
                 "string.empty": response_config_1.RESPONSE_CONFIG.MESSAGE.USER.NO_PHONE_NUM,

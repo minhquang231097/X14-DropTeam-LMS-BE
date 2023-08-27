@@ -9,6 +9,7 @@ import userService from "@/services/user.service";
 import workplaceService from "@/services/workplace.service";
 import { Request, Response } from "express";
 import mongoose from "mongoose";
+import * as console from "console";
 
 const LIMIT_PAGE_CLASS = 10;
 
@@ -32,12 +33,12 @@ const CreateNewClass = async (req: Request, res: Response) => {
 
 const AddStudentToClass = async (req: Request, res: Response) => {
   const { list } = req.body;
-  const check = await classStudentService.CheckStudentLengthAndInRegistCourse(list);
   try {
+    const check = await classStudentService.CheckStudentLengthAndInRegistCourse(list);
     if (list.length === 0) {
-      return res.status(400).send(new HttpException(RESPONSE_CONFIG.MESSAGE.CLASS.CLASS_EXIST, 400));
+      return res.status(400).send(new HttpException(RESPONSE_CONFIG.MESSAGE.CLASS.NOT_FOUND, 400));
     } else if (check.length == 0) {
-      return res.status(400).send(new HttpException("(lỗi id)", 400));
+      return res.status(404).send(new HttpException(RESPONSE_CONFIG.MESSAGE.CLASS.NO_STUDENT_IN_REGIST, 404));
     } else {
       const result = await classStudentService.AddStudentToClass(list);
       await registCourseService.DeleteRegistAfterAdd(list);
