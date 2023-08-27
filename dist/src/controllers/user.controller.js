@@ -82,9 +82,7 @@ const GetUser = async (req, res) => {
                 const sortedResult = result.sort((a, b) => b.create_at - a.create_at);
                 if (result.length === 0)
                     return res.status(404).send(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.USER.NOT_FOUND, 404));
-                res
-                    .status(200)
-                    .json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.USER.FOUND, 200, sortedResult, sortedResult.length, countDoc, 1, Math.ceil(countDoc / LIMIT_PAGE_USER)));
+                res.status(200).json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.USER.FOUND, 200, sortedResult, sortedResult.length, countDoc, 1, Math.ceil(countDoc / LIMIT_PAGE_USER)));
             }
         }
         else {
