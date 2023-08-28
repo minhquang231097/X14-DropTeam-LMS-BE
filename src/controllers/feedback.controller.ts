@@ -16,7 +16,7 @@ const CreateNewFeekback = async (req: Request, res: Response) => {
   try {
     const [_course, _student] = await Promise.all([courseService.GetCourseById(course_id as string), userService.GetUserById(_id)]);
     if (!_course || !_student) return res.status(404).send(new HttpException(RESPONSE_CONFIG.MESSAGE.FEEDBACK.NOT_FOUND, 404));
-    payload.student_id = _id
+    payload.student_id = _id;
     const feedback = await feedbackService.CreateFeedback(payload);
     res.status(200).json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.FEEDBACK.CREATE_SUCCES, 200, feedback));
   } catch (error) {
@@ -25,7 +25,7 @@ const CreateNewFeekback = async (req: Request, res: Response) => {
 };
 
 const GetFeedback = async (req: Request, res: Response) => {
-  const { page, limit, course_id, student_id, search } = req.query;
+  const { page, limit, course_id, student_id, search, sort } = req.query;
   const p = Number(page);
   const l = Number(limit);
   try {

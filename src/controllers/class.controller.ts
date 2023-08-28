@@ -9,7 +9,6 @@ import userService from "@/services/user.service";
 import workplaceService from "@/services/workplace.service";
 import { Request, Response } from "express";
 import mongoose from "mongoose";
-import * as console from "console";
 
 const LIMIT_PAGE_CLASS = 10;
 
@@ -70,7 +69,7 @@ const GetClass = async (req: Request, res: Response) => {
           .json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.CLASS.FOUND_SUCCESS, 200, result, result.length, num.length, p, Math.ceil(num.length / l)));
       } else if (status) {
         const num = await classService.GetClassByStatus(status as string);
-        let result;
+        let result = [];
         if (p === undefined && l === undefined) {
           result = await classService.GetClassByStatus(status as string, 1, LIMIT_PAGE_CLASS);
         } else {

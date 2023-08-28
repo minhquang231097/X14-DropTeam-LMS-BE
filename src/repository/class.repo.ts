@@ -36,9 +36,10 @@ export class ClassRepository extends BaseRepository<IClass> {
 
   async FindClassByCourseId(id: string, page?: any, limit?: any) {
     return await this.model
-      .find({ course: `${id}` })
+      .find({ course: id })
+      .sort({ create_at: -1 })
       .skip((page - 1) * limit)
       .limit(limit)
-      .populate(["mentor", "workplace", { path: "course" }]);
+      .populate(["mentor", "workplace", "course"]);
   }
 }
