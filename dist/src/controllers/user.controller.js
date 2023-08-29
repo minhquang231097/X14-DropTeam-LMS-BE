@@ -32,7 +32,7 @@ const GetUser = async (req, res) => {
                     return res.status(404).send(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.USER.NOT_FOUND, 404));
                 res.status(200).json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.USER.FOUND, 200, result, result.length, num.length, p, Math.ceil(num.length / l)));
             }
-            else if (role) {
+            else if (role && !search) {
                 const num = await user_service_1.default.GetUserByRole(role);
                 let result;
                 if (p === undefined && l === undefined) {
@@ -59,17 +59,32 @@ const GetUser = async (req, res) => {
                 res.status(200).json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.USER.FOUND, 200, result, result.length, num.length, p, Math.ceil(num.length / l)));
             }
             else if (search) {
-                const num = await user_service_1.default.SearchUserByCondition(search);
-                let result;
-                if (p === undefined && l === undefined) {
-                    result = await user_service_1.default.SearchUserByCondition(search, 1, LIMIT_PAGE_USER);
+                if (!role) {
+                    const num = await user_service_1.default.SearchUserByCondition(search);
+                    let result;
+                    if (p === undefined && l === undefined) {
+                        result = await user_service_1.default.SearchUserByCondition(search, 1, LIMIT_PAGE_USER);
+                    }
+                    else {
+                        result = await user_service_1.default.SearchUserByCondition(search, p, l);
+                    }
+                    if (result.length === 0)
+                        return res.status(404).send(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.USER.NOT_FOUND, 404));
+                    res.status(200).json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.USER.FOUND, 200, result, result.length, num.length, p, Math.ceil(num.length / l)));
                 }
                 else {
-                    result = await user_service_1.default.SearchUserByCondition(search, p, l);
+                    const num = await user_service_1.default.SearchUserByConditionAndRole(search, role);
+                    let result;
+                    if (p === undefined && l === undefined) {
+                        result = await user_service_1.default.SearchUserByConditionAndRole(search, role, 1, LIMIT_PAGE_USER);
+                    }
+                    else {
+                        result = await user_service_1.default.SearchUserByConditionAndRole(search, role, p, l);
+                    }
+                    if (result.length === 0)
+                        return res.status(404).send(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.USER.NOT_FOUND, 404));
+                    res.status(200).json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.USER.FOUND, 200, result, result.length, num.length, p, Math.ceil(num.length / l)));
                 }
-                if (result.length === 0)
-                    return res.status(404).send(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.USER.NOT_FOUND, 404));
-                res.status(200).json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.USER.FOUND, 200, result, result.length, num.length, p, Math.ceil(num.length / l)));
             }
             else if (page && limit) {
                 const result = await user_service_1.default.GetAllUser(p, l);

@@ -1,8 +1,6 @@
 import { Attendance } from "@/models/attendance.model";
 import { AttendanceRepository } from "@/repository/attendance.repo";
-import classService from "./class.service";
 import { FindAttendanceDto, UpdateAttendanceDto } from "@/types/attendance";
-import sessionService from "./session.service";
 
 const attendanceRepository = new AttendanceRepository(Attendance);
 
@@ -27,7 +25,7 @@ const GetAttendanceBySessionId = async (session_id: string, page?: any, limit?: 
 };
 
 const GetAllAttendance = async (page?: number, limit?: number) => {
-  return await attendanceRepository.FindAllInfoAndPagination(page, limit, ["session", "class"]);
+  return await attendanceRepository.FindAllInfoAndPagination(page, limit, ["session", "class"], { create_at: -1 });
 };
 
 const CountAttendance = async () => {

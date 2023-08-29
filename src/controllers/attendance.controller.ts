@@ -21,17 +21,16 @@ const CreateListAttendance = async (req: Request, res: Response) => {
 };
 
 const GetAttendance = async (req: Request, res: Response) => {
-  const { page, limit, class_id, session_id, student_id } = req.query;
+  const { page, limit, class_id, session_id, student_id, sort } = req.query;
   const p: number = Number(page);
-  const l :number = Number(limit);
-
+  const l: number = Number(limit);
   try {
     if (
       (!session_id || mongoose.isValidObjectId(session_id)) &&
       (!class_id || mongoose.isValidObjectId(class_id)) &&
       (!student_id || mongoose.isValidObjectId(student_id))
     ) {
-      const countDoc : number = await attendanceService.CountAttendance();
+      const countDoc: number = await attendanceService.CountAttendance();
 
       if (class_id) {
         const num = await attendanceService.GetAttendanceByClassId(class_id as string);

@@ -1,5 +1,4 @@
 import { RESPONSE_CONFIG } from "@/configs/response.config";
-import { NextFunction } from "express";
 import { Document, Schema, model } from "mongoose";
 
 const classSchema = new Schema({
