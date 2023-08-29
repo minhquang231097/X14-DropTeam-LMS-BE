@@ -22,7 +22,7 @@ const CreateNewClass = async (req: Request, res: Response) => {
       userService.GetUserById(mentor_id),
       classService.GetClassByCode(class_code),
     ]);
-    if (!_course || !_workplace || !_mentor || _class) return res.status(404).send(new HttpException(RESPONSE_CONFIG.MESSAGE.CLASS.NOT_EXIST, 404));
+    if (_course || _workplace || _mentor || !_class) return res.status(404).send(new HttpException(RESPONSE_CONFIG.MESSAGE.CLASS.NOT_EXIST, 404));
     const newClass = await classService.CreateOneClass(payload);
     res.status(200).json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.CLASS.CREATE_SUCCES, 200, newClass));
   } catch (error) {
@@ -69,7 +69,7 @@ const GetClass = async (req: Request, res: Response) => {
           .json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.CLASS.FOUND_SUCCESS, 200, result, result.length, num.length, p, Math.ceil(num.length / l)));
       } else if (status) {
         const num = await classService.GetClassByStatus(status as string);
-        let result = [];
+        let result;
         if (p === undefined && l === undefined) {
           result = await classService.GetClassByStatus(status as string, 1, LIMIT_PAGE_CLASS);
         } else {
@@ -144,9 +144,11 @@ const UpdateClass = async (req: Request, res: Response) => {
   const update = req.body;
   try {
     const exist = await classService.GetClassById(id as string);
-    if (!exist) return res.status(404).send(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.CLASS.NOT_FOUND, 404));
-    const newClass = await classService.UpdateOneClass(id as string, update);
-    res.status(200).json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.CLASS.UPDATE_SUCCESS, 200, newClass));
+    if (exist) {
+      const newClass = await classService.UpdateOneClass(id as string, update);
+      res.status(200).json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.CLASS.UPDATE_SUCCESS, 200, newClass));
+    }
+    return res.status(404).send(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.CLASS.NOT_FOUND, 404));
   } catch (error: any) {
     return res.status(400).send(new HttpException(RESPONSE_CONFIG.MESSAGE.CLASS.WRONG, 400));
   }
@@ -156,11 +158,13 @@ const UpdateStatusStudentInClass = async (req: Request, res: Response) => {
   const payload = req.body;
   const { student_id, class_id } = payload;
   try {
-    const [_student, _class] = await Promise.all([userService.GetUserById(student_id), classService.GetClassById(class_id)]);
-    if (!_class || !_student) return res.status(404).send(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.CLASS.NOT_FOUND, 404));
-    await classStudentService.GetClassByStudentId(student_id);
-    const newUpdate = await classStudentService.GetStudentInClassByStudentId(student_id);
-    res.status(200).json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.CLASS.UPDATE_SUCCESS, 200, newUpdate));
+    const exist = await classStudentService.CheckStudentInClass(student_id, class_id);
+    if (exist) {
+      await classStudentService.UpdateStatusStudentInClass(payload);
+      const newUpdate = await classStudentService.GetStudentInClassByStudentId(student_id);
+      res.status(200).json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.CLASS.UPDATE_SUCCESS, 200, newUpdate));
+    }
+    return res.status(404).send(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.CLASS.NOT_FOUND, 404));
   } catch (error) {
     return res.status(400).send(new HttpException(RESPONSE_CONFIG.MESSAGE.CLASS.WRONG, 400));
   }
@@ -170,9 +174,11 @@ const DeleteOneClass = async (req: Request, res: Response) => {
   const { id } = req.params;
   try {
     const exist = await classService.GetClassById(id as string);
-    if (!exist) return res.status(404).send(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.CLASS.NOT_FOUND, 404));
-    await classService.DeleteClassById(id as string);
-    res.status(200).json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.CLASS.DELETE_SUCCESS, 200));
+    if (exist) {
+      await classService.DeleteClassById(id as string);
+      res.status(200).json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.CLASS.DELETE_SUCCESS, 200));
+    }
+    return res.status(404).send(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.CLASS.NOT_FOUND, 404));
   } catch (error: any) {
     return res.status(400).send(new HttpException(RESPONSE_CONFIG.MESSAGE.CLASS.WRONG, 400));
   }

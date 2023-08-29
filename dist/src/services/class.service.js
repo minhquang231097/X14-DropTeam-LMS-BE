@@ -45,13 +45,13 @@ const CreateOneClass = async (payload) => {
     return await classRepository.CreateClass(date_end, payload);
 };
 const GetAllClass = async (page, limit) => {
-    return await classRepository.FindAllInfoAndPagination(page, limit, ["mentor", "workplace", { path: "course" }]);
+    return await classRepository.FindAllInfoAndPagination(page, limit, ["mentor", "workplace", "course"], { create_at: -1 });
 };
 const GetTotalClass = async () => {
     return await classRepository.Count();
 };
 const GetClassById = async (id) => {
-    return await classRepository.FindById(id, ["mentor", "workplace", { path: "course" }]);
+    return await classRepository.FindById(id, ["mentor", "workplace", "course"]);
 };
 const GetClassByCourseId = async (id, page, limit) => {
     return await classRepository.FindClassByCourseId(id, page, limit);
@@ -66,13 +66,13 @@ const GetClassByWorkplaceId = async (id) => {
     return await classRepository.FindClassByWorkplaceId(id);
 };
 const GetClassByCondition = async (filter) => {
-    return await classRepository.FindByCondition(filter, ["mentor", "workplace", { path: "course" }]);
+    return await classRepository.FindByCondition(filter, ["mentor", "workplace", "course"]);
 };
 const SearchClassByCondition = async (searchTerm, page, limit) => {
     const query = {
         $or: [{ class_code: { $regex: searchTerm, $options: "i" } }],
     };
-    return await classRepository.SearchByCondition(page, limit, query, ["mentor", "workplace", { path: "course" }]);
+    return await classRepository.SearchByCondition(page, limit, query, ["mentor", "workplace", "course"]);
 };
 const UpdateOneClass = async (id, payload) => {
     return await classRepository.FindByIdAndUpdate(id, payload);
@@ -87,7 +87,7 @@ const DeleteClassByCondition = async (filter) => {
     return await classRepository.DeleteByCondition(filter);
 };
 const GetClassByStatus = async (status, page, limit) => {
-    return await classRepository.FindByConditionAndPagination({ status }, page, limit);
+    return await classRepository.FindByConditionAndPagination({ status }, page, limit, { create_at: -1 });
 };
 exports.default = {
     CreateOneClass,

@@ -1,5 +1,5 @@
 export interface UpdateLessonDto {
-  session_id?: string;
+  session?: string;
   title?: string;
   content?: string;
   no?: number;

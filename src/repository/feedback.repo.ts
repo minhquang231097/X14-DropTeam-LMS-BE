@@ -8,18 +8,18 @@ export class FeedbackRepository extends BaseRepository<IFeedback> {
   }
 
   async FindFeedbackByCourseId(id: string, page: number, limit: number) {
-    return await this.model
+    return this.model
       .find({ course: id })
       .skip((page - 1) * limit)
       .limit(limit)
-      .populate([{ path: "course", populate: { path: "workplace" } }, "student"]);
+      .populate(["course", "student"]);
   }
 
   async FindFeedbackByStudentId(id: string, page: number, limit: number) {
-    return await this.model
+    return this.model
       .find({ student: id })
       .skip((page - 1) * limit)
       .limit(limit)
-      .populate([{ path: "course", populate: { path: "workplace" } }, "student"]);
+      .populate(["course", "student"]);
   }
 }

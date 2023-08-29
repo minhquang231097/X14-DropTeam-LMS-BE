@@ -58,7 +58,7 @@ const SearchRegistByCondition = async (searchTerm?: string, page?: any, limit?: 
       { phone_number: { $regex: searchTerm, $options: "i" } },
     ],
   };
-  return await registCourseRepository.SearchByCondition(page, limit, query);
+  return await registCourseRepository.SearchByCondition(page, limit, query, ["course", "workplace"], { create_at: -1 });
 };
 
 const UpdateRegist = async (id: string, payload: any) => {
@@ -71,9 +71,9 @@ const DeleteRegist = async (id: string) => {
 
 const DeleteRegistAfterAdd = async (list: AddStudentToClassDto[]) => {
   list.map(async (el) => {
-    return await registCourseRepository.DeleteByCondition({ student: el.student_id })
-  })
-}
+    return await registCourseRepository.DeleteByCondition({ student: el.student_id });
+  });
+};
 
 export default {
   DeleteRegist,

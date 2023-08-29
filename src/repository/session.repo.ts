@@ -16,7 +16,7 @@ export class SessionRepository extends BaseRepository<ISession> {
       .find({ course: id })
       .skip((page - 1) * limit)
       .limit(limit)
-      .populate([{ path: "course" }, "class"]);
+      .populate(["course", "class"]);
     return session;
   }
 
@@ -25,7 +25,7 @@ export class SessionRepository extends BaseRepository<ISession> {
       .find({ class: id })
       .skip((page - 1) * limit)
       .limit(limit)
-      .populate([{ path: "course" }, "class"]);
+      .populate(["course", "class"]);
     return session;
   }
 }

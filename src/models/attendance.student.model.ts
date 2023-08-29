@@ -1,17 +1,17 @@
 import { Document, Schema, model } from "mongoose";
 
 enum statusStudent {
-  P = "PRESENT",
-  AP = "ABSENT WITH PERMISSION",
-  AOP = "ABSENT WITHOUT PERMISSION",
-  R = "RESERVE",
+  "PRESENT",
+  "ABSENT WITH PERMISSION",
+  "ABSENT WITHOUT PERMISSION",
+  "RESERVE",
 }
 
 const attendance_studentSchema = new Schema({
   attendance: { type: Schema.Types.ObjectId, ref: "attendances" },
   student: { type: Schema.Types.ObjectId, ref: "users" },
   status: { type: String, enum: statusStudent },
-  score: String,
+  score: Number,
   comment: String,
   create_at: {
     type: Date,
@@ -22,7 +22,7 @@ const attendance_studentSchema = new Schema({
 export interface IAttendance_Student extends Document {
   attendance: string;
   student: string;
-  score: string;
+  score: number;
   status: statusStudent;
   comment: string;
   create_at: string;

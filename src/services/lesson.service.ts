@@ -21,20 +21,12 @@ const CountLesson = async () => {
 };
 
 const GetAllLesson = async (page: number, limit: number) => {
-  return await lessonRepository.FindAllInfoAndPagination(page, limit, [{ path: "session", populate: [{ path: "class" }] }]);
+  return await lessonRepository.FindAllInfoAndPagination(page, limit, "course");
 };
 
 const GetLessonById = async (id: string) => {
-  return await lessonRepository.FindById(id, {
-    path: "session",
-    populate: [{ path: "class" }],
-  });
+  return await lessonRepository.FindById(id, "course");
 };
-
-const GetLessonBySessionId = async (ss_id: string, page?: any, limit?: any) => {
-  return await lessonRepository.FindLessonBySessionId(ss_id, page, limit);
-};
-
 const GetLessonByCourseId = async (course_id: string, page?: any, limit?: any) => {
   return await lessonRepository.FindLessonByCourseId(course_id, page, limit);
 };
@@ -62,7 +54,6 @@ export default {
   CreateLesson,
   GetAllLesson,
   GetLessonById,
-  GetLessonBySessionId,
   GetLessonByCourseId,
   UpdateLessonById,
   UpdateCourseByCondition,

@@ -155,10 +155,12 @@ const UpdateRegist = async (req: Request, res: Response) => {
   const { payload } = req.body;
   try {
     const exist = await registCourseService.GetRegistById(id as string);
-    if (!exist) return res.status(404).send(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.REGIST.NOT_FOUND, 404));
-    await registCourseService.UpdateRegist(id as string, payload);
-    const newRegist = await registCourseService.GetRegistById(id as string);
-    res.status(200).json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.REGIST.FOUND_SUCCESS, 200, newRegist));
+    if (exist) {
+      await registCourseService.UpdateRegist(id as string, payload);
+      const newRegist = await registCourseService.GetRegistById(id as string);
+      res.status(200).json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.REGIST.FOUND_SUCCESS, 200, newRegist));
+    }
+    return res.status(404).send(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.REGIST.NOT_FOUND, 404));
   } catch (error) {
     return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.REGIST.WRONG, 400));
   }
@@ -168,9 +170,11 @@ const DeleteRegist = async (req: Request, res: Response) => {
   const { id } = req.params;
   try {
     const exist = await registCourseService.GetRegistById(id as string);
-    if (!exist) return res.status(404).send(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.REGIST.NOT_FOUND, 404));
-    await registCourseService.DeleteRegist(id as string);
-    res.status(200).json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.REGIST.DELETE_SUCCESS, 200));
+    if (exist) {
+      await registCourseService.DeleteRegist(id as string);
+      res.status(200).json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.REGIST.DELETE_SUCCESS, 200));
+    }
+    return res.status(404).send(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.REGIST.NOT_FOUND, 404));
   } catch (error) {
     return res.status(400).send(new HttpException(RESPONSE_CONFIG.MESSAGE.REGIST.WRONG, 400));
   }

@@ -47,6 +47,9 @@ const GetAllStudentInClass = async (class_id: string, page?: any, limit?: any) =
 const GetClassByStudentId = async (id: string, page?: any, limit?: any) => {
   return await classStudentRepository.FindByConditionAndPagination({ student: id }, page, limit, ["student"], { create_at: -1 });
 };
+const CheckStudentInClass = async (student_id: string, class_id: string) => {
+  return await classStudentRepository.FindByCondition({ class: class_id, student: student_id });
+};
 
 const UpdateStatusStudentInClass = async (payload: UpdateStatusStudentInClassDto) => {
   return await classStudentRepository.FindByConditionAndUpdate(
@@ -72,4 +75,5 @@ export default {
   UpdateStatusStudentInClass,
   GetStudentInClassByStudentId,
   CheckStudentLengthAndInRegistCourse,
+  CheckStudentInClass,
 };

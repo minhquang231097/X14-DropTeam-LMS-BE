@@ -118,10 +118,12 @@ const UpdateSession = async (req: Request, res: Response) => {
   const payload = req.body;
   try {
     const exist = await sessionService.GetSessionById(id as string);
-    if (!exist) return res.status(404).send(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.SESSION.NOT_FOUND, 404));
-    await sessionService.UpdateSessionById(id as string, payload);
-    const newSession = await sessionService.GetSessionById(id as string);
-    res.status(200).json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.SESSION.UPDATE_SUCCESS, 200, newSession));
+    if (exist) {
+      await sessionService.UpdateSessionById(id as string, payload);
+      const newSession = await sessionService.GetSessionById(id as string);
+      res.status(200).json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.SESSION.UPDATE_SUCCESS, 200, newSession));
+    }
+    return res.status(404).send(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.SESSION.NOT_FOUND, 404));
   } catch (error) {
     return res.status(400).send(new HttpException(RESPONSE_CONFIG.MESSAGE.SESSION.WRONG, 400));
   }
@@ -131,9 +133,11 @@ const DeleteSession = async (req: Request, res: Response) => {
   const { id } = req.params;
   try {
     const exist = await sessionService.GetSessionById(id as string);
-    if (!exist) return res.status(404).send(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.SESSION.NOT_FOUND, 404));
-    await sessionService.DeletedCourse(id as string);
-    res.status(200).json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.SESSION.DELETE_SUCCESS, 200));
+    if (exist) {
+      await sessionService.DeletedCourse(id as string);
+      res.status(200).json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.SESSION.DELETE_SUCCESS, 200));
+    }
+    return res.status(404).send(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.SESSION.NOT_FOUND, 404));
   } catch (error) {
     return res.status(400).send(new HttpException(RESPONSE_CONFIG.MESSAGE.SESSION.WRONG, 400));
   }
