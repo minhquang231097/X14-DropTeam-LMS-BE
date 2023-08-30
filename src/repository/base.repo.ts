@@ -31,7 +31,7 @@ export abstract class BaseRepository<T extends Document> {
   }
 
   async FindAllInfoAndPagination(page?: any, limit?: any, populate?: any | null, sort?: any): Promise<T[] | any> {
-    return await this.model
+    return this.model
       .find()
       .sort(sort)
       .skip((page - 1) * limit)

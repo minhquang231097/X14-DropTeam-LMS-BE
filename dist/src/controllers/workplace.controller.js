@@ -96,11 +96,12 @@ const UpdateWorkplace = async (req, res) => {
     const update = req.body;
     try {
         const exist = await workplace_service_1.default.GetWorkplaceById(id);
-        if (!exist)
-            return res.status(404).send(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.WORKPLACE.NOT_FOUND, 404));
-        await workplace_service_1.default.UpdateWorkplace(id, update);
-        const newWorkplace = await workplace_service_1.default.GetWorkplaceById(id);
-        res.status(200).json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.WORKPLACE.UPDATE_SUCCESS, 200, newWorkplace));
+        if (exist) {
+            await workplace_service_1.default.UpdateWorkplace(id, update);
+            const newWorkplace = await workplace_service_1.default.GetWorkplaceById(id);
+            res.status(200).json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.WORKPLACE.UPDATE_SUCCESS, 200, newWorkplace));
+        }
+        return res.status(404).send(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.WORKPLACE.NOT_FOUND, 404));
     }
     catch (error) {
         return res.status(400).send(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.WORKPLACE.WRONG, 400));
@@ -110,10 +111,11 @@ const DeletedWorkplace = async (req, res) => {
     const { id } = req.params;
     try {
         const exist = await workplace_service_1.default.GetWorkplaceById(id);
-        if (!exist)
-            return res.status(404).send(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.WORKPLACE.NOT_FOUND, 400));
-        await workplace_service_1.default.DeletedWorkplace(id);
-        res.status(200).json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.WORKPLACE.DELETE_SUCCESS, 200));
+        if (exist) {
+            await workplace_service_1.default.DeletedWorkplace(id);
+            res.status(200).json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.WORKPLACE.DELETE_SUCCESS, 200));
+        }
+        return res.status(404).send(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.WORKPLACE.NOT_FOUND, 400));
     }
     catch (error) {
         return res.status(400).send(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.WORKPLACE.WRONG, 400, error.message));
