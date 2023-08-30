@@ -13,6 +13,7 @@ const classSchema = new Schema({
   schedule: [Number],
   class_size: Number,
   status: { type: String, enum: ["ON", "OFF", "UPCOMING"] },
+  minimum_size: Number,
   create_at: {
     type: Date,
     default: Date.now(),
@@ -46,6 +47,7 @@ export interface IClass extends Document {
   total_session: number;
   schedule: [number];
   class_size: number;
+  minimum_size: number;
 }
 
 export const Class = model<IClass>("classes", classSchema);

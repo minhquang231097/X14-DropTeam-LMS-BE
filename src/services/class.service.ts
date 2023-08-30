@@ -5,6 +5,7 @@ import courseService from "./course.service";
 import userService from "./user.service";
 import workplaceService from "./workplace.service";
 import axios from "axios";
+import classStudentService from "@/services/class.student.service";
 
 const classRepository = new ClassRepository(Class);
 

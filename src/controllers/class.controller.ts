@@ -31,7 +31,7 @@ const CreateNewClass = async (req: Request, res: Response) => {
 };
 
 const AddStudentToClass = async (req: Request, res: Response) => {
-  const { list } = req.body;
+  const { list, class_id } = req.body;
   try {
     const check = await classStudentService.CheckStudentLengthAndInRegistCourse(list);
     if (list.length === 0) {
@@ -39,7 +39,7 @@ const AddStudentToClass = async (req: Request, res: Response) => {
     } else if (check.length == 0) {
       return res.status(404).send(new HttpException(RESPONSE_CONFIG.MESSAGE.CLASS.NO_STUDENT_IN_REGIST, 404));
     } else {
-      const result = await classStudentService.AddStudentToClass(list);
+      const result = await classStudentService.AddStudentToClass(list, class_id);
       await registCourseService.DeleteRegistAfterAdd(list);
       res.status(200).json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.CLASS.ADD_STU_SUCCESS, 200, result));
     }
@@ -158,7 +158,7 @@ const UpdateStatusStudentInClass = async (req: Request, res: Response) => {
   const payload = req.body;
   const { student_id, class_id } = payload;
   try {
-    const exist = await classStudentService.CheckStudentInClass(student_id, class_id);
+    const exist = await classStudentService.CheckStudentExistInClass(student_id, class_id);
     if (exist) {
       await classStudentService.UpdateStatusStudentInClass(payload);
       const newUpdate = await classStudentService.GetStudentInClassByStudentId(student_id);

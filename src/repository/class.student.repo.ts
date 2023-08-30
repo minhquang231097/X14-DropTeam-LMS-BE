@@ -7,10 +7,14 @@ export class ClassStudentRepository extends BaseRepository<IClass_Student> {
     super(model);
   }
   async FindByClassId(id: string, page: number, limit: number, populate?: any) {
-    return await this.model
+    return this.model
       .find({ class: id })
       .populate(populate)
       .skip((page - 1) * limit)
       .limit(limit);
+  }
+
+  async CountStudentInClass(class_id: string): Promise<number> {
+    return this.model.count({ class: class_id });
   }
 }
