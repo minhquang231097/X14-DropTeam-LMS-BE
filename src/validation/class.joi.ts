@@ -1,7 +1,7 @@
 import { IClass } from "@/models/class.model";
 import Joi from "joi";
 import { RESPONSE_CONFIG } from "@/configs/response.config";
-import { AddStudentToClassDto, CreateClassDto, UpdateClassDto } from "@/types/class";
+import { AddStudentToClassDto, CreateClassDto, UpdateClassDto, UpdateStatusStudentInClassDto } from "@/types/class";
 
 export const ClassSchema = {
   Class: {
@@ -52,15 +52,16 @@ export const ClassSchema = {
     }),
 
     add_student: Joi.object({
+      class_id: Joi.string().required()
+        .messages({
+          "string.empty": `import class_id`,
+          "any.required": `{{#label}} is a required field `,
+        }),
       list: Joi.array().items(
         Joi.object<AddStudentToClassDto>({
           student_id: Joi.string().required().messages({
             'string.empty': 'student_id is required',
             'any.required': 'student_id is a required field',
-          }),
-          class_id: Joi.string().required().messages({
-            'string.empty': 'class_id is required',
-            'any.required': 'class_id is a required field',
           }),
         })
       ),
@@ -105,6 +106,19 @@ export const ClassSchema = {
         "number.min": `{{#label}} must greater than or equal to {{#limit}}`,
         "number.base": `{{#label}} must be a number`,
         "number.integer": `{{#label}} must be an integer `,
+      }),
+    }),
+    update_student_status: Joi.object<UpdateStatusStudentInClassDto>({
+      student_id: Joi.string().required().messages({
+        "string.empty": ` (import student_id)`,
+        "any.required": `{{#label}} is a required field`,
+      }),
+      class_id: Joi.string().required().messages({
+        "string.empty": ` (import class_id)`,
+        "any.required": `{{#label}} is a required field`,
+      }),
+      status: Joi.string().valid("ACTIVE", "INACTIVE").required().messages({
+        'any.only': `{{#label}} must be ACTIVE or INACTIVE `,
       }),
     }),
   },

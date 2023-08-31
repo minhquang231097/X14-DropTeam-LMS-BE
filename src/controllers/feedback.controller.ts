@@ -3,22 +3,24 @@ import HttpResponseData from "@/common/httpResponseData";
 import { RESPONSE_CONFIG } from "@/configs/response.config";
 import courseService from "@/services/course.service";
 import feedbackService from "@/services/feedback.service";
-import userService from "@/services/user.service";
 import { Request, Response } from "express";
 import mongoose from "mongoose";
+import * as console from "console";
 
 const LIMIT_PAGE_FEEDBACK = 10;
 
-const CreateNewFeekback = async (req: Request, res: Response) => {
+const CreateNewFeedback = async (req: Request, res: Response) => {
   const payload = req.body;
-  const { course_id } = req.body;
+  const { course_id } = payload;
   const { _id } = req.user;
   try {
-    const [_course, _student] = await Promise.all([courseService.GetCourseById(course_id as string), userService.GetUserById(_id)]);
-    if (!_course || !_student) return res.status(404).send(new HttpException(RESPONSE_CONFIG.MESSAGE.FEEDBACK.NOT_FOUND, 404));
-    payload.student_id = _id
-    const feedback = await feedbackService.CreateFeedback(payload);
-    res.status(200).json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.FEEDBACK.CREATE_SUCCES, 200, feedback));
+    const exist = await courseService.GetCourseById(course_id as string);
+    if (exist) {
+      payload.student_id = _id;
+      const feedback = await feedbackService.CreateFeedback(payload);
+      res.status(200).json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.FEEDBACK.CREATE_SUCCES, 200, feedback));
+    }
+    return res.status(404).send(new HttpException(RESPONSE_CONFIG.MESSAGE.FEEDBACK.NOT_FOUND, 404));
   } catch (error) {
     return res.status(404).json(new HttpException(RESPONSE_CONFIG.MESSAGE.FEEDBACK.WRONG, 404));
   }
@@ -89,9 +91,9 @@ const GetFeedback = async (req: Request, res: Response) => {
 const GetFeedbackInfo = async (req: Request, res: Response) => {
   const { id } = req.params;
   try {
-    const feedback = await feedbackService.GetFeedbackById(id as string);
-    if (!feedback) return res.status(404).send(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.FEEDBACK.NOT_FOUND, 404));
-    res.status(200).json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.FEEDBACK.FOUND_SUCCESS, 200, feedback));
+    const exist = await feedbackService.GetFeedbackById(id as string);
+    if (!exist) return res.status(404).send(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.FEEDBACK.NOT_FOUND, 404));
+    res.status(200).json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.FEEDBACK.FOUND_SUCCESS, 200, exist));
   } catch (error) {
     return res.status(404).send(new HttpException(RESPONSE_CONFIG.MESSAGE.FEEDBACK.WRONG, 404));
   }
@@ -102,10 +104,12 @@ const UpdateFeedback = async (req: Request, res: Response) => {
   const payload = req.body;
   try {
     const exist = await feedbackService.GetFeedbackById(id as string);
-    if (!exist) return res.status(404).send(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.FEEDBACK.NOT_FOUND, 404));
-    await feedbackService.UpdateFeedback(id as string, payload);
-    const newFeedback = await feedbackService.GetFeedbackById(id as string);
-    res.status(200).json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.FEEDBACK.UPDATE_SUCCESS, 200, newFeedback));
+    if (exist) {
+      await feedbackService.UpdateFeedback(id as string, payload);
+      const newFeedback = await feedbackService.GetFeedbackById(id as string);
+      res.status(200).json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.FEEDBACK.UPDATE_SUCCESS, 200, newFeedback));
+    }
+    return res.status(404).send(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.FEEDBACK.NOT_FOUND, 404));
   } catch (error) {
     return res.status(400).send(new HttpException(RESPONSE_CONFIG.MESSAGE.FEEDBACK.WRONG, 400));
   }
@@ -115,16 +119,18 @@ const DeleteFeedback = async (req: Request, res: Response) => {
   const { id } = req.params;
   try {
     const exist = await feedbackService.GetFeedbackById(id as string);
-    if (!exist) return res.status(404).send(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.FEEDBACK.NOT_FOUND, 404));
-    await feedbackService.DeleteFeedbackById(id as string);
-    res.status(200).json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.FEEDBACK.DELETE_SUCCESS, 200));
+    if (exist) {
+      await feedbackService.DeleteFeedbackById(id as string);
+      res.status(200).json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.FEEDBACK.DELETE_SUCCESS, 200));
+    }
+    return res.status(404).send(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.FEEDBACK.NOT_FOUND, 404));
   } catch (error) {
     return res.status(400).send(new HttpException(RESPONSE_CONFIG.MESSAGE.FEEDBACK.WRONG, 400));
   }
 };
 
 export default {
-  CreateNewFeekback,
+  CreateNewFeedback,
   GetFeedback,
   UpdateFeedback,
   DeleteFeedback,

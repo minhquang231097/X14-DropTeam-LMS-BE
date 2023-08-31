@@ -1,7 +1,7 @@
 import Joi from "joi";
 import { IRegistedCourse } from "@/models/registe.course.model";
 import { RESPONSE_CONFIG } from "@/configs/response.config";
-import { RegistCourseDto, AdminRegistCourseDto, StudentRegistCourseDto } from "@/types/regist.course";
+import { RegistCourseDto, AdminRegistCourseDto, StudentRegistCourseDto, UpdateRegistCourseDto } from "@/types/regist.course";
 
 export const RegistSchema = {
   Regist: {
@@ -38,7 +38,7 @@ export const RegistSchema = {
         }),
       note: Joi.string().min(0),
     }),
-    update_course: Joi.object<RegistCourseDto>({
+    update_regist_course: Joi.object<UpdateRegistCourseDto>({
       course_id: Joi.string()
         .required()
         .messages({
@@ -51,7 +51,7 @@ export const RegistSchema = {
           "string.empty": `${RESPONSE_CONFIG.MESSAGE.REGIST.NO_COURSE} (import workplace id)`,
           "any.required": `{{#label}} is a required field`,
         }),
-      note: Joi.string().min(0),
+      note: Joi.string().optional().min(0),
     }),
   },
 };

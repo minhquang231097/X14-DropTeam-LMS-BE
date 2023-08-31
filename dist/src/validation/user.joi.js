@@ -24,7 +24,7 @@ exports.Schema = {
                 "string.email": `{{#label} is not an email`
             }),
             phone_number: joi_1.default.string()
-                .regex(/^[0-9]/)
+                .regex(/^\+?[0-9][0-9]{7,14}$/)
                 .min(5)
                 .max(12)
                 .required()

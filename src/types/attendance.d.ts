@@ -6,8 +6,8 @@ export interface CreateAttendanceDto {
 export interface CreateAttendanceStudentDto {
   attendance_id: string;
   student_id: string;
-  score?: string;
-  status?: statusStudent;
+  score?: number;
+  status?: string;
   comment?: string;
   create_at?: string;
 }

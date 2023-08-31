@@ -54,14 +54,15 @@ exports.ClassSchema = {
             }),
         }),
         add_student: joi_1.default.object({
+            class_id: joi_1.default.string().required()
+                .messages({
+                "string.empty": `import class_id`,
+                "any.required": `{{#label}} is a required field `,
+            }),
             list: joi_1.default.array().items(joi_1.default.object({
                 student_id: joi_1.default.string().required().messages({
                     'string.empty': 'student_id is required',
                     'any.required': 'student_id is a required field',
-                }),
-                class_id: joi_1.default.string().required().messages({
-                    'string.empty': 'class_id is required',
-                    'any.required': 'class_id is a required field',
                 }),
             })),
         }),
@@ -105,6 +106,19 @@ exports.ClassSchema = {
                 "number.min": `{{#label}} must greater than or equal to {{#limit}}`,
                 "number.base": `{{#label}} must be a number`,
                 "number.integer": `{{#label}} must be an integer `,
+            }),
+        }),
+        update_student_status: joi_1.default.object({
+            student_id: joi_1.default.string().required().messages({
+                "string.empty": ` (import student_id)`,
+                "any.required": `{{#label}} is a required field`,
+            }),
+            class_id: joi_1.default.string().required().messages({
+                "string.empty": ` (import class_id)`,
+                "any.required": `{{#label}} is a required field`,
+            }),
+            status: joi_1.default.string().valid("ACTIVE", "INACTIVE").required().messages({
+                'any.only': `{{#label}} must be ACTIVE or INACTIVE `,
             }),
         }),
     },

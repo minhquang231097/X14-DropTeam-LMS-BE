@@ -3,7 +3,7 @@ import { Document, Schema, model } from "mongoose";
 const registe_CourseSchema = new Schema({
   fullname: String,
   email: String,
-  phone_number: Number,
+  phone_number: String,
   course: { type: Schema.Types.ObjectId, ref: "courses" },
   workplace: { type: Schema.Types.ObjectId, ref: "workplaces" },
   student: { type: Schema.Types.ObjectId, ref: "users" },
@@ -17,7 +17,7 @@ const registe_CourseSchema = new Schema({
 export interface IRegistedCourse extends Document {
   fullname: string;
   email: string;
-  phone_number: number;
+  phone_number: string;
   course: string;
   workplace: string;
   note: string;

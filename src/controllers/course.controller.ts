@@ -3,7 +3,7 @@ import CourseService from "@/services/course.service";
 import { RESPONSE_CONFIG } from "@/configs/response.config";
 import HttpResponseData from "@/common/httpResponseData";
 import HttpException from "@/common/httpException";
-import { Course, ICourse } from "@/models/course.model";
+import { ICourse } from "@/models/course.model";
 import courseService from "@/services/course.service";
 
 const LIMIT_PAGE_COURSE = 10;

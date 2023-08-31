@@ -21,7 +21,7 @@ export const Schema = {
         "string.email": `{{#label} is not an email`
       }),
       phone_number: Joi.string()
-        .regex(/^[0-9]/)
+        .regex(/^\+?[0-9][0-9]{7,14}$/)
         .min(5)
         .max(12)
         .required()

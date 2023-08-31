@@ -12,11 +12,11 @@ export class RegistedCourseRepository extends BaseRepository<IRegistedCourse> {
       .find({ course: id })
       .skip((page - 1) * limit)
       .limit(limit)
-      .populate("course").populate("student")
+      .populate(["course", "workplace", "student"]);
   }
 
   async FindRegistbyWorkplaceId(id: string, page: number, limit: number) {
-    return await this.model
+    return this.model
       .find({ workplace: id })
       .skip((page - 1) * limit)
       .limit(limit)

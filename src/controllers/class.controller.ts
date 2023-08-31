@@ -9,21 +9,19 @@ import userService from "@/services/user.service";
 import workplaceService from "@/services/workplace.service";
 import { Request, Response } from "express";
 import mongoose from "mongoose";
-import * as console from "console";
 
 const LIMIT_PAGE_CLASS = 10;
 
 const CreateNewClass = async (req: Request, res: Response) => {
-  const { class_code, course_id, workplace_id, mentor_id } = req.body;
+  const { course_id, workplace_id, mentor_id } = req.body;
   const payload = req.body;
   try {
-    const [_course, _workplace, _mentor, _class] = await Promise.all([
+    const [_course, _workplace, _mentor] = await Promise.all([
       courseService.GetCourseById(course_id),
       workplaceService.GetWorkplaceById(workplace_id),
       userService.GetUserById(mentor_id),
-      classService.GetClassByCode(class_code),
     ]);
-    if (!_course || !_workplace || !_mentor || _class) return res.status(404).send(new HttpException(RESPONSE_CONFIG.MESSAGE.CLASS.NOT_EXIST, 404));
+    if (!_course || !_workplace || !_mentor) return res.status(404).send(new HttpException(RESPONSE_CONFIG.MESSAGE.CLASS.NOT_EXIST, 404));
     const newClass = await classService.CreateOneClass(payload);
     res.status(200).json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.CLASS.CREATE_SUCCES, 200, newClass));
   } catch (error) {
@@ -32,7 +30,7 @@ const CreateNewClass = async (req: Request, res: Response) => {
 };
 
 const AddStudentToClass = async (req: Request, res: Response) => {
-  const { list } = req.body;
+  const { list, class_id } = req.body;
   try {
     const check = await classStudentService.CheckStudentLengthAndInRegistCourse(list);
     if (list.length === 0) {
@@ -40,7 +38,7 @@ const AddStudentToClass = async (req: Request, res: Response) => {
     } else if (check.length == 0) {
       return res.status(404).send(new HttpException(RESPONSE_CONFIG.MESSAGE.CLASS.NO_STUDENT_IN_REGIST, 404));
     } else {
-      const result = await classStudentService.AddStudentToClass(list);
+      const result = await classStudentService.AddStudentToClass(list, class_id);
       await registCourseService.DeleteRegistAfterAdd(list);
       res.status(200).json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.CLASS.ADD_STU_SUCCESS, 200, result));
     }
@@ -50,7 +48,7 @@ const AddStudentToClass = async (req: Request, res: Response) => {
 };
 
 const GetClass = async (req: Request, res: Response) => {
-  const { page, limit, student_id, search, course_id, status } = req.query;
+  const { page, limit, student_id, search, course_id, status, mentor_id } = req.query;
   const p = Number(page);
   const l = Number(limit);
   try {
@@ -104,6 +102,18 @@ const GetClass = async (req: Request, res: Response) => {
         res
           .status(200)
           .json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.CLASS.FOUND_SUCCESS, 200, result, result.length, num.length, p, Math.ceil(num.length / l)));
+      } else if (mentor_id) {
+        const num = await classService.GetClassByMentorId(mentor_id as string);
+        let result;
+        if (p === undefined && l === undefined) {
+          result = await classService.GetClassByMentorId(mentor_id as string, 1, 10);
+        } else {
+          result = await classService.GetClassByMentorId(mentor_id as string, p, l);
+        }
+        if (result.length === 0) return res.status(404).json(new HttpException(RESPONSE_CONFIG.MESSAGE.CLASS.NOT_FOUND, 404));
+        res
+          .status(200)
+          .json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.CLASS.FOUND_SUCCESS, 200, result, result.length, num.length, p, Math.ceil(num.length / l)));
       } else if (page && limit) {
         const result = await classService.GetAllClass(p, l);
         if (result.length === 0) {
@@ -145,9 +155,12 @@ const UpdateClass = async (req: Request, res: Response) => {
   const update = req.body;
   try {
     const exist = await classService.GetClassById(id as string);
-    if (!exist) return res.status(404).send(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.CLASS.NOT_FOUND, 404));
-    const newClass = await classService.UpdateOneClass(id as string, update);
-    res.status(200).json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.CLASS.UPDATE_SUCCESS, 200, newClass));
+    if (exist) {
+      await classService.UpdateOneClass(id as string, update);
+      const newClass = await classService.GetClassById(id as string);
+      return res.status(200).json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.CLASS.UPDATE_SUCCESS, 200, newClass));
+    }
+    return res.status(404).send(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.CLASS.NOT_FOUND, 404));
   } catch (error: any) {
     return res.status(400).send(new HttpException(RESPONSE_CONFIG.MESSAGE.CLASS.WRONG, 400));
   }
@@ -157,11 +170,13 @@ const UpdateStatusStudentInClass = async (req: Request, res: Response) => {
   const payload = req.body;
   const { student_id, class_id } = payload;
   try {
-    const [_student, _class] = await Promise.all([userService.GetUserById(student_id), classService.GetClassById(class_id)]);
-    if (!_class || !_student) return res.status(404).send(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.CLASS.NOT_FOUND, 404));
-    await classStudentService.GetClassByStudentId(student_id);
-    const newUpdate = await classStudentService.GetStudentInClassByStudentId(student_id);
-    res.status(200).json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.CLASS.UPDATE_SUCCESS, 200, newUpdate));
+    const exist = await classStudentService.CheckStudentExistInClass(student_id, class_id);
+    if (exist) {
+      await classStudentService.UpdateStatusStudentInClass(payload);
+      const newUpdate = await classStudentService.GetStudentInClassByStudentId(student_id);
+      return res.status(200).json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.CLASS.UPDATE_SUCCESS, 200, newUpdate));
+    }
+    return res.status(404).send(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.CLASS.NOT_FOUND, 404));
   } catch (error) {
     return res.status(400).send(new HttpException(RESPONSE_CONFIG.MESSAGE.CLASS.WRONG, 400));
   }
@@ -171,9 +186,11 @@ const DeleteOneClass = async (req: Request, res: Response) => {
   const { id } = req.params;
   try {
     const exist = await classService.GetClassById(id as string);
-    if (!exist) return res.status(404).send(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.CLASS.NOT_FOUND, 404));
-    await classService.DeleteClassById(id as string);
-    res.status(200).json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.CLASS.DELETE_SUCCESS, 200));
+    if (exist) {
+      await classService.DeleteClassById(id as string);
+      res.status(200).json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.CLASS.DELETE_SUCCESS, 200));
+    }
+    return res.status(404).send(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.CLASS.NOT_FOUND, 404));
   } catch (error: any) {
     return res.status(400).send(new HttpException(RESPONSE_CONFIG.MESSAGE.CLASS.WRONG, 400));
   }

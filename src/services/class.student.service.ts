@@ -2,40 +2,49 @@ import { ClassStudentRepository } from "@/repository/class.student.repo";
 import { Class_Student } from "@/models/class.student.model";
 import { AddStudentToClassDto, UpdateStatusStudentInClassDto } from "@/types/class";
 import registCourseService from "@/services/regist.course.service";
+import classStudentService from "@/services/class.student.service";
+import classService from "@/services/class.service";
+import { IClass } from "@/models/class.model";
 const classStudentRepository = new ClassStudentRepository(Class_Student);
 
-const AddStudentToClass = async (list: AddStudentToClassDto[]) => {
+const AddStudentToClass = async (list: AddStudentToClassDto[], class_id: string) => {
+  let num = await classStudentService.CountNumberOfStudentInClass(class_id);
+  const classDetail: IClass = await classService.GetClassById(class_id);
   return await Promise.all(
     list.map((el) => {
+      num++;
+      if (num > classDetail.minimum_size) {
+        classService.UpdateOneClass(class_id, { status: "ON" });
+      }
       return classStudentRepository.Create({
         student: el.student_id,
-        class: el.class_id,
+        status: el.status,
+        class: class_id,
       });
     }),
   );
 };
 
 const CheckStudentLengthAndInRegistCourse = async (list: AddStudentToClassDto[]) => {
-  const duplicateStudentIds: string[] = []
+  const duplicateStudentIds: string[] = [];
   await Promise.all(
     list.map(async (el) => {
-      if (el.student_id.length == 24 && el.class_id.length == 24) {
+      if (el.student_id.length == 24) {
         const regist = await registCourseService.GetRegistByStudentId(el.student_id);
         if (regist.length > 0) {
           duplicateStudentIds.push(el.student_id);
         }
+      } else {
+        duplicateStudentIds.length = 0;
       }
-      else {
-        duplicateStudentIds.length = 0
-      }
-    })
-  )
+    }),
+  );
   if (duplicateStudentIds.length != list.length) {
     return [];
   } else {
     return duplicateStudentIds;
   }
-}
+};
 
 const GetStudentInClassByStudentId = async (student_id: string) => {
   return await classStudentRepository.FindByCondition({ student: student_id }, ["student"]);
@@ -46,7 +55,14 @@ const GetAllStudentInClass = async (class_id: string, page?: any, limit?: any) =
 };
 
 const GetClassByStudentId = async (id: string, page?: any, limit?: any) => {
-  return await classStudentRepository.FindByConditionAndPagination({ student: id }, page, limit, ["student"]);
+  return await classStudentRepository.FindByConditionAndPagination({ student: id }, page, limit, ["student"], { create_at: -1 });
+};
+const CheckStudentExistInClass = async (student_id: string, class_id: string) => {
+  return await classStudentRepository.FindByCondition({ class: class_id, student: student_id });
+};
+
+const CountNumberOfStudentInClass = async (class_id: string) => {
+  return await classStudentRepository.CountStudentInClass(class_id);
 };
 
 const UpdateStatusStudentInClass = async (payload: UpdateStatusStudentInClassDto) => {
@@ -73,4 +89,6 @@ export default {
   UpdateStatusStudentInClass,
   GetStudentInClassByStudentId,
   CheckStudentLengthAndInRegistCourse,
+  CheckStudentExistInClass,
+  CountNumberOfStudentInClass,
 };

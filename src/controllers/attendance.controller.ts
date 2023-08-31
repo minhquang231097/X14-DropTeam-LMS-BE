@@ -5,6 +5,7 @@ import attendanceService from "@/services/attendance.service";
 import attendanceStudentService from "@/services/attendance.student.service";
 import { Request, Response } from "express";
 import mongoose from "mongoose";
+import * as console from "console";
 
 const LIMIT_PAGE_ATTENDANCE = 10;
 
@@ -23,15 +24,14 @@ const CreateListAttendance = async (req: Request, res: Response) => {
 const GetAttendance = async (req: Request, res: Response) => {
   const { page, limit, class_id, session_id, student_id } = req.query;
   const p: number = Number(page);
-  const l :number = Number(limit);
-
+  const l: number = Number(limit);
   try {
     if (
       (!session_id || mongoose.isValidObjectId(session_id)) &&
       (!class_id || mongoose.isValidObjectId(class_id)) &&
       (!student_id || mongoose.isValidObjectId(student_id))
     ) {
-      const countDoc : number = await attendanceService.CountAttendance();
+      const countDoc: number = await attendanceService.CountAttendance();
 
       if (class_id) {
         const num = await attendanceService.GetAttendanceByClassId(class_id as string);
@@ -81,15 +81,7 @@ const GetAttendance = async (req: Request, res: Response) => {
         res
           .status(200)
           .json(
-            new HttpResponseData(
-              RESPONSE_CONFIG.MESSAGE.ATTENDANCE.FOUND_SUCCESS,
-              200,
-              result,
-              result.length,
-              countDoc,
-              1,
-              Math.ceil(countDoc / LIMIT_PAGE_ATTENDANCE),
-            ),
+            new HttpResponseData(RESPONSE_CONFIG.MESSAGE.ATTENDANCE.FOUND_SUCCESS, 200, result, result.length, countDoc, 1, Math.ceil(countDoc / LIMIT_PAGE_ATTENDANCE),),
           );
       }
     } else {
@@ -102,12 +94,16 @@ const GetAttendance = async (req: Request, res: Response) => {
 
 const GetInfoAttendanceStudent = async (req: Request, res: Response) => {
   const { id } = req.params;
+  const { page, limit } = req.query;
+  const p = Number(page);
+  const l = Number(limit);
+
   try {
-    const result = await attendanceStudentService.GetAttendanceByStudentId(id as string);
-    if (!result) res.status(404).send(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.ATTENDANCE.NOT_FOUND, 404));
-    res.status(200).json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.ATTENDANCE.FOUND_SUCCESS, 200, result));
-  } catch (error) {
-    res.status(400).send(new HttpException(RESPONSE_CONFIG.MESSAGE.ATTENDANCE.WRONG, 400));
+    const result = await attendanceStudentService.GetAttendanceByStudentId(id as string, p, l);
+    if (result.length > 0) res.status(200).json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.ATTENDANCE.FOUND_SUCCESS, 200, result));
+    res.status(404).send(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.ATTENDANCE.NOT_FOUND, 404, result));
+  } catch (error: Error | any) {
+    res.status(400).send(new HttpException(RESPONSE_CONFIG.MESSAGE.ATTENDANCE.WRONG, 400, error.message));
   }
 };
 
@@ -116,10 +112,12 @@ const UpdateAttendance = async (req: Request, res: Response) => {
   const update = req.body;
   try {
     const exist = await attendanceService.GetAttendanceById(id as string);
-    if (!exist) res.status(404).send(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.ATTENDANCE.NOT_FOUND, 404));
-    await attendanceService.UpdateAttendance(id as string, update);
-    const newAttendance = await attendanceService.UpdateAttendance(id as string, update);
-    res.status(200).json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.ATTENDANCE.UPDATE_SUCCESS, 200, newAttendance));
+    if (exist) {
+      await attendanceService.UpdateAttendance(id as string, update);
+      const newAttendance = await attendanceService.UpdateAttendance(id as string, update);
+      res.status(200).json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.ATTENDANCE.UPDATE_SUCCESS, 200, newAttendance));
+    }
+    res.status(404).send(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.ATTENDANCE.NOT_FOUND, 404));
   } catch (error: any) {
     res.status(400).json(new HttpException(RESPONSE_CONFIG.MESSAGE.ATTENDANCE.WRONG, 400));
   }
@@ -129,9 +127,11 @@ const DeleteAttendance = async (req: Request, res: Response) => {
   const { id } = req.params;
   try {
     const exist = await attendanceService.GetAttendanceById(id as string);
-    if (!exist) return res.status(404).send(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.ATTENDANCE.NOT_FOUND, 404));
-    await attendanceService.DeleteAttendanceById(id as string);
-    res.status(200).json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.ATTENDANCE.DELETE_SUCCESS, 200));
+    if (exist) {
+      await attendanceService.DeleteAttendanceById(id as string);
+      res.status(200).json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.ATTENDANCE.DELETE_SUCCESS, 200));
+    }
+    return res.status(404).send(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.ATTENDANCE.NOT_FOUND, 404));
   } catch (error: any) {
     return res.status(400).send(new HttpException(RESPONSE_CONFIG.MESSAGE.ATTENDANCE.WRONG, 400));
   }

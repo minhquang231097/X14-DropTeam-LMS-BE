@@ -5,6 +5,7 @@ import courseService from "./course.service";
 import userService from "./user.service";
 import workplaceService from "./workplace.service";
 import axios from "axios";
+import classStudentService from "@/services/class.student.service";
 
 const classRepository = new ClassRepository(Class);
 
@@ -51,7 +52,7 @@ const CreateOneClass = async (payload: CreateClassDto) => {
 };
 
 const GetAllClass = async (page?: number, limit?: number) => {
-  return await classRepository.FindAllInfoAndPagination(page, limit, ["mentor", "workplace", { path: "course" }]);
+  return await classRepository.FindAllInfoAndPagination(page, limit, ["mentor", "workplace", "course"], { create_at: -1 });
 };
 
 const GetTotalClass = async () => {
@@ -59,7 +60,7 @@ const GetTotalClass = async () => {
 };
 
 const GetClassById = async (id: string) => {
-  return await classRepository.FindById(id, ["mentor", "workplace", { path: "course" }]);
+  return await classRepository.FindById(id, ["mentor", "workplace", "course"]);
 };
 
 const GetClassByCourseId = async (id: string, page?: any, limit?: any) => {
@@ -70,8 +71,8 @@ const GetClassByCode = async (code: string) => {
   return await classRepository.FindClassByCode(code);
 };
 
-const GetClassByMentorId = async (id: string) => {
-  return await classRepository.FindClassByMentorId(id);
+const GetClassByMentorId = async (id: string, page?: any, limit?: any) => {
+  return await classRepository.FindByConditionAndPagination({ mentor: id }, page, limit, ["mentor"], { create_at: -1 });
 };
 
 const GetClassByWorkplaceId = async (id: string) => {
@@ -79,14 +80,14 @@ const GetClassByWorkplaceId = async (id: string) => {
 };
 
 const GetClassByCondition = async (filter: IClass) => {
-  return await classRepository.FindByCondition(filter, ["mentor", "workplace", { path: "course" }]);
+  return await classRepository.FindByCondition(filter, ["mentor", "workplace", "course"]);
 };
 
 const SearchClassByCondition = async (searchTerm?: string, page?: any, limit?: any) => {
   const query = {
     $or: [{ class_code: { $regex: searchTerm, $options: "i" } }],
   };
-  return await classRepository.SearchByCondition(page, limit, query, ["mentor", "workplace", { path: "course" }]);
+  return await classRepository.SearchByCondition(page, limit, query, ["mentor", "workplace", "course"]);
 };
 
 const UpdateOneClass = async (id: string, payload: UpdateClassDto) => {
@@ -106,7 +107,7 @@ const DeleteClassByCondition = async (filter: UpdateClassDto) => {
 };
 
 const GetClassByStatus = async (status: string, page?: number, limit?: number) => {
-  return await classRepository.FindByConditionAndPagination({ status }, page, limit);
+  return await classRepository.FindByConditionAndPagination({ status }, page, limit, { create_at: -1 });
 };
 
 export default {

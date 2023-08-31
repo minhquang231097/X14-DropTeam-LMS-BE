@@ -17,30 +17,32 @@ export abstract class BaseRepository<T extends Document> {
     return this.model.findOne(filter).populate(populate);
   }
 
-  async FindByConditionAndPagination(filter?: any, page?: any, limit?: any, populate?: any | null): Promise<T[] | any> {
+  async FindByConditionAndPagination(filter?: any, page?: any, limit?: any, populate?: any | null, sort?: any): Promise<T[] | any> {
     return this.model
       .find(filter)
-      .populate(populate)
+      .sort(sort)
       .skip((page - 1) * limit)
-      .limit(limit);
+      .limit(limit)
+      .populate(populate);
   }
 
   async FindAll(): Promise<T[] | any> {
     return this.model.find();
   }
 
-  async FindAllInfoAndPagination(page?: any, limit?: any, populate?: any | null, sorted?: any): Promise<T[] | any> {
-    return await this.model
+  async FindAllInfoAndPagination(page?: any, limit?: any, populate?: any | null, sort?: any): Promise<T[] | any> {
+    return this.model
       .find()
-      .sort({ create_at: sorted })
+      .sort(sort)
       .skip((page - 1) * limit)
       .limit(limit)
       ?.populate(populate);
   }
 
-  async SearchByCondition(page?: any, limit?: any, query?: any | null, populate?: any | null): Promise<T[] | any> {
+  async SearchByCondition(page?: any, limit?: any, query?: any | null, populate?: any | null, sort?: any): Promise<T[] | any> {
     return this.model
       .find(query)
+      .sort(sort)
       .skip((page - 1) * limit)
       .limit(limit)
       .populate(populate);

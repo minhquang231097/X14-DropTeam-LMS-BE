@@ -27,7 +27,7 @@ const GetTotalRegist = async () => {
 };
 
 const GetAllRegist = async (page: number, limit: number) => {
-  return await registCourseRepository.FindAllInfoAndPagination(page, limit);
+  return await registCourseRepository.FindAllInfoAndPagination(page, limit, ["course", "workplace"]);
 };
 
 const GetRegistByCourseId = async (course_id: string, page?: any, limit?: any) => {
@@ -43,7 +43,7 @@ const GetRegistByStudentId = async (student_id: string, page?: any, limit?: any)
 };
 
 const GetRegistById = async (id: string) => {
-  return await registCourseRepository.FindById(id);
+  return await registCourseRepository.FindById(id, ["course", "workplace"]);
 };
 
 const GetRegistByCourseIdAndStudentId = async (course_id: string, student_id: string) => {
@@ -58,7 +58,7 @@ const SearchRegistByCondition = async (searchTerm?: string, page?: any, limit?: 
       { phone_number: { $regex: searchTerm, $options: "i" } },
     ],
   };
-  return await registCourseRepository.SearchByCondition(page, limit, query);
+  return await registCourseRepository.SearchByCondition(page, limit, query, ["course", "workplace"], { create_at: -1 });
 };
 
 const UpdateRegist = async (id: string, payload: any) => {
@@ -71,9 +71,9 @@ const DeleteRegist = async (id: string) => {
 
 const DeleteRegistAfterAdd = async (list: AddStudentToClassDto[]) => {
   list.map(async (el) => {
-    return await registCourseRepository.DeleteByCondition({ student: el.student_id })
-  })
-}
+    return await registCourseRepository.DeleteByCondition({ student: el.student_id });
+  });
+};
 
 export default {
   DeleteRegist,
