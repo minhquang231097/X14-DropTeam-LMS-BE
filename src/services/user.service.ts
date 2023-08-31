@@ -51,6 +51,22 @@ const SearchUserByCondition = async (searchTerm?: string, page?: any, limit?: an
   return await userRepository.SearchByCondition(page, limit, query);
 };
 
+const SearchUserByConditionAndRole = async (searchTerm?: string, role?: string, page?: any, limit?: any) => {
+  const query = {
+    $and: [
+      {
+        $or: [
+          { username: { $regex: searchTerm, $options: "i" } },
+          { email: { $regex: searchTerm, $options: "i" } },
+          { fullname: { $regex: searchTerm, $options: "i" } },
+        ],
+      },
+      { role: { $regex: role, $options: "i" } },
+    ],
+  };
+  return await userRepository.SearchByCondition(page, limit, query);
+};
+
 const UpdateUserById = async (id: string, payload: any) => {
   return await userRepository.FindByIdAndUpdate(id, payload);
 };
@@ -98,4 +114,5 @@ export default {
   GetTotalUser,
   GetUserByRole,
   SortUser,
+  SearchUserByConditionAndRole,
 };

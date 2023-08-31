@@ -16,6 +16,10 @@ const CreateFeedback = async (payload: CreateFeedbackDto) => {
   return newFeedback;
 };
 
+const GetAllSortedFeedback = async () => {
+  return await feedbackRepository.Sort()
+}
+
 const GetTotalFeedback = async () => {
   return await feedbackRepository.Count();
 };
@@ -32,15 +36,15 @@ const GetFeedbackByStudentId = async (student_id: string, page?: any, limit?: an
   return await feedbackRepository.FindFeedbackByStudentId(student_id, page, limit);
 };
 
-const GetFeedbackByCondition = async (page: number, limit: number) => {
-  return await feedbackRepository.FindAllInfoAndPagination(page, limit, [{ path: "course" }, "student"]);
+const GetFeedbackByCondition = async (page: number, limit: number, sorted: number) => {
+  return await feedbackRepository.FindAllInfoAndPagination(page, limit, [{ path: "course" }, "student"], sorted);
 };
 
 const SearchFeedbackByCondition = async (searchTerm?: string, page?: any, limit?: any) => {
   const query = {
-    $or: [{ rating: { $regex: searchTerm, $options: "i" } }, { content: { $regex: searchTerm, $options: "i" } }],
+    $or: [{ 'path:"course.course_code"': { $regex: searchTerm, $options: "i" } }, { content: { $regex: searchTerm, $options: "i" } }],
   };
-  return await feedbackRepository.SearchByCondition(page, limit, query);
+  return await feedbackRepository.SearchByCondition(page, limit, query, [{ path: "course" }, "student"]);
 };
 
 const UpdateFeedback = async (id: string, payload: UpdateFeedbackDto) => {
@@ -54,6 +58,7 @@ const DeleteFeedbackById = async (id: string) => {
 const DeleteFeedbackByCondition = async (filter: FindFeedbackDto) => {
   return await feedbackRepository.DeleteByCondition(filter);
 };
+
 export default {
   CreateFeedback,
   GetFeedbackById,
@@ -65,4 +70,5 @@ export default {
   GetFeedbackByStudentId,
   GetTotalFeedback,
   SearchFeedbackByCondition,
+  GetAllSortedFeedback,
 };

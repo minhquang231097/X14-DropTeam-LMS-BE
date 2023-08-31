@@ -29,9 +29,10 @@ export abstract class BaseRepository<T extends Document> {
     return this.model.find();
   }
 
-  async FindAllInfoAndPagination(page?: any, limit?: any, populate?: any | null): Promise<T[] | any> {
+  async FindAllInfoAndPagination(page?: any, limit?: any, populate?: any | null, sorted?: any): Promise<T[] | any> {
     return await this.model
       .find()
+      .sort({ create_at: sorted })
       .skip((page - 1) * limit)
       .limit(limit)
       ?.populate(populate);
@@ -80,6 +81,7 @@ export abstract class BaseRepository<T extends Document> {
   async FindByIdAndUpdate(id: string | ObjectId, update: any) {
     return this.model.findByIdAndUpdate(id, update);
   }
+
   async Sort(): Promise<T[] | any> {
     return this.model.find().sort({ create_at: -1 });
   }

@@ -68,25 +68,15 @@ const GetFeedback = async (req: Request, res: Response) => {
           .status(200)
           .json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.FEEDBACK.FOUND_SUCCESS, 200, result, result.length, num.length, p, Math.ceil(num.length / l)));
       } else if (page && limit) {
-        const result = await feedbackService.GetFeedbackByCondition(p, l);
+        const result = await feedbackService.GetFeedbackByCondition(p, l, -1);
         if (result.length === 0) return res.status(404).send(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.FEEDBACK.FOUND_NO_DATA, 404));
         res
           .status(200)
           .json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.FEEDBACK.FOUND_SUCCESS, 200, result, result.length, countDoc, p, Math.ceil(countDoc / l)));
       } else {
-        const result = await feedbackService.GetFeedbackByCondition(1, LIMIT_PAGE_FEEDBACK);
+        const result = await feedbackService.GetFeedbackByCondition(1, LIMIT_PAGE_FEEDBACK, -1);
         if (result.length === 0) return res.status(404).send(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.FEEDBACK.FOUND_NO_DATA, 404));
-        res.json(
-          new HttpResponseData(
-            RESPONSE_CONFIG.MESSAGE.FEEDBACK.FOUND_SUCCESS,
-            200,
-            result,
-            result.length,
-            countDoc,
-            1,
-            Math.ceil(countDoc / LIMIT_PAGE_FEEDBACK),
-          ),
-        );
+        res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.FEEDBACK.FOUND_SUCCESS, 200, result, result.length, countDoc, 1, Math.ceil(countDoc / LIMIT_PAGE_FEEDBACK),),);
       }
     } else {
       return res.status(404).send(new HttpException(RESPONSE_CONFIG.MESSAGE.FEEDBACK.NOT_FOUND, 404));

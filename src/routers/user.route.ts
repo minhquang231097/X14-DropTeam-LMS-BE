@@ -1,5 +1,4 @@
 import userController from "@/controllers/user.controller";
-import { CheckRole } from "@/middlewares/checkRole";
 import { verifyAccessJWT } from "@/middlewares/verifyAccessToken";
 import { Schema } from "@/validation/user.joi";
 import { ValidateJoi } from "@/validation/validatejoi";
