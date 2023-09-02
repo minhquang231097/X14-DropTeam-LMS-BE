@@ -43,6 +43,9 @@ const AddStudentToClass = async (req, res) => {
             return res.status(404).send(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.CLASS.NO_STUDENT_IN_REGIST, 404));
         }
         else {
+            const uniqueList = new Set(list.map(JSON.stringify));
+            if (uniqueList.size !== list.length)
+                return res.status(400).send(new httpException_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.CLASS.LIST_DUPLICATE, 400));
             const result = await class_student_service_1.default.AddStudentToClass(list, class_id);
             await regist_course_service_1.default.DeleteRegistAfterAdd(list);
             res.status(200).json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.CLASS.ADD_STU_SUCCESS, 200, result));
@@ -136,9 +139,8 @@ const GetClass = async (req, res) => {
             }
             else if (page && limit) {
                 const result = await class_service_1.default.GetAllClass(p, l);
-                if (result.length === 0) {
+                if (result.length === 0)
                     return res.status(200).json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.CLASS.FOUND_NO_DATA, 200));
-                }
                 res
                     .status(200)
                     .json(new httpResponseData_1.default(response_config_1.RESPONSE_CONFIG.MESSAGE.CLASS.FOUND_SUCCESS, 200, result, result.length, countDoc, p, Math.ceil(countDoc / l)));

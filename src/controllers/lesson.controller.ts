@@ -6,15 +6,16 @@ import lessonService from "@/services/lesson.service";
 import sessionService from "@/services/session.service";
 import { Request, Response } from "express";
 import mongoose from "mongoose";
+import * as console from "console";
 
 const LIMIT_PAGE_LESSON = 10;
 
 const CreateNewLesson = async (req: Request, res: Response) => {
   const payload = req.body;
-  const { session_id, course_id } = payload;
+  const {course_id } = payload;
   try {
-    const [_session, _course] = await Promise.all([sessionService.GetSessionById(session_id as string), courseService.GetCourseById(course_id as string)]);
-    if (!_session || !_course) return res.status(404).send(new HttpException(RESPONSE_CONFIG.MESSAGE.LESSON.NOT_FOUND, 404));
+    const _course = await courseService.GetCourseById(course_id as string)
+    if (!_course) return res.status(404).send(new HttpException(RESPONSE_CONFIG.MESSAGE.LESSON.NOT_FOUND, 404));
     const newLesson = await lessonService.CreateLesson(payload);
     res.status(200).json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.LESSON.CREATE_SUCCES, 200, newLesson));
   } catch (error) {
@@ -75,9 +76,9 @@ const GetLesson = async (req: Request, res: Response) => {
 };
 
 const GetLessonInfo = async (req: Request, res: Response) => {
-  const { id } = req.params;
+  const {id}  = req.params;
   try {
-    const found = await lessonService.GetLessonById(id as string);
+    const found = await lessonService.GetLessonById(id);
     if (!found) return res.status(404).send(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.LESSON.NOT_FOUND, 404));
     res.status(200).json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.LESSON.FOUND_SUCCESS, 200, found));
   } catch (error) {
@@ -86,16 +87,14 @@ const GetLessonInfo = async (req: Request, res: Response) => {
 };
 
 const UpdateLesson = async (req: Request, res: Response) => {
-  const { id } = req.params;
-  const { payload } = req.body;
+  const {id}  = req.params;
+  const  payload = req.body;
   try {
-    const exist = await lessonService.GetLessonById(id as string);
-    if (exist) {
-      await lessonService.UpdateLessonById(id as string, payload);
-      const newLesson = await lessonService.GetLessonById(id as string);
+    const exist = await lessonService.GetLessonById(id);
+    if (!exist) return res.status(404).send(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.LESSON.NOT_FOUND, 404));
+      await lessonService.UpdateLessonById(id , payload);
+      const newLesson = await lessonService.GetLessonById(id);
       res.status(200).json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.LESSON.FOUND_SUCCESS, 200, newLesson));
-    }
-    return res.status(404).send(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.LESSON.NOT_FOUND, 404));
   } catch (error) {
     return res.status(404).send(new HttpException(RESPONSE_CONFIG.MESSAGE.LESSON.WRONG, 400));
   }

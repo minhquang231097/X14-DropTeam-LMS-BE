@@ -42,13 +42,13 @@ exports.RegistSchema = {
             note: joi_1.default.string().min(0),
         }),
         update_regist_course: joi_1.default.object({
-            course_id: joi_1.default.string()
+            course: joi_1.default.string()
                 .required()
                 .messages({
                 "string.empty": `${response_config_1.RESPONSE_CONFIG.MESSAGE.REGIST.NO_COURSE} (import course id)`,
                 "any.required": `{{#label}} is a required field`,
             }),
-            workplace_id: joi_1.default.string()
+            workplace: joi_1.default.string()
                 .required()
                 .messages({
                 "string.empty": `${response_config_1.RESPONSE_CONFIG.MESSAGE.REGIST.NO_COURSE} (import workplace id)`,

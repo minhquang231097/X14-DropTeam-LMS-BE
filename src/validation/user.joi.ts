@@ -38,7 +38,7 @@ export const Schema = {
         "string.max": `{{#label}} should have a maximum length of {#limit}`,
         "any.required": `{{#label}} is a required field`,
       }),
-      password: Joi.string().regex(/^(?!.* )[A-Za-zd$@$!%*?&.]/).min(5).max(100).required().messages({
+      password: Joi.string().regex(/^(?!.* )[A-Z-0-9a-zd$@$!%*?&.]/).min(5).max(100).required().messages({
         "string.empty": RESPONSE_CONFIG.MESSAGE.USER.NO_PASSWORD,
         "string.min": `{{#label}} should have a minimum length of {#limit}`,
         "string.max": `{{#label}} should have a maximum length of {#limit}`,

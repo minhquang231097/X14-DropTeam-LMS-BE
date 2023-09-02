@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="0a4be669-5ab2-4f8d-8757-f15e7041d32f" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/prettier.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/src/configs/response.config.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/src/configs/response.config.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/src/configs/response.config.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/dist/src/configs/response.config.js.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/src/controllers/auth.controller.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/src/controllers/auth.controller.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/src/controllers/class.controller.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/src/controllers/class.controller.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/src/controllers/class.controller.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/dist/src/controllers/class.controller.js.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/src/controllers/course.controller.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/src/controllers/course.controller.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/src/controllers/user.controller.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/src/controllers/user.controller.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/src/controllers/workplace.controller.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/src/controllers/workplace.controller.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/src/services/class.service.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/src/services/class.service.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/src/validation/attendance.joi.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/src/validation/attendance.joi.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/src/validation/class.joi.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/src/validation/class.joi.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/src/validation/course.joi.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/src/validation/course.joi.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/src/validation/feedback.joi.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/src/validation/feedback.joi.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/src/validation/lesson.joi.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/src/validation/lesson.joi.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/src/validation/lesson.joi.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/dist/src/validation/lesson.joi.js.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/src/validation/regist.course.joi.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/src/validation/regist.course.joi.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/src/validation/regist.course.joi.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/dist/src/validation/regist.course.joi.js.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/src/validation/session.joi.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/src/validation/session.joi.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/src/validation/user.joi.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/src/validation/user.joi.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/tsconfig.tsbuildinfo" beforeDir="false" afterPath="$PROJECT_DIR$/dist/tsconfig.tsbuildinfo" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/configs/response.config.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/configs/response.config.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/controllers/attendance.controller.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/controllers/attendance.controller.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/controllers/class.controller.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/controllers/class.controller.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/controllers/lesson.controller.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/controllers/lesson.controller.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/controllers/regist.course.controller.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/controllers/regist.course.controller.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/routers/class.route.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/routers/class.route.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/routers/regist.course.route.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/routers/regist.course.route.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/services/lesson.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/services/lesson.service.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/services/regist.course.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/services/regist.course.service.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/types/regist.course.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/types/regist.course.d.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/validation/lesson.joi.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/validation/lesson.joi.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/validation/regist.course.joi.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/validation/regist.course.joi.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/validation/user.joi.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/validation/user.joi.ts" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;customColor&quot;: &quot;&quot;,
+  &quot;associatedIndex&quot;: 5
+}</component>
+  <component name="ProjectId" id="2UmW4heNNNPEQzubfrpVfZCX0Pb" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;auth&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;ts.external.directory.path&quot;: &quot;D:\\Code\\X14-DropTeam-LMS-BE\\node_modules\\typescript\\lib&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  }
+}</component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="0a4be669-5ab2-4f8d-8757-f15e7041d32f" name="Changes" comment="" />
+      <created>1693545050569</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1693545050569</updated>
+      <workItem from="1693545056617" duration="1875000" />
+      <workItem from="1693602676262" duration="3377000" />
+      <workItem from="1693606356752" duration="299000" />
+      <workItem from="1693636991327" duration="2657000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+</project>

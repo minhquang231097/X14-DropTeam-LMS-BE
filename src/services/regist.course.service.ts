@@ -5,6 +5,7 @@ import { RegistedCourse } from "@/models/registe.course.model";
 import { RegistedCourseRepository } from "@/repository/regist.course.repo";
 import { RegistCourseDto } from "@/types/regist.course";
 import { AddStudentToClassDto } from "@/types/class";
+import * as console from "console";
 
 const registCourseRepository = new RegistedCourseRepository(RegistedCourse);
 

@@ -9,6 +9,8 @@ import userService from "@/services/user.service";
 import workplaceService from "@/services/workplace.service";
 import { Request, Response } from "express";
 import mongoose from "mongoose";
+import {AddStudentToClassDto} from "@/types/class";
+import * as console from "console";
 
 const LIMIT_PAGE_CLASS = 10;
 
@@ -38,6 +40,8 @@ const AddStudentToClass = async (req: Request, res: Response) => {
     } else if (check.length == 0) {
       return res.status(404).send(new HttpException(RESPONSE_CONFIG.MESSAGE.CLASS.NO_STUDENT_IN_REGIST, 404));
     } else {
+      const uniqueList = new Set(list.map(JSON.stringify))
+      if(uniqueList.size !== list.length) return res.status(400).send(new HttpException(RESPONSE_CONFIG.MESSAGE.CLASS.LIST_DUPLICATE, 400));
       const result = await classStudentService.AddStudentToClass(list, class_id);
       await registCourseService.DeleteRegistAfterAdd(list);
       res.status(200).json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.CLASS.ADD_STU_SUCCESS, 200, result));
@@ -116,9 +120,7 @@ const GetClass = async (req: Request, res: Response) => {
           .json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.CLASS.FOUND_SUCCESS, 200, result, result.length, num.length, p, Math.ceil(num.length / l)));
       } else if (page && limit) {
         const result = await classService.GetAllClass(p, l);
-        if (result.length === 0) {
-          return res.status(200).json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.CLASS.FOUND_NO_DATA, 200));
-        }
+        if (result.length === 0)  return res.status(200).json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.CLASS.FOUND_NO_DATA, 200));
         res
           .status(200)
           .json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.CLASS.FOUND_SUCCESS, 200, result, result.length, countDoc, p, Math.ceil(countDoc / l)));

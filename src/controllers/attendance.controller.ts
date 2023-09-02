@@ -5,7 +5,6 @@ import attendanceService from "@/services/attendance.service";
 import attendanceStudentService from "@/services/attendance.student.service";
 import { Request, Response } from "express";
 import mongoose from "mongoose";
-import * as console from "console";
 
 const LIMIT_PAGE_ATTENDANCE = 10;
 
@@ -81,7 +80,15 @@ const GetAttendance = async (req: Request, res: Response) => {
         res
           .status(200)
           .json(
-            new HttpResponseData(RESPONSE_CONFIG.MESSAGE.ATTENDANCE.FOUND_SUCCESS, 200, result, result.length, countDoc, 1, Math.ceil(countDoc / LIMIT_PAGE_ATTENDANCE),),
+            new HttpResponseData(
+              RESPONSE_CONFIG.MESSAGE.ATTENDANCE.FOUND_SUCCESS,
+              200,
+              result,
+              result.length,
+              countDoc,
+              1,
+              Math.ceil(countDoc / LIMIT_PAGE_ATTENDANCE),
+            ),
           );
       }
     } else {

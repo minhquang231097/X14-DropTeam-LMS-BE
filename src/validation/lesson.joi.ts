@@ -6,13 +6,6 @@ import { RESPONSE_CONFIG } from "@/configs/response.config";
 export const LessonSchema = {
   Lesson: {
     create_lesson: Joi.object<CreateLessonDto>({
-      session_id: Joi.string()
-        .required()
-        .messages({
-          "string.empty": `${RESPONSE_CONFIG.MESSAGE.LESSON.NO_SESSION} (import session code)`,
-          "string.max": `{{#label}} should have a maximum length of {#limit}`,
-          "any.required": `{{#label}} is a required field (import session code)`,
-        }),
       course_id: Joi.string()
         .required()
         .messages({
@@ -37,13 +30,6 @@ export const LessonSchema = {
       }),
     }),
     update_lesson: Joi.object<UpdateLessonDto>({
-      session: Joi.string()
-        .required()
-        .messages({
-          "string.empty": `${RESPONSE_CONFIG.MESSAGE.LESSON.NO_SESSION} (import session code)`,
-          "string.max": `{{#label}} should have a maximum length of {#limit}`,
-          "any.required": `{{#label}} is a required field`,
-        }),
       title: Joi.string().required().messages({
         "string.empty": RESPONSE_CONFIG.MESSAGE.LESSON.NO_TITLE,
         "string.max": `{{#label}} should have a maximum length of {#limit}`,

@@ -7,6 +7,7 @@ import userService from "@/services/user.service";
 import workplaceService from "@/services/workplace.service";
 import { Request, Response } from "express";
 import mongoose from "mongoose";
+import * as console from "console";
 
 const LIMIT_PAGE_REGIST = 10;
 
@@ -156,13 +157,10 @@ const UpdateRegist = async (req: Request, res: Response) => {
   const payload = req.body;
   try {
     const exist = await registCourseService.GetRegistById(id as string);
-    if (exist) {
-      await registCourseService.UpdateRegist(id as string, payload);
-      const newRegist = await registCourseService.GetRegistById(id as string);
-      console.log(payload)
-      return res.status(200).json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.REGIST.FOUND_SUCCESS, 200, newRegist));
-    }
-    return res.status(404).send(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.REGIST.NOT_FOUND, 404));
+    if (!exist) return res.status(404).send(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.REGIST.NOT_FOUND, 404));
+    await registCourseService.UpdateRegist(id as string, payload);
+    const newRegist = await registCourseService.GetRegistById(id as string);
+    return res.status(200).json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.REGIST.FOUND_SUCCESS, 200, newRegist));
   } catch (error) {
     return res.json(new HttpException(RESPONSE_CONFIG.MESSAGE.REGIST.WRONG, 400));
   }

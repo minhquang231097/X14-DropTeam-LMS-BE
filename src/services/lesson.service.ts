@@ -8,7 +8,6 @@ const lessonRepository = new LessonRepository(Lesson);
 
 const CreateLesson = async (payload: CreateLessonDto) => {
   return await lessonRepository.Create({
-    session: payload.session_id,
     course: payload.course_id,
     title: payload.title,
     content: payload.content,
