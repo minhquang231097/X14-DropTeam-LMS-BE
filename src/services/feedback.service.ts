@@ -17,8 +17,8 @@ const CreateFeedback = async (payload: CreateFeedbackDto) => {
 };
 
 const GetAllSortedFeedback = async () => {
-  return await feedbackRepository.Sort()
-}
+  return await feedbackRepository.Sort();
+};
 
 const GetTotalFeedback = async () => {
   return await feedbackRepository.Count();
@@ -28,23 +28,26 @@ const GetFeedbackById = async (id: string) => {
   return await feedbackRepository.FindById(id, [{ path: "course" }, "student"]);
 };
 
-const GetFeedbackByCourseId = async (course_id: string, page?: any, limit?: any) => {
-  return await feedbackRepository.FindFeedbackByCourseId(course_id, page, limit);
+const GetFeedbackByCourseId = async (course_id: string, page?: number, limit?: number, sortBy?: any) => {
+  return await feedbackRepository.FindFeedbackByCourseId(course_id, page, limit, sortBy);
 };
 
-const GetFeedbackByStudentId = async (student_id: string, page?: any, limit?: any) => {
-  return await feedbackRepository.FindFeedbackByStudentId(student_id, page, limit);
+const GetFeedbackByStudentId = async (student_id: string, page?: number, limit?: number, sortBy?: any) => {
+  return await feedbackRepository.FindFeedbackByStudentId(student_id, page, limit, sortBy);
 };
 
-const GetFeedbackByCondition = async (page: number, limit: number, sorted: number) => {
-  return await feedbackRepository.FindAllInfoAndPagination(page, limit, [{ path: "course" }, "student"], sorted);
+const GetFeedbackByCondition = async (page: number, limit: number, sortBy: number) => {
+  return await feedbackRepository.FindAllInfoAndPagination(page, limit, sortBy, [{ path: "course" }, "student"]);
 };
 
-const SearchFeedbackByCondition = async (searchTerm?: string, page?: any, limit?: any) => {
+const SearchFeedbackByCondition = async (searchTerm?: string, page?: number, limit?: number, sortBy?: any) => {
   const query = {
-    $or: [{ 'path:"course.course_code"': { $regex: searchTerm, $options: "i" } }, { content: { $regex: searchTerm, $options: "i" } }],
+    $or: [
+      { 'path:"course.course_code"': { $regex: searchTerm, $options: "i" } },
+      { content: { $regex: searchTerm, $options: "i" } },
+    ],
   };
-  return await feedbackRepository.SearchByCondition(page, limit, query, [{ path: "course" }, "student"]);
+  return await feedbackRepository.SearchByCondition(page, limit, query, sortBy, [{ path: "course" }, "student"]);
 };
 
 const UpdateFeedback = async (id: string, payload: UpdateFeedbackDto) => {

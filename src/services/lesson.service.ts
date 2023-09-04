@@ -19,22 +19,22 @@ const CountLesson = async () => {
   return await lessonRepository.Count();
 };
 
-const GetAllLesson = async (page: number, limit: number) => {
-  return await lessonRepository.FindAllInfoAndPagination(page, limit, "course");
+const GetAllLesson = async (page: number, limit: number, sortBy?: any) => {
+  return await lessonRepository.FindAllInfoAndPagination(page, limit, sortBy, "course");
 };
 
 const GetLessonById = async (id: string) => {
   return await lessonRepository.FindById(id, "course");
 };
-const GetLessonByCourseId = async (course_id: string, page?: any, limit?: any) => {
-  return await lessonRepository.FindLessonByCourseId(course_id, page, limit);
+const GetLessonByCourseId = async (course_id: string, page?: number, limit?: number, sortBy?: any) => {
+  return await lessonRepository.FindLessonByCourseId(course_id, page, limit, sortBy);
 };
 
-const SearchLessonByCondition = async (searchTerm?: string, page?: any, limit?: any) => {
+const SearchLessonByCondition = async (searchTerm?: string, page?: number, limit?: number, sortBy?: any) => {
   const query = {
     $or: [{ title: { $regex: searchTerm, $options: "i" } }],
   };
-  return await lessonRepository.SearchByCondition(page, limit, query);
+  return await lessonRepository.SearchByCondition(page, limit, query, sortBy, ["course"]);
 };
 
 const UpdateLessonById = async (id: string, payload: UpdateLessonDto) => {

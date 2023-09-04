@@ -11,7 +11,13 @@ userRouter.get("/info", verifyAccessJWT, userController.GetUserInfo);
 userRouter.get("/info/:id", verifyAccessJWT, userController.GetUserInfoById);
 userRouter.put("/reset-password", ValidateJoi(Schema.User.new_password), userController.ChangePassword);
 userRouter.put("/:id", verifyAccessJWT, ValidateJoi(Schema.User.update), userController.UpdateUserInfo);
-userRouter.put("/change-password", verifyAccessJWT, ValidateJoi(Schema.User.change_password), userController.UpdatePassword);
+userRouter.put("/", verifyAccessJWT, ValidateJoi(Schema.User.update), userController.UpdateInfo);
+userRouter.put(
+  "/change-password",
+  verifyAccessJWT,
+  ValidateJoi(Schema.User.change_password),
+  userController.UpdatePassword,
+);
 userRouter.delete("/:id", verifyAccessJWT, userController.DeleteUser);
 
 export default userRouter;

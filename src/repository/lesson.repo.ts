@@ -7,11 +7,12 @@ export class LessonRepository extends BaseRepository<ILesson> {
     super(model);
   }
 
-  async FindLessonByCourseId(id: string, page: number, limit: number) {
+  async FindLessonByCourseId(id: string, page?: number, limit?: number, sortBy?: any | { create_at: -1 }) {
     return this.model
       .find({ course: id })
-      .skip((page - 1) * limit)
-      .limit(limit)
+      .sort(sortBy)
+      .skip((Number(page) - 1) * Number(limit))
+      .limit(Number(limit))
       .populate([{ path: "session", populate: [{ path: "class" }] }, "course"]);
   }
 }

@@ -50,12 +50,12 @@ const GetStudentInClassByStudentId = async (student_id: string) => {
   return await classStudentRepository.FindByCondition({ student: student_id }, ["student"]);
 };
 
-const GetAllStudentInClass = async (class_id: string, page?: any, limit?: any) => {
+const GetAllStudentInClass = async (class_id: string, page?: number, limit?: number, sortBy?: any) => {
   return await classStudentRepository.FindByClassId(class_id, page, limit, ["student"]);
 };
 
-const GetClassByStudentId = async (id: string, page?: any, limit?: any) => {
-  return await classStudentRepository.FindByConditionAndPagination({ student: id }, page, limit, ["student"], { create_at: -1 });
+const GetClassByStudentId = async (id: string, page?: number, limit?: number, sortBy?: any) => {
+  return await classStudentRepository.FindByConditionAndPagination({ student: id }, page, limit, sortBy, ["student"]);
 };
 const CheckStudentExistInClass = async (student_id: string, class_id: string) => {
   return await classStudentRepository.FindByCondition({ class: class_id, student: student_id });

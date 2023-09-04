@@ -16,16 +16,16 @@ const GetAttendanceById = async (id: string) => {
   return await attendanceRepository.FindById(id, ["session", "class"]);
 };
 
-const GetAttendanceByClassId = async (class_id: string, page?: any, limit?: any) => {
-  return await attendanceRepository.FindAttendanceByClassId(class_id, page, limit);
+const GetAttendanceByClassId = async (class_id: string, page?: number, limit?: number, sortBy?: any) => {
+  return await attendanceRepository.FindAttendanceByClassId(class_id, page, limit, sortBy);
 };
 
-const GetAttendanceBySessionId = async (session_id: string, page?: any, limit?: any) => {
+const GetAttendanceBySessionId = async (session_id: string, page?: number, limit?: number, sortBy?: any) => {
   return await attendanceRepository.FindAttendanceBySessionId(session_id, page, limit);
 };
 
-const GetAllAttendance = async (page?: number, limit?: number) => {
-  return await attendanceRepository.FindAllInfoAndPagination(page, limit, ["session", "class"], { create_at: -1 });
+const GetAllAttendance = async (page?: number, limit?: number, sortBy?: any) => {
+  return await attendanceRepository.FindAllInfoAndPagination(page, limit, sortBy, ["session", "class"]);
 };
 
 const CountAttendance = async () => {

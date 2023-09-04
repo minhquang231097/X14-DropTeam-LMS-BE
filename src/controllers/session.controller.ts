@@ -19,7 +19,8 @@ const CreateSessionWithAttendance = async (req: Request, res: Response) => {
       classService.GetClassById(class_id),
       sessionService.GetSessionByCode(session_code),
     ]);
-    if (!_course || !_class || _session) return res.status(403).send(new HttpException(RESPONSE_CONFIG.MESSAGE.SESSION.WRONG, 403));
+    if (!_course || !_class || _session)
+      return res.status(403).send(new HttpException(RESPONSE_CONFIG.MESSAGE.SESSION.WRONG, 403));
     const session = await sessionService.CreateSession(payload);
     await attendanceService.CreateAttendance(_session._id, _class._id);
     res.status(200).json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.SESSION.CREATE_SUCCES, 200, session));
@@ -30,6 +31,7 @@ const CreateSessionWithAttendance = async (req: Request, res: Response) => {
 
 const GetSession = async (req: Request, res: Response) => {
   const { page, limit, course_id, class_id, search } = req.query;
+  const { sortBy } = req.body;
   const p = Number(page);
   const l = Number(limit);
   try {
@@ -39,47 +41,92 @@ const GetSession = async (req: Request, res: Response) => {
         const num = await sessionService.GetSessionByCourseId(course_id as string);
         let result;
         if (p === undefined && l === undefined) {
-          result = await sessionService.GetSessionByCourseId(course_id as string, 1, LIMIT_PAGE_SESSION);
+          result = await sessionService.GetSessionByCourseId(course_id as string, 1, LIMIT_PAGE_SESSION, sortBy);
         } else {
-          result = await sessionService.GetSessionByCourseId(course_id as string, p, l);
+          result = await sessionService.GetSessionByCourseId(course_id as string, p, l, sortBy);
         }
-        if (result.length === 0) return res.status(404).send(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.SESSION.NOT_FOUND, 404));
+        if (result.length === 0)
+          return res.status(404).send(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.SESSION.NOT_FOUND, 404));
         res
           .status(200)
-          .json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.SESSION.FOUND_SUCCESS, 200, result, result.length, num.length, p, Math.ceil(num.length / l)));
+          .json(
+            new HttpResponseData(
+              RESPONSE_CONFIG.MESSAGE.SESSION.FOUND_SUCCESS,
+              200,
+              result,
+              result.length,
+              num.length,
+              p,
+              Math.ceil(num.length / l),
+            ),
+          );
       } else if (search) {
         const num: any = await sessionService.SearchSessionByCondition(search as string);
         let result;
         if (p === undefined && l === undefined) {
-          result = await sessionService.SearchSessionByCondition(search as string, 1, LIMIT_PAGE_SESSION);
+          result = await sessionService.SearchSessionByCondition(search as string, 1, LIMIT_PAGE_SESSION, sortBy);
         } else {
-          result = await sessionService.SearchSessionByCondition(search as string, p, l);
+          result = await sessionService.SearchSessionByCondition(search as string, p, l, sortBy);
         }
-        if (result.length === 0) return res.status(200).send(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.SESSION.FOUND_NO_DATA, 200));
+        if (result.length === 0)
+          return res.status(200).send(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.SESSION.FOUND_NO_DATA, 200));
         res
           .status(200)
-          .json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.SESSION.FOUND_SUCCESS, 200, result, result.length, num.length, p, Math.ceil(num.length / l)));
+          .json(
+            new HttpResponseData(
+              RESPONSE_CONFIG.MESSAGE.SESSION.FOUND_SUCCESS,
+              200,
+              result,
+              result.length,
+              num.length,
+              p,
+              Math.ceil(num.length / l),
+            ),
+          );
       } else if (class_id) {
         const num: any = await sessionService.GetSessionByClassId(class_id as string);
         let result;
         if (p === undefined && l === undefined) {
-          result = await sessionService.GetSessionByClassId(class_id as string, 1, LIMIT_PAGE_SESSION);
+          result = await sessionService.GetSessionByClassId(class_id as string, 1, LIMIT_PAGE_SESSION, sortBy);
         } else {
-          result = await sessionService.GetSessionByClassId(class_id as string, p, l);
+          result = await sessionService.GetSessionByClassId(class_id as string, p, l, sortBy);
         }
-        if (result.length === 0) return res.status(404).send(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.SESSION.NOT_FOUND, 404));
+        if (result.length === 0)
+          return res.status(404).send(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.SESSION.NOT_FOUND, 404));
         res
           .status(200)
-          .json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.SESSION.FOUND_SUCCESS, 200, result, result.length, num.length, p, Math.ceil(num.length / l)));
+          .json(
+            new HttpResponseData(
+              RESPONSE_CONFIG.MESSAGE.SESSION.FOUND_SUCCESS,
+              200,
+              result,
+              result.length,
+              num.length,
+              p,
+              Math.ceil(num.length / l),
+            ),
+          );
       } else if (page && limit) {
-        const result = await sessionService.GetAllSession(p, l);
-        if (result.length === 0) return res.status(200).send(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.SESSION.FOUND_NO_DATA, 200));
+        const result = await sessionService.GetAllSession(p, l, sortBy);
+        if (result.length === 0)
+          return res.status(200).send(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.SESSION.FOUND_NO_DATA, 200));
         res
           .status(200)
-          .json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.SESSION.FOUND_SUCCESS, 200, result, result.length, countDoc, p, Math.ceil(countDoc / l)));
+          .json(
+            new HttpResponseData(
+              RESPONSE_CONFIG.MESSAGE.SESSION.FOUND_SUCCESS,
+              200,
+              result,
+              result.length,
+              countDoc,
+              p,
+              Math.ceil(countDoc / l),
+            ),
+          );
       } else {
-        const result = await sessionService.GetAllSession(1, LIMIT_PAGE_SESSION);
-        if (result.length === 0) return res.status(200).send(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.SESSION.FOUND_NO_DATA, 200));
+        const result = await sessionService.GetAllSession(1, LIMIT_PAGE_SESSION, sortBy);
+        if (result.length === 0)
+          return res.status(200).send(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.SESSION.FOUND_NO_DATA, 200));
         res
           .status(200)
           .json(
@@ -143,4 +190,10 @@ const DeleteSession = async (req: Request, res: Response) => {
   }
 };
 
-export default { CreateSessionWithAttendance, GetSession, UpdateSession, DeleteSession, GetSessionInfo };
+export default {
+  CreateSessionWithAttendance,
+  GetSession,
+  UpdateSession,
+  DeleteSession,
+  GetSessionInfo,
+};

@@ -1,11 +1,8 @@
-import courseService from "./course.service";
-import workplaceService from "./workplace.service";
 import userService from "./user.service";
 import { RegistedCourse } from "@/models/registe.course.model";
 import { RegistedCourseRepository } from "@/repository/regist.course.repo";
 import { RegistCourseDto } from "@/types/regist.course";
 import { AddStudentToClassDto } from "@/types/class";
-import * as console from "console";
 
 const registCourseRepository = new RegistedCourseRepository(RegistedCourse);
 
@@ -27,20 +24,20 @@ const GetTotalRegist = async () => {
   return await registCourseRepository.Count();
 };
 
-const GetAllRegist = async (page: number, limit: number) => {
-  return await registCourseRepository.FindAllInfoAndPagination(page, limit, ["course", "workplace"]);
+const GetAllRegist = async (page: number, limit: number, sortBy?: any) => {
+  return await registCourseRepository.FindAllInfoAndPagination(page, limit, sortBy, ["course", "workplace"]);
 };
 
-const GetRegistByCourseId = async (course_id: string, page?: any, limit?: any) => {
-  return await registCourseRepository.FindRegistbyCourseId(course_id, page, limit);
+const GetRegistByCourseId = async (course_id: string, page?: number, limit?: number, sortBy?: any) => {
+  return await registCourseRepository.FindRegistbyCourseId(course_id, page, limit, sortBy);
 };
 
-const GetRegistByWorkplaceId = async (wp_id: string, page?: any, limit?: any) => {
-  return await registCourseRepository.FindRegistbyWorkplaceId(wp_id, page, limit);
+const GetRegistByWorkplaceId = async (wp_id: string, page?: number, limit?: number, sortBy?: any) => {
+  return await registCourseRepository.FindRegistbyWorkplaceId(wp_id, page, limit, sortBy);
 };
 
-const GetRegistByStudentId = async (student_id: string, page?: any, limit?: any) => {
-  return await registCourseRepository.FindRegistbyStudentId(student_id, page, limit);
+const GetRegistByStudentId = async (student_id: string, page?: number, limit?: number, sortBy?: any) => {
+  return await registCourseRepository.FindRegistbyStudentId(student_id, page, limit, sortBy);
 };
 
 const GetRegistById = async (id: string) => {
@@ -51,7 +48,7 @@ const GetRegistByCourseIdAndStudentId = async (course_id: string, student_id: st
   return await registCourseRepository.FindByCondition({ course: course_id, student: student_id });
 };
 
-const SearchRegistByCondition = async (searchTerm?: string, page?: any, limit?: any) => {
+const SearchRegistByCondition = async (searchTerm?: string, page?: number, limit?: number, sortBy?: any) => {
   const query = {
     $or: [
       { fullname: { $regex: searchTerm, $options: "i" } },
@@ -59,7 +56,7 @@ const SearchRegistByCondition = async (searchTerm?: string, page?: any, limit?: 
       { phone_number: { $regex: searchTerm, $options: "i" } },
     ],
   };
-  return await registCourseRepository.SearchByCondition(page, limit, query, ["course", "workplace"], { create_at: -1 });
+  return await registCourseRepository.SearchByCondition(page, limit, query, sortBy, ["course", "workplace"]);
 };
 
 const UpdateRegist = async (id: string, payload: any) => {
