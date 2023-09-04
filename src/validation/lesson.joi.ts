@@ -30,17 +30,17 @@ export const LessonSchema = {
       }),
     }),
     update_lesson: Joi.object<UpdateLessonDto>({
-      title: Joi.string().required().messages({
+      title: Joi.string().optional().messages({
         "string.empty": RESPONSE_CONFIG.MESSAGE.LESSON.NO_TITLE,
         "string.max": `{{#label}} should have a maximum length of {#limit}`,
         "any.required": `{{#label}} is a required field`,
       }),
-      content: Joi.string().required().messages({
+      content: Joi.string().optional().messages({
         "string.empty": RESPONSE_CONFIG.MESSAGE.LESSON.NO_CONTENT,
         "string.max": `{{#label}} should have a maximum length of {#limit}`,
         "any.required": `{{#label}} is a required field`,
       }),
-      no: Joi.number().required().messages({
+      no: Joi.number().optional().messages({
         "number.empty": RESPONSE_CONFIG.MESSAGE.LESSON.NO_NO,
         "number.base": `{{#label}} must be a number`,
         "number.min": `{{#label}} must greater than or equal to {{#limit}}`,

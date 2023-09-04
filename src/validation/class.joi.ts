@@ -24,7 +24,7 @@ export const ClassSchema = {
           "string.empty": `${RESPONSE_CONFIG.MESSAGE.CLASS.NO_COURSE} (import course)`,
           "any.required": `{{#label}} is a required field`,
         }),
-      start_at: Joi.date().min(new Date().toISOString().split('T')[0]).required().messages({
+      start_at: Joi.date().min(new Date().toISOString().split("T")[0]).required().messages({
         "date.min": `{{#label}} must greater than or equal to now`,
         "string.empty": RESPONSE_CONFIG.MESSAGE.CLASS.NO_START_DATE,
         "any.required": `{{#label}} is a required field`,
@@ -52,18 +52,17 @@ export const ClassSchema = {
     }),
 
     add_student: Joi.object({
-      class_id: Joi.string().required()
-        .messages({
-          "string.empty": `import class_id`,
-          "any.required": `{{#label}} is a required field `,
-        }),
+      class_id: Joi.string().required().messages({
+        "string.empty": `import class_id`,
+        "any.required": `{{#label}} is a required field `,
+      }),
       list: Joi.array().items(
         Joi.object<AddStudentToClassDto>({
           student_id: Joi.string().required().messages({
-            'string.empty': 'student_id is required',
-            'any.required': 'student_id is a required field',
+            "string.empty": "student_id is required",
+            "any.required": "student_id is a required field",
           }),
-        })
+        }),
       ),
     }),
     update_class: Joi.object<UpdateClassDto>({
@@ -85,12 +84,12 @@ export const ClassSchema = {
           "string.empty": `${RESPONSE_CONFIG.MESSAGE.CLASS.NO_COURSE} (import course_id)`,
           "any.required": `{{#label}} is a required field`,
         }),
-      start_at: Joi.date().min(new Date().toISOString().split('T')[0]).required().messages({
+      start_at: Joi.date().min(new Date().toISOString().split("T")[0]).required().messages({
         "date.min": `{{#label}} must greater than or equal to now`,
         "string.empty": RESPONSE_CONFIG.MESSAGE.CLASS.NO_START_DATE,
         "any.required": `{{#label}} is a required field`,
       }),
-      end_at: Joi.date().min(Joi.ref('start_at')).required().messages({
+      end_at: Joi.date().min(Joi.ref("start_at")).required().messages({
         "date.min": `{{#label}} must greater than or equal to start_at`,
         "string.empty": RESPONSE_CONFIG.MESSAGE.CLASS.NO_END_DATE,
         "any.required": `{{#label}} is a required field`,
@@ -109,16 +108,16 @@ export const ClassSchema = {
       }),
     }),
     update_student_status: Joi.object<UpdateStatusStudentInClassDto>({
-      student_id: Joi.string().required().messages({
+      student_id: Joi.string().optional().messages({
         "string.empty": ` (import student_id)`,
         "any.required": `{{#label}} is a required field`,
       }),
-      class_id: Joi.string().required().messages({
+      class_id: Joi.string().optional().messages({
         "string.empty": ` (import class_id)`,
         "any.required": `{{#label}} is a required field`,
       }),
-      status: Joi.string().valid("ACTIVE", "INACTIVE").required().messages({
-        'any.only': `{{#label}} must be ACTIVE or INACTIVE `,
+      status: Joi.string().valid("ACTIVE", "INACTIVE").optional().messages({
+        "any.only": `{{#label}} must be ACTIVE or INACTIVE `,
       }),
     }),
   },
