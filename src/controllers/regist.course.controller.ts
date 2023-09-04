@@ -234,11 +234,9 @@ const DeleteRegist = async (req: Request, res: Response) => {
   const { id } = req.params;
   try {
     const exist = await registCourseService.GetRegistById(id as string);
-    if (exist) {
-      await registCourseService.DeleteRegist(id as string);
-      res.status(200).json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.REGIST.DELETE_SUCCESS, 200));
-    }
-    return res.status(404).send(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.REGIST.NOT_FOUND, 404));
+    if (!exist) return res.status(404).send(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.REGIST.NOT_FOUND, 404));
+    await registCourseService.DeleteRegist(id as string);
+    res.status(200).json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.REGIST.DELETE_SUCCESS, 200));
   } catch (error) {
     return res.status(400).send(new HttpException(RESPONSE_CONFIG.MESSAGE.REGIST.WRONG, 400));
   }

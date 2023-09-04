@@ -235,12 +235,10 @@ const UpdateClass = async (req: Request, res: Response) => {
   const update = req.body;
   try {
     const exist = await classService.GetClassById(id as string);
-    if (exist) {
-      await classService.UpdateOneClass(id as string, update);
-      const newClass = await classService.GetClassById(id as string);
-      return res.status(200).json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.CLASS.UPDATE_SUCCESS, 200, newClass));
-    }
-    return res.status(404).send(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.CLASS.NOT_FOUND, 404));
+    if (!exist) return res.status(404).send(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.CLASS.NOT_FOUND, 404));
+    await classService.UpdateOneClass(id as string, update);
+    const newClass = await classService.GetClassById(id as string);
+    return res.status(200).json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.CLASS.UPDATE_SUCCESS, 200, newClass));
   } catch (error: any) {
     return res.status(400).send(new HttpException(RESPONSE_CONFIG.MESSAGE.CLASS.WRONG, 400));
   }
@@ -251,12 +249,10 @@ const UpdateStatusStudentInClass = async (req: Request, res: Response) => {
   const { student_id, class_id } = payload;
   try {
     const exist = await classStudentService.CheckStudentExistInClass(student_id, class_id);
-    if (exist) {
-      await classStudentService.UpdateStatusStudentInClass(payload);
-      const newUpdate = await classStudentService.GetStudentInClassByStudentId(student_id);
-      return res.status(200).json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.CLASS.UPDATE_SUCCESS, 200, newUpdate));
-    }
-    return res.status(404).send(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.CLASS.NOT_FOUND, 404));
+    if (!exist) return res.status(404).send(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.CLASS.NOT_FOUND, 404));
+    await classStudentService.UpdateStatusStudentInClass(payload);
+    const newUpdate = await classStudentService.GetStudentInClassByStudentId(student_id);
+    return res.status(200).json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.CLASS.UPDATE_SUCCESS, 200, newUpdate));
   } catch (error) {
     return res.status(400).send(new HttpException(RESPONSE_CONFIG.MESSAGE.CLASS.WRONG, 400));
   }
@@ -266,11 +262,9 @@ const DeleteOneClass = async (req: Request, res: Response) => {
   const { id } = req.params;
   try {
     const exist = await classService.GetClassById(id as string);
-    if (exist) {
-      await classService.DeleteClassById(id as string);
-      res.status(200).json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.CLASS.DELETE_SUCCESS, 200));
-    }
-    return res.status(404).send(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.CLASS.NOT_FOUND, 404));
+    if (!exist) return res.status(404).send(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.CLASS.NOT_FOUND, 404));
+    await classService.DeleteClassById(id as string);
+    res.status(200).json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.CLASS.DELETE_SUCCESS, 200));
   } catch (error: any) {
     return res.status(400).send(new HttpException(RESPONSE_CONFIG.MESSAGE.CLASS.WRONG, 400));
   }

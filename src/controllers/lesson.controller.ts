@@ -149,11 +149,9 @@ const DeleteLesson = async (req: Request, res: Response) => {
   const { id } = req.params;
   try {
     const exist = await lessonService.GetLessonById(id as string);
-    if (exist) {
-      await lessonService.DeletedLessonById(id as string);
-      res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.LESSON.DELETE_SUCCESS, 200));
-    }
-    return res.status(404).send(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.LESSON.NOT_FOUND, 404));
+    if (!exist) return res.status(404).send(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.LESSON.NOT_FOUND, 404));
+    await lessonService.DeletedLessonById(id as string);
+    res.json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.LESSON.DELETE_SUCCESS, 200));
   } catch (error) {
     return res.status(400).json(new HttpException(RESPONSE_CONFIG.MESSAGE.LESSON.WRONG, 400));
   }

@@ -177,12 +177,10 @@ const UpdateAttendance = async (req: Request, res: Response) => {
   const update = req.body;
   try {
     const exist = await attendanceService.GetAttendanceById(id as string);
-    if (exist) {
-      await attendanceService.UpdateAttendance(id as string, update);
-      const newAttendance = await attendanceService.UpdateAttendance(id as string, update);
-      res.status(200).json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.ATTENDANCE.UPDATE_SUCCESS, 200, newAttendance));
-    }
-    res.status(404).send(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.ATTENDANCE.NOT_FOUND, 404));
+    if (!exist) res.status(404).send(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.ATTENDANCE.NOT_FOUND, 404));
+    await attendanceService.UpdateAttendance(id as string, update);
+    const newAttendance = await attendanceService.UpdateAttendance(id as string, update);
+    res.status(200).json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.ATTENDANCE.UPDATE_SUCCESS, 200, newAttendance));
   } catch (error: any) {
     res.status(400).json(new HttpException(RESPONSE_CONFIG.MESSAGE.ATTENDANCE.WRONG, 400));
   }
@@ -192,11 +190,9 @@ const DeleteAttendance = async (req: Request, res: Response) => {
   const { id } = req.params;
   try {
     const exist = await attendanceService.GetAttendanceById(id as string);
-    if (exist) {
-      await attendanceService.DeleteAttendanceById(id as string);
-      res.status(200).json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.ATTENDANCE.DELETE_SUCCESS, 200));
-    }
-    return res.status(404).send(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.ATTENDANCE.NOT_FOUND, 404));
+    if (!exist) return res.status(404).send(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.ATTENDANCE.NOT_FOUND, 404));
+    await attendanceService.DeleteAttendanceById(id as string);
+    res.status(200).json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.ATTENDANCE.DELETE_SUCCESS, 200));
   } catch (error: any) {
     return res.status(400).send(new HttpException(RESPONSE_CONFIG.MESSAGE.ATTENDANCE.WRONG, 400));
   }

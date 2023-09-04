@@ -7,43 +7,43 @@ export const WorkplaceSchema = {
   Workplace: {
     create_workplace: Joi.object<IWorkplace>({
       name: Joi.string().max(100).required().messages({
-        'string.empty': RESPONSE_CONFIG.MESSAGE.WORKPLACE.NO_WORKPLACE,
-        'string.max': `{{#label}} should have a maximum length of {#limit}`,
-        'any.required': `{{#label}} is a required field`
+        "string.empty": RESPONSE_CONFIG.MESSAGE.WORKPLACE.NO_WORKPLACE,
+        "string.max": `{{#label}} should have a maximum length of {#limit}`,
+        "any.required": `{{#label}} is a required field`,
       }),
       address: Joi.string().max(200).required().messages({
-        'string.empty': RESPONSE_CONFIG.MESSAGE.WORKPLACE.NO_ADDRESS,
-        'string.max': `{{#label}} should have a maximum length of {#limit}`,
-        'any.required': `{{#label}} is a required field`
+        "string.empty": RESPONSE_CONFIG.MESSAGE.WORKPLACE.NO_ADDRESS,
+        "string.max": `{{#label}} should have a maximum length of {#limit}`,
+        "any.required": `{{#label}} is a required field`,
       }),
       status: Joi.string().valid("ON", "OFF", "UPCOMING").required().messages({
-        'any.only': `{{#labe}} must be ON, OFF or UPCOMING`,
+        "any.only": `{{#labe}} must be ON, OFF or UPCOMING`,
       }),
       workplace_code: Joi.string().max(5).required().messages({
-        'string.empty': RESPONSE_CONFIG.MESSAGE.WORKPLACE.NO_CODENAME,
-        'string.max': `{{#label}} should have a maximum length of {#limit}`,
-        'any.required': `{{#label}} is a required field`
+        "string.empty": RESPONSE_CONFIG.MESSAGE.WORKPLACE.NO_CODENAME,
+        "string.max": `{{#label}} should have a maximum length of {#limit}`,
+        "any.required": `{{#label}} is a required field`,
       }),
     }),
     update_workplace: Joi.object<UpdateWorkplaceDto>({
-      name: Joi.string().max(100).required().messages({
-        'string.empty': RESPONSE_CONFIG.MESSAGE.WORKPLACE.NO_WORKPLACE,
-        'string.max': `{{#label}} should have a maximum length of {#limit}`,
-        'any.required': `{{#label}} is a required field`,
+      name: Joi.string().max(100).optional().messages({
+        "string.empty": RESPONSE_CONFIG.MESSAGE.WORKPLACE.NO_WORKPLACE,
+        "string.max": `{{#label}} should have a maximum length of {#limit}`,
+        "any.required": `{{#label}} is a required field`,
       }),
-      address: Joi.string().max(200).required().messages({
-        'string.empty': RESPONSE_CONFIG.MESSAGE.WORKPLACE.NO_ADDRESS,
-        'string.max': `{{#label}} should have a maximum length of {#limit}`,
-        'any.required': `{{#label}} is a required field`
+      address: Joi.string().max(200).optional().messages({
+        "string.empty": RESPONSE_CONFIG.MESSAGE.WORKPLACE.NO_ADDRESS,
+        "string.max": `{{#label}} should have a maximum length of {#limit}`,
+        "any.required": `{{#label}} is a required field`,
       }),
-      status: Joi.string().valid("ON", "OFF", "UPCOMING").required().messages({
-        'any.only': `{{#labe}} must be ON, OFF or UPCOMING`,
-        'any.required': `{{#label}} is a required field`
+      status: Joi.string().valid("ON", "OFF", "UPCOMING").optional().messages({
+        "any.only": `{{#labe}} must be ON, OFF or UPCOMING`,
+        "any.required": `{{#label}} is a required field`,
       }),
-      workplace_code: Joi.string().max(5).required().messages({
-        'string.empty': RESPONSE_CONFIG.MESSAGE.WORKPLACE.NO_CODENAME,
-        'string.max': `{{#label}} should have a maximum length of {#limit}`,
-        'any.required': `{{#label}} is a required field`,
+      workplace_code: Joi.string().max(5).optional().messages({
+        "string.empty": RESPONSE_CONFIG.MESSAGE.WORKPLACE.NO_CODENAME,
+        "string.max": `{{#label}} should have a maximum length of {#limit}`,
+        "any.required": `{{#label}} is a required field`,
       }),
     }),
   },

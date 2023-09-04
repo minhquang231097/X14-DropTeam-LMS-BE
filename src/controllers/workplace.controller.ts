@@ -128,12 +128,10 @@ const UpdateWorkplace = async (req: Request, res: Response) => {
   const update = req.body;
   try {
     const exist = await workplaceService.GetWorkplaceById(id as string);
-    if (exist) {
-      await workplaceService.UpdateWorkplace(id as string, update);
-      const newWorkplace = await workplaceService.GetWorkplaceById(id as string);
-      res.status(200).json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.WORKPLACE.UPDATE_SUCCESS, 200, newWorkplace));
-    }
-    return res.status(404).send(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.WORKPLACE.NOT_FOUND, 404));
+    if (!exist) return res.status(404).send(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.WORKPLACE.NOT_FOUND, 404));
+    await workplaceService.UpdateWorkplace(id as string, update);
+    const newWorkplace = await workplaceService.GetWorkplaceById(id as string);
+    res.status(200).json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.WORKPLACE.UPDATE_SUCCESS, 200, newWorkplace));
   } catch (error: any) {
     return res.status(400).send(new HttpException(RESPONSE_CONFIG.MESSAGE.WORKPLACE.WRONG, 400));
   }
@@ -143,11 +141,9 @@ const DeletedWorkplace = async (req: Request, res: Response) => {
   const { id } = req.params;
   try {
     const exist = await workplaceService.GetWorkplaceById(id as string);
-    if (exist) {
-      await workplaceService.DeletedWorkplace(id as string);
-      res.status(200).json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.WORKPLACE.DELETE_SUCCESS, 200));
-    }
-    return res.status(404).send(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.WORKPLACE.NOT_FOUND, 400));
+    if (!exist) return res.status(404).send(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.WORKPLACE.NOT_FOUND, 400));
+    await workplaceService.DeletedWorkplace(id as string);
+    res.status(200).json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.WORKPLACE.DELETE_SUCCESS, 200));
   } catch (error: any) {
     return res.status(400).send(new HttpException(RESPONSE_CONFIG.MESSAGE.WORKPLACE.WRONG, 400, error.message));
   }

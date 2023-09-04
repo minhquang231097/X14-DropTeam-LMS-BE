@@ -13,6 +13,6 @@ export class LessonRepository extends BaseRepository<ILesson> {
       .sort(sortBy)
       .skip((Number(page) - 1) * Number(limit))
       .limit(Number(limit))
-      .populate([{ path: "session", populate: [{ path: "class" }] }, "course"]);
+      .populate(["course"]);
   }
 }
