@@ -23,3 +23,9 @@ export interface StudentRegistCourseDto {
   create_at: string;
 }
 
+export interface UpdateRegistCourseDto {
+  course?: string;
+  workplace?: string;
+  note?: string;
+}
+

@@ -20,6 +20,7 @@ const CreateWorkplace = async (req: Request, res: Response) => {
 
 const GetWorkplace = async (req: Request, res: Response) => {
   const { page, limit, search, status } = req.query;
+  const { sortBy } = req.body;
   const p = Number(page);
   const l = Number(limit);
   try {
@@ -28,37 +29,70 @@ const GetWorkplace = async (req: Request, res: Response) => {
       const num = await workplaceService.GetWorkplaceByStatus(status as string);
       let result;
       if (p === undefined && l === undefined) {
-        result = await workplaceService.GetWorkplaceByStatus(status as string, 1, LIMIT_PAGE_WORKPLACE);
+        result = await workplaceService.GetWorkplaceByStatus(status as string, 1, LIMIT_PAGE_WORKPLACE, sortBy);
       } else {
-        result = await workplaceService.GetWorkplaceByStatus(status as string, p, l);
+        result = await workplaceService.GetWorkplaceByStatus(status as string, p, l, sortBy);
       }
       if (result.length === 0) {
         return res.status(200).send(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.WORKPLACE.FOUND_NO_DATA, 200));
       }
       res
         .status(200)
-        .json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.WORKPLACE.FOUND_SUCCESS, 200, result, result.length, num.length, p, Math.ceil(num.length / l)));
+        .json(
+          new HttpResponseData(
+            RESPONSE_CONFIG.MESSAGE.WORKPLACE.FOUND_SUCCESS,
+            200,
+            result,
+            result.length,
+            num.length,
+            p,
+            Math.ceil(num.length / l),
+          ),
+        );
     } else if (search) {
       const num = await workplaceService.SearchWorkplaceByCondition(search as string);
       let result;
       if (p === undefined && l === undefined) {
-        result = await workplaceService.SearchWorkplaceByCondition(search as string, 1, LIMIT_PAGE_WORKPLACE);
+        result = await workplaceService.SearchWorkplaceByCondition(search as string, 1, LIMIT_PAGE_WORKPLACE, sortBy);
       } else {
-        result = await workplaceService.SearchWorkplaceByCondition(search as string, p, l);
+        result = await workplaceService.SearchWorkplaceByCondition(search as string, p, l, sortBy);
       }
-      if (result.length === 0) return res.status(200).send(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.WORKPLACE.FOUND_NO_DATA, 200));
+      if (result.length === 0)
+        return res.status(200).send(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.WORKPLACE.FOUND_NO_DATA, 200));
       res
         .status(200)
-        .json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.WORKPLACE.FOUND_SUCCESS, 200, result, result.length, num.length, p, Math.ceil(num.length / l)));
+        .json(
+          new HttpResponseData(
+            RESPONSE_CONFIG.MESSAGE.WORKPLACE.FOUND_SUCCESS,
+            200,
+            result,
+            result.length,
+            num.length,
+            p,
+            Math.ceil(num.length / l),
+          ),
+        );
     } else if (page && limit) {
-      const result = await workplaceService.GetAllWorkplace(p, l);
-      if (result.length === 0) return res.status(200).send(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.WORKPLACE.FOUND_NO_DATA, 200));
+      const result = await workplaceService.GetAllWorkplace(p, l, sortBy);
+      if (result.length === 0)
+        return res.status(200).send(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.WORKPLACE.FOUND_NO_DATA, 200));
       res
         .status(200)
-        .json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.WORKPLACE.FOUND_SUCCESS, 200, result, result.length, countDoc, p, Math.ceil(countDoc / l)));
+        .json(
+          new HttpResponseData(
+            RESPONSE_CONFIG.MESSAGE.WORKPLACE.FOUND_SUCCESS,
+            200,
+            result,
+            result.length,
+            countDoc,
+            p,
+            Math.ceil(countDoc / l),
+          ),
+        );
     } else {
-      const result = await workplaceService.GetAllWorkplace(1, LIMIT_PAGE_WORKPLACE);
-      if (result.length === 0) return res.status(200).send(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.WORKPLACE.FOUND_NO_DATA, 200));
+      const result = await workplaceService.GetAllWorkplace(1, LIMIT_PAGE_WORKPLACE, sortBy);
+      if (result.length === 0)
+        return res.status(200).send(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.WORKPLACE.FOUND_NO_DATA, 200));
       res
         .status(200)
         .json(

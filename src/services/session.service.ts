@@ -18,8 +18,8 @@ const CountSession = async () => {
   return await sessionRepository.Count();
 };
 
-const GetAllSession = async (page: number, limit: number) => {
-  return await sessionRepository.FindAllInfoAndPagination(page, limit, ["course", "class"]);
+const GetAllSession = async (page: number, limit: number, sortBy?: any) => {
+  return await sessionRepository.FindAllInfoAndPagination(page, limit, sortBy, ["course", "class"]);
 };
 
 const GetSessionById = async (id: string) => {
@@ -30,19 +30,19 @@ const GetSessionByCode = async (code: string) => {
   return await sessionRepository.FindByCondition({ course: code }, ["course", "class"]);
 };
 
-const GetSessionByClassId = async (class_id: string, page?: any, limit?: any) => {
-  return await sessionRepository.FindSessionByClassId(class_id, page, limit);
+const GetSessionByClassId = async (class_id: string, page?: number, limit?: number, sortBy?: any) => {
+  return await sessionRepository.FindSessionByClassId(class_id, page, limit, sortBy);
 };
 
-const GetSessionByCourseId = async (course_id: string, page?: any, limit?: any) => {
-  return await sessionRepository.FindSessionByCourseId(course_id, page, limit);
+const GetSessionByCourseId = async (course_id: string, page?: number, limit?: number, sortBy?: any) => {
+  return await sessionRepository.FindSessionByCourseId(course_id, page, limit, sortBy);
 };
 
-const SearchSessionByCondition = async (searchTerm?: string, page?: any, limit?: any) => {
+const SearchSessionByCondition = async (searchTerm?: string, page?: number, limit?: number, sortBy?: any) => {
   const query = {
     $or: [{ session_code: { $regex: searchTerm, $options: "i" } }, { desc: { $regex: searchTerm, $options: "i" } }],
   };
-  return await sessionRepository.SearchByCondition(page, limit, query);
+  return await sessionRepository.SearchByCondition(page, limit, query, sortBy, ["course", "class"]);
 };
 
 const UpdateSessionById = async (id: string, payload: UpdateSessionDto) => {

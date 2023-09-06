@@ -1,25 +1,27 @@
 import { IFeedback } from "@/models/feedback.model";
 import { BaseRepository } from "./base.repo";
-import { Model, ObjectId } from "mongoose";
+import { Model } from "mongoose";
 
 export class FeedbackRepository extends BaseRepository<IFeedback> {
   constructor(model: Model<IFeedback>) {
     super(model);
   }
 
-  async FindFeedbackByCourseId(id: string, page: number, limit: number) {
-    return await this.model
+  async FindFeedbackByCourseId(id: string, page?: number, limit?: number, sortBy?: any | { create_at: -1 }) {
+    return this.model
       .find({ course: id })
-      .skip((page - 1) * limit)
-      .limit(limit)
-      .populate([{ path: "course", populate: { path: "workplace" } }, "student"]);
+      .sort(sortBy)
+      .skip((Number(page) - 1) * Number(limit))
+      .limit(Number(limit))
+      .populate(["course", "student"]);
   }
 
-  async FindFeedbackByStudentId(id: string, page: number, limit: number) {
-    return await this.model
+  async FindFeedbackByStudentId(id: string, page?: number, limit?: number, sortBy?: any | { create_at: -1 }) {
+    return this.model
       .find({ student: id })
-      .skip((page - 1) * limit)
-      .limit(limit)
-      .populate([{ path: "course", populate: { path: "workplace" } }, "student"]);
+      .sort(sortBy)
+      .skip((Number(page) - 1) * Number(limit))
+      .limit(Number(limit))
+      .populate(["course", "student"]);
   }
 }

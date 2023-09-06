@@ -3,7 +3,7 @@ import CourseService from "@/services/course.service";
 import { RESPONSE_CONFIG } from "@/configs/response.config";
 import HttpResponseData from "@/common/httpResponseData";
 import HttpException from "@/common/httpException";
-import { Course, ICourse } from "@/models/course.model";
+import { ICourse } from "@/models/course.model";
 import courseService from "@/services/course.service";
 
 const LIMIT_PAGE_COURSE = 10;
@@ -23,6 +23,7 @@ const CreateCourse = async (req: Request, res: Response) => {
 
 const GetCourse = async (req: Request, res: Response) => {
   const { page, limit, search } = req.query;
+  const { sortBy } = req.body;
   const p = Number(page);
   const l = Number(limit);
   try {
@@ -31,27 +32,58 @@ const GetCourse = async (req: Request, res: Response) => {
       const num = await courseService.SearchCourseByCondition(search as string);
       let result;
       if (p === undefined && l === undefined) {
-        result = await courseService.SearchCourseByCondition(search as string, 1, LIMIT_PAGE_COURSE);
+        result = await courseService.SearchCourseByCondition(search as string, 1, LIMIT_PAGE_COURSE, sortBy);
       } else {
-        result = await courseService.SearchCourseByCondition(search as string, p, l);
+        result = await courseService.SearchCourseByCondition(search as string, p, l, sortBy);
       }
-      if (result.length === 0) return res.status(200).send(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.COURSE.FOUND_NO_DATA, 200));
-      res
-        .status(200)
-        .json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.WORKPLACE.FOUND_SUCCESS, 200, result, result.length, num.length, p, Math.ceil(num.length / l)));
-    } else if (page && limit) {
-      const result = await CourseService.GetAllCourse(p, l);
-      if (result.length === 0) return res.status(200).send(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.COURSE.FOUND_NO_DATA, 200));
-      res
-        .status(200)
-        .json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.WORKPLACE.FOUND_SUCCESS, 200, result, result.length, countDoc, p, Math.ceil(countDoc / l)));
-    } else {
-      const result = await CourseService.GetAllCourse(1, LIMIT_PAGE_COURSE);
-      if (result.length === 0) return res.status(200).send(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.COURSE.FOUND_NO_DATA, 200));
+      if (result.length === 0)
+        return res.status(200).send(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.COURSE.FOUND_NO_DATA, 200));
       res
         .status(200)
         .json(
-          new HttpResponseData(RESPONSE_CONFIG.MESSAGE.COURSE.FOUND_SUCCESS, 200, result, result.length, countDoc, 1, Math.ceil(countDoc / LIMIT_PAGE_COURSE)),
+          new HttpResponseData(
+            RESPONSE_CONFIG.MESSAGE.WORKPLACE.FOUND_SUCCESS,
+            200,
+            result,
+            result.length,
+            num.length,
+            p,
+            Math.ceil(num.length / l),
+          ),
+        );
+    } else if (page && limit) {
+      const result = await CourseService.GetAllCourse(p, l, sortBy);
+      if (result.length === 0)
+        return res.status(200).send(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.COURSE.FOUND_NO_DATA, 200));
+      res
+        .status(200)
+        .json(
+          new HttpResponseData(
+            RESPONSE_CONFIG.MESSAGE.WORKPLACE.FOUND_SUCCESS,
+            200,
+            result,
+            result.length,
+            countDoc,
+            p,
+            Math.ceil(countDoc / l),
+          ),
+        );
+    } else {
+      const result = await CourseService.GetAllCourse(1, LIMIT_PAGE_COURSE, sortBy);
+      if (result.length === 0)
+        return res.status(200).send(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.COURSE.FOUND_NO_DATA, 200));
+      res
+        .status(200)
+        .json(
+          new HttpResponseData(
+            RESPONSE_CONFIG.MESSAGE.COURSE.FOUND_SUCCESS,
+            200,
+            result,
+            result.length,
+            countDoc,
+            1,
+            Math.ceil(countDoc / LIMIT_PAGE_COURSE),
+          ),
         );
     }
   } catch (error) {

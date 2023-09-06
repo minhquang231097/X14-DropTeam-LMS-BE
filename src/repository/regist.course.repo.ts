@@ -7,27 +7,30 @@ export class RegistedCourseRepository extends BaseRepository<IRegistedCourse> {
     super(model);
   }
 
-  async FindRegistbyCourseId(id: string, page: number, limit: number) {
+  async FindRegistbyCourseId(id: string, page?: number, limit?: number, sortBy?: any | { create_at: -1 }) {
     return this.model
       .find({ course: id })
-      .skip((page - 1) * limit)
-      .limit(limit)
-      .populate("course").populate("student")
-  }
-
-  async FindRegistbyWorkplaceId(id: string, page: number, limit: number) {
-    return await this.model
-      .find({ workplace: id })
-      .skip((page - 1) * limit)
-      .limit(limit)
+      .sort(sortBy)
+      .skip((Number(page) - 1) * Number(limit))
+      .limit(Number(limit))
       .populate(["course", "workplace", "student"]);
   }
 
-  async FindRegistbyStudentId(id: string, page: number, limit: number) {
+  async FindRegistbyWorkplaceId(id: string, page?: number, limit?: number, sortBy?: any | { create_at: -1 }) {
+    return this.model
+      .find({ workplace: id })
+      .sort(sortBy)
+      .skip((Number(page) - 1) * Number(limit))
+      .limit(Number(limit))
+      .populate(["course", "workplace", "student"]);
+  }
+
+  async FindRegistbyStudentId(id: string, page?: number, limit?: number, sortBy?: any | { create_at: -1 }) {
     return this.model
       .find({ student: id })
-      .skip((page - 1) * limit)
-      .limit(limit)
+      .sort(sortBy)
+      .skip((Number(page) - 1) * Number(limit))
+      .limit(Number(limit))
       .populate(["course", "workplace", "student"]);
   }
 }

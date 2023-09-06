@@ -17,10 +17,16 @@ export abstract class BaseRepository<T extends Document> {
     return this.model.findOne(filter).populate(populate);
   }
 
-  async FindByConditionAndPagination(filter?: any, page?: any, limit?: any, populate?: any | null, sort?: any): Promise<T[] | any> {
+  async FindByConditionAndPagination(
+    filter?: any,
+    page?: any,
+    limit?: any,
+    sortBy?: any | { create_at: -1 },
+    populate?: any | null,
+  ): Promise<T[] | any> {
     return this.model
       .find(filter)
-      .sort(sort)
+      .sort(sortBy)
       .skip((page - 1) * limit)
       .limit(limit)
       .populate(populate);
@@ -30,16 +36,22 @@ export abstract class BaseRepository<T extends Document> {
     return this.model.find();
   }
 
-  async FindAllInfoAndPagination(page?: any, limit?: any, populate?: any | null, sort?: any): Promise<T[] | any> {
-    return await this.model
+  async FindAllInfoAndPagination(page?: any, limit?: any, sort?: any, populate?: any | null): Promise<T[] | any> {
+    return this.model
       .find()
       .sort(sort)
       .skip((page - 1) * limit)
       .limit(limit)
-      ?.populate(populate);
+      .populate(populate);
   }
 
-  async SearchByCondition(page?: any, limit?: any, query?: any | null, populate?: any | null, sort?: any): Promise<T[] | any> {
+  async SearchByCondition(
+    page?: any,
+    limit?: any,
+    query?: any | null,
+    sort?: any | { create_at: -1 },
+    populate?: any | null,
+  ): Promise<T[] | any> {
     return this.model
       .find(query)
       .sort(sort)
@@ -83,6 +95,7 @@ export abstract class BaseRepository<T extends Document> {
   async FindByIdAndUpdate(id: string | ObjectId, update: any) {
     return this.model.findByIdAndUpdate(id, update);
   }
+
   async Sort(): Promise<T[] | any> {
     return this.model.find().sort({ create_at: -1 });
   }

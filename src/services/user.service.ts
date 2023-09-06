@@ -16,8 +16,8 @@ const CreateUser = async (payload: any) => {
   return user;
 };
 
-const GetAllUser = async (page: number, limit: number) => {
-  return await userRepository.FindAllInfoAndPagination(page, limit);
+const GetAllUser = async (page: number, limit: number, sortBy?: any) => {
+  return await userRepository.FindAllInfoAndPagination(page, limit, sortBy);
 };
 
 const GetUserByUsername = async (username: string) => {
@@ -36,11 +36,11 @@ const GetUserByCondition = async (filter: any) => {
   return await userRepository.FindByCondition(filter);
 };
 
-const GetUserByAttendance = async (attendance_id: string, page?: any, limit?: any) => {
-  return await attendanceStudentService.GetAllStudentInAttendance(attendance_id, page, limit);
+const GetUserByAttendance = async (attendance_id: string, page?: any, limit?: any, sortBy?: any) => {
+  return await attendanceStudentService.GetAllStudentInAttendance(attendance_id, page, limit, sortBy);
 };
 
-const SearchUserByCondition = async (searchTerm?: string, page?: any, limit?: any) => {
+const SearchUserByCondition = async (searchTerm?: string, page?: any, limit?: any, sortBy?: any) => {
   const query = {
     $or: [
       { username: { $regex: searchTerm, $options: "i" } },
@@ -48,10 +48,16 @@ const SearchUserByCondition = async (searchTerm?: string, page?: any, limit?: an
       { fullname: { $regex: searchTerm, $options: "i" } },
     ],
   };
-  return await userRepository.SearchByCondition(page, limit, query);
+  return await userRepository.SearchByCondition(page, limit, query, sortBy);
 };
 
-const SearchUserByConditionAndRole = async (searchTerm?: string, role?: string, page?: any, limit?: any) => {
+const SearchUserByConditionAndRole = async (
+  searchTerm?: string,
+  role?: string,
+  page?: number,
+  limit?: number,
+  sortBy?: any,
+) => {
   const query = {
     $and: [
       {
@@ -64,7 +70,7 @@ const SearchUserByConditionAndRole = async (searchTerm?: string, role?: string, 
       { role: { $regex: role, $options: "i" } },
     ],
   };
-  return await userRepository.SearchByCondition(page, limit, query);
+  return await userRepository.SearchByCondition(page, limit, query, sortBy);
 };
 
 const UpdateUserById = async (id: string, payload: any) => {
@@ -87,11 +93,11 @@ const GetTotalUser = async () => {
   return await userRepository.Count();
 };
 
-const GetUserByRole = async (role: string, page?: number, limit?: number) => {
+const GetUserByRole = async (role: string, page?: number, limit?: number, sortBy?: Object) => {
   const query = {
     role: { $regex: new RegExp(role, "i") },
   };
-  return await userRepository.FindByConditionAndPagination(query, page, limit);
+  return await userRepository.FindByConditionAndPagination(query, page, limit, sortBy);
 };
 
 const SortUser = async () => {

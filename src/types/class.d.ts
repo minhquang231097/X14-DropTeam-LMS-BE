@@ -9,6 +9,7 @@ export interface UpdateClassDto {
   class_size?: number;
   total_session?: number;
   total_hours?: number;
+  status?: string;
 }
 
 export interface CreateClassDto {
@@ -22,6 +23,7 @@ export interface CreateClassDto {
   class_size: number;
   total_hours?: number;
   total_session: number;
+  status?: string;
 }
 
 export interface ClassResponseDto {
@@ -36,11 +38,11 @@ export interface ClassResponseDto {
   class_size?: number;
   total_hours?: number;
   total_session?: number;
+  status?: string;
 }
 
 export interface AddStudentToClassDto {
   student_id: string;
-  class_id: string;
   status?: string;
 }
 

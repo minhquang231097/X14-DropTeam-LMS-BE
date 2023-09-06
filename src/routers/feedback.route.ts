@@ -8,7 +8,7 @@ const feedbackRouter = express.Router();
 
 feedbackRouter.get("/", feedbackController.GetFeedback);
 feedbackRouter.get("/:id", feedbackController.GetFeedbackInfo);
-feedbackRouter.post("/", verifyAccessJWT, ValidateJoi(FeedbackSchema.Feedback.create_feedback), feedbackController.CreateNewFeekback);
+feedbackRouter.post("/", verifyAccessJWT, ValidateJoi(FeedbackSchema.Feedback.create_feedback), feedbackController.CreateNewFeedback);
 feedbackRouter.put("/:id", verifyAccessJWT, ValidateJoi(FeedbackSchema.Feedback.update_feedback), feedbackController.UpdateFeedback);
 feedbackRouter.delete("/:id", feedbackController.DeleteFeedback);
 

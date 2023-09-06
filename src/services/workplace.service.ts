@@ -1,6 +1,7 @@
 import { IWorkplace, Workplace } from "@/models/workplace.model";
 import { WorkplaceRepository } from "@/repository/workplace.repo";
 import { FindWorkplaceDto } from "@/types/workplace";
+import { sortBy } from "lodash";
 
 const workplaceRepository = new WorkplaceRepository(Workplace);
 
@@ -8,8 +9,8 @@ const CreateWorkplace = async (payload: IWorkplace) => {
   return await workplaceRepository.Create(payload);
 };
 
-const GetAllWorkplace = async (page: number, limit: number) => {
-  return await workplaceRepository.FindAllInfoAndPagination(page, limit);
+const GetAllWorkplace = async (page: number, limit: number, sortBy?: any) => {
+  return await workplaceRepository.FindAllInfoAndPagination(page, limit, sortBy);
 };
 
 const GetWorkplaceByName = async (name: string) => {
@@ -40,16 +41,16 @@ const GetTotalWorkplace = async () => {
   return await workplaceRepository.Count();
 };
 
-const SearchWorkplaceByCondition = async (searchTerm?: string, page?: any, limit?: any) => {
+const SearchWorkplaceByCondition = async (searchTerm?: string, page?: number, limit?: number, sortBy?: any) => {
   const query = {
     $or: [{ name: { $regex: searchTerm, $options: "i" } }, { workplace_code: { $regex: searchTerm, $options: "i" } }],
   };
-  return await workplaceRepository.SearchByCondition(page, limit, query);
+  return await workplaceRepository.SearchByCondition(page, limit, query, sortBy);
 };
 
-const GetWorkplaceByStatus = async (status: string, page?: number, limit?: number) => {
-  return await workplaceRepository.FindByConditionAndPagination({ status }, page, limit)
-}
+const GetWorkplaceByStatus = async (status: string, page?: number, limit?: number, sortBy?: any) => {
+  return await workplaceRepository.FindByConditionAndPagination({ status }, page, limit, sortBy);
+};
 
 export default {
   CreateWorkplace,

@@ -1,7 +1,6 @@
 import { Document, Schema, model } from "mongoose";
 
 const lessonSchema = new Schema({
-  session: { type: Schema.Types.ObjectId, ref: "sessions" },
   course: { type: Schema.Types.ObjectId, ref: "courses" },
   title: String,
   content: String,
@@ -13,7 +12,6 @@ const lessonSchema = new Schema({
 });
 
 export interface ILesson extends Document {
-  session: string;
   course: string;
   title: string;
   content: string;

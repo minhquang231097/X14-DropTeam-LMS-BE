@@ -54,7 +54,7 @@ export const CourseSchema = {
         "string.max": `{{#label}} should have a maximum length of {#limit}`,
         "any.required": `{{#label}} is a required field`,
       }),
-      title: Joi.string().max(20).required().messages({
+      title: Joi.string().max(100).required().messages({
         "string.empty": RESPONSE_CONFIG.MESSAGE.COURSE.NO_TITLE,
         "string.max": `{{#label}} should have a maximum length of {#limit}`,
         "any.required": `{{#label}} is a required field`,
@@ -79,7 +79,7 @@ export const CourseSchema = {
         "any.required": `{{#label}} is a required field`,
       }),
       level: Joi.string().valid("BEGINNER", "INTERMEDIATE", "ADVANCED").required().messages({
-        "any.only": `{{#label}} must be BEGINNER, INTERMEDIATE or ADVANCED`,
+        "any.only": `{{#labe}} must be BEGINNER, INTERMEDIATE or ADVANCED`,
       }),
       rate: Joi.number().min(0).messages({
         "number.base": `{{#label}} must be a number`,

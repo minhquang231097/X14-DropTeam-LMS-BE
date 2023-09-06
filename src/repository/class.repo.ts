@@ -23,23 +23,29 @@ export class ClassRepository extends BaseRepository<IClass> {
   }
 
   async FindClassByCode(code: string, populate?: any | null) {
-    return await this.model.findOne({ class_code: code }).populate(["mentor", "workplace", { path: "course", populate: { path: "workplace" } }]);
+    return this.model
+      .findOne({ class_code: code })
+      .populate(["mentor", "workplace", { path: "course", populate: { path: "workplace" } }]);
   }
 
   async FindClassByMentorId(id: string) {
-    return await this.model.find({ mentor: `${id}` }).populate(["mentor", "workplace", { path: "course", populate: { path: "workplace" } }]);
+    return this.model
+      .find({ mentor: `${id}` })
+      .populate(["mentor", "workplace", { path: "course", populate: { path: "workplace" } }]);
   }
 
   async FindClassByWorkplaceId(id: string) {
-    return await this.model.find({ workplace: `${id}` }).populate(["mentor", "workplace", { path: "course", populate: { path: "workplace" } }]);
+    return this.model
+      .find({ workplace: `${id}` })
+      .populate(["mentor", "workplace", { path: "course", populate: { path: "workplace" } }]);
   }
 
-  async FindClassByCourseId(id: string, page?: any, limit?: any) {
-    return await this.model
+  async FindClassByCourseId(id: string, page?: number, limit?: number, sortBy?: any | { create_at: -1 }) {
+    return this.model
       .find({ course: id })
-      .sort({ create_at: -1 })
-      .skip((page - 1) * limit)
-      .limit(limit)
+      .sort(sortBy)
+      .skip((Number(page) - 1) * Number(limit))
+      .limit(Number(limit))
       .populate(["mentor", "workplace", "course"]);
   }
 }

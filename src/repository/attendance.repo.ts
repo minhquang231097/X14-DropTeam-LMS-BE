@@ -7,21 +7,21 @@ export class AttendanceRepository extends BaseRepository<IAttendance> {
     super(model);
   }
 
-  async FindAttendanceBySessionId(id: string, page: number, limit: number) {
-    return await this.model
+  async FindAttendanceBySessionId(id: string, page?: number, limit?: number, sortBy?: any | { create_at: -1 }) {
+    return this.model
       .find({ session: id })
-      .sort({ create_at: -1 })
-      .skip((page - 1) * limit)
-      .limit(limit)
+      .sort(sortBy)
+      .skip((Number(page) - 1) * Number(limit))
+      .limit(Number(limit))
       .populate(["session", "class"]);
   }
 
-  async FindAttendanceByClassId(id: string, page: number, limit: number) {
-    return await this.model
+  async FindAttendanceByClassId(id: string, page?: number, limit?: number, sortBy?: any | { create_at: -1 }) {
+    return this.model
       .find({ class: id })
-      .sort({ create_at: -1 })
-      .skip((page - 1) * limit)
-      .limit(limit)
+      .sort(sortBy)
+      .skip((Number(page) - 1) * Number(limit))
+      .limit(Number(limit))
       .populate(["session", "class"]);
   }
 }

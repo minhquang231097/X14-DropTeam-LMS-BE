@@ -8,8 +8,8 @@ const CreateCourse = async (payload: CreateCourseDto) => {
   return await courseRepository.Create(payload);
 };
 
-const GetAllCourse = async (page: number, limit: number) => {
-  return await courseRepository.FindAllInfoAndPagination(page, limit, null, { create_at: -1 });
+const GetAllCourse = async (page: number, limit: number, sortBy?: any) => {
+  return await courseRepository.FindAllInfoAndPagination(page, limit, sortBy);
 };
 
 const GetCourseById = async (id: string) => {
@@ -24,11 +24,11 @@ const GetTotalCourse = async () => {
   return await courseRepository.Count();
 };
 
-const SearchCourseByCondition = async (searchTerm?: string, page?: any, limit?: any) => {
+const SearchCourseByCondition = async (searchTerm?: string, page?: any, limit?: any, sortBy?: any) => {
   const query = {
     $or: [{ title: { $regex: searchTerm, $options: "i" } }, { course_code: { $regex: searchTerm, $options: "i" } }],
   };
-  return await courseRepository.SearchByCondition(page, limit, query, null, { create_at: -1 });
+  return await courseRepository.SearchByCondition(page, limit, query, sortBy);
 };
 
 const UpdateCourse = async (id: string, payload: ICourse) => {
