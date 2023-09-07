@@ -57,7 +57,6 @@ const GetClassByMentor = async (req: Request, res: Response) => {
   const { sortBy } = req.body;
   const p = Number(page);
   const l = Number(limit);
-  console.log(req.query);
   try {
     const num = await classService.GetClassByMentorId(idMentor);
     let result;
