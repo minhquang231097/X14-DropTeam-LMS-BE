@@ -36,7 +36,7 @@ const GetFeedbackByStudentId = async (student_id: string, page?: number, limit?:
   return await feedbackRepository.FindFeedbackByStudentId(student_id, page, limit, sortBy);
 };
 
-const GetFeedbackByCondition = async (page: number, limit: number, sortBy: number) => {
+const GetFeedbackByCondition = async (page: number, limit: number, sortBy: any) => {
   return await feedbackRepository.FindAllInfoAndPagination(page, limit, sortBy, [{ path: "course" }, "student"]);
 };
 

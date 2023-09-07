@@ -11,11 +11,11 @@ import mongoose from "mongoose";
 const LIMIT_PAGE_USER = 20;
 
 const GetUser = async (req: Request, res: Response) => {
-  const { page, limit, attendance_id, class_id, search, role } = req.query;
-  const { sortBy } = req.body;
+  const { page, limit, attendance_id, class_id, search, role, sortFeild, sortOrder } = req.query;
   const p = Number(page);
   const l = Number(limit);
   try {
+    const sortBy = { [sortFeild as string]: Number(sortOrder) };
     if (
       (!attendance_id || mongoose.isValidObjectId(attendance_id)) &&
       (!class_id || mongoose.isValidObjectId(class_id))

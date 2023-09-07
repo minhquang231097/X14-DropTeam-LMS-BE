@@ -22,11 +22,11 @@ const CreateCourse = async (req: Request, res: Response) => {
 };
 
 const GetCourse = async (req: Request, res: Response) => {
-  const { page, limit, search } = req.query;
-  const { sortBy } = req.body;
+  const { page, limit, search, sortFeild, sortOrder } = req.query;
   const p = Number(page);
   const l = Number(limit);
   try {
+    const sortBy = { [sortFeild as string]: Number(sortOrder) };
     const countDoc = await CourseService.GetTotalCourse();
     if (search) {
       const num = await courseService.SearchCourseByCondition(search as string);

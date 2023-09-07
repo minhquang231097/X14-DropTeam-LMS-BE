@@ -54,11 +54,12 @@ const RegistedNewCourseInAdmin = async (req: Request, res: Response) => {
 };
 
 const GetRegist = async (req: Request, res: Response) => {
-  const { workplace_id, course_id, search, student_id, page, limit } = req.query;
+  const { workplace_id, course_id, search, student_id, page, limit, sortFeild, sortOrder } = req.query;
   const { sortBy } = req.body;
   const p = Number(page);
   const l = Number(limit);
   try {
+    const sortBy = { [sortFeild as string]: Number(sortOrder) };
     if (
       (!workplace_id || mongoose.isValidObjectId(workplace_id)) &&
       (!course_id || mongoose.isValidObjectId(course_id)) &&

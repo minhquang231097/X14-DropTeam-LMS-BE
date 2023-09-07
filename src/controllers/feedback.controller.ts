@@ -27,11 +27,11 @@ const CreateNewFeedback = async (req: Request, res: Response) => {
 };
 
 const GetFeedback = async (req: Request, res: Response) => {
-  const { page, limit, course_id, student_id, search } = req.query;
-  const { sortBy } = req.body;
+  const { page, limit, course_id, student_id, search, sortFeild, sortOrder } = req.query;
   const p = Number(page);
   const l = Number(limit);
   try {
+    const sortBy = { [sortFeild as string]: Number(sortOrder) };
     if ((!student_id || mongoose.isValidObjectId(student_id)) && (!course_id || mongoose.isValidObjectId(course_id))) {
       const countDoc = await feedbackService.GetTotalFeedback();
       if (course_id) {

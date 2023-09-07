@@ -22,11 +22,11 @@ const CreateListAttendance = async (req: Request, res: Response) => {
 };
 
 const GetAttendance = async (req: Request, res: Response) => {
-  const { page, limit, class_id, session_id, student_id } = req.query;
-  const { sortBy } = req.body;
+  const { page, limit, class_id, session_id, student_id, sortFeild, sortOrder } = req.query;
   const p: number = Number(page);
   const l: number = Number(limit);
   try {
+    const sortBy = { [sortFeild as string]: Number(sortOrder) };
     if (
       (!session_id || mongoose.isValidObjectId(session_id)) &&
       (!class_id || mongoose.isValidObjectId(class_id)) &&

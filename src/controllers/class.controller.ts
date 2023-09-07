@@ -53,11 +53,12 @@ const AddStudentToClass = async (req: Request, res: Response) => {
 
 const GetClassByMentor = async (req: Request, res: Response) => {
   const idMentor = req.user._id;
-  const { page, limit } = req.query;
-  const { sortBy } = req.body;
+  const { page, limit, sortFeild, sortOrder } = req.query;
   const p = Number(page);
   const l = Number(limit);
   try {
+    const sortBy = JSON.stringify({ [sortFeild as string]: sortOrder });
+    console.log(sortBy);
     const num = await classService.GetClassByMentorId(idMentor);
     let result;
     if (p === undefined && l === undefined) {
@@ -86,11 +87,11 @@ const GetClassByMentor = async (req: Request, res: Response) => {
 };
 
 const GetClass = async (req: Request, res: Response) => {
-  const { page, limit, student_id, search, course_id, status, mentor_id } = req.query;
-  const { sortBy } = req.body;
+  const { page, limit, student_id, search, course_id, status, mentor_id, sortFeild, sortOrder } = req.query;
   const p = Number(page);
   const l = Number(limit);
   try {
+    const sortBy = { [sortFeild as string]: Number(sortOrder) };
     if ((!student_id || mongoose.isValidObjectId(student_id)) && (!course_id || mongoose.isValidObjectId(course_id))) {
       const countDoc = await classService.GetTotalClass();
       if (course_id) {

@@ -19,11 +19,11 @@ const CreateWorkplace = async (req: Request, res: Response) => {
 };
 
 const GetWorkplace = async (req: Request, res: Response) => {
-  const { page, limit, search, status } = req.query;
-  const { sortBy } = req.body;
+  const { page, limit, search, status, sortFeild, sortOrder } = req.query;
   const p = Number(page);
   const l = Number(limit);
   try {
+    const sortBy = { [sortFeild as string]: Number(sortOrder) };
     const countDoc = await workplaceService.GetTotalWorkplace();
     if (status) {
       const num = await workplaceService.GetWorkplaceByStatus(status as string);
