@@ -2,7 +2,6 @@ import { User } from "@/models/user.model";
 import { UserRepository } from "@/repository/user.repo";
 import bcrypt from "bcryptjs";
 import attendanceStudentService from "./attendance.student.service";
-import attendanceService from "./attendance.service";
 
 const userRepository = new UserRepository(User);
 
@@ -17,7 +16,7 @@ const CreateUser = async (payload: any) => {
 };
 
 const GetAllUser = async (page: number, limit: number, sortBy?: any) => {
-  return await userRepository.FindAllInfoAndPagination(page, limit, sortBy);
+  return await userRepository.FindAllUser(page, limit, sortBy);
 };
 
 const GetUserByUsername = async (username: string) => {
@@ -41,14 +40,7 @@ const GetUserByAttendance = async (attendance_id: string, page?: any, limit?: an
 };
 
 const SearchUserByCondition = async (searchTerm?: string, page?: any, limit?: any, sortBy?: any) => {
-  const query = {
-    $or: [
-      { username: { $regex: searchTerm, $options: "i" } },
-      { email: { $regex: searchTerm, $options: "i" } },
-      { fullname: { $regex: searchTerm, $options: "i" } },
-    ],
-  };
-  return await userRepository.SearchByCondition(page, limit, query, sortBy);
+  return await userRepository.SearchUser(searchTerm, page, limit, sortBy);
 };
 
 const SearchUserByConditionAndRole = async (
@@ -58,19 +50,7 @@ const SearchUserByConditionAndRole = async (
   limit?: number,
   sortBy?: any,
 ) => {
-  const query = {
-    $and: [
-      {
-        $or: [
-          { username: { $regex: searchTerm, $options: "i" } },
-          { email: { $regex: searchTerm, $options: "i" } },
-          { fullname: { $regex: searchTerm, $options: "i" } },
-        ],
-      },
-      { role: { $regex: role, $options: "i" } },
-    ],
-  };
-  return await userRepository.SearchByCondition(page, limit, query, sortBy);
+  return await userRepository.SearchUserByConditionAndRole(searchTerm, role, page, limit, sortBy);
 };
 
 const UpdateUserById = async (id: string, payload: any) => {
@@ -94,10 +74,7 @@ const GetTotalUser = async () => {
 };
 
 const GetUserByRole = async (role: string, page?: number, limit?: number, sortBy?: Object) => {
-  const query = {
-    role: { $regex: new RegExp(role, "i") },
-  };
-  return await userRepository.FindByConditionAndPagination(query, page, limit, sortBy);
+  return await userRepository.FindAllUserByRole(role, page, limit, sortBy);
 };
 
 const SortUser = async () => {

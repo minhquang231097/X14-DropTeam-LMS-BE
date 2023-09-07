@@ -13,7 +13,7 @@ export class RegistedCourseRepository extends BaseRepository<IRegistedCourse> {
       .sort(sortBy)
       .skip((Number(page) - 1) * Number(limit))
       .limit(Number(limit))
-      .populate(["course", "workplace", "student"]);
+      .populate(["course", "workplace", { path: "student", select: "-__v -password -refreshToken" }]);
   }
 
   async FindRegistbyWorkplaceId(id: string, page?: number, limit?: number, sortBy?: any | { create_at: -1 }) {
@@ -22,7 +22,7 @@ export class RegistedCourseRepository extends BaseRepository<IRegistedCourse> {
       .sort(sortBy)
       .skip((Number(page) - 1) * Number(limit))
       .limit(Number(limit))
-      .populate(["course", "workplace", "student"]);
+      .populate(["course", "workplace", { path: "student", select: "-__v -password -refreshToken" }]);
   }
 
   async FindRegistbyStudentId(id: string, page?: number, limit?: number, sortBy?: any | { create_at: -1 }) {
@@ -31,6 +31,6 @@ export class RegistedCourseRepository extends BaseRepository<IRegistedCourse> {
       .sort(sortBy)
       .skip((Number(page) - 1) * Number(limit))
       .limit(Number(limit))
-      .populate(["course", "workplace", "student"]);
+      .populate(["course", "workplace", { path: "student", select: "-__v -password -refreshToken" }]);
   }
 }

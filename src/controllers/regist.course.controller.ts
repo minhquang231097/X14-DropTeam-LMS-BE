@@ -55,7 +55,6 @@ const RegistedNewCourseInAdmin = async (req: Request, res: Response) => {
 
 const GetRegist = async (req: Request, res: Response) => {
   const { workplace_id, course_id, search, student_id, page, limit, sortFeild, sortOrder } = req.query;
-  const { sortBy } = req.body;
   const p = Number(page);
   const l = Number(limit);
   try {

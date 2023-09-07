@@ -19,18 +19,18 @@ const CreateListAttendance = async (list: CreateAttendanceStudentDto[]) => {
 };
 
 const GetAllStudentInAttendance = async (id: string, page?: number, limit?: number, sortBy?: any) => {
-  return await attendanceStudentRepository.FindByConditionAndPagination(
-    { attendance: id },
-    page,
-    limit,
-    sortBy,
-    "student",
-  );
+  return await attendanceStudentRepository.FindByConditionAndPagination({ attendance: id }, page, limit, sortBy, {
+    path: "student",
+    select: "-__v -password -refreshToken",
+  });
 };
 
 const GetAllAttendance = async (page: number, limit: number) => {
   return await attendanceStudentRepository.FindAllInfoAndPagination(page, limit, [
-    "student",
+    {
+      path: "student",
+      select: "-__v -password -refreshToken",
+    },
     { path: "attendance", populate: { path: "session" } },
   ]);
 };

@@ -25,7 +25,11 @@ const GetTotalRegist = async () => {
 };
 
 const GetAllRegist = async (page: number, limit: number, sortBy?: any) => {
-  return await registCourseRepository.FindAllInfoAndPagination(page, limit, sortBy, ["course", "workplace"]);
+  return await registCourseRepository.FindAllInfoAndPagination(page, limit, sortBy, [
+    "course",
+    "workplace",
+    { path: "student", select: "-__v -password -refreshToken" },
+  ]);
 };
 
 const GetRegistByCourseId = async (course_id: string, page?: number, limit?: number, sortBy?: any) => {
@@ -41,11 +45,19 @@ const GetRegistByStudentId = async (student_id: string, page?: number, limit?: n
 };
 
 const GetRegistById = async (id: string) => {
-  return await registCourseRepository.FindById(id, ["course", "workplace"]);
+  return await registCourseRepository.FindById(id, [
+    "course",
+    "workplace",
+    { path: "student", select: "-__v -password -refreshToken" },
+  ]);
 };
 
 const GetRegistByCourseIdAndStudentId = async (course_id: string, student_id: string) => {
-  return await registCourseRepository.FindByCondition({ course: course_id, student: student_id });
+  return await registCourseRepository.FindByCondition({ course: course_id, student: student_id }, [
+    "course",
+    "workplace",
+    { path: "student", select: "-__v -password -refreshToken" },
+  ]);
 };
 
 const SearchRegistByCondition = async (searchTerm?: string, page?: number, limit?: number, sortBy?: any) => {
@@ -56,7 +68,11 @@ const SearchRegistByCondition = async (searchTerm?: string, page?: number, limit
       { phone_number: { $regex: searchTerm, $options: "i" } },
     ],
   };
-  return await registCourseRepository.SearchByCondition(page, limit, query, sortBy, ["course", "workplace"]);
+  return await registCourseRepository.SearchByCondition(page, limit, query, sortBy, [
+    "course",
+    "workplace",
+    { path: "student", select: "-__v -password -refreshToken" },
+  ]);
 };
 
 const UpdateRegist = async (id: string, payload: any) => {

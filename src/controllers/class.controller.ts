@@ -57,7 +57,7 @@ const GetClassByMentor = async (req: Request, res: Response) => {
   const p = Number(page);
   const l = Number(limit);
   try {
-    const sortBy = JSON.stringify({ [sortFeild as string]: sortOrder });
+    const sortBy = { [sortFeild as string]: Number(sortOrder) };
     console.log(sortBy);
     const num = await classService.GetClassByMentorId(idMentor);
     let result;

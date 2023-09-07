@@ -13,7 +13,7 @@ export class FeedbackRepository extends BaseRepository<IFeedback> {
       .sort(sortBy)
       .skip((Number(page) - 1) * Number(limit))
       .limit(Number(limit))
-      .populate(["course", "student"]);
+      .populate(["course", { path: "student", select: "-__v -password -refreshToken" }]);
   }
 
   async FindFeedbackByStudentId(id: string, page?: number, limit?: number, sortBy?: any | { create_at: -1 }) {
@@ -22,6 +22,6 @@ export class FeedbackRepository extends BaseRepository<IFeedback> {
       .sort(sortBy)
       .skip((Number(page) - 1) * Number(limit))
       .limit(Number(limit))
-      .populate(["course", "student"]);
+      .populate(["course", { path: "student", select: "-__v -password -refreshToken" }]);
   }
 }

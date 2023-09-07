@@ -51,7 +51,7 @@ const GetStudentInClassByStudentId = async (student_id: string) => {
 };
 
 const GetAllStudentInClass = async (class_id: string, page?: number, limit?: number, sortBy?: any) => {
-  return await classStudentRepository.FindByClassId(class_id, page, limit, sortBy, ["student"]);
+  return await classStudentRepository.FindByClassId(class_id, page, limit, sortBy);
 };
 
 const GetClassByStudentId = async (id: string, page?: number, limit?: number, sortBy?: any) => {
