@@ -42,7 +42,7 @@ const GetCourse = async (req: Request, res: Response) => {
         .status(200)
         .json(
           new HttpResponseData(
-            RESPONSE_CONFIG.MESSAGE.WORKPLACE.FOUND_SUCCESS,
+            RESPONSE_CONFIG.MESSAGE.COURSE.FOUND_SUCCESS,
             200,
             result,
             result.length,

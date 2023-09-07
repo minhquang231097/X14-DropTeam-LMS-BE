@@ -54,7 +54,7 @@ export const CourseSchema = {
         "string.max": `{{#label}} should have a maximum length of {#limit}`,
         "any.required": `{{#label}} is a required field`,
       }),
-      title: Joi.string().max(20).optional().messages({
+      title: Joi.string().max(100).optional().messages({
         "string.empty": RESPONSE_CONFIG.MESSAGE.COURSE.NO_TITLE,
         "string.max": `{{#label}} should have a maximum length of {#limit}`,
         "any.required": `{{#label}} is a required field`,

@@ -8,6 +8,7 @@ const classRouter = express.Router();
 
 classRouter.get("/", classController.GetClass);
 classRouter.get("/:id", classController.GetClassInfo);
+classRouter.get("/mentor", verifyAccessJWT, classController.GetClassByMentor);
 classRouter.post("/", ValidateJoi(ClassSchema.Class.create_class), classController.CreateNewClass);
 classRouter.post("/add-student", ValidateJoi(ClassSchema.Class.add_student), classController.AddStudentToClass);
 classRouter.put("/:id", ValidateJoi(ClassSchema.Class.update_class), classController.UpdateClass);

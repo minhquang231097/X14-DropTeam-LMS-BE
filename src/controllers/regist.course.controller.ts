@@ -210,7 +210,7 @@ const GetRegistInfo = async (req: Request, res: Response) => {
   try {
     const exist = await registCourseService.GetRegistById(id as string);
     if (!exist) return res.status(404).send(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.REGIST.NOT_FOUND, 404));
-    res.status(200).json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.REGIST.FOUND_SUCCESS, 200, exist));
+    return res.status(200).json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.REGIST.FOUND_SUCCESS, 200, exist));
   } catch (error) {
     return res.status(400).send(new HttpException(RESPONSE_CONFIG.MESSAGE.REGIST.WRONG, 400));
   }

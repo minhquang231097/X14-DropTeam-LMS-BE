@@ -24,8 +24,8 @@ export interface StudentRegistCourseDto {
 }
 
 export interface UpdateRegistCourseDto {
-  course?: string;
-  workplace?: string;
+  course_id?: string;
+  workplace_id?: string;
   note?: string;
 }
 

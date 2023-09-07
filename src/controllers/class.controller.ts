@@ -53,6 +53,36 @@ const AddStudentToClass = async (req: Request, res: Response) => {
   }
 };
 
+const GetClassByMentor = async (req: Request, res: Response) => {
+  const { page, limit } = req.query;
+  const _id = req.user;
+  const { sortBy } = req.body;
+  const p = Number(page);
+  const l = Number(limit);
+  console.log(req.user)
+  try {
+    const user = await userService.GetUserById(_id);
+    if (user) {
+      const num = await classService.GetClassByMentorId(_id);
+      let result;
+      if (p === undefined && l === undefined) {
+        result = await classService.GetClassByMentorId(_id, 1, LIMIT_PAGE_CLASS, sortBy);
+      } else {
+        result = await classService.GetClassByMentorId(_id, p, l, sortBy);
+      }
+      if (result.length === 0)
+        return res.status(404).json(new HttpException(RESPONSE_CONFIG.MESSAGE.CLASS.NOT_FOUND, 404));
+      res
+        .status(200)
+        .json(
+          new HttpResponseData(RESPONSE_CONFIG.MESSAGE.CLASS.FOUND_SUCCESS, 200, result, result.length, num.length, p, Math.ceil(num.length / l),),
+        );
+    }
+  } catch (error: Error | any) {
+    return res.status(400).send(new HttpException(RESPONSE_CONFIG.MESSAGE.USER.WRONG, 400));
+  }
+}
+
 const GetClass = async (req: Request, res: Response) => {
   const { page, limit, student_id, search, course_id, status, mentor_id } = req.query;
   const { sortBy } = req.body;
@@ -278,4 +308,5 @@ export default {
   AddStudentToClass,
   GetClassInfo,
   UpdateStatusStudentInClass,
+  GetClassByMentor,
 };
