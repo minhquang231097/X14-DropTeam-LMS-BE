@@ -19,6 +19,7 @@ export class ClassRepository extends BaseRepository<IClass> {
       total_hours: payload.total_hours,
       schedule: payload.schedule,
       class_size: payload.class_size,
+      status: payload.status
     });
   }
 

@@ -30,6 +30,7 @@ export const ClassSchema = {
         "any.required": `{{#label}} is a required field`,
       }),
       end_at: Joi.string().optional(),
+      status: Joi.string().optional(),
       schedule: Joi.array().items(Joi.number().integer().min(0).max(6)).unique().required().messages({
         "array.empty": RESPONSE_CONFIG.MESSAGE.CLASS.NO_SCHEDULE,
         "any.required": `{{#label}} is a required field`,
