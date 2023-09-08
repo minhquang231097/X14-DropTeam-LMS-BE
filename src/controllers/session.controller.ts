@@ -30,11 +30,11 @@ const CreateSessionWithAttendance = async (req: Request, res: Response) => {
 };
 
 const GetSession = async (req: Request, res: Response) => {
-  const { page, limit, course_id, class_id, search, sortFeild, sortOrder } = req.query;
+  const { page, limit, course_id, class_id, search, sortField, sortOrder } = req.query;
   const p = Number(page);
   const l = Number(limit);
   try {
-    const sortBy = { [sortFeild as string]: Number(sortOrder) };
+    const sortBy = { [sortField as string]: Number(sortOrder) };
     if ((!course_id || mongoose.isValidObjectId(course_id)) && (!class_id || mongoose.isValidObjectId(class_id))) {
       const countDoc = await sessionService.CountSession();
       if (course_id) {

@@ -50,6 +50,12 @@ export const ClassSchema = {
         "number.base": `{{#label}} must be a number`,
         "number.integer": `{{#label}} must be an integer `,
       }),
+      minimum_size: Joi.number().integer().min(1).optional().messages({
+        "number.empty": RESPONSE_CONFIG.MESSAGE.CLASS.NO_SIZE,
+        "number.min": `{{#label}} must greater than or equal to {{#limit}}`,
+        "number.base": `{{#label}} must be a number`,
+        "number.integer": `{{#label}} must be an integer `,
+      }),
     }),
 
     add_student: Joi.object({

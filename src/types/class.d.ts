@@ -24,6 +24,7 @@ export interface CreateClassDto {
   total_hours?: number;
   total_session: number;
   status?: string;
+  minimum_size?: number
 }
 
 export interface ClassResponseDto {

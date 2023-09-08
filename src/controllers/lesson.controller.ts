@@ -24,11 +24,11 @@ const CreateNewLesson = async (req: Request, res: Response) => {
 };
 
 const GetLesson = async (req: Request, res: Response) => {
-  const { course_id, search, page, limit, sortFeild, sortOrder } = req.query;
+  const { course_id, search, page, limit, sortField, sortOrder } = req.query;
   const p = Number(page);
   const l = Number(limit);
   try {
-    const sortBy = { [sortFeild as string]: Number(sortOrder) };
+    const sortBy = { [sortField as string]: Number(sortOrder) };
     if (!course_id || mongoose.isValidObjectId(course_id)) {
       const countDoc = await lessonService.CountLesson();
       if (course_id) {
