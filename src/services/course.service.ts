@@ -26,7 +26,7 @@ const GetTotalCourse = async () => {
 
 const SearchCourseByCondition = async (searchTerm?: string, page?: any, limit?: any, sortBy?: any) => {
   const query = {
-    $or: [{ title: { $regex: searchTerm, $options: "i" } }, { course_code: { $regex: searchTerm, $options: "i" } }],
+    $or: [{ title: { $regex: searchTerm, $options: "i" } }, { course_code: { $regex: searchTerm, $options: "i" } }, { level: { $regex: searchTerm, $options: "i" } }],
   };
   return await courseRepository.SearchByCondition(page, limit, query, sortBy);
 };

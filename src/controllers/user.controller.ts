@@ -212,11 +212,14 @@ const GetUserInfoById = async (req: Request, res: Response) => {
   try {
     const user = await userService.GetUserById(id);
     if (!user) return res.status(404).send(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.USER.NOT_FOUND, 404));
-    const { email, fullname, phone_number, dob, gender, address, avatar } = user;
+    const { _id, email, fullname, username, role, phone_number, dob, gender, address, avatar } = user;
     res.status(200).json(
       new HttpResponseData(RESPONSE_CONFIG.MESSAGE.USER.SUCCESS, 200, {
+        _id,
         email,
         fullname,
+        username,
+        role,
         phone_number,
         dob,
         gender,
