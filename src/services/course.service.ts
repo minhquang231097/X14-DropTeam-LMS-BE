@@ -24,6 +24,14 @@ const GetTotalCourse = async () => {
   return await courseRepository.Count();
 };
 
+const GetCoureByLevel = async (level: string, page?: number, limit?: number, sortBy?: any) => {
+  return await courseRepository.FindByConditionAndPagination({level}, page, limit, sortBy)
+}
+
+const GetCoureByRate = async (rate: number, page?: number, limit?: number, sortBy?: any) => {
+  return await courseRepository.FindByConditionAndPagination({rate}, page, limit, sortBy)
+}
+
 const SearchCourseByCondition = async (searchTerm?: string, page?: any, limit?: any, sortBy?: any) => {
   const query = {
     $or: [{ title: { $regex: searchTerm, $options: "i" } }, { course_code: { $regex: searchTerm, $options: "i" } }, { level: { $regex: searchTerm, $options: "i" } }],
@@ -53,4 +61,6 @@ export default {
   GetCourseByCode,
   UpdateManyCourse,
   GetTotalCourse,
+  GetCoureByLevel,
+  GetCoureByRate
 };
