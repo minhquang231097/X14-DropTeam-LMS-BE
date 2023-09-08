@@ -22,7 +22,7 @@ const CreateSessionWithAttendance = async (req: Request, res: Response) => {
     if (!_course || !_class || _session)
       return res.status(403).send(new HttpException(RESPONSE_CONFIG.MESSAGE.SESSION.WRONG, 403));
     const session = await sessionService.CreateSession(payload);
-    await attendanceService.CreateAttendance(_session._id, _class._id);
+    await attendanceService.CreateAttendance(session._id, class_id);
     res.status(200).json(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.SESSION.CREATE_SUCCES, 200, session));
   } catch (error) {
     return res.status(400).send(new HttpException(RESPONSE_CONFIG.MESSAGE.SESSION.WRONG, 400));

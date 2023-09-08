@@ -212,19 +212,19 @@ const GetUserInfoById = async (req: Request, res: Response) => {
   try {
     const user = await userService.GetUserById(id);
     if (!user) return res.status(404).send(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.USER.NOT_FOUND, 404));
-    const { _id, email, fullname, username, role, phone_number, dob, gender, address, avatar } = user;
+    const { _id, email, fullname, phone_number, username, dob, gender, address, avatar, role } = user;
     res.status(200).json(
       new HttpResponseData(RESPONSE_CONFIG.MESSAGE.USER.SUCCESS, 200, {
         _id,
         email,
         fullname,
-        username,
-        role,
         phone_number,
+        username,
         dob,
         gender,
         address,
         avatar,
+        role
       }),
     );
   } catch (error) {
@@ -237,11 +237,12 @@ const GetUserInfo = async (req: Request, res: Response) => {
   try {
     const user = await userService.GetUserById(_id);
     if (!user) return res.status(404).send(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.USER.NOT_FOUND, 404));
-    const { email, fullname, phone_number, dob, gender, address, avatar } = user;
+    const { email, fullname, phone_number, dob, gender, address, avatar, role } = user;
     res
       .status(200)
       .json(
         new HttpResponseData(RESPONSE_CONFIG.MESSAGE.USER.SUCCESS, 200, {
+          _id,
           email,
           fullname,
           phone_number,
@@ -249,6 +250,7 @@ const GetUserInfo = async (req: Request, res: Response) => {
           gender,
           address,
           avatar,
+          role
         }),
       );
   } catch (error) {
@@ -264,9 +266,10 @@ const UpdateUserInfo = async (req: Request, res: Response) => {
     if (!exist) return res.status(404).send(new HttpResponseData(RESPONSE_CONFIG.MESSAGE.USER.NOT_FOUND, 404));
     await userService.UpdateUserById(id, payload);
     const newUser = await userService.GetUserById(id);
-    const { email, fullname, phone_number, dob, gender, address, avatar } = newUser;
+    const { _id, email, fullname, phone_number, dob, gender, address, avatar, role } = newUser;
     res.status(200).send(
       new HttpResponseData(RESPONSE_CONFIG.MESSAGE.USER.SUCCESS, 200, {
+        _id,
         email,
         fullname,
         phone_number,
@@ -274,6 +277,7 @@ const UpdateUserInfo = async (req: Request, res: Response) => {
         gender,
         address,
         avatar,
+        role
       }),
     );
   } catch (error) {
@@ -287,9 +291,10 @@ const UpdateInfo = async (req: Request, res: Response) => {
   try {
     await userService.UpdateUserById(id, payload);
     const newUser = await userService.GetUserById(id);
-    const { email, fullname, phone_number, dob, gender, address, avatar } = newUser;
+    const { _id, email, fullname, phone_number, dob, gender, address, avatar, role } = newUser;
     res.status(200).send(
       new HttpResponseData(RESPONSE_CONFIG.MESSAGE.USER.SUCCESS, 200, {
+        _id,
         email,
         fullname,
         phone_number,
@@ -297,6 +302,7 @@ const UpdateInfo = async (req: Request, res: Response) => {
         gender,
         address,
         avatar,
+        role
       }),
     );
   } catch (error) {

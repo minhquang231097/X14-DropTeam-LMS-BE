@@ -27,7 +27,7 @@ const GetSessionById = async (id: string) => {
 };
 
 const GetSessionByCode = async (code: string) => {
-  return await sessionRepository.FindByCondition({ course: code }, ["course", "class"]);
+  return await sessionRepository.FindByCondition({ session_code: code }, ["course", "class"]);
 };
 
 const GetSessionByClassId = async (class_id: string, page?: number, limit?: number, sortBy?: any) => {

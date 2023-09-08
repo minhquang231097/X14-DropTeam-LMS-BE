@@ -14,7 +14,7 @@ userRouter.get("/mentor/class/all", verifyAccessJWT, classController.GetClassByM
 userRouter.put("/reset-password", ValidateJoi(Schema.User.new_password), userController.ChangePassword);
 userRouter.put("/:id", verifyAccessJWT, ValidateJoi(Schema.User.update), userController.UpdateUserInfo);
 userRouter.put("/", verifyAccessJWT, ValidateJoi(Schema.User.update), userController.UpdateInfo);
-userRouter.put("/change-password", verifyAccessJWT, ValidateJoi(Schema.User.change_password), userController.UpdatePassword,);
+userRouter.put("/update/change-password", verifyAccessJWT, ValidateJoi(Schema.User.change_password), userController.UpdatePassword,);
 userRouter.delete("/:id", verifyAccessJWT, userController.DeleteUser);
 
 export default userRouter;
